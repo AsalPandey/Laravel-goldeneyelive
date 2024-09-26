@@ -19,15 +19,13 @@ Route::post('/contact', [ContactController::class, 'contactSubmit'])->name('Cont
 //newsletter route
 Route::post('/newsletter', [ContactController::class, 'Newsletter'])->name('Newsletter');
 //newsletter route end
-Route::get('/courses/computer-classes', [SiteController::class, 'computerClasses'])->name('ComputerClasses');
-Route::get('/courses/language-classes', [SiteController::class, 'languageClasses'])->name('LanguageClasses');
-Route::get('/courses/other-classes', [SiteController::class, 'otherClasses'])->name('OtherClasses');
-Route::get('/courses', [CoursesController::class, 'courses'])->name('Courses');
-Route::get('/courses-all', [CoursesController::class, 'coursesAll'])->name('CoursesAll');
 //join now route
 Route::get('/join-now', [ContactController::class, 'joinNow'])->name('JoinNow');
 Route::post('/join-now', [ContactController::class, 'joinNowSubmit'])->name('JoinNowSubmit');
 //join now route end
-//courses details route
-Route::get('/courses/Basic-computer-Classes', [CoursesController::class, 'coursesDetail'])->name('CoursesDetail');
-//aru thapna baki
+//courses  route
+Route::get('/courses-catagory/{slug}', [CoursesController::class, 'courseCatagory'])->name('courseCatagory');
+Route::get('/courses', [CoursesController::class, 'courses'])->name('Courses');
+Route::get('/courses-all', [CoursesController::class, 'coursesAll'])->name('CoursesAll');
+Route::get('/courses/{slug}', [CoursesController::class, 'coursesDetail'])->name('CoursesDetail');
+//courses route end
