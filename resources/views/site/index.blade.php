@@ -1,4 +1,4 @@
-@extends('Site.layout.app')
+@extends('site.layout.app')
 @section('content')
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5">
@@ -94,9 +94,11 @@
             <div class="row g-5 align-items-center">
                 <!-- Round Image of Chairperson -->
                 <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="position-relative rounded-circle overflow-hidden shadow" style="width: 300px; height: 300px;">
-                        <img class="img-fluid position-absolute w-100 h-100" src="{{ asset("site/img/message-chairperson.jpg") }}" alt="Chairperson Message" style="object-fit: cover;">
-                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="position-relative rounded-circle overflow-hidden shadow" style="width: 300px; height: 300px;">
+                            <img class="img-fluid position-absolute w-100 h-100" src="{{ asset('site/img/message-chairperson.jpg') }}" alt="Chairperson Message" style="object-fit: cover;">
+                        </div>
+                    </div>                    
                     <div class="mt-3 text-center">
                         <h4 class="mb-1 text-primary">Shankar Pokharel</h4> <!-- Name of Chairperson -->
                         <p class="text-muted">Founder</p> <!-- Position -->
@@ -338,72 +340,72 @@
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" src="{{ asset("site/img/team-1.jpg") }}" alt="">
+                            <img class="img-fluid" style="height:300px;width:300px" src="{{ asset("site/img/team-1.jpg") }}" alt="">
                         </div>
-                        <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
+                        {{-- <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
                             <div class="bg-light d-flex justify-content-center pt-2 px-1">
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                <!-- <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-twitter"></i></a> -->
+                                <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-twitter"></i></a>
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-instagram"></i></a>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="text-center p-4">
-                            <h5 class="mb-0">Instructor Name</h5>
-                            <small>Designation</small>
+                            <h5 class="mb-0">Shankar Pokhrel</h5>
+                            <small>Founder</small>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" src="{{ asset("site/img/team-2.jpg") }}" alt="">
+                            <img class="img-fluid" style="height:300px;width:300px" src="{{ asset("site/img/team-2.jpg") }}" alt="">
                         </div>
-                        <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
+                        {{-- <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
                             <div class="bg-light d-flex justify-content-center pt-2 px-1">
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-facebook-f"></i></a>
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-twitter"></i></a>
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-instagram"></i></a>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="text-center p-4">
-                            <h5 class="mb-0">Instructor Name</h5>
-                            <small>Designation</small>
+                            <h5 class="mb-0">Pradeep Paudel</h5>
+                            <small>Korean Teacher</small>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" src="{{ asset("site/img/team-3.jpg") }}" alt="">
+                            <img class="img-fluid" style="height:300px;width:300px" src="{{ asset("site/img/team-3.jpg") }}" alt="">
                         </div>
-                        <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
+                        {{-- <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
                             <div class="bg-light d-flex justify-content-center pt-2 px-1">
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-facebook-f"></i></a>
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-twitter"></i></a>
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-instagram"></i></a>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="text-center p-4">
-                            <h5 class="mb-0">Instructor Name</h5>
-                            <small>Designation</small>
+                            <h5 class="mb-0">Surendra Bhattarai</h5>
+                            <small>Computer Teacher</small>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" src="{{ asset("site/img/team-4.jpg") }}" alt="">
+                            <img class="img-fluid" style="height:300px;width:300px" src="{{ asset("site/img/user.png") }}" alt="">
                         </div>
-                        <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
+                        {{-- <div class="position-relative d-flex justify-content-center" style="margin-top: -23px;">
                             <div class="bg-light d-flex justify-content-center pt-2 px-1">
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-facebook-f"></i></a>
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-twitter"></i></a>
                                 <a class="btn btn-sm-square btn-primary mx-1" href=""><i class="fab fa-instagram"></i></a>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="text-center p-4">
-                            <h5 class="mb-0">Instructor Name</h5>
-                            <small>Designation</small>
+                            <h5 class="mb-0">Ajay B.k</h5>
+                            <small>English Teacher</small>
                         </div>
                     </div>
                 </div>
@@ -423,34 +425,34 @@
             <div class="owl-carousel testimonial-carousel position-relative">
                 <div class="testimonial-item text-center">
                     <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ asset("site/img/testimonial-1.jpg") }}" style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Client Name</h5>
-                    <p>Profession</p>
+                    <h5 class="mb-0">Sandesh Mahat</h5>
+                    <p>Student</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                    <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
+                    <p class="mb-0">Joining Golden Eye Academy's computer classes was the best decision I made this year. The instructors are patient and skilled, making complex topics easy to grasp. I now feel confident and ready to take on new tech challenges!</p>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
                     <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ asset("site/img/testimonial-2.jpg") }}" style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Client Name</h5>
-                    <p>Profession</p>
+                    <h5 class="mb-0">Sharap dorje Gurung </h5>
+                    <p>Student</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                    <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
+                    <p class="mb-0">The Computer Class at Golden Eye Academy exceeded my expectations. The hands-on approach let me explore my creativity while mastering industry-standard tools. I now have a portfolio I'm proud to showcase.</p>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
                     <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ asset("site/img/testimonial-3.jpg") }}" style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Client Name</h5>
-                    <p>Profession</p>
+                    <h5 class="mb-0">Apekshya Chhetri</h5>
+                    <p>Student</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                    <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
+                    <p class="mb-0">I also never imagined learning Korean so quickly! The language classes are perfectly structured, blending conversation practice with grammar. The supportive environment has made a huge difference in my progress.</p>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
                     <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ asset("site/img/testimonial-4.jpg") }}" style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Client Name</h5>
-                    <p>Profession</p>
+                    <h5 class="mb-0">Nirmala Thapa</h5>
+                    <p>Student</p>
                     <div class="testimonial-text bg-light text-center p-4">
-                    <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
+                    <p class="mb-0">GoldenEye Academy offered excellent IELTS preparation. The instructors were knowledgeable and supportive, helping me build confidence. I highly recommend them for anyone aiming for a high IELTS score!</p>
                     </div>
                 </div>
             </div>
