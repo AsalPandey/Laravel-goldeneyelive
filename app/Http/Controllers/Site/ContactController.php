@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\JoinNowQueries;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Contact;
+use App\Models\Courses;
 use App\Models\NewsLetter;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactMail;
@@ -61,7 +62,10 @@ class ContactController extends Controller
     //join now
     public function joinNow()
     {
-        return view('site.join-now.join-now');
+        $data= [
+            'courses' => Courses::all(),
+        ];
+        return view('site.join-now.join-now',$data);
     }
     public function joinNowSubmit(Request $request)
     {

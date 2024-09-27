@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
     <a href="{{ route('Home') }}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
         <h4 class="m-0 text-primary">
-            <img class="img-logo px-3" src="img/logo.png" alt="">
+            <img class="img-logo px-3" src="{{ asset('site/img/logo.png') }}" alt="">
             GoldenEye <span class="logo-text-2">Academy</span>
         </h4>
     </a>

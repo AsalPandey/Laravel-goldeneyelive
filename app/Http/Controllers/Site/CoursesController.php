@@ -32,7 +32,7 @@ class CoursesController extends Controller
     public function courseCatagory($slug)
     {
         $data=[
-            'courses' => Courses::where('catagory_slug',$slug)->get()
+            'courses' => Courses::where('category_slug',$slug)->get()
         ];
         return view('site.courses.courses-catagory',$data);
     }

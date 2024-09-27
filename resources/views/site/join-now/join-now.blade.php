@@ -78,10 +78,12 @@
                                 <div class="form-floating">
                                     <select class="form-select @error('course') is-invalid @enderror" id="course" name="course" required>
                                         <option value="" disabled selected>Select a Course</option>
-                                        <option value="course1" {{ old('course') == 'course1' ? 'selected' : '' }}>Course 1</option>
-                                        <option value="course2" {{ old('course') == 'course2' ? 'selected' : '' }}>Course 2</option>
-                                        <option value="course3" {{ old('course') == 'course3' ? 'selected' : '' }}>Course 3</option>
-                                    </select>
+                                        @foreach($courses as $course)
+                                            <option value="{{ $course->id }}" {{ old('course') == $course->id ? 'selected' : '' }}>
+                                                {{ $course->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>                                    
                                     <label for="course">Course that you are interested to know about</label>
                                     @error('course')
                                         <div class="invalid-feedback">{{ $message }}</div>

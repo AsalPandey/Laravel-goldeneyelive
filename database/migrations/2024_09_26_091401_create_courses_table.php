@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
-            $table->string('description');
-            $table->string('course_outline');
+            $table->longText('description');
+            $table->longText('course_outline');
             $table->string('rating_star');
             $table->string('rating_count');
             $table->string('capacity');
@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('price');
             $table->string('duration');
             $table->string('instructor');
-            $table->string('category');
-            $table->string('catagory_slug');
+            $table->enum('category', ['computer classes', 'language classes', 'other classes']);
+            $table->enum('category_slug',['computer-classes', 'language-classes', 'other-classes']);
             $table->timestamps();
         });
     }
