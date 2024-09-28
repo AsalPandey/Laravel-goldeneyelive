@@ -185,6 +185,23 @@
                     object-fit: cover;
                 }
             </style>
+            @php
+                $count = App\Models\Courses::all();
+                $data=[
+                    'computer-classes'=>0,
+                    'language-classes'=>0,
+                    'other-classes'=>0
+                ];
+                foreach ($count as $course) {
+                    if ($course->category_slug == 'computer-classes') {
+                        $data['computer-classes']++;
+                    }elseif ($course->category_slug == 'language-classes') {
+                        $data['language-classes']++;
+                    }elseif ($course->category_slug == 'other-classes') {
+                        $data['other-classes']++;
+                    }
+                }
+            @endphp
             <div class="row g-3 justify-content-center">
                 <div class="col-lg-9 col-md-9">
                     <div class="row g-3">
@@ -193,7 +210,7 @@
                                 <img class="img-fluid course-cat" src="{{ asset("site/img/cat-1.jpg")}}" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
                                     <h5 class="m-0">Computer Classes</h5>
-                                    <small class="text-primary">3 Courses</small>
+                                    <small class="text-primary">{{ $data['computer-classes'] }} Courses</small>
                                 </div>
                             </a>
                         </div>
@@ -202,7 +219,7 @@
                                 <img class="img-fluid course-cat" src="{{ asset("site/img/cat-2.jpg")}}" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
                                     <h5 class="m-0">Language Classes</h5>
-                                    <small class="text-primary"> Courses</small>
+                                    <small class="text-primary">{{ $data['language-classes'] }} Courses</small>
                                 </div>
                             </a>
                         </div>
@@ -211,7 +228,7 @@
                                 <img class="img-fluid course-cat" src="{{ asset("site/img/cat-3.jpg")}}" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
                                     <h5 class="m-0">Other Courses</h5>
-                                    <small class="text-primary"> Courses</small>
+                                    <small class="text-primary">{{ $data['other-classes'] }} Courses</small>
                                 </div>
                             </a>
                         </div>
