@@ -27,7 +27,7 @@ class ContactMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "mail From the website",
+            subject: $this->data['subject'],
         );
     }
 
