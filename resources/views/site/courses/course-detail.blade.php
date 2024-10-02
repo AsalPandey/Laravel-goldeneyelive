@@ -37,7 +37,7 @@
                     @endforeach
     
                     <div class="d-flex justify-content-between mt-4">
-                        <h5 class="text-primary">Price: Rs. {{ $course->price }}</h5>
+                        <h5 class="text-primary">Price: {{ $course->price }}</h5>
                         <h5 class="text-primary">Duration: {{ $course->duration }}</h5>
                     </div>
                     <div class="d-flex justify-content-between mt-4">

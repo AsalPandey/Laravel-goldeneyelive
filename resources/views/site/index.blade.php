@@ -15,23 +15,40 @@
             font-weight: bold;
             border: 0px;
         }
+        .close-btn {
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            position: absolute;
+        }
+        .close-btn i {
+            font-size: 24px;
+        }
     </style>
 
     <!-- Notice Popup --->
     @foreach ($notices as $noticeData)
         <!-- Modal Markup for Each Row -->
-        <div class="modal fade" id="modal{{ $noticeData->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $noticeData->id }}"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="b5-modal">
-                        <button type="button" class="" data-bs-dismiss="modal" aria-label="Close">
+        <div class="modal fade" id="modal{{ $noticeData->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $noticeData->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content" style="background-color: transparent; border: none;">
+                    <div class="position-relative"> <!-- Relative positioning for absolute children -->
+                        <!-- Close Button -->
+                        <button type="button" class="position-absolute close-btn" data-bs-dismiss="modal" aria-label="Close">
                             <i class="fa fa-times" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div style="max-height: 90vh; overflow-y: auto;">
-                        <img style="width: 100%;" src="{{ asset('site/uploads/notices/' . $noticeData->image) }}"
-                            alt="">
+                        </button>                        
+                        <div style="width: 100%; height: 90vh; display: flex; justify-content: center; align-items: center;">
+                            <img style="max-width: 100%; max-height: 90vh; object-fit: contain;" src="{{ asset('site/uploads/notices/' . $noticeData->image) }}" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -49,7 +66,7 @@
                     modal{{ $noticeData->id }}.show();
     
                     // Mark this modal as shown in session storage
-                    sessionStorage.setItem('modalShown{{ $noticeData->id }}', 'true');
+                    //sessionStorage.setItem('modalShown{{ $noticeData->id }}', 'true');
                 }
             @endforeach
         });
@@ -414,10 +431,10 @@
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
                             <img class="img-fluid" style="height:300px;width:100%; object-fit: cover;"
-                                src="{{ asset('site/img/user.png') }}" alt="Instructor 1">
+                                src="{{ asset('site/img/team_4.jpg') }}" alt="Instructor 1">
                         </div>
                         <div class="text-center p-4">
-                            <h5 class="mb-0">Aakash Shubedi</h5>
+                            <h5 class="mb-0">Aakash Subedi</h5>
                             <small>IELTS/PTE/TOFEL Instructor</small>
                         </div>
                     </div>
@@ -459,7 +476,7 @@
                                 src="{{ asset('site/img/team_1.jpg') }}" alt="Instructor 4">
                         </div>
                         <div class="text-center p-4">
-                            <h5 class="mb-0">Ajay B.k</h5>
+                            <h5 class="mb-0">Ajay B.K</h5>
                             <small>English Teacher</small>
                         </div>
                     </div>
