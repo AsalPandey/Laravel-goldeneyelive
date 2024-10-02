@@ -42,12 +42,18 @@
         // JavaScript to trigger the modals on page load
         document.addEventListener("DOMContentLoaded", function() {
             @foreach ($notices as $noticeData)
-                var modal{{ $noticeData->id }} = new bootstrap.Modal(document.getElementById(
-                    'modal{{ $noticeData->id }}'));
-                modal{{ $noticeData->id }}.show();
+                // Check if the modal has already been shown in the session
+                if (!sessionStorage.getItem('modalShown{{ $noticeData->id }}')) {
+                    // Create and show the modal
+                    var modal{{ $noticeData->id }} = new bootstrap.Modal(document.getElementById('modal{{ $noticeData->id }}'));
+                    modal{{ $noticeData->id }}.show();
+    
+                    // Mark this modal as shown in session storage
+                    sessionStorage.setItem('modalShown{{ $noticeData->id }}', 'true');
+                }
             @endforeach
         });
-    </script>
+    </script>    
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5">
         <div class="owl-carousel header-carousel position-relative" style="height: 100vh;">
