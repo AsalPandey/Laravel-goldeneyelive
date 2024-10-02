@@ -4,11 +4,11 @@
             <div class="row g-5">
                 <div class="col-lg-4 col-md-6">
                     <h4 class="text-white mb-3">Quick Link</h4>
-                    <a class="btn btn-link" href="">About Us</a>
-                    <a class="btn btn-link" href="">Contact Us</a>
+                    <a class="btn btn-link" href="{{ route('About') }}">About Us</a>
+                    <a class="btn btn-link" href="{{ route('Contact') }}">Contact Us</a>
                     <a class="btn btn-link" href="">Privacy Policy</a>
                     <a class="btn btn-link" href="">Terms & Condition</a>
-                    <a class="btn btn-link" href="">FAQs & Help</a>
+                    <a class="btn btn-link" href="{{ route('FAQ') }}">FAQs & Help</a>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <h4 class="text-white mb-3">Contact</h4>
@@ -75,10 +75,9 @@
                     </div>
                     <div class="col-md-6 text-center text-md-end">
                         <div class="footer-menu">
-                            <a href="">Home</a>
-                            <a href="">Cookies</a>
-                            <a href="">Help</a>
-                            <a href="">FQAs</a>
+                            <a href="{{ route('Home') }}">Home</a>
+                            <a href="{{ route('Contact') }}">Help</a>
+                            <a href="{{ route('FAQ') }}">FQAs</a>
                         </div>
                     </div>
                 </div>

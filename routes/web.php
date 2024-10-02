@@ -29,3 +29,6 @@ Route::get('/courses', [CoursesController::class, 'courses'])->name('Courses');
 Route::get('/courses-all', [CoursesController::class, 'coursesAll'])->name('CoursesAll');
 Route::get('/courses/{slug}', [CoursesController::class, 'coursesDetail'])->name('CoursesDetail');
 //courses route end
+//faq route
+Route::get('/faq', [SiteController::class, 'faq'])->name('FAQ');
+//faq route end
