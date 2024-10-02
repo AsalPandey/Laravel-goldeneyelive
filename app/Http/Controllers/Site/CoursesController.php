@@ -31,9 +31,15 @@ class CoursesController extends Controller
     }
     public function courseCatagory($slug)
     {
-        $data=[
-            'courses' => Courses::where('category_slug',$slug)->get()
+        // getting the category and its courses based on the provided slug
+        $category = Courses::where('category_slug', $slug)->first();
+        // Get all courses in the specified category
+        $courses = Courses::where('category_slug', $slug)->get();
+        // Prepare data to pass to the view, including the category name
+        $data = [
+            'courses' => $courses,
+            'categoryName' => $category ? $category->category : 'Other Classes' //getting catagiory name only
         ];
-        return view('site.courses.courses-catagory',$data);
-    }
+        return view('site.courses.courses-catagory', $data);
+    }    
 }
