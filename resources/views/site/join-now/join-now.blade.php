@@ -79,7 +79,7 @@
                                     <select class="form-select @error('course') is-invalid @enderror" id="course" name="course" required>
                                         <option value="" disabled selected>Select a Course</option>
                                         @foreach($courses as $course)
-                                            <option value="{{ $course->id }}" {{ old('course') == $course->id ? 'selected' : '' }}>
+                                            <option value="{{ $course->slug }}" {{ old('course') == $course->slug ? 'selected' : '' }}>
                                                 {{ $course->name }}
                                             </option>
                                         @endforeach

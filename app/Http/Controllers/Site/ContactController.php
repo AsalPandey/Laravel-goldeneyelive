@@ -85,7 +85,8 @@ class ContactController extends Controller
         $JoinNowQueries->email = $ValidatedData['email'];
         $JoinNowQueries->phone = $ValidatedData['phone'];
         $JoinNowQueries->address = $ValidatedData['address'];
-        $JoinNowQueries->course = $ValidatedData['course'];
+        $course = Courses::where('slug',$ValidatedData['course'])->first();
+        $JoinNowQueries->course = $course->name;
         $JoinNowQueries->queries = $ValidatedData['queries'];
         $JoinNowQueries->save();
         Alert::success('Success', 'Thank you for contacting us, we will get back to you soon');
@@ -94,10 +95,11 @@ class ContactController extends Controller
             'dataType' => 'joinNow',
             'firstName' => $ValidatedData['firstName'],
             'lastName' => $ValidatedData['lastName'],
+            'subject' => 'Join Now in '.$course->name,
             'email' => $ValidatedData['email'],
             'phone' => $ValidatedData['phone'],
             'address' => $ValidatedData['address'],
-            'course' => $ValidatedData['course'],
+            'course' => $course->name,
             'queries' => $ValidatedData['queries'],
         ];
         mail::to($to)->send(new ContactMail($data));
