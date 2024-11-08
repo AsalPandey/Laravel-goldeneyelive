@@ -114,7 +114,7 @@
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 d-flex justify-content-center wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item bg-light">
                         <div class="overflow-hidden">
-                            <img class="img-fluid" style="height:300px;width:100%; object-fit: cover;" src="{{ asset('site/img/user.png') }}" alt="Instructor 1">
+                            <img class="img-fluid" style="height:300px;width:100%; object-fit: cover;" src="{{ asset('site/img/team_4.jpg') }}" alt="Instructor 1">
                         </div>
                         <div class="text-center p-4">
                             <h5 class="mb-0">Aakash Shubedi</h5>
