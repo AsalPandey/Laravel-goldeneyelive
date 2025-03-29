@@ -1,76 +1,195 @@
 @extends('site.layout.app')
 @section('content')
     <style>
-        .b5-modal {
-            position: relative;
-        }
+       /* Modal Container - Full Width with 20px Margin */
+.custom-modal-content {
+    background-color: transparent;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Full width minus 20px margin on each side */
+    max-width: 100%;
+}
 
-        .b5-modal button {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background: red;
-            color: white;
-            border-radius: 50%;
-            font-weight: bold;
-            border: 0px;
-        }
-        .close-btn {
-            top: 10px;
-            right: 10px;
-            background-color: red;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            cursor: pointer;
-            position: absolute;
-        }
-        .close-btn i {
-            font-size: 24px;
-        }
+/* Modal Wrapper */
+.custom-modal-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: calc(100% - 40px); /* Full width minus margin */
+    height: auto;
+    position: relative;
+    padding: 20px;
+}
+
+/* Responsive Image - Fills Modal */
+.custom-notice-image {
+    width: 100%; /* Make the image fill the modal width */
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 10px;
+    position: relative;
+}
+
+/* Close Button (X) - Top Right of Image */
+.custom-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: red;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    z-index: 1000;
+}
+
+.custom-close-btn i {
+    font-size: 20px;
+}
+
+/* Close Button Hover Effect */
+.custom-close-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Register Now Button - Centered on Image */
+.custom-register-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #F4A701;
+    color: #6C757D;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 14px 28px;
+    border-radius: 30px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px solid white;
+    box-shadow: 0 4px 10px rgba(244, 167, 1, 0.4);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+    display: inline-block;
+    animation: custom-pulseScale 2s infinite ease-in-out;
+}
+
+/* Register Button Hover */
+.custom-register-btn:hover {
+    background: white;
+    color: #F4A701;
+    border: 2px solid #F4A701;
+    box-shadow: 0 6px 15px rgba(244, 167, 1, 0.6);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Pulse & Scale Animation */
+@keyframes custom-pulseScale {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 10px rgba(244, 167, 1, 0.5);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.08);
+        box-shadow: 0 0 20px rgba(244, 167, 1, 0.8);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 10px rgba(244, 167, 1, 0.5);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .custom-modal-wrapper {
+        padding: 10px;
+        max-width: calc(100%);
+    }
+
+    .custom-notice-image {
+    }
+
+    .custom-register-btn {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .custom-notice-image {
+        max-width: 100%;
+    }
+
+    .custom-register-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .custom-close-btn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .custom-close-btn i {
+        font-size: 16px;
+    }
+}
+
     </style>
 
-    <!-- Notice Popup --->
+    <!-- Notice Popup -->
     @foreach ($notices as $noticeData)
         <!-- Modal Markup for Each Row -->
-        <div class="modal fade" id="modal{{ $noticeData->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $noticeData->id }}" aria-hidden="true">
+        <div class="modal fade" id="modal{{ $noticeData->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $noticeData->id }}"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content" style="background-color: transparent; border: none;">
-                    <div class="position-relative"> <!-- Relative positioning for absolute children -->
+                <div class="custom-modal-content">
+                    <div class="custom-modal-wrapper">
                         <!-- Close Button -->
-                        <button type="button" class="position-absolute close-btn" data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="custom-close-btn" data-bs-dismiss="modal" aria-label="Close">
                             <i class="fa fa-times" aria-hidden="true"></i>
-                        </button>                        
-                        <div style="width: 100%; height: 90vh; display: flex; justify-content: center; align-items: center;">
-                            <img style="max-width: 100%; max-height: 90vh; object-fit: contain;" src="{{ asset('site/uploads/notices/' . $noticeData->image) }}" alt="">
+                        </button>
+                        <div class="modal-body">
+                            <!-- Notice Image -->
+                            <img class="custom-notice-image" src="{{ asset('site/uploads/notices/' . $noticeData->image) }}"
+                                alt="">
+                            <!-- Register Now Button -->
                         </div>
                     </div>
                 </div>
             </div>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBL1Ii__eZokGm28E4M5dBLPct0jlZiX-wKJuWUvF9a9UMTg/viewform" class="custom-register-btn" target="_blank">Register Now</a>
         </div>
     @endforeach
-    <!-- Notice Popup --->
+
+    <!-- Notice Popup Script -->
     <script>
-        // JavaScript to trigger the modals on page load
         document.addEventListener("DOMContentLoaded", function() {
             @foreach ($notices as $noticeData)
-                // Check if the modal has already been shown in the session
-                if (!sessionStorage.getItem('modalShown{{ $noticeData->id }}')) {
-                    // Create and show the modal
-                    var modal{{ $noticeData->id }} = new bootstrap.Modal(document.getElementById('modal{{ $noticeData->id }}'));
-                    modal{{ $noticeData->id }}.show();
-    
-                    // Mark this modal as shown in session storage
-                    //sessionStorage.setItem('modalShown{{ $noticeData->id }}', 'true');
-                }
+                // if (!sessionStorage.getItem('customModalShown{{ $noticeData->id }}')) {
+                var customModal{{ $noticeData->id }} = new bootstrap.Modal(document.getElementById(
+                    'modal{{ $noticeData->id }}'));
+                customModal{{ $noticeData->id }}.show();
+                sessionStorage.setItem('customModalShown{{ $noticeData->id }}', 'true');
+                // }
             @endforeach
         });
-    </script>    
+    </script>
+    
+
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5">
         <div class="owl-carousel header-carousel position-relative" style="height: 100vh;">
@@ -128,6 +247,7 @@
 
 
     <!-- Service Start -->
+    
     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-4">
