@@ -105,4 +105,18 @@ class ContactController extends Controller
         mail::to($to)->send(new ContactMail($data));
         return redirect()->back();
     }
+    public function contact_display()
+    {
+        $data = [
+            'contacts' => Contact::all(),
+        ];
+        return view('admin.contact-display', $data);
+    }
+    public function join_now_display()
+    {
+        $data = [
+            'joinNowQueries' => JoinNowQueries::all(),
+        ];
+        return view('admin.join-now-display', $data);
+    }
 }

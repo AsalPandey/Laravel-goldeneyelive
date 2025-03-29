@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             NoticeSeeder::class,
             FAQSeeder::class,
+            ContactSeeder::class,
+            JoinNowSeeder::class,
         ]);
     }
 }

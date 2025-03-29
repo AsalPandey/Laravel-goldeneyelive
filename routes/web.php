@@ -32,3 +32,11 @@ Route::get('/courses/{slug}', [CoursesController::class, 'coursesDetail'])->name
 //faq route
 Route::get('/faq', [SiteController::class, 'faq'])->name('FAQ');
 //faq route end
+
+//Inquery Display
+//contact route
+Route::get('/admin/contact/details/display', [ContactController::class, 'contact_display'])->name('contact-display');
+//contact route end
+//join_now
+Route::get('/admin/join_now/details/display', [ContactController::class, 'join_now_display'])->name('join_now-display');
+//join_now end
