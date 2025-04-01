@@ -33,4 +33,12 @@ class SiteController extends Controller
         ];
         return view('site.faq.faq',$data);
     }
+    public function privacyPolicy()
+    {
+        return view('site.others.privacyPolicy');
+    }
+    public function termsAndConditions()
+    {
+        return view('site.others.termsAndConditions');
+    }
 }

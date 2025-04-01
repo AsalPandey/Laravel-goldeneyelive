@@ -296,47 +296,6 @@
     </div>
     <!-- Service End -->
 
-    <!-- Message For Chairperson -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5 align-items-center">
-                <!-- Round Image of Chairperson -->
-                <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <div class="position-relative rounded-circle overflow-hidden shadow"
-                            style="width: 300px; height: 300px;">
-                            <img class="img-fluid position-absolute w-100 h-100"
-                                src="{{ asset('site/img/message-chairperson.jpg') }}" alt="Chairperson Message"
-                                style="object-fit: cover;">
-                        </div>
-                    </div>
-                    <div class="mt-3 text-center">
-                        <h4 class="mb-1 text-primary">Shankar Pokharel</h4> <!-- Name of Chairperson -->
-                        <p class="text-muted">Founder</p> <!-- Position -->
-                    </div>
-                </div>
-                <!-- Message from Chairperson -->
-                <div class="col-lg-9 wow fadeInUp" data-wow-delay="0.3s">
-                    <h6 class="section-title bg-white text-start text-primary pe-3">Message</h6>
-                    <h1 class="mb-4">A Message <br>From Our Founder</h1>
-                    <p class="mb-4">
-                        A dedicate educational organization, GoldenEye Academy was established with the motto "Complete
-                        Solution for preparation." It provides you various options for building your golden future. <br>
-                        We welcome you in the ocean of knowledge to dive into it and achieve the best. We facilitate you to
-                        identify yourself with the best through motivational tips, inner engineering skills, memory power as
-                        well as career counselling. You will be enriched with knowledge and capacity and be able to glow
-                        your cherished aim as pearls which you always dreamt for. We help you to determine your destination.
-                        <br>I heartly welcome all dear students, participats as well institutions at Golden Eye Academy and
-                        assure golden opportunities with quality services.
-                        <br><strong class="text-primary"> "GoldenEye Academy" Prepares you to build a sound academic
-                            foundation with clear concepts for your higher studies.</strong>
-                    </p>
-                    <!-- <a href="#more" class="btn btn-primary rounded-pill py-3 px-5">Read More</a> -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- About Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -398,6 +357,47 @@
         </div>
     </div>
     <!-- About End -->
+
+    <!-- Message For Chairperson -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <!-- Round Image of Chairperson -->
+                <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="position-relative rounded-circle overflow-hidden shadow"
+                            style="width: 300px; height: 300px;">
+                            <img class="img-fluid position-absolute w-100 h-100"
+                                src="{{ asset('site/img/message-chairperson.jpg') }}" alt="Chairperson Message"
+                                style="object-fit: cover;">
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <h4 class="mb-1 text-primary">Shankar Pokharel</h4> <!-- Name of Chairperson -->
+                        <p class="text-muted">Founder</p> <!-- Position -->
+                    </div>
+                </div>
+                <!-- Message from Chairperson -->
+                <div class="col-lg-9 wow fadeInUp" data-wow-delay="0.3s">
+                    <h6 class="section-title bg-white text-start text-primary pe-3">Message</h6>
+                    <h1 class="mb-4">A Message <br>From Our Founder</h1>
+                    <p class="mb-4">
+                        A dedicate educational organization, GoldenEye Academy was established with the motto "Complete
+                        Solution for preparation." It provides you various options for building your golden future. <br>
+                        We welcome you in the ocean of knowledge to dive into it and achieve the best. We facilitate you to
+                        identify yourself with the best through motivational tips, inner engineering skills, memory power as
+                        well as career counselling. You will be enriched with knowledge and capacity and be able to glow
+                        your cherished aim as pearls which you always dreamt for. We help you to determine your destination.
+                        <br>I heartly welcome all dear students, participats as well institutions at Golden Eye Academy and
+                        assure golden opportunities with quality services.
+                        <br><strong class="text-primary"> "GoldenEye Academy" Prepares you to build a sound academic
+                            foundation with clear concepts for your higher studies.</strong>
+                    </p>
+                    <!-- <a href="#more" class="btn btn-primary rounded-pill py-3 px-5">Read More</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Categories Start -->
@@ -485,7 +485,11 @@
             <div class="row g-4 justify-content-center">
                 @foreach ($courses as $course)
                     <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="course-item bg-light">
+                        <div class="course-item bg-light position-relative">
+                            @if ($course->slug === 'basic-web-development')
+                                <img src="{{ asset('site/img/premium.png') }}" alt="Premium Badge" 
+                                    class="position-absolute top-50 start-0 m-3" style="width: 100px; z-index: 1000;">
+                            @endif
                             <div class="position-relative overflow-hidden">
                                 <img class="img-fluid popular-course-img" src="{{ asset("site/img/$course->photo") }}"
                                     alt="">
@@ -501,17 +505,15 @@
                                 <h3 class="mb-0">{{ $course->price }}</h3>
                                 <div class="mb-3">
                                     @php
-                                        $rating_star = $course->rating_star; // e.g., 4.2
-                                        $rating_count = $course->rating_count; // e.g., 75
+                                        $rating_star = $course->rating_star;
+                                        $rating_count = $course->rating_count;
                                         $fullStars = floor($rating_star);
                                         $hasHalfStar = $rating_star - $fullStars >= 0.5;
                                     @endphp
-                                    <!-- filling stars -->
                                     @for ($i = 0; $i < 5; $i++)
                                         <small
                                             class="fa {{ $i < $fullStars ? 'fa-star text-primary' : ($i == $fullStars && $hasHalfStar ? 'fa-star-half-alt text-primary' : 'fa-star text-secondary') }}"></small>
                                     @endfor
-
                                     <small>({{ $rating_count }})</small>
                                 </div>
                                 <h5 class="mb-4">{{ $course->name }}</h5>

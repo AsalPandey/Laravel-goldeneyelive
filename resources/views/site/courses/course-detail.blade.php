@@ -1,4 +1,5 @@
 @extends('site.layout.app')
+
 @section('content')
     <!-- Header Start -->
     <div class="container-fluid bg-primary py-5 mb-5 page-header">
@@ -10,7 +11,7 @@
                         <ol class="breadcrumb justify-content-center">
                             <li class="breadcrumb-item"><a class="text-white" href="{{ route('Home') }}">Home</a></li>
                             <li class="breadcrumb-item text-primary" aria-current="page"><a class="text-white" href="{{ route('Courses') }}">Courses</a></li>
-                            <li class="breadcrumb-item text-primary" aria-current="page">Basic Computer Class</li>
+                            <li class="breadcrumb-item text-primary" aria-current="page">{{ $course->name }}</li>
                         </ol>
                     </nav>
                 </div>
@@ -18,12 +19,18 @@
         </div>
     </div>
     <!-- Header End -->
+
     <!-- Course Details Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-5">
                 <!-- Image Section -->
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="col-lg-6 wow fadeInUp position-relative" data-wow-delay="0.1s">
+                    <!-- Premium Badge for Basic Web Development -->
+                    @if ($course->slug === 'basic-web-development')
+                        <img src="{{ asset('site/img/premium.png') }}" alt="Premium Badge" 
+                            class="position-absolute top-0 start-10 m-3" style="width: 100px; z-index: 1000;">
+                    @endif
                     <img class="img-fluid" src="{{ asset('site/img/' . $course->photo) }}" alt="{{ $course->name }}" style="height:450px; object-fit: cover;">
                 </div>
                 
@@ -55,6 +62,6 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Course Details End -->
 @stop

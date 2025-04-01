@@ -40,3 +40,7 @@ Route::get('/admin/contact/details/display', [ContactController::class, 'contact
 //join_now
 Route::get('/admin/join_now/details/display', [ContactController::class, 'join_now_display'])->name('join_now-display');
 //join_now end
+//Privacy Policy
+Route::get('/privacy-policy', [SiteController::class, 'privacyPolicy'])->name('PrivacyPolicy');
+//Terms and Conditions
+Route::get('/terms-and-conditions', [SiteController::class, 'termsAndConditions'])->name('TermsAndConditions');
