@@ -191,147 +191,54 @@
     
 
     <!-- Carousel Start -->
-    <div class="container py-5 mx-auto">
-        <div class="row">
-            <div class="col-lg-8 col-md-12">
-                <!-- Left content section -->
-                <div class="academy-content mx-5">
-                    <h1>
-                        <div style="color: #F2A900; font-size: 2.5rem;">Preparing for</div>
-                        <div style="color: #5A3D24; font-size: 2.5rem;">Global</div>
-                        <div style="color: #F2A900; font-size: 2.5rem;">Opportunities</div>
-                    </h1>
-                    <style>
-                        @media (min-width: 480px) {
-                            .since-2008 {
-                                margin: 1rem 0 1.5rem 16rem;
-                                font-size: 3.5rem;
-                            }
-                        }
-                        @media (max-width: 480px) {
-                            .since-2008 {
-                                margin: 1rem 0 1.5rem 0;
-                                font-size: 2.5rem;
-                            }
-                        }
-                    </style>
-                    <h2 class="since-2008" style="
-                    background: linear-gradient(  #FFAA00,#E53935);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent; ">Since 2008</h2>
-                    <h3>GoldenEye Golden Future</h3>
-                
-    
-    
-                    <p style="color: #6c757d; line-height: 1.6;">
-                        At Golden Eye Academy, gain hands-on experience in Web development, Computer studies,<br>
-                        Skill advancement trainings, Professional workshops, career consultancy, and more.<br>
-                        Our expert instructors are committed to helping you achieve<br>
-                        excellence in your field.
-                    </p>
-                    
-                    <div class="d-flex justify-content-center mt-4">
-                        <a href="{{ route('About') }}"
-                       class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Learn More</a>
-                        <a href="{{ route('JoinNow') }}"
-                        class="btn btn-light py-md-3 px-md-5 animated slideInRight">Join Us Today</a>
+    <div class="container-fluid p-0 mb-5">
+        <div class="owl-carousel header-carousel position-relative" style="height: 100vh;">
+            <!-- Carousel 1 -->
+            <div class="owl-carousel-item position-relative" style="height: 100vh;">
+                <img class="img-fluid position-absolute w-100 h-100" src="{{ asset('site/img/carousel-1.jpg') }}"
+                    alt="" style="object-fit: cover;">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                    style="background: rgba(24, 29, 56, .7);">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-sm-10 col-lg-8">
+                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Expert-Led Courses</h5>
+                                <h1 class="display-3 text-white animated slideInDown">Learn In-Person with Industry
+                                    Professionals</h1>
+                                <p class="fs-5 text-white mb-4 pb-2">At Golden Eye Academy, gain hands-on experience in web
+                                    development, computer studies, language classes, and more. Our expert instructors are
+                                    committed to helping you achieve excellence in your field.</p>
+                                <a href="{{ route('About') }}"
+                                    class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Discover More</a>
+                                <a href="{{ route('JoinNow') }}"
+                                    class="btn btn-light py-md-3 px-md-5 animated slideInRight">Enroll Now</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-12 col-sm-12 position-relative my-5 d-flex justify-content-end">
-                <style>
-                    .first, .second {
-                        height: 300px;
-                        width: 200px;
-                        border-radius: 100px;
-                        transition: all 0.3s ease-in-out;
-                    }
-            
-                    .first {
-                        background: #000;
-                        position: absolute;
-                        top: 125px;
-                        left: 15px;
-                        z-index: 1;
-                    }
-            
-                    .second {
-                        background: #ff0000;
-                        text-align: center;
-                        z-index: 2;
-                    }
-            
-                    /* Responsive Design */
-                    @media (max-width: 1200px) { /* Large screens */
-                        .first, .second {
-                            height: 250px;
-                            width: 180px;
-                            border-radius: 90px;
-                        }
-                        .first {
-                            top: 100px;
-                            left: 10px;
-                        }
-                    }
-    
-                    @media (max-width: 992px) { /* Tablets */
-                        .first, .second {
-                            height: 230px;
-                            width: 160px;
-                            border-radius: 80px;
-                        }
-                        .first {
-                            top: 90px;
-                            left: 8px;
-                        }
-                    }
-    
-                    @media (max-width: 768px) { /* Mobile Devices */
-                        .first, .second {
-                            height: 200px;
-                            width: 140px;
-                            border-radius: 70px;
-                        }
-                        .first {
-                            top: 80px;
-                            left: 5px;
-                        }
-                    }
-                </style>
-            
-                <!-- Wrapper for small image -->
-                <div class="first animated slideInLeft overflow-hidden">
-                    <img src="{{ asset('site/img/carousel-1.jpg') }}" alt="Academy Logo" class="img-fluid"
-                        style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-            
-                <!-- Wrapper for large image -->
-                <div class="second animated slideInRight overflow-hidden">
-                    <img src="{{ asset('site/img/carousel-2.jpg') }}" alt="Academy Logo" class="img-fluid"
-                        style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-            
-                <!-- Notification Box -->
-                <div class="position-absolute text-white p-3 text-center"
-                    style="bottom: -10%; left: 50%; transform: translateX(-50%);
-                        background: linear-gradient(to right, #F2A900, #E53935);
-                        box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-                        width: 80%; max-width: 265px;
-                        z-index: 3; border-radius: 20px;">
-                    <p class="mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
-                            class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16">
-                            <path d="M16 8A8 8 0 1 1 0 8a 8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                        </svg>
-                        Exclusive Discount Available
-                    </p>
-                    <p class="mb-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
-                            class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16">
-                            <path d="M16 8A8 8 0 1 1 0 8a 8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                        </svg>
-                        Expert Teachers Await You.
-                    </p>
+
+            <!-- Carousel 2 -->
+            <div class="owl-carousel-item position-relative" style="height: 100vh;">
+                <img class="img-fluid position-absolute w-100 h-100" src="{{ asset('site/img/carousel-2.jpg') }}"
+                    alt="" style="object-fit: cover;">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                    style="background: rgba(24, 29, 56, .7);">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-sm-10 col-lg-8">
+                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Build Your Future</h5>
+                                <h1 class="display-3 text-white animated slideInDown">Prepare for Global Opportunities</h1>
+                                <p class="fs-5 text-white mb-4 pb-2">Whether you're pursuing web development, language
+                                    proficiency, or preparing for international studies, Golden Eye Academy offers the
+                                    resources and guidance you need to succeed locally and abroad.</p>
+                                <a href="{{ route('About') }}"
+                                    class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Learn More</a>
+                                <a href="{{ route('JoinNow') }}"
+                                    class="btn btn-light py-md-3 px-md-5 animated slideInRight">Join Us Today</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -17,37 +17,7 @@
             </div>
         </div>
         <!-- Header End -->
-    <!-- Message For Chairperson -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5 align-items-center">
-                <!-- Round Image of Chairperson -->
-                <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <div class="position-relative rounded-circle overflow-hidden shadow" style="width: 300px; height: 300px;">
-                            <img class="img-fluid position-absolute w-100 h-100" src="{{ asset('site/img/message-chairperson.jpg') }}" alt="Chairperson Message" style="object-fit: cover;">
-                        </div>
-                    </div>
-                    <div class="mt-3 text-center">
-                        <h4 class="mb-1 text-primary">Shankar Pokharel</h4> <!-- Name of Chairperson -->
-                        <p class="text-muted">Founder</p> <!-- Position -->
-                    </div>
-                </div>
-                <!-- Message from Chairperson -->
-                <div class="col-lg-9 wow fadeInUp" data-wow-delay="0.3s">
-                    <h6 class="section-title bg-white text-start text-primary pe-3">Message</h6>
-                    <h1 class="mb-4">A Message <br>From Our Founder</h1>
-                    <p class="mb-4">
-                        A dedicate educational organization, GoldenEye Academy was established with the motto "Complete Solution for preparation." It provides you various options for building your golden future. <br>
-                        We welcome you in the ocean of knowledge to dive into it and achieve the best. We facilitate you to identify yourself with the best through motivational tips, inner engineering skills, memory power as well as career counselling. You will be enriched with knowledge and capacity and be able to glow your cherished aim as pearls which you always dreamt for. We help you to determine your destination.
-                        <br>I heartly welcome all dear students, participats as well institutions at Golden Eye Academy and assure golden opportunities with quality services.
-                        <br><strong class="text-primary"> "GoldenEye Academy" Prepares you to build a sound academic foundation with clear concepts for your higher studies.</strong>
-                    </p>
-                    <!-- <a href="#more" class="btn btn-primary rounded-pill py-3 px-5">Read More</a> -->
-                </div>
-            </div>
-        </div>
-    </div>    
+    
 
     <!-- About Start -->
     <div class="container-xxl py-5">
@@ -100,7 +70,37 @@
         </div>
     </div>
     <!-- About End -->
-    
+        <!-- Message For Chairperson -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <!-- Round Image of Chairperson -->
+                    <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="position-relative rounded-circle overflow-hidden shadow" style="width: 300px; height: 300px;">
+                                <img class="img-fluid position-absolute w-100 h-100" src="{{ asset('site/img/message-chairperson.jpg') }}" alt="Chairperson Message" style="object-fit: cover;">
+                            </div>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <h4 class="mb-1 text-primary">Shankar Pokharel</h4> <!-- Name of Chairperson -->
+                            <p class="text-muted">Founder</p> <!-- Position -->
+                        </div>
+                    </div>
+                    <!-- Message from Chairperson -->
+                    <div class="col-lg-9 wow fadeInUp" data-wow-delay="0.3s">
+                        <h6 class="section-title bg-white text-start text-primary pe-3">Message</h6>
+                        <h1 class="mb-4">A Message <br>From Our Founder</h1>
+                        <p class="mb-4">
+                            A dedicate educational organization, GoldenEye Academy was established with the motto "Complete Solution for preparation." It provides you various options for building your golden future. <br>
+                            We welcome you in the ocean of knowledge to dive into it and achieve the best. We facilitate you to identify yourself with the best through motivational tips, inner engineering skills, memory power as well as career counselling. You will be enriched with knowledge and capacity and be able to glow your cherished aim as pearls which you always dreamt for. We help you to determine your destination.
+                            <br>I heartly welcome all dear students, participats as well institutions at Golden Eye Academy and assure golden opportunities with quality services.
+                            <br><strong class="text-primary"> "GoldenEye Academy" Prepares you to build a sound academic foundation with clear concepts for your higher studies.</strong>
+                        </p>
+                        <!-- <a href="#more" class="btn btn-primary rounded-pill py-3 px-5">Read More</a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
     
     <!-- Team Start -->
     <div class="container-xxl py-5">
