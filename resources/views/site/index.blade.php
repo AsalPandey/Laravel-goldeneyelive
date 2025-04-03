@@ -219,14 +219,22 @@
                     background: linear-gradient(  #FFAA00,#E53935);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent; ">Since 2008</h2>
-                    <h3>GoldenEye Golden Future</h3>
-                
-    
-    
+                   <blockquote class="text-center fw-bold font-italic" style="
+                        background: linear-gradient(80deg, #FFAA00,#E53935);
+                        -webkit-background-clip: text !important;
+                        -webkit-text-fill-color: transparent !important;
+
+                   "> 
+                        <i class="fas fa-quote-left"></i>  
+                            <span>
+                                GoldenEye, Golden Future
+                            </span>
+                        <i class="fas fa-quote-right"></i>               
+                    </blockquote>
                     <p style="color: #6c757d; line-height: 1.6;">
-                        At Golden Eye Academy, gain hands-on experience in Web development, Computer studies,<br>
-                        Skill advancement trainings, Professional workshops, career consultancy, and more.<br>
-                        Our expert instructors are committed to helping you achieve<br>
+                        At Golden Eye Academy, gain hands-on experience in Web development, Computer studies,
+                        Skill advancement trainings, Professional workshops, career consultancy, and more.
+                        Our expert instructors are committed to helping you achieve
                         excellence in your field.
                     </p>
                     
