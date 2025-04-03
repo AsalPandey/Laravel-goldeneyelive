@@ -501,7 +501,7 @@
     </div>
 
 
-    <!-- Categories Start -->
+    {{-- <!-- Categories Start -->
     <div class="container-xxl py-5 category">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -571,6 +571,144 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Categories End --> --}}
+    <!-- Categories Start -->
+    <div class="container-xxl py-5 category">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Categories</h6>
+                <h1 class="mb-5">Courses Categories</h1>
+            </div>
+            <style>
+                .category-container {
+                    display: flex;
+                    gap: 5px;
+                    justify-content: center;
+                }
+
+                .category-item {
+                    position: relative;
+                    overflow: hidden;
+                    height: 410px;
+                    flex: 1;
+                    transition: flex 0.3s ease, transform 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* Scale horizontally and compress others */
+                .category-item:hover {
+                    flex: 1.4; /* Expand the hovered item */
+                }
+
+                .category-item:not(:hover) {
+                    flex: 0.8; /* Compress other items */
+                }
+
+                /* Dark Mask over image */
+                .category-mask {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5); /* 50% Black overlay */
+                    transition: opacity 0.3s ease;
+                    z-index: 2;
+                }
+
+                /* Hide dark mask on hover */
+                .category-item:hover .category-mask {
+                    opacity: 0;
+                }
+
+                .category-item img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.3s ease;
+                }
+
+                /* White Mask for Category Text - Always Visible */
+                .category-text {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    text-align: center;
+                    padding: 15px;
+                    background: rgba(255, 255, 255, 0.8);
+                    z-index: 3;
+                    transition: transform 0.3s ease;
+                }
+
+                /* Scale up text div when hovered */
+                .category-item:hover .category-text {
+                    transform: scale(1.1);
+                }
+
+                .category-text h5 {
+                    margin: 0;
+                    font-weight: bold;
+                }
+
+                .category-text small {
+                    color: #007bff;
+                }
+            </style>
+
+            @php
+                $count = App\Models\Courses::all();
+                $data = [
+                    'computer-classes' => 0,
+                    'language-classes' => 0,
+                    'other-classes' => 0,
+                ];
+                foreach ($count as $course) {
+                    if ($course->category_slug == 'computer-classes') {
+                        $data['computer-classes']++;
+                    } elseif ($course->category_slug == 'language-classes') {
+                        $data['language-classes']++;
+                    } elseif ($course->category_slug == 'other-classes') {
+                        $data['other-classes']++;
+                    }
+                }
+            @endphp
+
+            <div class="category-container">
+                <!-- Computer Classes Category -->
+                <a href="{{ route('courseCatagory', 'computer-classes') }}" class="position-relative d-block category-item">
+                    <div class="category-mask"></div> <!-- Dark Mask Layer -->
+                    <img class="img-fluid" src="{{ asset('site/img/cat-1.jpg') }}" alt="Computer Classes">
+                    <div class="category-text">
+                        <h5>Computer Classes</h5>
+                        <small>{{ $data['computer-classes'] }} Courses</small>
+                    </div>
+                </a>
+
+                <!-- Language Classes Category -->
+                <a href="{{ route('courseCatagory', 'language-classes') }}" class="position-relative d-block category-item">
+                    <div class="category-mask"></div> <!-- Dark Mask Layer -->
+                    <img class="img-fluid" src="{{ asset('site/img/cat-2.jpg') }}" alt="Language Classes">
+                    <div class="category-text">
+                        <h5>Language Classes</h5>
+                        <small>{{ $data['language-classes'] }} Courses</small>
+                    </div>
+                </a>
+
+                <!-- Other Classes Category -->
+                <a href="{{ route('courseCatagory', 'other-classes') }}" class="position-relative d-block category-item">
+                    <div class="category-mask"></div> <!-- Dark Mask Layer -->
+                    <img class="img-fluid" src="{{ asset('site/img/cat-3.jpg') }}" alt="Other Courses">
+                    <div class="category-text">
+                        <h5>Other Courses</h5>
+                        <small>{{ $data['other-classes'] }} Courses</small>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
