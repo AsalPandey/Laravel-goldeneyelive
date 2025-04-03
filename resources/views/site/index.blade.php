@@ -659,6 +659,16 @@
                 .category-text small {
                     color: #007bff;
                 }
+                @media (max-width: 576px) {
+                    .category-container {
+                        flex-direction: column; /* Stack items vertically on very small screens */
+                        gap: 20px;
+                    }
+                    .category-item {
+                        height: 300px; /* Reduce height for smaller screens */
+                        width: 100%; /* Make items take full width */
+                    }
+                }
             </style>
 
             @php
