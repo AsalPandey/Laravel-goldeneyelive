@@ -691,7 +691,7 @@
 
             <div class="category-container">
                 <!-- Computer Classes Category -->
-                <a href="{{ route('courseCatagory', 'computer-classes') }}" class="position-relative d-block category-item">
+                <a href="{{ route('courseCatagory', 'computer-classes') }}" class="position-relative d-block category-item wow slideInLeft"  data-wow-delay="0.1s">
                     <div class="category-mask"></div> <!-- Dark Mask Layer -->
                     <img class="img-fluid" src="{{ asset('site/img/cat-1.jpg') }}" alt="Computer Classes">
                     <div class="category-text">
@@ -701,7 +701,7 @@
                 </a>
 
                 <!-- Language Classes Category -->
-                <a href="{{ route('courseCatagory', 'language-classes') }}" class="position-relative d-block category-item">
+                <a href="{{ route('courseCatagory', 'language-classes') }}" class="position-relative d-block category-item wow slideInUp"  data-wow-delay="0.1s">
                     <div class="category-mask"></div> <!-- Dark Mask Layer -->
                     <img class="img-fluid" src="{{ asset('site/img/cat-2.jpg') }}" alt="Language Classes">
                     <div class="category-text">
@@ -711,7 +711,7 @@
                 </a>
 
                 <!-- Other Classes Category -->
-                <a href="{{ route('courseCatagory', 'other-classes') }}" class="position-relative d-block category-item">
+                <a href="{{ route('courseCatagory', 'other-classes') }}" class="position-relative d-block category-item wow slideInRight"  data-wow-delay="0.1s">
                     <div class="category-mask"></div> <!-- Dark Mask Layer -->
                     <img class="img-fluid" src="{{ asset('site/img/cat-3.jpg') }}" alt="Other Courses">
                     <div class="category-text">

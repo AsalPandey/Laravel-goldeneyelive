@@ -53,6 +53,7 @@
     @endif
     <div class="footer">
         <p>This email was sent from your website contact form.</p>
+        <p>We appreciate your feedback, and all responses will remain confidential.</p>
     </div>
 </body>
 </html>

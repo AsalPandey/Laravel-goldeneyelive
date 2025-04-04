@@ -35,8 +35,8 @@ class ContactController extends Controller
         $contact->subject = $ValidatedData['subject'];
         $contact->message = $ValidatedData['message'];
         $contact->save();
-        Alert::success('Success', 'Thank you for contacting us, we will get back to you soon');
-        $to = "prasunpaudel2001@gmail.com";
+        Alert::success('Success', 'We appreciate your feedback, and all responses will remain confidential.');
+        $to = "goldeneyeacademy2008@gmail.com";
         $data =[
             'dataType' => 'contactMail',
             'subject' => $ValidatedData['subject'],
@@ -56,7 +56,7 @@ class ContactController extends Controller
         $NewsLetter = new NewsLetter();
         $NewsLetter->email = $ValidatedData['Email'];
         $NewsLetter->save();
-        Alert::success('Success', 'Your email has been added to our newsletter');
+        Alert::success('Success', 'Your email has been added to our newsletter.');
         return redirect()->back();
     }
     //join now
@@ -89,8 +89,8 @@ class ContactController extends Controller
         $JoinNowQueries->course = $course->name;
         $JoinNowQueries->queries = $ValidatedData['queries'];
         $JoinNowQueries->save();
-        Alert::success('Success', 'Thank you for contacting us, we will get back to you soon');
-        $to = "prasunpaudel2001@gmail.com";
+        Alert::success('Success', 'We appreciate your feedback, and all responses will remain confidential.');
+        $to = "goldeneyeacademy2008@gmail.com";
         $data =[
             'dataType' => 'joinNow',
             'firstName' => $ValidatedData['firstName'],
