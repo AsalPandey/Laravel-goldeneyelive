@@ -1,0 +1,140 @@
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+
+    --color-brand-gold: #C5A059;
+    --color-brand-dark: #050C1C;
+    --color-brand-accent: #A6803B;
+
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f5;
+    --color-zinc-200: #e5e5e5;
+    --color-zinc-300: #d4d4d4;
+    --color-zinc-400: #a3a3a3;
+    --color-zinc-500: #737373;
+    --color-zinc-600: #525252;
+    --color-zinc-700: #404040;
+    --color-zinc-800: #262626;
+    --color-zinc-900: #171717;
+    --color-zinc-950: #0a0a0a;
+
+    --color-accent: var(--color-brand-gold);
+    --color-accent-content: var(--color-brand-gold);
+    --color-accent-foreground: var(--color-brand-dark);
+}
+
+@layer base {
+    :root {
+        --bs-primary: #C5A059;
+        --bs-dark: #050C1C;
+    }
+    
+    body {
+        @apply font-sans bg-white text-brand-dark leading-relaxed overflow-x-hidden;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-heading font-bold tracking-tight;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 bg-brand-gold border-none font-extrabold uppercase tracking-widest text-brand-dark shadow-xl transition-all duration-300;
+        background: #C5A059 !important;
+        color: #000 !important;
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+    }
+    
+    .btn-primary:hover {
+        @apply -translate-y-1 shadow-2xl bg-brand-accent;
+        background: #A6803B !important;
+    }
+
+    .premium-card {
+        @apply bg-white rounded-2xl border border-zinc-200 shadow-sm transition-all duration-300;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+    
+    .premium-card:hover {
+        @apply shadow-xl border-brand-gold/40;
+        transform: translateY(-5px);
+    }
+
+    .whatsapp-float {
+        @apply shadow-2xl;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .whatsapp-float:hover {
+        transform: scale(1.1);
+    }
+
+    /* Section Headers */
+    .section-title {
+        @apply relative inline-block uppercase font-black tracking-[0.3em] text-[10px] text-brand-gold mb-6;
+        border-bottom: 2px solid #C5A059;
+        padding-bottom: 5px;
+    }
+
+    /* Solid FAQ Items */
+    .faq-premium-item {
+        @apply bg-white rounded-xl border border-zinc-200 overflow-hidden mb-6 transition-all duration-300;
+    }
+    .faq-premium-btn {
+        @apply w-full text-left px-8 py-5 font-bold uppercase text-[12px] tracking-wider text-brand-dark flex items-center justify-between;
+    }
+    /* Hoverable Dropdowns for Desktop */
+    @media (min-width: 992px) {
+        .dropdown-hover:hover .dropdown-menu {
+            display: block;
+            margin-top: 0;
+            opacity: 1;
+            visibility: visible;
+            animation: fadeInDown 0.3s ease-out;
+        }
+        .dropdown-hover .dropdown-toggle::after {
+            transition: transform 0.3s ease;
+        }
+        .dropdown-hover:hover .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Breadcrumb active color fix */
+    .breadcrumb-item.active {
+        color: var(--color-brand-gold) !important;
+        opacity: 1 !important;
+    }
+}
+
+@layer utilities {
+    .animate-glow {
+        animation: glow 3s infinite;
+    }
+    @keyframes glow {
+        0%, 100% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.2); }
+        50% { box-shadow: 0 0 25px rgba(197, 160, 89, 0.6); }
+    }
+    .fw-black { font-weight: 900 !important; }
+    .tracking-tighter { letter-spacing: 0; }
+    
+    .aspect-video-centered {
+        @apply aspect-video object-cover object-center;
+    }
+}

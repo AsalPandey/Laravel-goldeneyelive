@@ -1,140 +1,162 @@
 @extends('site.layout.app')
+@section('page_title', 'Contact GoldenEye Academy - ' . ($settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal'))
+@section('meta_description', 'Contact GoldenEye Academy for questions about courses, enrollment, and course guidance. Visit us at ' . ($settings['site_address'] ?? 'Srijana Chowk, Pokhara') . ' or call ' . ($settings['site_phone'] ?? '061-572599') . '.')
 @section('content')
     <!-- Header Start -->
-    <div class="container-fluid bg-primary py-5 mb-5 page-header">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <h1 class="display-3 text-white animated slideInDown">Contact Us</h1>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a class="text-white" href="{{ route('Home') }}">Home</a></li>
-                            <li class="breadcrumb-item text-primary" aria-current="page">Contact Us</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+    <div class="container-fluid page-header py-4 mb-4 wow fadeIn" data-wow-delay="0.1s" style="background: linear-gradient(rgba(5, 12, 28, 0.85), rgba(5, 12, 28, 0.85)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
+        <div class="container py-4 text-center">
+            <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['contact_header_title'] ?? 'Message GoldenEye Academy' }}</h1>
+            <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 10px;">Quick replies from the team</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a class="text-white opacity-50" href="{{ route('home') }}">Home</a></li>
+                    <li class="breadcrumb-item text-brand-gold active font-bold uppercase" aria-current="page">Contact</li>
+                </ol>
+            </nav>
         </div>
     </div>
     <!-- Header End -->
-    <!-- Contact Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center text-primary px-3">Contact Us</h6>
-                <h1 class="mb-5">Contact For Any Query</h1>
-            </div>
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <h5>Get In Touch</h5>
-                    <p class="mb-4">We're here to support your educational journey! Whether you have questions about our
-                        programs or need more details, don't hesitate to reach out. <br><br> Contact us today, and let's
-                        work together to achieve your goals!</p>
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
-                            style="width: 50px; height: 50px;">
-                            <i class="fa fa-map-marker-alt text-white"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="text-primary">Office</h5>
-                            <p class="mb-0">Srijana Chowk, Pokhara, Nepal</p>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
-                            style="width: 50px; height: 50px;">
-                            <i class="fa fa-phone-alt text-white"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="text-primary">Mobile</h5>
-                            <p class="mb-0">061-572599, 9856058599</p>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
-                            style="width: 50px; height: 50px;">
-                            <i class="fa fa-envelope-open text-white"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="text-primary">Email</h5>
-                            <p class="mb-0">goldeneyeacademy2008@gmail.com</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <iframe class="position-relative rounded w-100 h-100"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1687.7949561082255!2d83.98105790540313!3d28.212102922025796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399595ac8d5df7a3%3A0x1971ef66310b97ae!2sGolden%20Eye%20Academy!5e0!3m2!1sen!2snp!4v1725470686886!5m2!1sen!2snp"
-                        frameborder="0" style="min-height: 300px; border:0;" allowfullscreen="" aria-hidden="false"
-                        tabindex="0"></iframe>
-                </div>
-                <div class="col-lg-8 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
-                    <form action="{{ route('ContactSubmit') }}" enctype="multipart/form-data" method="POST">
-                        @csrf
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" name="name" id="name"
-                                        placeholder="Name" value="{{ old('name') }}">
-                                    <label for="name">Name</label>
-                                    @error('name')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="tel" class="form-control" name="phone" id="phone"
-                                        placeholder="Phone number" value="{{ old('phone') }}">
-                                    <label for="phone">Phone Number</label>
-                                    @error('phone')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" name="email" id="email"
-                                        placeholder="Email" value="{{ old('email') }}">
-                                    <label for="email">Email</label>
-                                    @error('email')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" name="subject" id="subject"
-                                        placeholder="Subject" value="{{ old('subject') }}">
-                                    <label for="subject">Subject</label>
-                                    @error('subject')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <textarea class="form-control" name="message" id="message" placeholder="Leave a message here"
-                                        style="height: 150px">{{ old('message') }}</textarea>
-                                    <label for="message">Message</label>
-                                    @error('message')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    {!! htmlFormSnippet() !!}
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
-                            </div>
-                        </div>
-                    </form>
 
+    <!-- Contact Start -->
+    <div class="container-xxl py-4">
+        <div class="container">
+            <div class="text-center wow fadeInUp mb-10" data-wow-delay="0.1s">
+                <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
+                    <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Connect with Us</span>
+                    <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
+                </div>
+                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Ask a Quick <span class="text-brand-gold">Course Question</span></h2>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-5 col-md-12 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="premium-card p-5 p-lg-6 h-100 border border-zinc-100 shadow-lg rounded-xl relative overflow-hidden">
+                        <div class="absolute -top-10 -right-10 opacity-5">
+                            <i class="fa fa-map-marked-alt fa-10x"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div style="width: 30px; height: 2px; background: var(--brand-gold);"></div>
+                                <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 10px;">Direct Access</span>
+                            </div>
+                            <h5 class="mb-4 font-black uppercase tracking-tight text-brand-dark">Visit Our Campus</h5>
+                            <div class="mb-6 text-zinc-600 leading-relaxed italic border-start-4 border-brand-gold/20 ps-4 extra-small">
+                                @if(isset($settings['contact_page_content']) && !empty($settings['contact_page_content']))
+                                    @sanitize($settings['contact_page_content'])
+                                @else
+                                    Established in 2008, GoldenEye Academy helps learners choose practical courses with less confusion. Visit us or send a quick question and we will reply with the next step.
+                                @endif
+                            </div>
+                            
+                            <div class="space-y-8">
+                                <div class="d-flex align-items-center gap-3 group">
+                                    <div class="w-12 h-12 rounded-xl bg-brand-dark text-brand-gold flex items-center justify-center flex-shrink-0 transition-all group-hover:scale-110 shadow-lg">
+                                        <i class="fa fa-map-marker-alt fs-6"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Academy Headquarters</h6>
+                                        <p class="mb-0 font-black text-brand-dark">{{ $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal' }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-3 group">
+                                    <div class="w-14 h-14 rounded-2xl bg-brand-dark text-brand-gold flex items-center justify-center flex-shrink-0 transition-all group-hover:scale-110 shadow-lg">
+                                        <i class="fa fa-phone-alt fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Hotline</h6>
+                                        <p class="mb-0 font-black text-brand-dark">{{ $settings['site_phone'] ?? '061-572599, 9856058599' }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-3 group">
+                                    <div class="w-14 h-14 rounded-2xl bg-brand-dark text-brand-gold flex items-center justify-center flex-shrink-0 transition-all group-hover:scale-110 shadow-lg">
+                                        <i class="fa fa-envelope fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Academic Inquiry</h6>
+                                        <p class="mb-0 font-black text-brand-dark">{{ $settings['site_email'] ?? 'info@goldeneye.edu.np' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7 col-md-12 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="premium-card p-5 p-lg-6 shadow-lg rounded-xl bg-white border border-zinc-100">
+                        <h5 class="font-black uppercase tracking-tight mb-5 text-brand-dark">Send Your <span class="text-brand-gold">Course Question</span></h5>
+                        <form action="{{ route('contact-submit') }}" method="POST" class="form-conversational">
+                            @csrf
+                            <input type="hidden" name="lead_source" value="contact_page">
+                            <input type="hidden" name="landing_page" value="{{ url()->current() }}">
+                            <input type="hidden" name="cta_id" value="contact-form">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control border-0 bg-zinc-50 rounded-2xl" name="name" id="name" placeholder="Name" value="{{ old('name') }}" required>
+                                        <label for="name">Full Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="tel" class="form-control border-0 bg-zinc-50 rounded-xl" name="phone" id="phone" placeholder="Phone" value="{{ old('phone') }}" required>
+                                        <label for="phone">Phone Number</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select border-0 bg-zinc-50 rounded-xl font-bold" name="subject" id="subject" required>
+                                            <option value="" disabled selected>Interested Pathway...</option>
+                                            @forelse($categories as $cat)
+                                                <option value="{{ $cat->name }}">{{ $cat->name }}</option>
+                                            @empty
+                                                <option value="IELTS / PTE / Study Abroad">IELTS / PTE / Study Abroad</option>
+                                                <option value="Computer Skills / Office Package">Computer Skills / Office Package</option>
+                                                <option value="Web Development / IT Career">Web Development / IT Career</option>
+                                                <option value="Language Classes">Language Classes</option>
+                                            @endforelse
+                                            <option value="General Inquiry">General Inquiry</option>
+                                        </select>
+                                        <label for="subject">Interested Pathway</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control border-0 bg-zinc-50 rounded-xl" name="email" id="email" placeholder="Email" value="{{ old('email') }}" required>
+                                        <label for="email">Email Address</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control border-0 bg-zinc-50 rounded-xl" name="message" id="message" placeholder="Message" style="height: 120px" required>{{ old('message') }}</textarea>
+                                        <label for="message">How can we help with your career?</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 pt-2">
+                                    <button class="btn btn-primary w-100 py-3 rounded-xl shadow-lg animate-glow font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 11px;" type="submit">
+                                        Send My Question <i class="fa fa-paper-plane ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Map Section -->
+                <div class="col-12 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="premium-card p-2 h-100 shadow-lg rounded-xl overflow-hidden" style="min-height: 300px;">
+                        @if(isset($settings['google_maps_embed']) && !empty($settings['google_maps_embed']))
+                            <iframe class="w-100 h-100" src="{{ $settings['google_maps_embed'] }}" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+                        @else
+                            <iframe class="w-100 h-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1687.7949561082255!2d83.98105790540313!3d28.212102922025796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399595ac8d5df7a3%3A0x1971ef66310b97ae!2sGolden%20Eye%20Academy!5e0!3m2!1sen!2snp!4v1725470686886!5m2!1sen!2snp" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Contact End -->
-@stop
+@endsection

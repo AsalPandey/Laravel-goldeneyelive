@@ -1,165 +1,237 @@
 @extends('site.layout.app')
+@section('page_title', ($settings['about_header_title'] ?? 'About Us') . ' - ' . ($settings['site_name'] ?? 'GoldenEye Academy'))
+@section('meta_description', $settings['meta_description'] ?? 'Learn about GoldenEye Academy, an independent educational institution established in 2008 in Pokhara, Nepal.')
+
+@section('schema_markup')
+    {{-- Person Schema for Teachers (AEO/GEO) --}}
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@graph": [
+        @foreach($teachers as $teacher)
+        @if(is_object($teacher))
+        {
+          "@@type": "Person",
+          "name": @json($teacher->name ?? ''),
+          "jobTitle": @json($teacher->designation ?? ''),
+          "image": "{{ \App\Support\PublicAsset::url($teacher->photo ?? null, 'site/img/team-1.jpg') }}",
+          "description": @json($teacher->bio ?? ''),
+          "worksFor": {
+            "@@type": "EducationalOrganization",
+            "name": @json(($settings['site_name'] ?? 'GoldenEye') . ' ' . ($settings['site_name_suffix'] ?? 'Academy'))
+          },
+          "sameAs": [
+            "{{ $teacher->facebook_url ?? '' }}",
+            "{{ $teacher->linkedin_url ?? '' }}"
+          ]
+        }{{ !$loop->last ? ',' : '' }}
+        @endif
+        @endforeach
+      ]
+    }
+    </script>
+@endsection
+
 @section('content')
-        <!-- Header Start -->
-        <div class="container-fluid bg-primary py-5 mb-5 page-header">
-            <div class="container py-5">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10 text-center">
-                        <h1 class="display-3 text-white animated slideInDown">About Us</h1>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb justify-content-center">
-                                <li class="breadcrumb-item"><a class="text-white" href="{{ route('Home') }}">Home</a></li>
-                                <li class="breadcrumb-item text-primary active" aria-current="page">About</li>
-                            </ol>
-                        </nav>
+    <!-- Header Start -->
+    <div class="container-fluid page-header mb-4" style="background: linear-gradient(rgba(5, 12, 28, 0.85), rgba(5, 12, 28, 0.85)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter mb-4" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['about_header_title'] ?? '18 Years of Building Careers' }}</h1>
+                    <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 11px;">Est. 2008</p>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center mb-0">
+                            <li class="breadcrumb-item"><a class="text-white opacity-50" href="{{ route('home') }}">Home</a></li>
+                            <li class="breadcrumb-item text-brand-gold active font-bold uppercase" aria-current="page">About</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <!-- Feature Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="premium-card text-center p-4 border-zinc-100 hover:border-brand-gold/30 transition-all">
+                        <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                            <i class="fa fa-graduation-cap fs-6"></i>
+                        </div>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_1_title'] ?? 'Elite Instructors' }}</h6>
+                        <p class="extra-small text-zinc-500 mb-0">{{ $settings['about_feat_1_desc'] ?? 'Industry experts dedicated to your professional growth.' }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="premium-card text-center p-4 border-zinc-100 hover:border-brand-gold/30 transition-all">
+                        <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                            <i class="fa fa-globe fa-lg"></i>
+                        </div>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_2_title'] ?? 'Global Standards' }}</h6>
+                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_2_desc'] ?? 'Curriculum designed for international career opportunities.' }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="premium-card text-center p-4 border-zinc-100 hover:border-brand-gold/30 transition-all">
+                        <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                            <i class="fa fa-laptop-code fa-lg"></i>
+                        </div>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_3_title'] ?? 'Practical Labs' }}</h6>
+                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_3_desc'] ?? 'Hands-on training in high-tech simulation environments.' }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="premium-card text-center p-4 border-zinc-100 hover:border-brand-gold/30 transition-all">
+                        <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                            <i class="fa fa-award fa-lg"></i>
+                        </div>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_4_title'] ?? 'Practical Quality' }}</h6>
+                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_4_desc'] ?? 'Comprehensive resources for every academic pathway.' }}</p>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Header End -->
-    
+    </div>
+    <!-- Feature End -->
 
     <!-- About Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-5">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 350px;">
                     <div class="position-relative h-100">
-                        <img class="img-fluid position-absolute w-100 h-100" src="{{ asset("site/img/about.jpg") }}" alt="" style="object-fit: cover;">
+                        <img class="img-fluid position-absolute w-100 h-100 rounded-xl shadow-xl object-cover" src="{{ \App\Support\PublicAsset::url($settings['about_image'] ?? null, 'site/img/about.jpg') }}" alt="GoldenEye Academy Building">
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
-                    <h1 class="mb-4">Welcome to <br>Golden Eye Academy</h1>
-                    <p class="mb-4">GoldenEye Academy is an independent organization, established in 2008 with the aim of promoting qualitative education with special emphasis on carrer counseling and personality development.
-                        GoldenEye Academy provides formal and authorized training, preparation classes, language classes, computer classes and various motivational sessions.
-                        In order to achieve institutional goal, it operates full time education counselling service. Focusing on the demand and valuable time. it provides morning, day and evening shifts.
-                        </p>
-                        <div class="row gy-2 gx-4 mb-4">
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Quality Preparation Classes</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Experienced Teachers</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Affordable Fees</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Weekly Tests</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Educational Environment</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Friendly Staff</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Sufficient Teaching Materials</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Classes on Memory Power</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Career Counseling & Motivational Sessions</p>
-                            </div>
-                        </div>                        
-                    <a class="btn btn-primary py-3 px-5 mt-2" href="{{ route('AboutDetail') }}">Read More</a>
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div style="width: 30px; height: 2px; background: var(--brand-gold);"></div>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Our Story</span>
+                    </div>
+                    <h2 class="h3 fw-black text-brand-dark mb-4 uppercase tracking-tighter">{{ $settings['about_content_title'] ?? 'Welcome to GoldenEye Academy' }}</h2>
+                    <div class="mb-5 text-zinc-600 leading-relaxed fs-6 border-start-4 border-brand-gold/20 ps-4 italic">
+                        @sanitize($settings['about_content'] ?? 'Established in 2008, GoldenEye Academy has been the pioneer of technical and language education in Pokhara. We provide high-impact training that translates directly into career success.')
+                    </div>
+                    <div class="row gy-3 gx-4 mb-5">
+                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_1'] ?? 'Experienced Teachers' }}</p></div>
+                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_2'] ?? '100% Practical Learning' }}</p></div>
+                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_3'] ?? 'Career Direction Support' }}</p></div>
+                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_4'] ?? 'Est. 2008 - 15+ Years' }}</p></div>
+                    </div>
+                    <a class="btn btn-primary py-3 px-6 rounded-xl shadow-xl font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 11px;" href="{{ route('courses-all') }}">
+                        Explore Courses <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
     <!-- About End -->
-        <!-- Message For Chairperson -->
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class="row g-5 align-items-center">
-                    <!-- Round Image of Chairperson -->
-                    <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="position-relative rounded-circle overflow-hidden shadow" style="width: 300px; height: 300px;">
-                                <img class="img-fluid position-absolute w-100 h-100" src="{{ asset('site/img/message-chairperson.jpg') }}" alt="Chairperson Message" style="object-fit: cover;">
-                            </div>
-                        </div>
-                        <div class="mt-3 text-center">
-                            <h4 class="mb-1 text-primary">Shankar Pokharel</h4> <!-- Name of Chairperson -->
-                            <p class="text-muted">Founder</p> <!-- Position -->
-                        </div>
-                    </div>
-                    <!-- Message from Chairperson -->
-                    <div class="col-lg-9 wow fadeInUp" data-wow-delay="0.3s">
-                        <h6 class="section-title bg-white text-start text-primary pe-3">Message</h6>
-                        <h1 class="mb-4">A Message <br>From Our Founder</h1>
-                        <p class="mb-4">
-                            A dedicate educational organization, GoldenEye Academy was established with the motto "Complete Solution for preparation." It provides you various options for building your golden future. <br>
-                            We welcome you in the ocean of knowledge to dive into it and achieve the best. We facilitate you to identify yourself with the best through motivational tips, inner engineering skills, memory power as well as career counselling. You will be enriched with knowledge and capacity and be able to glow your cherished aim as pearls which you always dreamt for. We help you to determine your destination.
-                            <br>I heartly welcome all dear students, participats as well institutions at Golden Eye Academy and assure golden opportunities with quality services.
-                            <br><strong class="text-primary"> "GoldenEye Academy" Prepares you to build a sound academic foundation with clear concepts for your higher studies.</strong>
-                        </p>
-                        <!-- <a href="#more" class="btn btn-primary rounded-pill py-3 px-5">Read More</a> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-    <!-- Team Start -->
-    <div class="container-xxl py-5">
+
+    <!-- Why GoldenEye Comparison Start -->
+    <div class="container-xxl py-5 bg-zinc-50">
         <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center text-primary px-3">Instructors</h6>
-                <h1 class="mb-5">Expert Instructors</h1>
+            <div class="text-center wow fadeInUp mb-5" data-wow-delay="0.1s">
+                <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
+                    <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">The GoldenEye Edge</span>
+                    <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
+                </div>
+                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Why Choose <span class="text-brand-gold">GoldenEye?</span></h2>
             </div>
-            <div class="row g-4 justify-content-center">
-                <!-- Instructor 1 -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 d-flex justify-content-center wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item bg-light">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" style="height:300px;width:100%; object-fit: cover;" src="{{ asset('site/img/team_4.jpg') }}" alt="Instructor 1">
-                        </div>
-                        <div class="text-center p-4">
-                            <h5 class="mb-0">Aakash Shubedi</h5>
-                            <small>IELTS/PTE/TOFEL Instructor</small>
-                        </div>
-                    </div>
-                </div>
-                <!-- Instructor 2 -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 d-flex justify-content-center wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="team-item bg-light">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" style="height:300px;width:100%; object-fit: cover;" src="{{ asset('site/img/team-2.jpg') }}" alt="Instructor 2">
-                        </div>
-                        <div class="text-center p-4">
-                            <h5 class="mb-0">Pradeep Paudel</h5>
-                            <small>Korean Teacher</small>
-                        </div>
-                    </div>
-                </div>
-                <!-- Instructor 3 -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 d-flex justify-content-center wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item bg-light">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" style="height:300px;width:100%; object-fit: cover;" src="{{ asset('site/img/team-3.jpg') }}" alt="Instructor 3">
-                        </div>
-                        <div class="text-center p-4">
-                            <h5 class="mb-0">Surendra Bhattarai</h5>
-                            <small>Computer Teacher</small>
-                        </div>
-                    </div>
-                </div>
-                <!-- Instructor 4 -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 d-flex justify-content-center wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="team-item bg-light">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" style="height:300px;width:100%; object-fit: cover;" src="{{ asset('site/img/team_1.jpg') }}" alt="Instructor 4">
-                        </div>
-                        <div class="text-center p-4">
-                            <h5 class="mb-0">Ajay B.k</h5>
-                            <small>English Teacher</small>
+            
+            <div class="row justify-content-center wow fadeInUp" data-wow-delay="0.3s">
+                <div class="col-lg-10">
+                    <div class="premium-card bg-white rounded-2xl shadow-xl overflow-hidden border border-zinc-100">
+                        <div class="table-responsive">
+                            <table class="table mb-0 align-middle">
+                                <thead class="bg-brand-dark text-white text-center border-b border-brand-gold/30">
+                                    <tr>
+                                        <th class="py-4 font-black uppercase tracking-widest text-xs border-0 text-start ps-5 w-1/3">Feature</th>
+                                        <th class="py-4 font-black uppercase tracking-widest text-xs border-0 w-1/3 bg-brand-gold/10 text-brand-gold">GoldenEye Academy</th>
+                                        <th class="py-4 font-black uppercase tracking-widest text-xs border-0 text-zinc-400 w-1/3">Standard Institutes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50">
+                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Curriculum Focus</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Industry-Driven / Practical</td>
+                                        <td class="py-4 text-center text-zinc-500 small"><i class="fa fa-times text-zinc-300 me-2"></i> Book-Based / Theoretical</td>
+                                    </tr>
+                                    <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50 bg-zinc-50/50">
+                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Class Sizes</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Strictly Limited (Max 15)</td>
+                                        <td class="py-4 text-center text-zinc-500 small"><i class="fa fa-times text-zinc-300 me-2"></i> Crowded (25+ Students)</td>
+                                    </tr>
+                                    <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50">
+                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Instructors</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Active Industry Professionals</td>
+                                        <td class="py-4 text-center text-zinc-500 small"><i class="fa fa-times text-zinc-300 me-2"></i> Junior Trainers / Alumni</td>
+                                    </tr>
+                                    <tr class="transition-all hover:bg-zinc-50 bg-zinc-50/50">
+                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Career Support</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Resume Building & Placement</td>
+                                        <td class="py-4 text-center text-zinc-500 small"><i class="fa fa-times text-zinc-300 me-2"></i> None Provided</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Why GoldenEye Comparison End -->
+
+    <!-- Team Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp mb-12" data-wow-delay="0.1s">
+                <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
+                    <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Expert Faculty</span>
+                    <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
+                </div>
+                <h2 class="h2 fw-black text-brand-dark uppercase tracking-tighter">Our Professional <span class="text-brand-gold">Instructors</span></h2>
+            </div>
+            <div class="row g-4 justify-content-center">
+                @foreach($teachers as $teacher)
+                @if(is_object($teacher))
+                <div class="col-xl-3 col-lg-4 col-md-6 wow zoomIn">
+                    <div class="team-item bg-white w-100 shadow-lg rounded-2xl overflow-hidden position-relative group border border-zinc-100 hover:border-brand-gold/30 transition-all duration-500">
+                        <div class="overflow-hidden position-relative" style="height:300px;">
+                            <img class="img-fluid w-100 h-100 object-cover transition-all duration-700 group-hover:scale-110" src="{{ \App\Support\PublicAsset::url($teacher->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $teacher->name }}">
+                            
+                            {{-- Bio Overlay --}}
+                            @if(!empty($teacher->bio))
+                            <div class="position-absolute inset-0 d-flex align-items-center justify-content-center p-5 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-md bg-brand-dark/90">
+                                <div class="text-white transform translate-y-10 group-hover:translate-y-0 transition-all duration-500">
+                                    <i class="fa fa-quote-left text-brand-gold mb-4 fa-2x"></i>
+                                    <p class="small italic mb-0 leading-relaxed font-medium">{{ Str::limit($teacher->bio, 200) }}</p>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                        <div class="text-center p-4 bg-white relative">
+                            <h6 class="mt-2 mb-1 font-black text-brand-dark" style="font-size: 15px;">{{ $teacher->name }}</h6>
+                            <small class="text-brand-gold font-black uppercase tracking-[0.2em]" style="font-size: 8px;">{{ $teacher->designation }}</small>
+                            <div class="d-flex justify-content-center mt-4 gap-3">
+                                @if(!empty($teacher->facebook_url))
+                                    <a class="w-10 h-10 rounded-full border border-zinc-200 d-flex align-items-center justify-content-center text-zinc-400 hover:bg-brand-dark hover:text-brand-gold transition-all" href="{{ $teacher->facebook_url }}" target="_blank"><i class="fab fa-facebook-f text-xs"></i></a>
+                                @endif
+                                @if(!empty($teacher->linkedin_url))
+                                    <a class="w-10 h-10 rounded-full border border-zinc-200 d-flex align-items-center justify-content-center text-zinc-400 hover:bg-brand-dark hover:text-brand-gold transition-all" href="{{ $teacher->linkedin_url }}" target="_blank"><i class="fab fa-linkedin-in text-xs"></i></a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
     <!-- Team End -->
-@stop
+@endsection

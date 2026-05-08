@@ -12,18 +12,14 @@
     spinner();
     
     
-    // Initiate the wowjs
-    new WOW().init();
+    // Initiate animations only when the library is available.
+    if (typeof WOW !== 'undefined') {
+        new WOW().init();
+    }
 
 
-    // Sticky Navbar
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 300) {
-            $('.sticky-top').css('top', '0px');
-        } else {
-            $('.sticky-top').css('top', '-100px');
-        }
-    });
+    // Sticky navbar must remain visible for conversion actions.
+    $('.sticky-top').css('top', '0px');
     
     
     // Dropdown on mouse hover
@@ -69,41 +65,63 @@
 
 
     // Header carousel
-    $(".header-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1500,
-        items: 1,
-        dots: false,
-        loop: true,
-        nav : true,
-        navText : [
-            '<i class="bi bi-chevron-left"></i>',
-            '<i class="bi bi-chevron-right"></i>'
-        ]
-    });
+    if ($.fn.owlCarousel && $(".header-carousel").length) {
+        $(".header-carousel").owlCarousel({
+            autoplay: true,
+            smartSpeed: 1500,
+            items: 1,
+            dots: false,
+            loop: true,
+            nav : true,
+            navText : [
+                '<i class="bi bi-chevron-left"></i>',
+                '<i class="bi bi-chevron-right"></i>'
+            ]
+        });
+    }
 
 
     // Testimonials carousel
-    $(".testimonial-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1000,
-        center: true,
-        margin: 24,
-        dots: true,
-        loop: true,
-        nav : false,
-        responsive: {
-            0:{
-                items:1
-            },
-            768:{
-                items:2
-            },
-            992:{
-                items:3
+    if ($.fn.owlCarousel && $(".testimonial-carousel").length) {
+        $(".testimonial-carousel").owlCarousel({
+            autoplay: true,
+            smartSpeed: 1000,
+            center: true,
+            margin: 24,
+            dots: true,
+            loop: true,
+            nav : false,
+            responsive: {
+                0:{
+                    items:1
+                },
+                768:{
+                    items:2
+                },
+                992:{
+                    items:3
+                }
             }
-        }
+        });
+    }
+
+    // Fact Counter
+    $('[data-toggle="counter-up"]').each(function() {
+        var $this = $(this);
+        var countTo = $this.attr('data-count');
+        $({ countNum: $this.text() }).animate({
+            countNum: countTo
+        },
+        {
+            duration: 2000,
+            easing: 'swing',
+            step: function() {
+                $this.text(Math.floor(this.countNum));
+            },
+            complete: function() {
+                $this.text(this.countNum);
+            }
+        });
     });
     
 })(jQuery);
-

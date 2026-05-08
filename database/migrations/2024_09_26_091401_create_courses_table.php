@@ -25,7 +25,10 @@ return new class extends Migration
             $table->string('duration');
             $table->string('instructor');
             $table->enum('category', ['computer classes', 'language classes', 'other classes']);
-            $table->enum('category_slug',['computer-classes', 'language-classes', 'other-classes']);
+            $table->enum('category_slug', ['computer-classes', 'language-classes', 'other-classes']);
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->longText('schema_markup')->nullable();
             $table->timestamps();
         });
     }
