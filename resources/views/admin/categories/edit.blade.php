@@ -30,9 +30,10 @@
 
                             <div class="space-y-2">
                                 <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">Custom Slug</label>
-                                <input type="text" name="slug" value="{{ old('slug', $category->slug) }}"
+                                <input type="text" name="slug" value="{{ old('slug', $category->slug ?: \Illuminate\Support\Str::slug($category->name)) }}" required
                                        class="w-full px-5 py-4 rounded-xl border-neutral-100 bg-white text-sm focus:border-brand-gold focus:ring-0 transition-all font-mono text-[11px]"
                                        placeholder="computer-classes">
+                                <p class="text-[10px] text-neutral-500 mt-1 italic">Required. Use lowercase words with hyphens.</p>
                                 @error('slug') <p class="text-rose-500 text-[10px] font-bold mt-1 uppercase">{{ $message }}</p> @enderror
                             </div>
                         </div>
@@ -103,7 +104,7 @@
 
                 <div class="mt-10 pt-8 border-t border-neutral-100 flex justify-between items-center">
                     <div class="text-[10px] font-black uppercase text-neutral-300 tracking-widest">
-                        Category ID: #{{ $category->id }} · Last Updated: {{ $category->updated_at->format('M d, Y') }}
+                        Category ID: #{{ $category->id }} | Last Updated: {{ $category->updated_at->format('M d, Y') }}
                     </div>
                     <div class="flex gap-4">
                         <a href="{{ route('admin.categories.index') }}" class="px-8 py-4 rounded-xl bg-neutral-100 text-neutral-500 text-sm font-black uppercase hover:bg-neutral-200 transition-all">

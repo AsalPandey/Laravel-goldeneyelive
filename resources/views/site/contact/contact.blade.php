@@ -2,11 +2,30 @@
 @section('page_title', 'Contact GoldenEye Academy - ' . ($settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal'))
 @section('meta_description', 'Contact GoldenEye Academy for questions about courses, enrollment, and course guidance. Visit us at ' . ($settings['site_address'] ?? 'Srijana Chowk, Pokhara') . ' or call ' . ($settings['site_phone'] ?? '061-572599') . '.')
 @section('content')
+    <style>
+        .contact-field > label {
+            display: block;
+            margin-bottom: .5rem;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .contact-field .form-control,
+        .contact-field .form-select {
+            border-color: #cbd5e1 !important;
+            min-height: 56px;
+        }
+    </style>
+
     <!-- Header Start -->
     <div class="container-fluid page-header py-4 mb-4 wow fadeIn" data-wow-delay="0.1s" style="background: linear-gradient(rgba(5, 12, 28, 0.85), rgba(5, 12, 28, 0.85)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
         <div class="container py-4 text-center">
             <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['contact_header_title'] ?? 'Message GoldenEye Academy' }}</h1>
-            <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 10px;">Quick replies from the team</p>
+            <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 10px;">Course, fee, and timing questions</p>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center mb-0">
                     <li class="breadcrumb-item"><a class="text-white opacity-50" href="{{ route('home') }}">Home</a></li>
@@ -23,7 +42,7 @@
             <div class="text-center wow fadeInUp mb-10" data-wow-delay="0.1s">
                 <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
-                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Connect with Us</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Course questions</span>
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
                 </div>
                 <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Ask a Quick <span class="text-brand-gold">Course Question</span></h2>
@@ -38,14 +57,14 @@
                         <div class="relative z-10">
                             <div class="d-flex align-items-center gap-3 mb-4">
                                 <div style="width: 30px; height: 2px; background: var(--brand-gold);"></div>
-                                <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 10px;">Direct Access</span>
+                                <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 10px;">Visit or call</span>
                             </div>
                             <h5 class="mb-4 font-black uppercase tracking-tight text-brand-dark">Visit Our Campus</h5>
                             <div class="mb-6 text-zinc-600 leading-relaxed italic border-start-4 border-brand-gold/20 ps-4 extra-small">
                                 @if(isset($settings['contact_page_content']) && !empty($settings['contact_page_content']))
                                     @sanitize($settings['contact_page_content'])
                                 @else
-                                    Established in 2008, GoldenEye Academy helps learners choose practical courses with less confusion. Visit us or send a quick question and we will reply with the next step.
+                                    Not sure which course fits your goal? Visit us or send a quick question. We will explain course fit, fees, timing, and next steps before enrollment.
                                 @endif
                             </div>
                             
@@ -65,8 +84,14 @@
                                         <i class="fa fa-phone-alt fs-5"></i>
                                     </div>
                                     <div>
-                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Hotline</h6>
-                                        <p class="mb-0 font-black text-brand-dark">{{ $settings['site_phone'] ?? '061-572599, 9856058599' }}</p>
+                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Phone</h6>
+                                        @php
+                                            $contactPhone = $settings['site_phone'] ?? '061-572599, 9856058599';
+                                            $contactPhoneHref = preg_replace('/[^0-9+]/', '', explode(',', $contactPhone)[0]);
+                                        @endphp
+                                        <p class="mb-0 font-black text-brand-dark">
+                                            <a href="tel:{{ $contactPhoneHref }}" class="text-brand-dark text-decoration-none" data-source-page="contact" data-source-section="contact-phone" data-cta-label="Phone">{{ $contactPhone }}</a>
+                                        </p>
                                     </div>
                                 </div>
 
@@ -75,7 +100,7 @@
                                         <i class="fa fa-envelope fs-5"></i>
                                     </div>
                                     <div>
-                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Academic Inquiry</h6>
+                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Email</h6>
                                         <p class="mb-0 font-black text-brand-dark">{{ $settings['site_email'] ?? 'info@goldeneye.edu.np' }}</p>
                                     </div>
                                 </div>
@@ -94,20 +119,24 @@
                             <input type="hidden" name="cta_id" value="contact-form">
                             <div class="row g-4">
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control border-0 bg-zinc-50 rounded-2xl" name="name" id="name" placeholder="Name" value="{{ old('name') }}" required>
+                                    <div class="contact-field">
                                         <label for="name">Full Name</label>
+                                        <input type="text" class="form-control bg-white border rounded-xl px-4 py-3 @error('name') is-invalid @enderror" name="name" id="name" placeholder="Your full name" value="{{ old('name') }}" required autocomplete="name" aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}" @error('name') aria-describedby="nameError" @enderror>
+                                        @error('name') <div id="nameError" class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="tel" class="form-control border-0 bg-zinc-50 rounded-xl" name="phone" id="phone" placeholder="Phone" value="{{ old('phone') }}" required>
+                                    <div class="contact-field">
                                         <label for="phone">Phone Number</label>
+                                        <input type="tel" class="form-control bg-white border rounded-xl px-4 py-3 @error('phone') is-invalid @enderror" name="phone" id="phone" placeholder="98XXXXXXXX" value="{{ old('phone') }}" required inputmode="tel" autocomplete="tel" pattern="(?:\+977(?:97|98)[0-9]{8}|(?:97|98)[0-9]{8}|0[0-9]{9})" title="Use a valid Nepal phone number, such as 98XXXXXXXX, 97XXXXXXXX, +97798XXXXXXXX, or 0XXXXXXXXX." aria-describedby="phoneHelp{{ $errors->has('phone') ? ' phoneError' : '' }}" aria-invalid="{{ $errors->has('phone') ? 'true' : 'false' }}">
+                                        <div id="phoneHelp" class="form-text small">Use 98XXXXXXXX, 97XXXXXXXX, or +97798XXXXXXXX.</div>
+                                        @error('phone') <div id="phoneError" class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <select class="form-select border-0 bg-zinc-50 rounded-xl font-bold" name="subject" id="subject" required>
+                                    <div class="contact-field">
+                                        <label for="subject">Interested Pathway</label>
+                                        <select class="form-select bg-white border rounded-xl px-4 py-3 font-bold @error('subject') is-invalid @enderror" name="subject" id="subject" required aria-invalid="{{ $errors->has('subject') ? 'true' : 'false' }}" @error('subject') aria-describedby="subjectError" @enderror>
                                             <option value="" disabled selected>Interested Pathway...</option>
                                             @forelse($categories as $cat)
                                                 <option value="{{ $cat->name }}">{{ $cat->name }}</option>
@@ -119,25 +148,27 @@
                                             @endforelse
                                             <option value="General Inquiry">General Inquiry</option>
                                         </select>
-                                        <label for="subject">Interested Pathway</label>
+                                        @error('subject') <div id="subjectError" class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control border-0 bg-zinc-50 rounded-xl" name="email" id="email" placeholder="Email" value="{{ old('email') }}" required>
+                                    <div class="contact-field">
                                         <label for="email">Email Address</label>
+                                        <input type="email" class="form-control bg-white border rounded-xl px-4 py-3 @error('email') is-invalid @enderror" name="email" id="email" placeholder="you@example.com" value="{{ old('email') }}" required autocomplete="email" aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}" @error('email') aria-describedby="emailError" @enderror>
+                                        @error('email') <div id="emailError" class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-floating">
-                                        <textarea class="form-control border-0 bg-zinc-50 rounded-xl" name="message" id="message" placeholder="Message" style="height: 120px" required>{{ old('message') }}</textarea>
-                                        <label for="message">How can we help with your career?</label>
+                                    <div class="contact-field">
+                                        <label for="message">What goal or course question can we help with?</label>
+                                        <textarea class="form-control bg-white border rounded-xl px-4 py-3 @error('message') is-invalid @enderror" name="message" id="message" placeholder="Tell us your goal, preferred course, or timing question." style="height: 140px" required aria-invalid="{{ $errors->has('message') ? 'true' : 'false' }}" @error('message') aria-describedby="messageError" @enderror>{{ old('message') }}</textarea>
+                                        @error('message') <div id="messageError" class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
 
                                 <div class="col-12 pt-2">
                                     <button class="btn btn-primary w-100 py-3 rounded-xl shadow-lg animate-glow font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 11px;" type="submit">
-                                        Send My Question <i class="fa fa-paper-plane ms-2"></i>
+                                        Ask for Course Help <i class="fa fa-paper-plane ms-2"></i>
                                     </button>
                                 </div>
                             </div>

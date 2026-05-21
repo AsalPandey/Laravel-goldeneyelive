@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CourseCategoryController extends Controller
@@ -16,11 +17,16 @@ class CourseCategoryController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $search = trim((string) $request->input('search', ''));
 
         $categories = CourseCategory::query()
             ->when($search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%")
+                        ->orWhere('status', 'like', "%{$search}%");
+                });
             })
             ->withCount(['courses as active_courses_count' => function ($query) {
                 $query->where('status', 'active');
@@ -30,7 +36,7 @@ class CourseCategoryController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.categories.index', compact('categories', 'search'));
     }
 
     public function create()
@@ -42,9 +48,7 @@ class CourseCategoryController extends Controller
     {
         $validated = $request->validated();
 
-        if (empty($validated['slug'])) {
-            $validated['slug'] = (new CourseCategory)->generateUniqueSlug($validated['name']);
-        }
+        $validated['slug'] = Str::slug($validated['slug']);
 
         $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/categories', null);
 
@@ -73,9 +77,7 @@ class CourseCategoryController extends Controller
         $category = CourseCategory::findOrFail($id);
         $validated = $request->validated();
 
-        if (empty($validated['slug'])) {
-            $validated['slug'] = (new CourseCategory)->generateUniqueSlug($validated['name'], $id);
-        }
+        $validated['slug'] = Str::slug($validated['slug']);
 
         $oldImage = $category->image;
         $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/categories', $category->image);

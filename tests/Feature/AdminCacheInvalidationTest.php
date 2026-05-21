@@ -32,6 +32,7 @@ class AdminCacheInvalidationTest extends TestCase
 
         $response = $this->actingAs($admin)->post(route('admin.courses.store'), [
             'name' => 'IELTS Preparation',
+            'slug' => 'ielts-preparation',
             'category_id' => $category->id,
             'price' => '10000',
             'duration' => '8 weeks',

@@ -7,6 +7,7 @@ use App\Http\Requests\Site\ContactRequest;
 use App\Http\Requests\Site\JoinNowRequest;
 use App\Http\Requests\Site\NewsletterRequest;
 use App\Mail\ContactMail;
+use App\Models\AnalyticsEvent;
 use App\Models\Contact;
 use App\Models\Course;
 use App\Models\JoinNowQuery;
@@ -107,6 +108,7 @@ class ContactController extends Controller
         return view('site.join-now.join-now', [
             'courses' => Course::publiclyVisible()->orderBy('name')->get(),
             'selectedCourse' => $selectedCourse,
+            'helpTopics' => JoinNowRequest::helpTopics(),
         ]);
     }
 
@@ -121,6 +123,7 @@ class ContactController extends Controller
             return back()->withErrors(['g-recaptcha-response' => 'Security verification failed. Please try again.'])->withInput();
         }
 
+        $selectedCourseContext = $validated['selected_course'] ?? $validated['course'] ?? 'undecided';
         $needsCourseGuidance = $validated['course'] === 'undecided';
         $course = $needsCourseGuidance ? null : Course::publiclyVisible()->where('slug', $validated['course'])->first();
 
@@ -130,8 +133,7 @@ class ContactController extends Controller
 
         $courseName = $course?->name ?? 'Need help choosing a program';
 
-        // Prevent Duplicate Enrollments (last 24h)
-        $existing = JoinNowQuery::where('email', $validated['email'])
+        $existing = JoinNowQuery::where('phone', $validated['phone'])
             ->where('course', $courseName)
             ->where('created_at', '>=', now()->subDay())
             ->first();
@@ -142,22 +144,59 @@ class ContactController extends Controller
             return back();
         }
 
+        $leadScore = $this->calculateJoinNowLeadScore($validated, $course);
+
+        $trackingContext = [
+            'lead_source' => $validated['lead_source'] ?? $validated['source_section'] ?? 'website',
+            'landing_page' => $validated['landing_page'] ?? $validated['source_page'] ?? url()->previous(),
+            'cta_id' => $validated['cta_id'] ?? $validated['inquiry_intent'] ?? null,
+            'selected_course' => $selectedCourseContext,
+            'source_page' => $validated['source_page'] ?? null,
+            'source_section' => $validated['source_section'] ?? null,
+            'audience_type' => $validated['audience_type'] ?? $this->inferAudienceType($validated),
+            'inquiry_intent' => $validated['inquiry_intent'] ?? $this->inferInquiryIntent($validated),
+            'lead_score' => $leadScore,
+            'lead_status' => $this->leadStatusForScore($leadScore),
+        ];
+
+        unset($validated['full_name'], $validated['preferred_course']);
+
+        $message = trim(implode("\n\n", array_filter([
+            $validated['goal'] ?? null,
+            $validated['queries'] ?? null,
+        ])));
+
         $submissionData = [
             ...$validated,
+            'email' => $validated['email'] ?? '',
+            'lastName' => $validated['lastName'] ?? '',
             'address' => $validated['address'] ?? '',
             'contactMethod' => $validated['contactMethod'] ?? 'Phone Call',
-            'queries' => $validated['queries'] ?? '',
-            'lead_source' => $validated['lead_source'] ?? 'website',
-            'landing_page' => $validated['landing_page'] ?? url()->previous(),
-            'cta_id' => $validated['cta_id'] ?? null,
+            'queries' => $message,
+            ...$trackingContext,
             'course_id' => $course?->id,
             'course_slug' => $course?->slug,
             'course' => $courseName, // Keep for backward compatibility/history
         ];
 
-        JoinNowQuery::create($submissionData);
+        $submission = JoinNowQuery::create($submissionData);
 
-        Alert::success('Success', SiteSetting::getValue('enroll_success_message', 'Your application has been received. We will get back to you shortly.'));
+        try {
+            AnalyticsEvent::record('course_help_submit', [
+                ...$trackingContext,
+                'cta_label' => 'Ask for Course Help',
+                'device_type' => 'server',
+                'metadata' => [
+                    'lead_score' => (string) $leadScore,
+                    'lead_status' => $trackingContext['lead_status'],
+                    'submission_id' => (string) $submission->id,
+                ],
+            ]);
+        } catch (\Throwable $exception) {
+            report($exception);
+        }
+
+        Alert::success('Thank you!', SiteSetting::getValue('enroll_success_message', 'Thank you! We received your inquiry. Our team will contact you soon.'));
 
         $adminEmail = SiteSetting::getValue('site_email', config('mail.from.address', 'contact@goldeneye.edu.np'));
 
@@ -169,10 +208,94 @@ class ContactController extends Controller
                 'course' => $courseName,
             ]));
         } catch (\Exception $e) {
-            logger()->error("Enrollment Mail failure for {$validated['email']} (Course: {$courseName}): ".$e->getMessage());
+            logger()->error('Enrollment Mail failure for '.($validated['email'] ?? 'no-email')." (Course: {$courseName}): ".$e->getMessage());
         }
 
-        return back();
+        return back()->with('success', SiteSetting::getValue('enroll_success_message', 'Thank you! We received your inquiry. Our team will contact you soon.'));
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    private function calculateJoinNowLeadScore(array $validated, ?Course $course): int
+    {
+        $score = 0;
+        $helpTopic = (string) ($validated['help_topic'] ?? '');
+        $audienceType = (string) ($validated['audience_type'] ?? '');
+        $message = trim((string) (($validated['goal'] ?? '').' '.($validated['queries'] ?? '')));
+
+        if ($course || (($validated['course'] ?? 'undecided') !== 'undecided')) {
+            $score += 5;
+        }
+
+        if (! empty($validated['phone'])) {
+            $score += 5;
+        }
+
+        if (! empty($validated['preferred_batch_time'])) {
+            $score += 4;
+        }
+
+        if ($helpTopic === 'Fees and timing' || str_contains(strtolower($message), 'fee') || str_contains(strtolower($message), 'timing')) {
+            $score += 4;
+        }
+
+        if ($helpTopic === 'Parent inquiry' || str_contains(strtolower($audienceType), 'parent')) {
+            $score += 3;
+        }
+
+        if (in_array($helpTopic, ['IELTS / PTE', 'Japanese / Korean'], true) || str_contains(strtolower($audienceType), 'study')) {
+            $score += 3;
+        }
+
+        if (mb_strlen($message) > 30) {
+            $score += 2;
+        }
+
+        return $score;
+    }
+
+    private function leadStatusForScore(int $score): string
+    {
+        return match (true) {
+            $score >= 15 => 'Hot',
+            $score >= 8 => 'Warm',
+            default => 'Basic',
+        };
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    private function inferAudienceType(array $validated): string
+    {
+        $sourceSection = strtolower((string) ($validated['source_section'] ?? ''));
+        $helpTopic = (string) ($validated['help_topic'] ?? '');
+
+        return match (true) {
+            str_contains($sourceSection, 'parent') || $helpTopic === 'Parent inquiry' => 'parent',
+            str_contains($sourceSection, 'study') || in_array($helpTopic, ['IELTS / PTE', 'Japanese / Korean'], true) => 'study_abroad_applicant',
+            str_contains($sourceSection, 'job') || in_array($helpTopic, ['Computer skills', 'Web development'], true) => 'job_skill_learner',
+            default => 'student',
+        };
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    private function inferInquiryIntent(array $validated): string
+    {
+        $helpTopic = (string) ($validated['help_topic'] ?? '');
+
+        return match ($helpTopic) {
+            'Fees and timing' => 'fees_and_timing',
+            'Parent inquiry' => 'parent_inquiry',
+            'IELTS / PTE' => 'study_abroad_test_prep',
+            'Japanese / Korean' => 'language_course',
+            'Computer skills' => 'computer_skills',
+            'Web development' => 'web_development',
+            default => $validated['inquiry_intent'] ?? 'course_guidance',
+        };
     }
 
     /**

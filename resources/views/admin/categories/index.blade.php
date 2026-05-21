@@ -5,9 +5,23 @@
                 <h1 class="text-3xl font-black text-neutral-900 tracking-tight uppercase">Category <span class="text-brand-gold">Hub</span></h1>
                 <p class="text-neutral-500 text-sm">Organize and manage departments within your academy.</p>
             </div>
-            <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-gold text-brand-dark px-6 py-3 text-sm font-black uppercase shadow-xl hover:bg-brand-dark hover:text-brand-gold transition-all">
-                <i class="fa fa-plus-circle"></i> Create New Category
-            </a>
+            <div class="flex items-center gap-4">
+                <form action="{{ route('admin.categories.index') }}" method="GET" class="flex items-center gap-2">
+                    <div class="relative">
+                        <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs"></i>
+                        <input type="search" name="search" value="{{ $search ?? request('search') }}" placeholder="Search categories..." class="pl-10 pr-4 py-2.5 rounded-xl border-neutral-200 bg-white text-xs w-64 focus:border-brand-gold focus:ring-0">
+                    </div>
+                    <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-xs font-black uppercase text-white hover:bg-brand-gold hover:text-brand-dark transition-all">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                    @if(request('search'))
+                        <a href="{{ route('admin.categories.index') }}" class="inline-flex items-center rounded-xl bg-neutral-100 px-4 py-2.5 text-xs font-black uppercase text-neutral-600 hover:bg-neutral-200 transition-all">Clear</a>
+                    @endif
+                </form>
+                <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-gold text-brand-dark px-6 py-3 text-sm font-black uppercase shadow-xl hover:bg-brand-dark hover:text-brand-gold transition-all">
+                    <i class="fa fa-plus-circle"></i> Create New Category
+                </a>
+            </div>
         </div>
 
         <div class="overflow-x-auto rounded-2xl border border-neutral-100 bg-white shadow-sm">
@@ -74,12 +88,12 @@
                         </td>
                         <td class="px-6 py-5">
                             <div class="flex justify-center gap-2">
-                                <a href="{{ route('admin.categories.edit', $category->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-orange-600 hover:border-orange-200 hover:shadow-lg transition-all">
+                                <a href="{{ route('admin.categories.edit', $category->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-orange-600 hover:border-orange-200 hover:shadow-lg transition-all" title="Edit Category" aria-label="Edit {{ $category->name }}">
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
                                 <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Delete this category? This cannot be undone.')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all {{ $category->total_courses_count > 0 ? 'opacity-30 cursor-not-allowed' : '' }}" {{ $category->total_courses_count > 0 ? 'disabled' : '' }}>
+                                    <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all {{ $category->total_courses_count > 0 ? 'opacity-30 cursor-not-allowed' : '' }}" title="Delete Category" aria-label="Delete {{ $category->name }}" {{ $category->total_courses_count > 0 ? 'disabled' : '' }}>
                                         <i class="fa fa-trash-alt text-xs"></i>
                                     </button>
                                 </form>
@@ -87,7 +101,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="7" class="py-24 text-center text-neutral-400 font-medium italic">No departments have been established yet.</td></tr>
+                    <tr><td colspan="8" class="py-24 text-center text-neutral-400 font-medium italic">No departments have been established yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>

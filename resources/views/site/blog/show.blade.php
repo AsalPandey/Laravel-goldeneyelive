@@ -12,6 +12,15 @@
     @endif
 @endsection
 @section('content')
+    @php
+        $blogDetailGuidanceUrl = route('join-now', [
+            'course' => 'undecided',
+            'selected_course' => 'undecided',
+            'source_page' => 'blog-detail',
+            'source_section' => 'blog-sidebar',
+            'inquiry_intent' => 'course_guidance',
+        ]);
+    @endphp
 
     <!-- Header Start -->
     <div class="container-fluid py-4 mb-4 page-header">
@@ -98,7 +107,7 @@
                     <div class="bg-brand-dark p-4 rounded-xl text-white text-center border border-brand-gold/20 shadow-lg">
                         <h6 class="text-brand-gold mb-2 font-black uppercase tracking-tight" style="font-size: 14px;">{{ $settings['blog_cta_title'] ?? 'Ready to Join?' }}</h6>
                         <p class="mb-3 text-white/60 extra-small">{{ $settings['blog_cta_desc'] ?? 'Take the next step in your career with our specialized courses.' }}</p>
-                        <a href="{{ route('join-now') }}" data-cta="blog-detail-course-help" class="btn btn-primary px-4 py-2 rounded-lg font-black uppercase tracking-widest shadow-md" style="font-size: 9px;">{{ $settings['blog_cta_btn'] ?? 'Ask for Course Help' }}</a>
+                        <a href="{{ $blogDetailGuidanceUrl }}" data-cta="blog-detail-course-guidance" class="btn btn-primary px-4 py-2 rounded-lg font-black uppercase tracking-widest shadow-md" style="font-size: 9px;">Ask for Course Help</a>
                     </div>
                 </aside>
             </div>

@@ -35,7 +35,22 @@ class CheckpointSeederTest extends TestCase
 
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'whatsapp_cta_text',
-            'value' => 'Message us on WhatsApp',
+            'value' => 'Message on WhatsApp',
+        ]);
+
+        $this->assertDatabaseHas(SiteSetting::class, [
+            'key' => 'stat_3_val',
+            'value' => 'Regular',
+        ]);
+
+        $this->assertDatabaseHas(SiteSetting::class, [
+            'key' => 'google_business_profile_url',
+            'value' => '',
+        ]);
+
+        $this->assertDatabaseHas(SiteSetting::class, [
+            'key' => 'external_review_proof_note',
+            'value' => 'Ask the academy team for current Google review proof or verified review screenshots before enrollment.',
         ]);
 
         $this->assertDatabaseHas(Course::class, [
@@ -52,19 +67,28 @@ class CheckpointSeederTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('GoldenEye Academy Launchpad')
-            ->assertSee('Start with the path that sounds like you.')
-            ->assertSee('Learn Your Way: Digital-First Flexibility')
-            ->assertSee('Courses students ask about most.')
+            ->assertSee('Study Abroad, Language &amp; Computer Courses in Pokhara', false)
+            ->assertSee('Trusted by students in Pokhara since 2008')
+            ->assertSee('Srijana Chowk, Pokhara, Nepal')
+            ->assertSee('Specific progress/result:')
+            ->assertSee('Courses taught:')
+            ->assertSee('External social proof')
+            ->assertSee('I am a Parent')
+            ->assertSee('Courses students ask about most')
+            ->assertSee('Browse by learning goal')
             ->assertSee('Real students. Practical progress.')
-            ->assertSee('Message us on WhatsApp')
+            ->assertSee('Still confused about which course fits you?')
+            ->assertSee('Message on WhatsApp')
             ->assertSee('Ask for Course Help');
 
         $this->get(route('courses-all'))
             ->assertOk()
-            ->assertSee('IELTS Masterclass for Band 7+')
-            ->assertSee('Corporate Office and Admin Package')
+            ->assertSee('IELTS Preparation for Band 7 Goal')
+            ->assertSee('Office and Admin Skills Package')
             ->assertSee('Ask for Course Help');
+
+        $this->get(route('courses'))
+            ->assertRedirect(route('courses-all'));
 
         $this->get(route('blog'))
             ->assertOk()
@@ -127,6 +151,8 @@ class CheckpointSeederTest extends TestCase
             'popup_image_path' => 'site/img/premium.png',
             'site_logo_path' => 'site/img/logo.png',
             'site_favicon_path' => 'site/img/logo.png',
+            'google_business_profile_url' => 'https://www.google.com/maps/place/GoldenEye+Academy',
+            'external_review_proof_note' => 'Verified review screenshots are available from the academy team.',
         ]);
 
         $response->assertRedirect();
@@ -139,6 +165,16 @@ class CheckpointSeederTest extends TestCase
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'popup_image',
             'value' => 'site/img/premium.png',
+        ]);
+
+        $this->assertDatabaseHas(SiteSetting::class, [
+            'key' => 'google_business_profile_url',
+            'value' => 'https://www.google.com/maps/place/GoldenEye+Academy',
+        ]);
+
+        $this->assertDatabaseHas(SiteSetting::class, [
+            'key' => 'external_review_proof_note',
+            'value' => 'Verified review screenshots are available from the academy team.',
         ]);
     }
 

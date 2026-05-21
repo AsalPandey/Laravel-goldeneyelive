@@ -3,6 +3,16 @@
 @section('page_title', 'Career Guide & FAQs - GoldenEye Academy')
 
 @section('content')
+    @php
+        $faqGuidanceUrl = route('join-now', [
+            'course' => 'undecided',
+            'selected_course' => 'undecided',
+            'source_page' => 'faq',
+            'source_section' => 'faq-lead-block',
+            'inquiry_intent' => 'course_guidance',
+        ]);
+    @endphp
+
     {{-- Advanced FAQ Schema for AEO --}}
     <script type="application/ld+json">
     {
@@ -107,7 +117,7 @@
                             <h4 class="font-black mb-2 uppercase tracking-tighter text-brand-gold">{{ $settings['faq_lead_title'] ?? 'Still Have Questions?' }}</h4>
                             <p class="mb-4 text-white/60 extra-small leading-relaxed">Send a quick question and our team will help you choose the right next step.</p>
                             <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                                <a href="{{ route('join-now') }}" data-cta="faq-course-help" class="btn btn-primary py-2.5 px-5 rounded-lg shadow-lg font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 10px;">Ask for Course Help</a>
+                                <a href="{{ $faqGuidanceUrl }}" data-cta="faq-course-guidance" class="btn btn-primary py-2.5 px-5 rounded-lg shadow-lg font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 10px;">Ask for Course Help</a>
                                 <a href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599') }}?text={{ rawurlencode('Hi GoldenEye Academy, I have a quick question about courses.') }}" target="_blank" rel="noopener" data-cta="faq-whatsapp" class="btn btn-outline-brand-gold py-2.5 px-5 rounded-lg font-black uppercase tracking-widest hover:bg-brand-gold hover:text-brand-dark transition-all" style="font-size: 10px;">Message on WhatsApp</a>
                             </div>
                         </div>

@@ -11,25 +11,28 @@ class PublicServicePillarTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_homepage_renders_compact_hook_and_seeded_service_pillars(): void
+    public function test_homepage_uses_conversion_arc_instead_of_dense_service_pillar_copy(): void
     {
         $this->seed(ServicePillarSeeder::class);
 
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertSee("Don't just study. Build your competitive edge.");
-        $response->assertSee('Confused about what to study next? Message GoldenEye Academy with your goal.');
-        $response->assertSee('Learn Your Way: Digital-First Flexibility');
-        $response->assertSee('The Network: Your Unfair Advantage');
-        $response->assertSee('Career and College Blueprint: Zero Guesswork');
-        $response->assertSee('Flexible online learning with in-person support when students need focus and collaboration.');
-        $response->assertSee('Corporate access, industry exposure, and community events that help students move faster.');
+        $response->assertSee('Study Abroad, Language &amp; Computer Courses in Pokhara', false);
+        $response->assertSee('Not sure which course to choose? Tell us your goal. We will help you compare study abroad, language, computer, and IT options before enrollment.');
+        $response->assertSee('I am a Student');
+        $response->assertSee('I am a Parent');
+        $response->assertSee('I am planning Study Abroad');
+        $response->assertSee('I want Job/Computer Skills');
+        $response->assertDontSee("Don't just study. Build your competitive edge.");
+        $response->assertDontSee('Learn Your Way: Digital-First Flexibility');
+        $response->assertDontSee('The Network: Your Unfair Advantage');
+        $response->assertDontSee('Career and College Blueprint: Zero Guesswork');
         $response->assertDontSee('Online When You Want: Premium, interactive virtual classrooms that fit your schedule. Learn from our experts anywhere, anytime.');
         $response->assertDontSee('Events: Learn, Meet, Move');
     }
 
-    public function test_service_pillars_render_in_admin_defined_order_and_only_when_active(): void
+    public function test_service_pillars_do_not_leak_into_homepage_conversion_flow(): void
     {
         ServicePillar::factory()->create([
             'title' => 'Third Pillar',
@@ -53,7 +56,10 @@ class PublicServicePillarTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertSeeInOrder(['First Pillar', 'Third Pillar']);
+        $response->assertSee('Study Abroad, Language &amp; Computer Courses in Pokhara', false);
+        $response->assertSeeInOrder(['I am a Student', 'I am a Parent', 'I am planning Study Abroad', 'I want Job/Computer Skills']);
+        $response->assertDontSee('First Pillar');
+        $response->assertDontSee('Third Pillar');
         $response->assertDontSee('Hidden Pillar');
     }
 }

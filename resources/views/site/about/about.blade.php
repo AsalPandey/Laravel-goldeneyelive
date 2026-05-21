@@ -38,7 +38,7 @@
         <div class="container py-4">
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
-                    <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter mb-4" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['about_header_title'] ?? '18 Years of Building Careers' }}</h1>
+                    <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter mb-4" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['about_header_title'] ?? 'About GoldenEye Academy' }}</h1>
                     <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 11px;">Est. 2008</p>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center mb-0">
@@ -61,8 +61,8 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-graduation-cap fs-6"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_1_title'] ?? 'Elite Instructors' }}</h6>
-                        <p class="extra-small text-zinc-500 mb-0">{{ $settings['about_feat_1_desc'] ?? 'Industry experts dedicated to your professional growth.' }}</p>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_1_title'] ?? 'Guidance Before Enrollment' }}</h6>
+                        <p class="extra-small text-zinc-500 mb-0">{{ $settings['about_feat_1_desc'] ?? 'Understand course fit, timing, fees, and support before you enroll.' }}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
@@ -70,8 +70,8 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-globe fa-lg"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_2_title'] ?? 'Global Standards' }}</h6>
-                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_2_desc'] ?? 'Curriculum designed for international career opportunities.' }}</p>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_2_title'] ?? 'Practical Learning' }}</h6>
+                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_2_desc'] ?? 'Mock tests, assignments, projects, and feedback where each course requires it.' }}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
@@ -79,8 +79,8 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-laptop-code fa-lg"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_3_title'] ?? 'Practical Labs' }}</h6>
-                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_3_desc'] ?? 'Hands-on training in high-tech simulation environments.' }}</p>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_3_title'] ?? 'Parent-Friendly Decisions' }}</h6>
+                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_3_desc'] ?? 'Parents can ask about fees, timing, safety, and realistic next steps.' }}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
@@ -88,8 +88,8 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-award fa-lg"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_4_title'] ?? 'Practical Quality' }}</h6>
-                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_4_desc'] ?? 'Comprehensive resources for every academic pathway.' }}</p>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_4_title'] ?? 'Follow-Up Support' }}</h6>
+                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_4_desc'] ?? 'The team stays available for questions after the first inquiry.' }}</p>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                     </div>
                     <h2 class="h3 fw-black text-brand-dark mb-4 uppercase tracking-tighter">{{ $settings['about_content_title'] ?? 'Welcome to GoldenEye Academy' }}</h2>
                     <div class="mb-5 text-zinc-600 leading-relaxed fs-6 border-start-4 border-brand-gold/20 ps-4 italic">
-                        @sanitize($settings['about_content'] ?? 'Established in 2008, GoldenEye Academy has been the pioneer of technical and language education in Pokhara. We provide high-impact training that translates directly into career success.')
+                        @sanitize($settings['about_content'] ?? 'Established in 2008, GoldenEye Academy helps learners compare courses before enrollment. We focus on practical classes, clear timing and fee discussions, and realistic next steps.')
                     </div>
                     <div class="row gy-3 gx-4 mb-5">
                         <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_1'] ?? 'Experienced Teachers' }}</p></div>
@@ -122,7 +122,7 @@
                         <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_4'] ?? 'Est. 2008 - 15+ Years' }}</p></div>
                     </div>
                     <a class="btn btn-primary py-3 px-6 rounded-xl shadow-xl font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 11px;" href="{{ route('courses-all') }}">
-                        Explore Courses <i class="fas fa-arrow-right ms-2"></i>
+                        View Course Details <i class="fas fa-arrow-right ms-2"></i>
                     </a>
                 </div>
             </div>
@@ -136,10 +136,10 @@
             <div class="text-center wow fadeInUp mb-5" data-wow-delay="0.1s">
                 <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
-                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">The GoldenEye Edge</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Before enrollment</span>
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
                 </div>
-                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Why Choose <span class="text-brand-gold">GoldenEye?</span></h2>
+                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Questions we help you answer</h2>
             </div>
             
             <div class="row justify-content-center wow fadeInUp" data-wow-delay="0.3s">
@@ -149,31 +149,31 @@
                             <table class="table mb-0 align-middle">
                                 <thead class="bg-brand-dark text-white text-center border-b border-brand-gold/30">
                                     <tr>
-                                        <th class="py-4 font-black uppercase tracking-widest text-xs border-0 text-start ps-5 w-1/3">Feature</th>
-                                        <th class="py-4 font-black uppercase tracking-widest text-xs border-0 w-1/3 bg-brand-gold/10 text-brand-gold">GoldenEye Academy</th>
-                                        <th class="py-4 font-black uppercase tracking-widest text-xs border-0 text-zinc-400 w-1/3">Standard Institutes</th>
+                                        <th class="py-4 font-black uppercase tracking-widest text-xs border-0 text-start ps-5 w-1/3">Decision point</th>
+                                        <th class="py-4 font-black uppercase tracking-widest text-xs border-0 w-1/3 bg-brand-gold/10 text-brand-gold">What we explain</th>
+                                        <th class="py-4 font-black uppercase tracking-widest text-xs border-0 text-zinc-400 w-1/3">What to ask anywhere</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50">
-                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Curriculum Focus</td>
-                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Industry-Driven / Practical</td>
-                                        <td class="py-4 text-center text-zinc-500 small"><i class="fa fa-times text-zinc-300 me-2"></i> Book-Based / Theoretical</td>
+                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">What students learn</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Lessons, practice work, and weekly progress</td>
+                                        <td class="py-4 text-center text-zinc-500 small">Ask for the course outline</td>
                                     </tr>
                                     <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50 bg-zinc-50/50">
-                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Class Sizes</td>
-                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Strictly Limited (Max 15)</td>
-                                        <td class="py-4 text-center text-zinc-500 small"><i class="fa fa-times text-zinc-300 me-2"></i> Crowded (25+ Students)</td>
+                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Batch timing and seat fit</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Morning, day, and evening options when available</td>
+                                        <td class="py-4 text-center text-zinc-500 small">Ask current batch size and timing</td>
                                     </tr>
                                     <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50">
-                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Instructors</td>
-                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Active Industry Professionals</td>
-                                        <td class="py-4 text-center text-zinc-500 small"><i class="fa fa-times text-zinc-300 me-2"></i> Junior Trainers / Alumni</td>
+                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Who teaches it</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Instructor profile and subject fit</td>
+                                        <td class="py-4 text-center text-zinc-500 small">Ask who will teach your batch</td>
                                     </tr>
                                     <tr class="transition-all hover:bg-zinc-50 bg-zinc-50/50">
-                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">Career Support</td>
-                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Resume Building & Placement</td>
-                                        <td class="py-4 text-center text-zinc-500 small"><i class="fa fa-times text-zinc-300 me-2"></i> None Provided</td>
+                                        <td class="py-4 ps-5 fw-bold text-zinc-700 small">What is not guaranteed</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Realistic outcomes and next steps</td>
+                                        <td class="py-4 text-center text-zinc-500 small">Ask what depends on student practice</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -191,10 +191,10 @@
             <div class="text-center wow fadeInUp mb-12" data-wow-delay="0.1s">
                 <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
-                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Expert Faculty</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Instructor profiles</span>
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
                 </div>
-                <h2 class="h2 fw-black text-brand-dark uppercase tracking-tighter">Our Professional <span class="text-brand-gold">Instructors</span></h2>
+                <h2 class="h2 fw-black text-brand-dark uppercase tracking-tighter">Teachers and Course Help Team</h2>
             </div>
             <div class="row g-4 justify-content-center">
                 @foreach($teachers as $teacher)

@@ -19,7 +19,7 @@ class TeacherSeeder extends Seeder
             ],
             [
                 'name' => 'Course Help Team',
-                'designation' => 'Course Roadmap and Admissions',
+                'designation' => 'Course Guidance and Admissions',
                 'photo' => 'site/img/team-1.jpg',
                 'bio' => 'Helps students, parents, abroad applicants, and job seekers compare programs before enrollment.',
                 'is_featured' => true,

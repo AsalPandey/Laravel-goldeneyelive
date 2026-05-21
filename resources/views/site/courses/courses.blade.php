@@ -2,6 +2,16 @@
 @section('page_title', 'Courses - Computer, Web Development & Language Training at GoldenEye Academy')
 @section('meta_description', 'Browse computer classes, language courses, IELTS/TOEFL preparation, and web development training at GoldenEye Academy, Pokhara.')
 @section('content')
+    @php
+        $guidanceUrl = fn (string $sourceSection, string $selectedCourse = 'undecided') => route('join-now', [
+            'course' => $selectedCourse,
+            'selected_course' => $selectedCourse,
+            'source_page' => 'courses',
+            'source_section' => $sourceSection,
+            'inquiry_intent' => 'course_guidance',
+        ]);
+    @endphp
+
     {{-- ItemList Schema for GEO --}}
     <script type="application/ld+json">
     {
@@ -28,7 +38,7 @@
     <div class="container-fluid page-header py-4 mb-4" style="background: linear-gradient(rgba(5, 12, 28, 0.85), rgba(5, 12, 28, 0.85)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
         <div class="container py-4 text-center">
             <h1 class="h2 font-black text-white animated slideInDown uppercase tracking-tighter">{{ $settings['courses_header_title'] ?? 'Academic Pathways' }}</h1>
-            <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 10px;">Skills That Get You Hired</p>
+            <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 10px;">Compare course options before enrollment</p>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center mb-0">
                     <li class="breadcrumb-item"><a class="text-white opacity-50" href="{{ route('home') }}">Home</a></li>
@@ -45,10 +55,10 @@
             <div class="text-center wow fadeInUp mb-8" data-wow-delay="0.1s">
                 <div class="d-flex align-items-center justify-content-center gap-3 mb-3">
                     <div style="width: 30px; height: 1.5px; background: var(--brand-gold);"></div>
-                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 10px;">{{ $settings['pathway_tagline'] ?? 'Educational Hubs' }}</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 10px;">{{ $settings['pathway_tagline'] ?? 'Course categories' }}</span>
                     <div style="width: 30px; height: 1.5px; background: var(--brand-gold);"></div>
                 </div>
-                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Browse By <span class="text-brand-gold">Department</span></h2>
+                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Browse By <span class="text-brand-gold">Goal</span></h2>
             </div>
 
             <div class="row g-4 justify-content-center">
@@ -81,7 +91,7 @@
             <div class="text-center wow fadeInUp mb-8" data-wow-delay="0.1s">
                 <div class="d-flex align-items-center justify-content-center gap-3 mb-3">
                     <div style="width: 30px; height: 1.5px; background: var(--brand-gold);"></div>
-                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 10px;">Elite Selection</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 10px;">Common choices</span>
                     <div style="width: 30px; height: 1.5px; background: var(--brand-gold);"></div>
                 </div>
                 <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Our Most <span class="text-brand-gold">Popular Paths</span></h2>
@@ -92,18 +102,13 @@
                         <div class="premium-card p-0 overflow-hidden h-full flex flex-col border border-zinc-100 shadow-lg rounded-xl">
                             <div class="relative overflow-hidden h-52">
                                 <img class="w-full h-full object-cover" loading="lazy" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
-                                <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2 py-1 m-3 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg">{{ $course->badge_text ?? 'Elite Track' }}</span>
+                                <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2 py-1 m-3 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg">{{ $course->badge_text ?? 'Course' }}</span>
                             </div>
                             
                             <div class="p-5 text-center flex flex-col flex-grow">
-                                <div class="mb-4 flex justify-center gap-1">
-                                    @php
-                                        $rating_star = $course->rating_star;
-                                        $fullStars = floor($rating_star);
-                                    @endphp
-                                    @for ($i = 0; $i < 5; $i++)
-                                        <i class="fa fa-star text-[9px] {{ $i < $fullStars ? 'text-brand-gold' : 'text-zinc-200' }}"></i>
-                                    @endfor
+                                <div class="mb-4 d-inline-flex align-items-center justify-content-center gap-2 text-brand-dark fw-black text-uppercase tracking-widest" style="font-size: 8px;">
+                                    <i class="fa fa-check-circle text-brand-gold" aria-hidden="true"></i>
+                                    Practical guidance available
                                 </div>
                                 <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 15px;">{{ $course->name }}</h6>
                                 <p class="text-zinc-500 extra-small mb-4 line-clamp-2 italic" style="font-size: 11px;">{{ Str::limit(strip_tags($course->description), 100) }}</p>
@@ -114,7 +119,7 @@
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center gap-2 mb-6 flex-wrap">
                                     <div class="text-center bg-brand-gold/10 rounded-full px-3 py-1 border border-brand-gold/20">
-                                        <span class="fw-black text-brand-gold uppercase tracking-widest" style="font-size: 7.5px;">Next Batch: Now Enrolling</span>
+                                        <span class="fw-black text-brand-gold uppercase tracking-widest" style="font-size: 7.5px;">Ask for current batch</span>
                                     </div>
                                     <div class="text-center bg-zinc-50 rounded-full px-3 py-1 border border-zinc-100">
                                         <i class="fas fa-comment-dots text-brand-dark me-1" style="font-size: 8px;" aria-hidden="true"></i>
@@ -122,8 +127,8 @@
                                     </div>
                                 </div>
                                 <div class="d-flex flex-column gap-2">
-                                    <a href="{{ $course->slug ? route('courses-detail', $course->slug) : route('courses-all') }}" class="btn btn-outline-brand-dark py-2 rounded-lg font-black uppercase tracking-widest" style="font-size: 9px;">View Roadmap</a>
-                                    <a href="{{ route('join-now', ['course' => $course->slug]) }}" data-cta="featured-course-help" class="btn btn-primary py-2 rounded-lg shadow-lg animate-glow font-black uppercase tracking-widest" style="font-size: 9px;">Ask About This Course</a>
+                                    <a href="{{ $course->slug ? route('courses-detail', $course->slug) : route('courses-all') }}" class="btn btn-primary py-2 rounded-lg shadow-lg animate-glow font-black uppercase tracking-widest" style="font-size: 9px;">View Course Details</a>
+                                    <a href="{{ $guidanceUrl('featured-course-card', $course->slug) }}" data-cta="featured-course-guidance" class="btn btn-outline-brand-dark py-2 rounded-lg font-black uppercase tracking-widest" style="font-size: 9px;">Ask for Course Help</a>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +136,7 @@
                 @endforeach
             </div>
             <div class="text-center mt-8 wow fadeInUp" data-wow-delay="0.5s">
-                <a href="{{ route('courses-all') }}" class="btn btn-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl hover:bg-brand-gold hover:text-brand-dark transition-all" style="font-size: 11px;">Explore All Pathways <i class="fas fa-arrow-right ms-2"></i></a>
+                <a href="{{ route('courses-all') }}" class="btn btn-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl hover:bg-brand-gold hover:text-brand-dark transition-all" style="font-size: 11px;">View Course Details <i class="fas fa-arrow-right ms-2"></i></a>
             </div>
         </div>
     </div>

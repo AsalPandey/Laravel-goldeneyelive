@@ -9,6 +9,7 @@ use App\Models\CourseCategory;
 use App\Models\JoinNowQuery;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CourseController extends Controller
@@ -17,12 +18,19 @@ class CourseController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $search = trim((string) $request->input('search', ''));
 
         $courses = Course::query()
             ->when($search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('category', 'like', "%{$search}%");
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%")
+                        ->orWhere('category', 'like', "%{$search}%")
+                        ->orWhere('category_slug', 'like', "%{$search}%")
+                        ->orWhere('price', 'like', "%{$search}%")
+                        ->orWhere('duration', 'like', "%{$search}%")
+                        ->orWhere('instructor', 'like', "%{$search}%");
+                });
             })
             ->orderByDesc('is_featured')
             ->orderBy('display_order')
@@ -30,7 +38,7 @@ class CourseController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.courses.index', compact('courses'));
+        return view('admin.courses.index', compact('courses', 'search'));
     }
 
     public function create()
@@ -44,15 +52,13 @@ class CourseController extends Controller
     {
         $validated = $request->validated();
 
-        $category = CourseCategory::find($validated['category_id']);
+        $category = CourseCategory::findOrFail($validated['category_id']);
         $validated['category'] = $category->name;
         $validated['category_slug'] = $category->slug;
 
-        $validated['slug'] = $request->filled('slug')
-            ? (new Course)->generateUniqueSlug($request->slug)
-            : (new Course)->generateUniqueSlug($validated['name']);
+        $validated['slug'] = Str::slug($validated['slug']);
 
-        $validated['rating_star'] = '5';
+        $validated['rating_star'] = '0';
         $validated['rating_count'] = '0';
         $validated['is_featured'] = $request->has('is_featured');
         $validated['display_order'] = $validated['display_order'] ?? 100;
@@ -74,7 +80,7 @@ class CourseController extends Controller
 
     public function edit($id)
     {
-        $course = Course::findOrFail($id);
+        $course = Course::with('courseCategory')->findOrFail($id);
         $categories = CourseCategory::orderBy('name')->get();
 
         return view('admin.courses.edit', compact('course', 'categories'));
@@ -86,13 +92,11 @@ class CourseController extends Controller
 
         $validated = $request->validated();
 
-        $category = CourseCategory::find($validated['category_id']);
+        $category = CourseCategory::findOrFail($validated['category_id']);
         $validated['category'] = $category->name;
         $validated['category_slug'] = $category->slug;
 
-        $validated['slug'] = $request->filled('slug')
-            ? $course->generateUniqueSlug($request->slug, $id)
-            : $course->generateUniqueSlug($validated['name'], $id);
+        $validated['slug'] = Str::slug($validated['slug']);
 
         $validated['is_featured'] = $request->has('is_featured');
         $validated['display_order'] = $validated['display_order'] ?? 100;

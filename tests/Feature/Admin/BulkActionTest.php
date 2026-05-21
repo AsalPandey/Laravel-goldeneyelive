@@ -126,6 +126,43 @@ class BulkActionTest extends TestCase
             ->assertSee('colspan="4"', false);
     }
 
+    public function test_admin_enrollment_list_shows_course_help_submission_source_and_searches_it()
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
+
+        JoinNowQuery::factory()->create([
+            'firstName' => 'Asha',
+            'lastName' => 'Sharma',
+            'email' => 'asha@example.com',
+            'phone' => '9812345678',
+            'course' => 'Need help choosing a program',
+            'queries' => 'I need help choosing IELTS or PTE.',
+            'lead_source' => 'join_now_page',
+            'cta_id' => 'join-now-form',
+            'help_topic' => 'IELTS / PTE',
+            'selected_course' => 'ielts-masterclass',
+            'source_page' => 'home',
+            'source_section' => 'hero',
+            'audience_type' => 'study_abroad_applicant',
+            'inquiry_intent' => 'course_guidance',
+            'lead_score' => 15,
+            'lead_status' => 'Hot',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.submissions.join_now-display', ['search' => 'Hot']))
+            ->assertOk()
+            ->assertSee('Asha Sharma')
+            ->assertSee('9812345678')
+            ->assertSee('Need help choosing a program')
+            ->assertSee('Source: join_now_page')
+            ->assertSee('CTA: join-now-form')
+            ->assertSee('Help: IELTS / PTE')
+            ->assertSee('Hot: 15')
+            ->assertSee('Selected: ielts-masterclass');
+    }
+
     public function test_unauthorized_user_cannot_bulk_delete()
     {
         $user = User::factory()->create();

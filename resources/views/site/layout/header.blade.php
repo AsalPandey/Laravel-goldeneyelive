@@ -2,6 +2,7 @@
     <meta charset="utf-8">
     <title>@yield('page_title', $settings['meta_title'] ?? 'GoldenEye Academy - Preparing for Global Opportunities Since 2008')</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
     @if(isset($settings['google_analytics_id']) && $settings['google_analytics_id'])
     <!-- Google tag (gtag.js) -->
@@ -13,6 +14,8 @@
       gtag('config', '{{ $settings['google_analytics_id'] }}');
     </script>
     @endif
+
+    @include('site.layout.analytics')
     
     {{-- SEO / GEO / AEO Meta Tags --}}
     <meta content="@yield('meta_keywords', $settings['meta_keywords'] ?? 'Web Development, Computer Classes, Language Classes, IELTS, TOEFL, GoldenEye Academy, Pokhara, Nepal')" name="keywords">
@@ -127,7 +130,7 @@
         "url": "{{ url('/') }}",
         "logo": "{{ \App\Support\PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png') }}",
         "foundingDate": "2008",
-        "description": "{{ $settings['meta_description'] ?? 'GoldenEye Academy is a premier educational institution in Pokhara, Nepal offering expert Web Development, Computer, Language, and IELTS/TOEFL preparation courses since 2008.' }}",
+        "description": "{{ $settings['meta_description'] ?? 'GoldenEye Academy helps learners in Pokhara choose study abroad, language, computer, office, and web development courses with guidance before enrollment.' }}",
         "address": {
             "@@type": "PostalAddress",
             "streetAddress": "{{ $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal' }}",

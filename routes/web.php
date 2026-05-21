@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ServicePillarController;
 use App\Http\Controllers\Admin\SubmissionController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Site\AnalyticsEventController;
 use App\Http\Controllers\Site\BlogController as PublicBlogController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\CoursesController;
@@ -29,6 +30,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', RobotsController::class);
+Route::redirect('/catalogue', '/catelogue', 301)->name('catalogue.redirect');
+Route::redirect('/all-courses', '/courses-all', 301)->name('all-courses.redirect');
+Route::post('/analytics/events', [AnalyticsEventController::class, 'store'])
+    ->middleware('throttle:120,1')
+    ->name('analytics.events.store');
 
 Route::controller(SiteController::class)->group(function () {
     Route::get('/', 'index')->name('home');

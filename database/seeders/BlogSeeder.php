@@ -75,7 +75,7 @@ class BlogSeeder extends Seeder
                 'category' => 'Admissions',
                 'image' => 'site/img/cat-4.jpg',
                 'author' => 'GoldenEye Admissions Team',
-                'content' => '<p>Good guidance reduces wrong enrollment. Students often know they want improvement but are unsure whether they need language, computer, test prep, or career support first.</p><p>A short roadmap conversation helps align the course with the student goal.</p>',
+                'content' => '<p>Good guidance reduces wrong enrollment. Students often know they want improvement but are unsure whether they need language, computer, test prep, or career support first.</p><p>A short guidance conversation helps align the course with the student goal.</p>',
                 'meta_keywords' => 'course guidance Pokhara, free course help Nepal, admissions guidance',
             ],
         ];

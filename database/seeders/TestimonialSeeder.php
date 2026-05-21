@@ -12,7 +12,7 @@ class TestimonialSeeder extends Seeder
         $testimonials = [
             [
                 'student_name' => 'Sandesh Mahat',
-                'course_name' => 'Professional Web Development',
+                'course_name' => 'Web Development with Laravel Basics',
                 'photo' => 'site/img/testimonial-1.jpg',
                 'content' => 'GoldenEye helped me understand web development step by step. The project practice made the course useful beyond theory.',
                 'rating' => 5,
@@ -28,7 +28,7 @@ class TestimonialSeeder extends Seeder
             ],
             [
                 'student_name' => 'Nirmala Thapa',
-                'course_name' => 'IELTS Masterclass',
+                'course_name' => 'IELTS Preparation',
                 'photo' => 'site/img/testimonial-4.jpg',
                 'content' => 'The IELTS mock tests and speaking feedback helped me understand exactly what to improve before the real exam.',
                 'rating' => 5,
@@ -44,7 +44,7 @@ class TestimonialSeeder extends Seeder
             ],
             [
                 'student_name' => 'Rojina Gurung',
-                'course_name' => 'PTE Elite Academic Training',
+                'course_name' => 'PTE Academic Preparation',
                 'photo' => 'site/img/user.png',
                 'content' => 'The PTE templates and computer-based practice made the exam feel less confusing. I knew what to focus on each week.',
                 'rating' => 5,
@@ -52,7 +52,7 @@ class TestimonialSeeder extends Seeder
             ],
             [
                 'student_name' => 'Suman Pariyar',
-                'course_name' => 'Free Course Roadmap Help',
+                'course_name' => 'Course Guidance Before Enrollment',
                 'photo' => 'site/img/user.png',
                 'content' => 'I was confused between language and computer courses. The quick guidance session gave me a clear order of what to learn first.',
                 'rating' => 5,
@@ -60,7 +60,7 @@ class TestimonialSeeder extends Seeder
             ],
             [
                 'student_name' => 'Pratiksha Sharma',
-                'course_name' => 'Global English Professional Track',
+                'course_name' => 'Practical English Communication',
                 'photo' => 'site/img/user.png',
                 'content' => 'My speaking confidence improved through regular practice, correction, and interview-style activities.',
                 'rating' => 5,

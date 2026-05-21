@@ -48,8 +48,8 @@ class CmsSynchronizationTest extends TestCase
 
         $response = $this->actingAs($admin)->post(route('admin.branding.update'), [
             'whatsapp_number' => '9779800000000',
-            'whatsapp_cta_text' => 'Message us on WhatsApp',
-            'whatsapp_cta_subtext' => 'Casual questions. Quick reply.',
+            'whatsapp_cta_text' => 'Message on WhatsApp',
+            'whatsapp_cta_subtext' => '',
             'whatsapp_prefill_message' => 'Hi GoldenEye Academy, I have a quick question. Can you help me choose the right course?',
         ]);
 
@@ -57,13 +57,14 @@ class CmsSynchronizationTest extends TestCase
 
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'whatsapp_cta_text',
-            'value' => 'Message us on WhatsApp',
+            'value' => 'Message on WhatsApp',
         ]);
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Message us on WhatsApp', false)
-            ->assertSee('Casual questions. Quick reply.', false)
+            ->assertSee('Message on WhatsApp', false)
+            ->assertDontSee('Message us on WhatsApp', false)
+            ->assertDontSee('Casual questions. Quick reply.', false)
             ->assertSee('Hi%20GoldenEye%20Academy%2C%20I%20have%20a%20quick%20question.%20Can%20you%20help%20me%20choose%20the%20right%20course%3F', false);
     }
 }

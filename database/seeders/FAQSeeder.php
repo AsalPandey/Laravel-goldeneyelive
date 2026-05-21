@@ -10,7 +10,7 @@ class FAQSeeder extends Seeder
     public function run(): void
     {
         $faqs = [
-            ['What courses does GoldenEye Academy offer?', 'GoldenEye Academy offers IELTS, PTE, Japanese, Korean, English, computer office skills, web development, and free course-roadmap help.', 10],
+            ['What courses does GoldenEye Academy offer?', 'GoldenEye Academy offers IELTS, PTE, Japanese, Korean, English, computer office skills, web development, and course guidance before enrollment.', 10],
             ['Can I ask for help before choosing a course?', 'Yes. Students, parents, job seekers, and study abroad applicants can ask for quick course help before choosing a course.', 20],
             ['What should I choose after SEE or Plus Two?', 'The right path depends on your goal, timeline, budget, interest, and current level. Our team compares study abroad, language, IT, and job-skill options with you.', 30],
             ['Do you help parents understand course options?', 'Yes. Parents can talk with the team about course outcomes, class timing, fees, student readiness, and next-step planning.', 40],
@@ -24,9 +24,9 @@ class FAQSeeder extends Seeder
             ['Can working professionals join?', 'Yes. Working professionals can choose short courses, office skills, English communication, or flexible language/test-prep batches.', 120],
             ['How much do courses cost?', 'Fees vary by program, duration, and batch. The team can explain the current fee, timing, and available options before enrollment.', 130],
             ['Is there an online learning option?', 'Some programs may support online or hybrid guidance depending on the course structure. Contact the team for the current batch format.', 140],
-            ['How do I enroll?', 'You can submit the Join Now form, contact the academy, or use the WhatsApp chat CTA. The team will confirm your goal and guide the next step.', 150],
+            ['How do I enroll?', 'You can submit the course guidance form, contact the academy, or use the WhatsApp chat CTA. The team will confirm your goal and guide the next step.', 150],
             ['What happens after I submit the form?', 'The team receives your details, reviews the selected course or course-help request, and contacts you for confirmation and guidance.', 160],
-            ['Can I ask for a course recommendation?', 'Yes. Select the option for help choosing the right program, and the team will contact you with a roadmap recommendation.', 170],
+            ['Can I ask for a course recommendation?', 'Yes. Select the option for help choosing the right program, and the team will contact you with a practical recommendation.', 170],
             ['Do you run events and workshops?', 'Yes. GoldenEye Academy can run workshops, skill sessions, course-help events, and career-focused activities based on schedule and demand.', 180],
             ['Can I switch course after getting guidance?', 'Course changes depend on batch status and availability. The team will help you avoid wrong enrollment before payment whenever possible.', 190],
             ['Where is GoldenEye Academy located?', 'GoldenEye Academy is based around Srijana Chowk, Pokhara. Contact the team for exact visit timing and location support.', 200],

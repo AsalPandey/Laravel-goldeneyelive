@@ -18,8 +18,8 @@
 
                     <div>
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">URL Slug (e.g. basic-computer)</label>
-                        <input type="text" name="slug" id="course_slug" value="{{ old('slug') }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
-                        <p class="text-[10px] text-neutral-500 mt-1 italic">Leave empty to auto-generate from name.</p>
+                        <input type="text" name="slug" id="course_slug" value="{{ old('slug') }}" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        <p class="text-[10px] text-neutral-500 mt-1 italic">Required. Use lowercase words with hyphens for clean course URLs.</p>
                         @error('slug') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 

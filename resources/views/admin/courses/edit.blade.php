@@ -18,7 +18,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">URL Slug</label>
-                        <input type="text" name="slug" value="{{ old('slug', $course->slug) }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3 bg-neutral-50 dark:bg-neutral-950">
+                        <input type="text" name="slug" value="{{ old('slug', $course->slug ?: \Illuminate\Support\Str::slug($course->name)) }}" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3 bg-neutral-50 dark:bg-neutral-950">
                         <p class="text-[10px] text-red-500 mt-1 italic font-bold">Warning: Changing this will break existing links to this course.</p>
                         @error('slug') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>

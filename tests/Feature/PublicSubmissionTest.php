@@ -23,7 +23,7 @@ class PublicSubmissionTest extends TestCase
 
         $response = $this->from(route('contact'))->post(route('contact-submit'), [
             'name' => 'Asha Sharma',
-            'phone' => '9800000000',
+            'phone' => '9823456780',
             'email' => 'asha@example.com',
             'subject' => 'Course question',
             'message' => 'I want to know more about IELTS classes.',
@@ -39,7 +39,57 @@ class PublicSubmissionTest extends TestCase
         Mail::assertQueued(ContactMail::class);
     }
 
+    public function test_contact_form_rejects_invalid_phone_number(): void
+    {
+        $response = $this->from(route('contact'))->post(route('contact-submit'), [
+            'name' => 'Asha Sharma',
+            'phone' => 'not-a-phone',
+            'email' => 'asha@example.com',
+            'subject' => 'Course question',
+            'message' => 'I want to know more about IELTS classes.',
+        ]);
+
+        $response
+            ->assertRedirect(route('contact'))
+            ->assertSessionHasErrors('phone');
+
+        $this->assertDatabaseMissing(Contact::class, [
+            'email' => 'asha@example.com',
+        ]);
+    }
+
     public function test_join_now_form_accepts_visible_required_fields_only(): void
+    {
+        Mail::fake();
+
+        $response = $this->from(route('join-now'))->post(route('join-now-submit'), [
+            'full_name' => 'Asha Sharma',
+            'phone' => '9823456780',
+            'help_topic' => 'Choosing a course',
+        ]);
+
+        $response
+            ->assertRedirect(route('join-now'))
+            ->assertSessionHas('success', 'Thank you! We received your inquiry. Our team will contact you soon.');
+
+        $this->assertDatabaseHas(JoinNowQuery::class, [
+            'firstName' => 'Asha',
+            'lastName' => 'Sharma',
+            'email' => '',
+            'phone' => '9823456780',
+            'address' => '',
+            'course_id' => null,
+            'course_slug' => null,
+            'course' => 'Need help choosing a program',
+            'help_topic' => 'Choosing a course',
+            'lead_score' => 5,
+            'lead_status' => 'Basic',
+        ]);
+
+        Mail::assertQueued(ContactMail::class);
+    }
+
+    public function test_join_now_form_stores_optional_context_and_lead_score_for_admin(): void
     {
         Mail::fake();
 
@@ -60,26 +110,91 @@ class PublicSubmissionTest extends TestCase
             'status' => 'active',
         ]);
 
-        $response = $this->from(route('join-now'))->post(route('join-now-submit'), [
-            'firstName' => 'Asha',
-            'lastName' => 'Sharma',
+        $response = $this->from(route('courses-detail', $course->slug))->post(route('join-now-submit'), [
+            'full_name' => 'Asha Sharma',
             'email' => 'asha@example.com',
-            'phone' => '9800000000',
+            'phone' => '9823456789',
+            'help_topic' => 'Fees and timing',
             'course' => $course->slug,
+            'selected_course' => $course->slug,
+            'source_page' => 'course-detail',
+            'source_section' => 'course-detail-hero',
+            'audience_type' => 'parent',
+            'inquiry_intent' => 'course_guidance',
+            'preferred_batch_time' => 'Evening',
+            'goal' => 'I want IELTS preparation for abroad study and need fee timing details before enrollment.',
+            'queries' => 'Please call my parent after 5 PM.',
+            'contactMethod' => 'WhatsApp',
         ]);
 
-        $response->assertRedirect(route('join-now'));
+        $response
+            ->assertRedirect(route('courses-detail', $course->slug))
+            ->assertSessionHas('success', 'Thank you! We received your inquiry. Our team will contact you soon.');
 
         $this->assertDatabaseHas(JoinNowQuery::class, [
-            'firstName' => 'Asha',
-            'lastName' => 'Sharma',
-            'address' => '',
+            'email' => 'asha@example.com',
+            'phone' => '9823456789',
             'course_id' => $course->id,
             'course_slug' => $course->slug,
             'course' => $course->name,
+            'help_topic' => 'Fees and timing',
+            'selected_course' => $course->slug,
+            'source_page' => 'course-detail',
+            'source_section' => 'course-detail-hero',
+            'audience_type' => 'parent',
+            'inquiry_intent' => 'course_guidance',
+            'preferred_batch_time' => 'Evening',
+            'lead_score' => 23,
+            'lead_status' => 'Hot',
         ]);
+    }
 
-        Mail::assertQueued(ContactMail::class);
+    public function test_join_now_form_accepts_supported_nepal_phone_formats(): void
+    {
+        Mail::fake();
+
+        foreach (['9823456789', '9723456789', '+9779823456789', '+9779723456789', '0615725999'] as $index => $phone) {
+            $response = $this->from(route('join-now'))->post(route('join-now-submit'), [
+                'firstName' => 'Asha'.$index,
+                'lastName' => 'Sharma',
+                'email' => "asha{$index}@example.com",
+                'phone' => $phone,
+                'course' => 'undecided',
+            ]);
+
+            $response->assertRedirect(route('join-now'));
+
+            $this->assertDatabaseHas(JoinNowQuery::class, [
+                'email' => "asha{$index}@example.com",
+                'phone' => $phone,
+                'course' => 'Need help choosing a program',
+            ]);
+        }
+    }
+
+    public function test_join_now_form_rejects_invalid_phone_number(): void
+    {
+        Mail::fake();
+
+        foreach (['abc123', '98000', '9800000000123', '9800000000'] as $index => $phone) {
+            $response = $this->from(route('join-now'))->post(route('join-now-submit'), [
+                'firstName' => 'Asha',
+                'lastName' => 'Sharma',
+                'email' => "bad-phone{$index}@example.com",
+                'phone' => $phone,
+                'course' => 'undecided',
+            ]);
+
+            $response
+                ->assertRedirect(route('join-now'))
+                ->assertSessionHasErrors('phone');
+
+            $this->assertDatabaseMissing(JoinNowQuery::class, [
+                'email' => "bad-phone{$index}@example.com",
+            ]);
+        }
+
+        Mail::assertNothingQueued();
     }
 
     public function test_newsletter_submits_successfully(): void
@@ -103,7 +218,7 @@ class PublicSubmissionTest extends TestCase
 
         $response = $this->from(route('contact'))->post(route('contact-submit'), [
             'name' => 'Asha Sharma',
-            'phone' => '9800000000',
+            'phone' => '9823456780',
             'email' => 'asha@example.com',
             'subject' => 'Course question',
             'message' => 'I want to know more.',
@@ -120,7 +235,7 @@ class PublicSubmissionTest extends TestCase
             'firstName' => 'Asha',
             'lastName' => 'Sharma',
             'email' => 'asha@example.com',
-            'phone' => '9800000000',
+            'phone' => '9823456780',
             'course' => 'invalid-course-slug',
         ]);
 
@@ -144,7 +259,7 @@ class PublicSubmissionTest extends TestCase
             'firstName' => 'Asha',
             'lastName' => 'Sharma',
             'email' => 'asha@example.com',
-            'phone' => '9800000000',
+            'phone' => '9823456780',
             'course' => $course->slug,
         ]);
 

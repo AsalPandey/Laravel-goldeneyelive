@@ -21,17 +21,18 @@
                             
                             <div class="space-y-2">
                                 <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">Category Name</label>
-                                <input type="text" name="name" value="{{ old('name') }}" required
+                                <input type="text" name="name" id="category_name" value="{{ old('name') }}" required
                                        class="w-full px-5 py-4 rounded-xl border-neutral-100 bg-white text-sm focus:border-orange-500 focus:ring-0 transition-all font-bold placeholder:font-normal"
                                        placeholder="e.g., Computer Classes">
                                 @error('name') <p class="text-rose-500 text-[10px] font-bold mt-1 uppercase">{{ $message }}</p> @enderror
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">Custom Slug (Optional)</label>
-                                <input type="text" name="slug" value="{{ old('slug') }}"
+                                <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">URL Slug</label>
+                                <input type="text" name="slug" id="category_slug" value="{{ old('slug') }}" required
                                        class="w-full px-5 py-4 rounded-xl border-neutral-100 bg-white text-sm focus:border-orange-500 focus:ring-0 transition-all font-mono text-[11px]"
                                        placeholder="computer-classes">
+                                <p class="text-[10px] text-neutral-500 mt-1 italic">Required. Use lowercase words with hyphens.</p>
                                 @error('slug') <p class="text-rose-500 text-[10px] font-bold mt-1 uppercase">{{ $message }}</p> @enderror
                             </div>
                         </div>
@@ -110,4 +111,14 @@
             </form>
         </div>
     </div>
+    <script>
+        document.getElementById('category_name')?.addEventListener('input', function() {
+            const slug = this.value.toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+
+            document.getElementById('category_slug').value = slug;
+        });
+    </script>
 </x-layouts::app>

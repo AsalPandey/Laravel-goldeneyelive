@@ -6,6 +6,13 @@
     @php
         $whatsappCleanNumber = str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599');
         $whatsappMessage = rawurlencode($settings['whatsapp_prefill_message'] ?? 'Hi GoldenEye Academy, I have a quick question. Can you help me choose the right course?');
+        $guidanceUrl = fn (string $sourceSection, string $selectedCourse = 'undecided') => route('join-now', [
+            'course' => $selectedCourse,
+            'selected_course' => $selectedCourse,
+            'source_page' => 'catalogue',
+            'source_section' => $sourceSection,
+            'inquiry_intent' => 'course_guidance',
+        ]);
     @endphp
 
     <section class="py-5 bg-brand-dark text-white">
@@ -17,7 +24,7 @@
                     <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8; max-width: 760px;">Browse the full GoldenEye Academy offer, compare what fits your goal, then send a quick message before you enroll.</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
-                    <a href="{{ route('join-now', ['course' => 'undecided']) }}" data-cta="catalogue-course-help" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask What Fits Me</a>
+                    <a href="{{ $guidanceUrl('catalogue-hero') }}" data-cta="catalogue-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask for Course Help</a>
                     <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="catalogue-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Message on WhatsApp</a>
                 </div>
             </div>
@@ -33,7 +40,7 @@
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Choose by support area.</h2>
                     </div>
                     <div class="col-lg-4 text-lg-end">
-                        <a href="{{ route('contact') }}" data-cta="catalogue-service-contact" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Ask a Question</a>
+                        <a href="{{ $guidanceUrl('catalogue-service') }}" data-cta="catalogue-service-guidance" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -57,8 +64,8 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <a href="{{ $pillar->cta_url ?: route('contact') }}" data-cta="catalogue-service-{{ $pillar->slug }}" class="text-brand-dark font-black uppercase tracking-widest text-decoration-none hover:text-brand-gold transition-all" style="font-size: 9px;">
-                                    {{ $pillar->cta_label ?: 'Ask More' }} <i class="fa fa-arrow-right ms-1"></i>
+                                <a href="{{ $pillar->cta_url ?: $guidanceUrl('catalogue-service-'.$pillar->slug) }}" data-cta="catalogue-service-{{ $pillar->slug }}" class="text-brand-dark font-black uppercase tracking-widest text-decoration-none hover:text-brand-gold transition-all" style="font-size: 9px;">
+                                    Ask for Course Help <i class="fa fa-arrow-right ms-1"></i>
                                 </a>
                             </article>
                         </div>
@@ -106,11 +113,11 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-8">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Course Roadmaps</span>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Course Guidance</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Open a course, or ask us to compare options.</h2>
                     </div>
                     <div class="col-lg-4 text-lg-end">
-                        <a href="{{ route('courses-all') }}" data-cta="catalogue-all-courses" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">All Courses</a>
+                        <a href="{{ route('courses-all') }}" data-cta="catalogue-all-courses" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">View Course Details</a>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -132,8 +139,8 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid gap-2">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="catalogue-course-roadmap" class="btn btn-outline-brand-dark py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">View Roadmap</a>
-                                        <a href="{{ route('join-now', ['course' => $course->slug]) }}" data-cta="catalogue-course-inquiry" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">Ask About This Course</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="catalogue-course-details" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">View Course Details</a>
+                                        <a href="{{ $guidanceUrl('catalogue-course-card', $course->slug) }}" data-cta="catalogue-course-guidance" class="btn btn-outline-brand-dark py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">Ask for Course Help</a>
                                     </div>
                                 </div>
                             </article>
@@ -153,7 +160,7 @@
                     <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">A short question is enough. Tell us your class level, goal, and preferred timing.</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
-                    <a href="{{ route('join-now', ['course' => 'undecided']) }}" data-cta="catalogue-final-course-help" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask What Fits Me</a>
+                    <a href="{{ $guidanceUrl('catalogue-final') }}" data-cta="catalogue-final-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask for Course Help</a>
                     <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="catalogue-final-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Message on WhatsApp</a>
                 </div>
             </div>

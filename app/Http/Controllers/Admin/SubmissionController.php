@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AnalyticsEvent;
 use App\Models\Contact;
 use App\Models\JoinNowQuery;
 use App\Models\NewsLetter;
@@ -16,13 +17,14 @@ class SubmissionController extends Controller
      */
     public function contact_display(Request $request)
     {
-        $search = $request->input('search');
+        $search = trim((string) $request->input('search', ''));
 
         $contacts = Contact::query()
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
                         ->orWhere('subject', 'like', "%{$search}%")
                         ->orWhere('message', 'like', "%{$search}%");
                 });
@@ -71,7 +73,7 @@ class SubmissionController extends Controller
      */
     public function join_now_display(Request $request)
     {
-        $search = $request->input('search');
+        $search = trim((string) $request->input('search', ''));
 
         $joinNowQueries = JoinNowQuery::query()
             ->when($search, function ($query, $search) {
@@ -79,7 +81,20 @@ class SubmissionController extends Controller
                     $q->where('firstName', 'like', "%{$search}%")
                         ->orWhere('lastName', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('address', 'like', "%{$search}%");
+                        ->orWhere('phone', 'like', "%{$search}%")
+                        ->orWhere('address', 'like', "%{$search}%")
+                        ->orWhere('course', 'like', "%{$search}%")
+                        ->orWhere('queries', 'like', "%{$search}%")
+                        ->orWhere('help_topic', 'like', "%{$search}%")
+                        ->orWhere('selected_course', 'like', "%{$search}%")
+                        ->orWhere('lead_source', 'like', "%{$search}%")
+                        ->orWhere('cta_id', 'like', "%{$search}%")
+                        ->orWhere('source_page', 'like', "%{$search}%")
+                        ->orWhere('source_section', 'like', "%{$search}%")
+                        ->orWhere('audience_type', 'like', "%{$search}%")
+                        ->orWhere('inquiry_intent', 'like', "%{$search}%")
+                        ->orWhere('lead_status', 'like', "%{$search}%")
+                        ->orWhere('status', 'like', "%{$search}%");
                 });
             })
             ->latest()
@@ -97,6 +112,7 @@ class SubmissionController extends Controller
         ]);
 
         $query = JoinNowQuery::findOrFail($id);
+        $previousStatus = $query->status;
 
         $data = [
             'status' => $request->status,
@@ -108,6 +124,27 @@ class SubmissionController extends Controller
         }
 
         $query->update($data);
+
+        try {
+            AnalyticsEvent::record('admin_lead_status_change', [
+                'source_page' => 'admin',
+                'source_section' => 'enrollments',
+                'cta_label' => 'Update Audit Log',
+                'selected_course' => $query->selected_course ?: $query->course_slug,
+                'audience_type' => $query->audience_type,
+                'inquiry_intent' => $query->inquiry_intent,
+                'device_type' => 'server',
+                'metadata' => [
+                    'lead_id' => (string) $query->id,
+                    'lead_status' => (string) $query->lead_status,
+                    'previous_status' => (string) $previousStatus,
+                    'new_status' => (string) $query->status,
+                ],
+            ]);
+        } catch (\Throwable $exception) {
+            report($exception);
+        }
+
         Alert::success('Success', 'Enrollment details updated.');
 
         return back();
@@ -126,7 +163,7 @@ class SubmissionController extends Controller
      */
     public function newsletter_display(Request $request)
     {
-        $search = $request->input('search');
+        $search = trim((string) $request->input('search', ''));
 
         $subscribers = NewsLetter::query()
             ->when($search, function ($query, $search) {

@@ -193,7 +193,7 @@
                     <a href="{{ route('profile.edit') }}" class="px-8 py-4 bg-brand-gold text-brand-dark rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all shadow-xl hover:scale-105 active:scale-95">
                         Complete Profile
                     </a>
-                    <a href="{{ route('courses') }}" class="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all hover:bg-white/10">
+                    <a href="{{ route('courses-all') }}" class="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all hover:bg-white/10">
                         Explore Courses
                     </a>
                 </div>
@@ -212,4 +212,3 @@
         }
     </style>
 </x-layouts::app>
-

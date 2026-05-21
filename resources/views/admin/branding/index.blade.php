@@ -665,6 +665,32 @@
                             @endforeach
                         </div>
                     </div>
+
+                    <div class="brand-card lg:col-span-2">
+                        <div class="section-icon bg-zinc-900"><i class="fab fa-google text-white"></i></div>
+                        <h3 class="text-xl font-black uppercase text-zinc-800 mb-2">External Review Proof</h3>
+                        <p class="text-sm text-zinc-500 mb-8">Add a verified Google Business Profile link or a review screenshot so public trust sections can show external proof without fake rating claims.</p>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <label class="premium-label">Google Business Profile URL</label>
+                                <input type="url" name="google_business_profile_url" value="{{ $settings['google_business_profile_url'] ?? '' }}" class="premium-input" placeholder="https://g.page/r/...">
+                            </div>
+                            <div>
+                                <label class="premium-label">Review Screenshot Path</label>
+                                <div class="flex gap-2">
+                                    <input type="text" name="external_review_screenshot_path" id="input_external_review_screenshot" value="{{ $settings['external_review_screenshot'] ?? '' }}" class="premium-input flex-1" placeholder="site/img/reviews/google-review.png">
+                                    <button type="button" onclick="openPicker('input_external_review_screenshot')" class="bg-zinc-800 text-[#C5A059] px-4 rounded-xl text-[9px] font-black uppercase hover:bg-[#C5A059] hover:text-white transition-all whitespace-nowrap">
+                                        <i class="fa fa-images"></i>
+                                    </button>
+                                </div>
+                                <input type="file" name="external_review_screenshot" class="text-xs mt-3">
+                            </div>
+                            <div class="lg:col-span-2">
+                                <label class="premium-label">Public Review Proof Note</label>
+                                <textarea name="external_review_proof_note" rows="3" class="premium-input h-auto py-3" placeholder="Explain how students or parents can verify reviews.">{{ $settings['external_review_proof_note'] ?? '' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

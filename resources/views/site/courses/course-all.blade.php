@@ -4,6 +4,16 @@
 @section('meta_description', $settings['courses_subtitle'] ?? 'Browse GoldenEye Academy courses by category, search by goal, and ask the team before choosing your next course.')
 
 @section('content')
+    @php
+        $guidanceUrl = fn (string $sourceSection, string $selectedCourse = 'undecided') => route('join-now', [
+            'course' => $selectedCourse,
+            'selected_course' => $selectedCourse,
+            'source_page' => 'courses-all',
+            'source_section' => $sourceSection,
+            'inquiry_intent' => 'course_guidance',
+        ]);
+    @endphp
+
     @if(count($courses) > 0)
         <script type="application/ld+json">
         {
@@ -33,10 +43,10 @@
                 <div class="col-lg-7">
                     <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Find your next step</span>
                     <h1 class="display-5 fw-black mt-3 mb-3 text-white" style="letter-spacing: 0;">Choose a course by goal, not guesswork.</h1>
-                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8;">Search by course, skill, language, exam, or job goal. The most relevant and seasonal options stay easy to find.</p>
+                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8;">Search by course, skill, language, exam, or job goal. Compare the details first, then ask us before you enroll.</p>
                 </div>
                 <div class="col-lg-5">
-                    <form action="{{ route('courses-all') }}" method="GET" class="bg-white/10 border border-white/10 rounded-2xl p-3 shadow-2xl">
+                    <form action="{{ route('courses-all') }}" method="GET" class="bg-white/10 border border-white/10 rounded-2xl p-3 shadow-2xl" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="courses-filter" data-cta-label="View Course Details">
                         <div class="row g-2">
                             <div class="col-12">
                                 <label for="course-search" class="visually-hidden">Search courses</label>
@@ -52,14 +62,14 @@
                                 </select>
                             </div>
                             <div class="col-md-5 d-grid">
-                                <button type="submit" data-cta="courses-filter-submit" class="btn btn-primary rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Find Courses</button>
+                                <button type="submit" data-cta="courses-filter-submit" class="btn btn-primary rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">View Course Details</button>
                             </div>
                         </div>
                     </form>
                     <div class="d-flex flex-wrap gap-2 mt-3">
-                        <a href="{{ route('courses-all') }}" class="text-white/70 text-decoration-none font-bold" style="font-size: 12px;">Reset filters</a>
+                        <a href="{{ route('courses-all') }}" class="text-white/70 text-decoration-none font-bold" style="font-size: 12px;" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="courses-filter-reset" data-cta-label="Reset filters">Reset filters</a>
                         <span class="text-white/30">|</span>
-                        <a href="{{ route('join-now', ['course' => 'undecided']) }}" data-cta="courses-hero-course-help" class="text-brand-gold text-decoration-none font-black" style="font-size: 12px;">Not sure? Ask what fits you</a>
+                        <a href="{{ $guidanceUrl('courses-hero') }}" data-cta="courses-hero-course-guidance" class="text-brand-gold text-decoration-none font-black" style="font-size: 12px;">Ask for Course Help</a>
                     </div>
                 </div>
             </div>
@@ -71,12 +81,12 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-7">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Popular right now</span>
-                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Hot courses students ask about first.</h2>
-                        <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Start here if you want the courses students are asking about most right now.</p>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Popular courses</span>
+                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Courses students ask about first.</h2>
+                        <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Start here if you want to compare common options before choosing a batch.</p>
                     </div>
                     <div class="col-lg-4 text-lg-end">
-                        <a href="{{ route('join-now', ['course' => 'undecided']) }}" data-cta="popular-course-help" class="btn btn-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Ask What Fits Me</a>
+                        <a href="{{ $guidanceUrl('popular-courses') }}" data-cta="popular-course-guidance" class="btn btn-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -95,8 +105,8 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid gap-2">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="popular-course-roadmap" class="btn btn-outline-brand-dark py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">View Roadmap</a>
-                                        <a href="{{ route('join-now', ['course' => $course->slug]) }}" data-cta="popular-course-inquiry" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">Ask About This Course</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="popular-course-details" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">View Course Details</a>
+                                        <a href="{{ $guidanceUrl('popular-course-card', $course->slug) }}" data-cta="popular-course-guidance" class="btn btn-outline-brand-dark py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">Ask for Course Help</a>
                                     </div>
                                 </div>
                             </article>
@@ -110,9 +120,9 @@
     <section class="py-4 bg-zinc-50/50 border-bottom border-zinc-100">
         <div class="container">
             <div class="d-flex flex-wrap gap-2 align-items-center justify-content-center">
-                <a href="{{ route('courses-all') }}" class="btn {{ blank($categorySlug) ? 'btn-brand-dark' : 'btn-outline-brand-dark' }} rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 9px;">All</a>
+                <a href="{{ route('courses-all') }}" class="btn {{ blank($categorySlug) ? 'btn-brand-dark' : 'btn-outline-brand-dark' }} rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 9px;" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="category-filter" data-cta-label="All">All</a>
                 @foreach($categories as $category)
-                    <a href="{{ route('courses-all', ['category' => $category->slug, 'search' => $search ?: null]) }}" class="btn {{ $categorySlug === $category->slug ? 'btn-brand-dark' : 'btn-outline-brand-dark' }} rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 9px;">
+                    <a href="{{ route('courses-all', ['category' => $category->slug, 'search' => $search ?: null]) }}" class="btn {{ $categorySlug === $category->slug ? 'btn-brand-dark' : 'btn-outline-brand-dark' }} rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 9px;" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="category-filter" data-cta-label="{{ $category->name }}">
                         {{ $category->name }} <span class="opacity-60">({{ $category->courses_count }})</span>
                     </a>
                 @endforeach
@@ -132,7 +142,7 @@
                             All available courses
                         @endif
                     </h2>
-                    <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Open the roadmap for details, or send an inquiry directly from the course card.</p>
+                    <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Open the course details first, then ask for guidance with the course context attached.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
                     <span class="text-zinc-500 font-bold" style="font-size: 12px;">{{ $courses->total() }} course{{ $courses->total() === 1 ? '' : 's' }} found</span>
@@ -157,8 +167,8 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;"><i class="fa fa-tag text-brand-gold me-1"></i>{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid gap-2">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="course-card-roadmap" class="btn btn-outline-brand-dark py-2 rounded-lg font-black uppercase tracking-widest" style="font-size: 9px;">View Roadmap</a>
-                                        <a href="{{ route('join-now', ['course' => $course->slug]) }}" data-cta="course-card-course-help" class="btn btn-primary py-2 rounded-lg font-black uppercase tracking-widest shadow-lg" style="font-size: 9px;">Ask About This Course</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="course-card-details" class="btn btn-primary py-2 rounded-lg font-black uppercase tracking-widest shadow-lg" style="font-size: 9px;">View Course Details</a>
+                                        <a href="{{ $guidanceUrl('course-card', $course->slug) }}" data-cta="course-card-course-guidance" class="btn btn-outline-brand-dark py-2 rounded-lg font-black uppercase tracking-widest" style="font-size: 9px;">Ask for Course Help</a>
                                     </div>
                                 </div>
                             </article>
@@ -173,7 +183,7 @@
                 <div class="text-center py-5 bg-zinc-50 rounded-2xl border border-zinc-100">
                     <h3 class="h5 fw-black text-brand-dark mb-2">No course matched that search.</h3>
                     <p class="text-zinc-600 mb-4">Send us your goal and we will point you to the closest option.</p>
-                    <a href="{{ route('join-now', ['course' => 'undecided']) }}" data-cta="courses-empty-course-help" class="btn btn-primary rounded-xl px-5 py-3 font-black uppercase tracking-widest" style="font-size: 10px;">Ask What Fits Me</a>
+                    <a href="{{ $guidanceUrl('courses-empty') }}" data-cta="courses-empty-course-guidance" class="btn btn-primary rounded-xl px-5 py-3 font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
                 </div>
             @endif
         </div>

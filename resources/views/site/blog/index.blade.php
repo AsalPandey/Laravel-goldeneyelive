@@ -1,6 +1,15 @@
 @extends('site.layout.app')
 @section('page_title', 'Academy Blog - GoldenEye Academy Pokhara')
 @section('content')
+    @php
+        $blogGuidanceUrl = route('join-now', [
+            'course' => 'undecided',
+            'selected_course' => 'undecided',
+            'source_page' => 'blog',
+            'source_section' => 'blog-header',
+            'inquiry_intent' => 'course_guidance',
+        ]);
+    @endphp
 
     <!-- Header Start -->
     <div class="container-fluid page-header py-4 mb-4 wow fadeIn" data-wow-delay="0.1s">
@@ -10,11 +19,11 @@
                     <h1 class="h2 text-white animated slideInDown font-black uppercase tracking-tighter">{{ $settings['blog_title'] ?? 'Academy Blog' }}</h1>
                     <p class="text-white-50 mb-3 small font-bold">{{ $settings['blog_subtitle'] ?? 'Guides, updates, and decisions that help you move faster.' }}</p>
                     <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2 mb-4">
-                        <a href="{{ route('join-now') }}" data-cta="blog-header-course-help" class="btn btn-primary rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 10px;">
+                        <a href="{{ $blogGuidanceUrl }}" data-cta="blog-header-course-guidance" class="btn btn-primary rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 10px;">
                             Ask for Course Help
                         </a>
                         <a href="{{ route('courses-all') }}" data-cta="blog-header-programs" class="btn btn-outline-light rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 10px;">
-                            Explore Programs
+                            View Course Details
                         </a>
                     </div>
                     <nav aria-label="breadcrumb">

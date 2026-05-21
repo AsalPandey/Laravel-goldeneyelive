@@ -6,9 +6,17 @@
                 <p class="text-neutral-500 text-sm">Full administrative control over your academy curriculum.</p>
             </div>
             <div class="flex items-center gap-4">
-                <form action="{{ route('admin.courses.index') }}" method="GET" class="relative">
-                    <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs"></i>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search courses..." class="pl-10 pr-4 py-2.5 rounded-xl border-neutral-200 bg-white text-xs w-64 focus:border-brand-gold focus:ring-0">
+                <form action="{{ route('admin.courses.index') }}" method="GET" class="flex items-center gap-2">
+                    <div class="relative">
+                        <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs"></i>
+                        <input type="search" name="search" value="{{ $search ?? request('search') }}" placeholder="Search courses..." class="pl-10 pr-4 py-2.5 rounded-xl border-neutral-200 bg-white text-xs w-64 focus:border-brand-gold focus:ring-0">
+                    </div>
+                    <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-xs font-black uppercase text-white hover:bg-brand-gold hover:text-brand-dark transition-all">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                    @if(request('search'))
+                        <a href="{{ route('admin.courses.index') }}" class="inline-flex items-center rounded-xl bg-neutral-100 px-4 py-2.5 text-xs font-black uppercase text-neutral-600 hover:bg-neutral-200 transition-all">Clear</a>
+                    @endif
                 </form>
                 <a href="{{ route('admin.courses.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-gold text-brand-dark px-6 py-3 text-sm font-black uppercase shadow-xl hover:bg-brand-dark hover:text-brand-gold transition-all">
                     <i class="fa fa-plus-circle"></i> Create New Course
@@ -96,16 +104,16 @@
                         <td class="px-6 py-5">
                             <div class="flex justify-center gap-2">
                                 @if($course->slug)
-                                <a href="{{ route('courses-detail', $course->slug) }}" target="_blank" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-blue-600 hover:border-blue-200 hover:shadow-lg transition-all" title="View on Site">
+                                <a href="{{ route('courses-detail', $course->slug) }}" target="_blank" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-blue-600 hover:border-blue-200 hover:shadow-lg transition-all" title="View on Site" aria-label="View {{ $course->name }} on site">
                                     <i class="fa fa-globe text-xs"></i>
                                 </a>
                                 @endif
-                                <a href="{{ route('admin.courses.edit', $course->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-brand-gold hover:border-brand-gold/20 hover:shadow-lg transition-all" title="Edit Course">
+                                <a href="{{ route('admin.courses.edit', $course->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-brand-gold hover:border-brand-gold/20 hover:shadow-lg transition-all" title="Edit Course" aria-label="Edit {{ $course->name }}">
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
                                 <form action="{{ route('admin.courses.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Retract this course from the public curriculum?')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all" title="Delete Course">
+                                    <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all" title="Delete Course" aria-label="Delete {{ $course->name }}">
                                         <i class="fa fa-trash-alt text-xs"></i>
                                     </button>
                                 </form>

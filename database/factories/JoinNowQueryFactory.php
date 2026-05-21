@@ -26,6 +26,9 @@ class JoinNowQueryFactory extends Factory
             'course' => $this->faker->word(),
             'queries' => $this->faker->paragraph(),
             'status' => 'new',
+            'help_topic' => 'Choosing a course',
+            'lead_score' => 7,
+            'lead_status' => 'Basic',
         ];
     }
 }

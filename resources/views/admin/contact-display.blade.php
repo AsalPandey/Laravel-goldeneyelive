@@ -6,9 +6,17 @@
                 <p class="text-neutral-500 text-sm">Review and manage general website inquiries.</p>
             </div>
             <div class="flex items-center gap-4">
-                <form action="{{ route('admin.submissions.contact-display') }}" method="GET" class="relative">
-                    <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs"></i>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search inquiries..." class="pl-10 pr-4 py-2.5 rounded-xl border-neutral-200 bg-white text-xs w-64 focus:border-brand-gold focus:ring-0">
+                <form action="{{ route('admin.submissions.contact-display') }}" method="GET" class="flex items-center gap-2">
+                    <div class="relative">
+                        <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs"></i>
+                        <input type="search" name="search" value="{{ request('search') }}" placeholder="Search inquiries..." class="pl-10 pr-4 py-2.5 rounded-xl border-neutral-200 bg-white text-xs w-64 focus:border-brand-gold focus:ring-0">
+                    </div>
+                    <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-xs font-black uppercase text-white hover:bg-brand-gold hover:text-brand-dark transition-all">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                    @if(request('search'))
+                        <a href="{{ route('admin.submissions.contact-display') }}" class="inline-flex items-center rounded-xl bg-neutral-100 px-4 py-2.5 text-xs font-black uppercase text-neutral-600 hover:bg-neutral-200 transition-all">Clear</a>
+                    @endif
                 </form>
             </div>
         </div>

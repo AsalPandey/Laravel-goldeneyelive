@@ -50,6 +50,11 @@ class SiteController extends Controller
             'testimonials' => Testimonial::where('status', 'active')->orderByDesc('is_featured')->latest()->limit(6)->get(),
             'posts' => BlogPost::where('status', 'published')->latest()->limit(3)->get(),
             'servicePillars' => ServicePillar::active()->ordered()->get(),
+            'faqs' => FAQ::where('status', 'active')
+                ->orderBy('order_priority', 'asc')
+                ->latest()
+                ->limit(4)
+                ->get(),
             'notices' => Notice::where('status', 'active')
                 ->where(function ($query) {
                     $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());

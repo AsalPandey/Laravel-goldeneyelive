@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Course;
 use App\Models\CourseCategory;
+use App\Models\SiteSetting;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -84,15 +86,102 @@ class PublicCourseVisibilityTest extends TestCase
         $response = $this->get(route('courses-all'));
 
         $response->assertOk()
-            ->assertSee('Popular right now', false)
+            ->assertSee('Popular courses', false)
             ->assertSeeInOrder([$hotCourse->name, $lowPriority->name])
-            ->assertSee('Find Courses', false)
-            ->assertSee('Ask What Fits Me', false);
+            ->assertSee('View Course Details', false)
+            ->assertSee('Ask for Course Help', false)
+            ->assertDontSee('Find Courses', false)
+            ->assertDontSee('Ask What Fits Me', false);
 
         $this->get(route('courses-all', ['category' => $category->slug, 'search' => 'Seasonal']))
             ->assertOk()
             ->assertSee($hotCourse->name, false)
             ->assertDontSee($lowPriority->name, false);
+    }
+
+    public function test_course_detail_page_renders_deep_decision_sections_and_contextual_ctas(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        SiteSetting::where('key', 'whatsapp_number')->update(['value' => '+977 980-000-0000']);
+
+        $response = $this->get(route('courses-detail', 'ielts-masterclass'));
+
+        $response->assertOk()
+            ->assertSee('IELTS Preparation for Band 7 Goal', false)
+            ->assertSee('Planning abroad and unsure how to prepare for IELTS?', false)
+            ->assertSee('Best for:', false)
+            ->assertSee('Duration: 6 Weeks', false)
+            ->assertSee('Fee: Rs. 7,000', false)
+            ->assertSee('Next batch: Ask for current intake and available seats', false)
+            ->assertSee('Ask for Course Help', false)
+            ->assertSee('Message on WhatsApp', false)
+            ->assertSee('selected_course=ielts-masterclass', false)
+            ->assertSee('source_page=course-detail', false)
+            ->assertSee('source_section=course-detail-hero', false)
+            ->assertSee('inquiry_intent=course_guidance', false)
+            ->assertSee('data-cta="course-detail-whatsapp"', false)
+            ->assertSee('https://wa.me/9779800000000?text=', false)
+            ->assertSee('Quick facts', false)
+            ->assertSee('Who this course is for', false)
+            ->assertSee('Local trust', false)
+            ->assertSee('Srijana Chowk, Pokhara, Nepal', false)
+            ->assertSee('Phone', false)
+            ->assertSee('061-572599', false)
+            ->assertSee('Morning, day, and evening batches', false)
+            ->assertSee('Student View', false)
+            ->assertSee('Parent View', false)
+            ->assertSee('data-bs-toggle="pill"', false)
+            ->assertSee('Curriculum', false)
+            ->assertSee('Practical assignments', false)
+            ->assertSee('Mock tests/practice', false)
+            ->assertSee('What you will learn', false)
+            ->assertSee('Week-by-week curriculum', false)
+            ->assertSee('Week 1', false)
+            ->assertSee('IELTS format and scoring', false)
+            ->assertSee('Batch timing and fee', false)
+            ->assertSee('Instructor profile', false)
+            ->assertSee('Aakash Subedi', false)
+            ->assertSee('IELTS and PTE Specialist', false)
+            ->assertSee('Years of experience', false)
+            ->assertSee('Courses taught:', false)
+            ->assertSee('Credibility note:', false)
+            ->assertSee('Student result', false)
+            ->assertSee('Course completed:', false)
+            ->assertSee('Specific progress/result:', false)
+            ->assertSee('External social proof', false)
+            ->assertSee('verified Google review proof', false)
+            ->assertSee('FAQs', false)
+            ->assertSee('Inquiry CTA', false)
+            ->assertSee('Not guaranteed', false)
+            ->assertDontSee('4.9/5', false)
+            ->assertDontSee('Placement 92%', false)
+            ->assertDontSee('<small class="text-muted d-block text-uppercase fw-bold" style="font-size: 8px;">Placement</small>', false);
+    }
+
+    public function test_course_detail_breadcrumb_uses_clickable_actual_category_name(): void
+    {
+        $category = CourseCategory::factory()->create([
+            'name' => 'Study Abroad Test Prep',
+            'slug' => 'study-abroad-test-prep',
+            'status' => 'active',
+        ]);
+
+        $course = Course::factory()->create([
+            'name' => 'PTE Academic Preparation',
+            'slug' => 'pte-academic-preparation',
+            'category_id' => $category->id,
+            'category' => $category->name,
+            'category_slug' => $category->slug,
+            'status' => 'active',
+        ]);
+
+        $this->get(route('courses-detail', $course->slug))
+            ->assertOk()
+            ->assertSee('href="'.route('courses-all').'"', false)
+            ->assertSee('href="'.route('courses-all', ['category' => $category->slug]).'"', false)
+            ->assertSee('Study Abroad Test Prep', false)
+            ->assertDontSee('Generic Category', false);
     }
 
     public function test_legacy_course_and_category_urls_redirect_to_course_finder(): void

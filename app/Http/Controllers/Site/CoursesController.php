@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseCategory;
+use App\Models\FAQ;
+use App\Models\Teacher;
+use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -65,9 +68,55 @@ class CoursesController extends Controller
      */
     public function coursesDetail($slug)
     {
-        $course = Course::publiclyVisible()->where('slug', $slug)->firstOrFail();
+        $course = Course::publiclyVisible()
+            ->with('courseCategory')
+            ->where('slug', $slug)
+            ->firstOrFail();
 
-        return view('site.courses.course-detail', compact('course'));
+        $instructor = Teacher::where('status', 'active')
+            ->where('name', $course->instructor)
+            ->first()
+            ?? Teacher::where('status', 'active')
+                ->orderByDesc('is_featured')
+                ->latest()
+                ->first();
+
+        $instructorCourses = $instructor
+            ? Course::publiclyVisible()
+                ->where('instructor', $instructor->name)
+                ->orderBy('name')
+                ->limit(4)
+                ->pluck('name')
+            : collect();
+
+        $testimonial = Testimonial::where('status', 'active')
+            ->where(function ($query) use ($course) {
+                $query->where('course_name', $course->name)
+                    ->orWhere('course_name', 'like', '%'.strtok($course->name, ' ').'%')
+                    ->orWhere('course_name', 'like', '%'.$course->category.'%');
+            })
+            ->orderByDesc('is_featured')
+            ->latest()
+            ->first()
+            ?? Testimonial::where('status', 'active')
+                ->orderByDesc('is_featured')
+                ->latest()
+                ->first();
+
+        $faqs = FAQ::where('status', 'active')
+            ->where(function ($query) use ($course) {
+                $query->where('question', 'like', '%course%')
+                    ->orWhere('question', 'like', '%fee%')
+                    ->orWhere('question', 'like', '%duration%')
+                    ->orWhere('answer', 'like', '%'.$course->category.'%')
+                    ->orWhere('answer', 'like', '%'.$course->name.'%');
+            })
+            ->orderBy('order_priority')
+            ->latest()
+            ->limit(4)
+            ->get();
+
+        return view('site.courses.course-detail', compact('course', 'instructor', 'instructorCourses', 'testimonial', 'faqs'));
     }
 
     /**

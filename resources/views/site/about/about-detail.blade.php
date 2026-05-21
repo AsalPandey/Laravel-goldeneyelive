@@ -41,13 +41,13 @@
                         <p class="mb-4 extra-small text-zinc-600 leading-relaxed">Since its founding in 2008, Golden Eye Academy has been committed to delivering practical educational experiences. Through a blend of expert guidance, focused programs, and personal course direction, we help students build skills they can use in study, work, and daily communication.</p>
 
                         <h3 class="h4 mb-3 font-black text-brand-dark uppercase tracking-tight">Our Mission</h3>
-                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">Our mission is to offer a complete solution for academic preparation, personal growth, and skill development. From language and computer classes to motivational coaching, we provide comprehensive resources for success. We aim to foster a community of learners who are driven to achieve excellence and explore new horizons.</p>
+                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">Our mission is to help students and parents choose practical courses with clear information. We explain course fit, fees, timing, support, and realistic next steps before enrollment.</p>
 
                         <h3 class="h4 mb-3 font-black text-brand-dark uppercase tracking-tight">Our Vision</h3>
-                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">At Golden Eye Academy, we envision a future where education empowers individuals to overcome barriers, realize their potential, and contribute to society. We are committed to setting new standards in education by embracing innovation and providing exceptional training in language, computer skills, and beyond.</p>
+                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">At Golden Eye Academy, we want learners in Pokhara to get practical preparation for study, work, language, and computer needs without pressure or confusion.</p>
 
                         <h3 class="h4 mb-3 font-black text-brand-dark uppercase tracking-tight">Our History</h3>
-                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">Golden Eye Academy was established in 2008 with a vision to redefine education and preparation. Guided by our motto, "Complete Solution for Preparation," we have consistently delivered educational services that meet the evolving needs of students. Over the years, we have built a reputation for excellence, adaptability, and forward-thinking in our approach to education.</p>
+                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">Golden Eye Academy was established in 2008 in Pokhara. Over the years, students and parents have visited us for course guidance, language preparation, computer skills, office skills, and study-abroad test preparation.</p>
                     @endif
                 </div>
             </div>

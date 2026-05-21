@@ -28,6 +28,8 @@ class BrandingRequest extends FormRequest
             'linkedin_url' => ['nullable', 'url', 'max:255'],
             'youtube_url' => ['nullable', 'url', 'max:255'],
             'twitter_url' => ['nullable', 'url', 'max:255'],
+            'google_business_profile_url' => ['nullable', 'url', 'max:255'],
+            'external_review_proof_note' => ['nullable', 'string', 'max:500'],
             'google_analytics_id' => ['nullable', 'string', 'regex:/^G-[a-zA-Z0-9-]+$/'],
             'recaptcha_site_key' => ['nullable', 'string', 'max:255'],
             'recaptcha_secret_key' => ['nullable', 'string', 'max:255'],
@@ -49,6 +51,7 @@ class BrandingRequest extends FormRequest
             'about_image_path' => ['nullable', 'string', 'max:255'],
             'founder_image_path' => ['nullable', 'string', 'max:255'],
             'popup_image_path' => ['nullable', 'string', 'max:255'],
+            'external_review_screenshot_path' => ['nullable', 'string', 'max:255'],
 
             // Image uploads
             'site_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"],
@@ -60,6 +63,7 @@ class BrandingRequest extends FormRequest
             'about_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"],
             'founder_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"],
             'popup_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"],
+            'external_review_screenshot' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"],
         ];
     }
 }

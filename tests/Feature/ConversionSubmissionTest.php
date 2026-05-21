@@ -36,7 +36,7 @@ class ConversionSubmissionTest extends TestCase
     public function test_join_now_submission_tracks_conversion_source(): void
     {
         $course = Course::factory()->create([
-            'name' => 'IELTS Masterclass',
+            'name' => 'IELTS Preparation',
             'slug' => 'ielts-masterclass',
             'status' => 'active',
         ]);
@@ -57,7 +57,7 @@ class ConversionSubmissionTest extends TestCase
 
         $this->assertDatabaseHas('join_now_queries', [
             'email' => 'niraj@example.com',
-            'course' => 'IELTS Masterclass',
+            'course' => 'IELTS Preparation',
             'lead_source' => 'service_pillar',
             'landing_page' => 'https://goldeneye.edu.np/#service-pillars',
             'cta_id' => 'service-pillar-global-launchpad',

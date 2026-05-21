@@ -6,9 +6,17 @@
                 <p class="text-neutral-500 text-sm">Review and manage student course enrollment requests.</p>
             </div>
             <div class="flex items-center gap-4">
-                <form action="{{ route('admin.submissions.join_now-display') }}" method="GET" class="relative">
-                    <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs"></i>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name or email..." class="pl-10 pr-4 py-2.5 rounded-xl border-neutral-200 bg-white text-xs w-64 focus:border-brand-gold focus:ring-0">
+                <form action="{{ route('admin.submissions.join_now-display') }}" method="GET" class="flex items-center gap-2">
+                    <div class="relative">
+                        <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs"></i>
+                        <input type="search" name="search" value="{{ request('search') }}" placeholder="Search name, phone, course, source..." class="pl-10 pr-4 py-2.5 rounded-xl border-neutral-200 bg-white text-xs w-72 focus:border-brand-gold focus:ring-0">
+                    </div>
+                    <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-xs font-black uppercase text-white hover:bg-brand-gold hover:text-brand-dark transition-all">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                    @if(request('search'))
+                        <a href="{{ route('admin.submissions.join_now-display') }}" class="inline-flex items-center rounded-xl bg-neutral-100 px-4 py-2.5 text-xs font-black uppercase text-neutral-600 hover:bg-neutral-200 transition-all">Clear</a>
+                    @endif
                 </form>
             </div>
         </div>
@@ -35,7 +43,7 @@
                         </td>
                         <td class="px-6 py-5">
                             <div class="text-sm font-black text-neutral-900 leading-tight">{{ $data->firstName }} {{ $data->lastName }}</div>
-                            <div class="text-[10px] text-neutral-400 font-bold uppercase mt-0.5">{{ $data->email }} &bull; {{ $data->phone }}</div>
+                            <div class="text-[10px] text-neutral-400 font-bold uppercase mt-0.5">{{ $data->email ?: 'No email yet' }} &bull; {{ $data->phone }}</div>
                             <div class="flex items-center gap-2 mt-1">
                                 @if($data->address)
                                     <div class="text-[9px] text-neutral-400 italic opacity-60">From {{ $data->address }}</div>
@@ -45,6 +53,30 @@
                                 @endif
                                 <span class="text-[9px] text-neutral-400 italic opacity-60">&bull; {{ $data->created_at->diffForHumans() }}</span>
                             </div>
+                            @if($data->lead_source || $data->cta_id)
+                                <div class="flex flex-wrap items-center gap-1.5 mt-2">
+                                    @if($data->lead_status)
+                                        @php
+                                            $leadStatusLabel = str_replace(' Lead', '', (string) $data->lead_status);
+                                        @endphp
+                                        <span class="text-[8px] px-1.5 py-0.5 rounded-md font-black uppercase border
+                                            {{ $leadStatusLabel === 'Hot' ? 'bg-rose-50 text-rose-700 border-rose-100' : '' }}
+                                            {{ $leadStatusLabel === 'Warm' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
+                                            {{ $leadStatusLabel === 'Basic' ? 'bg-neutral-50 text-neutral-600 border-neutral-100' : '' }}">
+                                            {{ $leadStatusLabel }}: {{ $data->lead_score ?? 0 }}
+                                        </span>
+                                    @endif
+                                    @if($data->help_topic)
+                                        <span class="text-[8px] bg-emerald-50 text-emerald-700 border border-emerald-100 px-1.5 py-0.5 rounded-md font-black uppercase">Help: {{ $data->help_topic }}</span>
+                                    @endif
+                                    @if($data->lead_source)
+                                        <span class="text-[8px] bg-blue-50 text-blue-700 border border-blue-100 px-1.5 py-0.5 rounded-md font-black uppercase">Source: {{ $data->lead_source }}</span>
+                                    @endif
+                                    @if($data->cta_id)
+                                        <span class="text-[8px] bg-amber-50 text-amber-700 border border-amber-100 px-1.5 py-0.5 rounded-md font-black uppercase">CTA: {{ $data->cta_id }}</span>
+                                    @endif
+                                </div>
+                            @endif
                         </td>
                         <td class="px-6 py-5">
                             @if($data->course_slug)
@@ -55,6 +87,12 @@
                                 <span class="inline-flex items-center rounded-lg bg-neutral-50 px-3 py-1.5 text-[9px] font-black uppercase text-neutral-500 border border-neutral-100">
                                     <i class="fa fa-history mr-1.5"></i> {{ $data->course }}
                                 </span>
+                            @endif
+                            @if($data->selected_course)
+                                <div class="mt-2 text-[9px] text-neutral-400 font-black uppercase">Selected: {{ $data->selected_course }}</div>
+                            @endif
+                            @if($data->preferred_batch_time)
+                                <div class="mt-1 text-[9px] text-neutral-400 font-black uppercase">Batch: {{ $data->preferred_batch_time }}</div>
                             @endif
                         </td>
                         <td class="px-6 py-5">
@@ -150,6 +188,19 @@
                         <div class="p-4 bg-brand-gold/10 rounded-2xl border border-brand-gold/10">
                             <span class="text-[9px] font-black uppercase text-brand-gold block mb-1">Desired Program</span>
                             <p id="modal_course" class="text-sm font-black text-brand-gold"></p>
+                            <p id="modal_help_topic" class="text-[10px] text-brand-gold/80 font-bold mt-1"></p>
+                            <p id="modal_batch_time" class="text-[10px] text-brand-gold/80 font-bold mt-1"></p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-rose-50/60 border border-rose-100 rounded-2xl">
+                            <span class="text-[9px] font-black uppercase text-rose-500 block mb-1">Lead Priority</span>
+                            <p id="modal_lead_status" class="text-sm font-black text-rose-700"></p>
+                        </div>
+                        <div class="p-4 bg-neutral-50 border border-neutral-100 rounded-2xl">
+                            <span class="text-[9px] font-black uppercase text-neutral-400 block mb-1">Audience / Intent</span>
+                            <p id="modal_intent" class="text-xs text-neutral-700 font-bold"></p>
                         </div>
                     </div>
 
@@ -157,6 +208,11 @@
                     <div class="p-6 bg-neutral-50 border border-neutral-100 rounded-2xl">
                         <span class="text-[9px] font-black uppercase text-neutral-400 block mb-2">Student's Questions</span>
                         <p id="modal_queries" class="text-xs text-neutral-700 leading-relaxed italic"></p>
+                    </div>
+
+                    <div class="p-4 bg-blue-50/50 border border-blue-100 rounded-2xl">
+                        <span class="text-[9px] font-black uppercase text-blue-400 block mb-2">Lead Source</span>
+                        <p id="modal_source" class="text-xs text-neutral-700 leading-relaxed"></p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -198,11 +254,16 @@
                 const urlTemplate = "{{ route('admin.submissions.join_now.status.update', ['id' => ':id']) }}";
                 form.action = urlTemplate.replace(':id', data.id);
                 document.getElementById('modal_name').innerText = `${data.firstName} ${data.lastName}`;
-                document.getElementById('modal_contact').innerText = `${data.email} | ${data.phone}`;
+                document.getElementById('modal_contact').innerText = `${data.email || 'No email yet'} | ${data.phone}`;
                 document.getElementById('modal_address').innerText = data.address;
                 document.getElementById('modal_contact_method').innerText = data.contactMethod || 'Phone Call';
                 document.getElementById('modal_course').innerText = data.course;
+                document.getElementById('modal_help_topic').innerText = data.help_topic ? `Help topic: ${data.help_topic}` : 'Help topic not captured';
+                document.getElementById('modal_batch_time').innerText = data.preferred_batch_time ? `Preferred batch: ${data.preferred_batch_time}` : '';
+                document.getElementById('modal_lead_status').innerText = `${(data.lead_status || 'Basic').replace(' Lead', '')} (${data.lead_score || 0})`;
+                document.getElementById('modal_intent').innerText = [data.audience_type, data.inquiry_intent].filter(Boolean).join(' | ') || 'No audience or intent captured.';
                 document.getElementById('modal_queries').innerText = data.queries ? `"${data.queries}"` : 'No additional questions provided.';
+                document.getElementById('modal_source').innerText = [data.lead_source, data.source_page, data.source_section, data.cta_id, data.landing_page].filter(Boolean).join(' | ') || 'No source data captured.';
                 document.getElementById('modal_date').innerText = `Received on ${new Date(data.created_at).toLocaleString()}`;
                 document.getElementById('modal_status').value = data.status;
                 document.getElementById('modal_notes').value = data.admin_notes || '';

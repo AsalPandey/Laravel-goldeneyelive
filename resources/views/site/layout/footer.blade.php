@@ -6,7 +6,7 @@
                     <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_quick_link_title'] ?? 'Quick Link' }}</h6>
                     <a class="btn btn-link extra-small" href="{{ route('about') }}">About Us</a>
                     <a class="btn btn-link extra-small" href="{{ route('courses-all') }}">Courses</a>
-                    <a class="btn btn-link extra-small" href="{{ route('contact') }}">Contact Us</a>
+                    <a class="btn btn-link extra-small" href="{{ route('contact') }}">Contact</a>
                     <a class="btn btn-link extra-small" href="{{ route('privacy-policy') }}">Privacy Policy</a>
                     <a class="btn btn-link extra-small" href="{{ route('terms-and-conditions') }}">Terms & Conditions</a>
                     <a class="btn btn-link extra-small" href="{{ route('faq') }}">FAQs & Help</a>
@@ -14,7 +14,11 @@
                 <div class="col-lg-3 col-md-6">
                     <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_contact_title'] ?? 'Contact' }}</h6>
                     <p class="mb-2 extra-small"><i class="fa fa-map-marker-alt me-3 text-brand-gold"></i>{{ $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal' }}</p>
-                    <p class="mb-2 extra-small"><i class="fa fa-phone-alt me-3 text-brand-gold"></i>{{ $settings['site_phone'] ?? '061-572599, 9856058599' }}</p>
+                    @php
+                        $footerPhone = $settings['site_phone'] ?? '061-572599, 9856058599';
+                        $footerPhoneHref = preg_replace('/[^0-9+]/', '', explode(',', $footerPhone)[0]);
+                    @endphp
+                    <p class="mb-2 extra-small"><i class="fa fa-phone-alt me-3 text-brand-gold"></i><a href="tel:{{ $footerPhoneHref }}" class="text-light text-decoration-none" data-source-page="footer" data-source-section="footer-phone" data-cta-label="Phone">{{ $footerPhone }}</a></p>
                     <p class="mb-2 extra-small"><i class="fa fa-envelope me-3 text-brand-gold"></i>{{ $settings['site_email'] ?? 'contact@goldeneye.edu.np' }}</p>
                     <div class="d-flex pt-2">
                         @if(isset($settings['facebook_url']) && $settings['facebook_url'])
@@ -36,7 +40,7 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_faq_title'] ?? 'Academic Guide' }}</h6>
-                    <p class="extra-small text-muted mb-3">Expert answers for your career growth.</p>
+                    <p class="extra-small text-muted mb-3">Quick answers about course fit, fees, timing, and next steps.</p>
                     @if(isset($footerFaqs) && is_iterable($footerFaqs) && count($footerFaqs) > 0)
                         @foreach($footerFaqs as $footerFaq)
                             <a class="btn btn-link py-1 text-truncate w-100 extra-small" href="{{ route('faq') }}#faq-{{ $footerFaq->id }}" title="{{ $footerFaq->question }}">

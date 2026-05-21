@@ -21,11 +21,17 @@ class PublicCatalogueTest extends TestCase
             ->assertSee('Full Catalogue', false)
             ->assertSee('Service Catalogue', false)
             ->assertSee('Course Catalogue', false)
-            ->assertSee('Learn Your Way: Digital-First Flexibility', false)
+            ->assertSee('Flexible Learning Support', false)
             ->assertSee('Study Abroad Test Prep', false)
-            ->assertSee('IELTS Masterclass for Band 7+', false)
+            ->assertSee('IELTS Preparation for Band 7 Goal', false)
             ->assertSee('Message on WhatsApp', false)
-            ->assertSee('Ask What Fits Me', false);
+            ->assertSee('Ask for Course Help', false)
+            ->assertSee('View Course Details', false)
+            ->assertDontSee('Ask What Fits Me', false);
+
+        $this->get('/catalogue')
+            ->assertStatus(301)
+            ->assertRedirect(route('catalogue'));
     }
 
     public function test_catalogue_is_hidden_from_homepage_navigation_and_footer(): void

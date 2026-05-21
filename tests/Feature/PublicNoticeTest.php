@@ -77,6 +77,8 @@ class PublicNoticeTest extends TestCase
         Notice::create([
             'title' => 'Top Bar Notice',
             'subtitle' => 'Visible above navbar',
+            'link' => '/courses-all',
+            'button_text' => 'View Course Details',
             'status' => 'active',
             'display_type' => 'bar',
         ]);
@@ -84,6 +86,8 @@ class PublicNoticeTest extends TestCase
         Notice::create([
             'title' => 'Popup Notice',
             'subtitle' => 'Visible as modal',
+            'link' => '/join-now?source_page=popup',
+            'button_text' => 'Ask for Course Guidance',
             'status' => 'active',
             'display_type' => 'popup',
         ]);
@@ -95,6 +99,9 @@ class PublicNoticeTest extends TestCase
         $response->assertSee('siteNoticePopup');
         $response->assertSee('Top Bar Notice');
         $response->assertSee('Popup Notice');
+        $response->assertSee('View Course Details');
+        $response->assertSee('Ask for Course Help');
+        $response->assertDontSee('Ask for Course Guidance');
     }
 
     public function test_active_bar_notice_does_not_suppress_marketing_popup_settings(): void
