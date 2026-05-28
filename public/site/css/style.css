@@ -272,6 +272,9 @@ h1, h2, h3, h4, h5, h6, .section-title {
 @media (max-width: 991.98px) {
     .site-navbar {
         background: rgba(5, 12, 28, 0.92) !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1040;
     }
 
     .site-navbar .navbar-collapse {
@@ -875,6 +878,11 @@ h1, h2, h3, h4, h5, h6, .section-title {
     transform: translateY(-4px);
     border-color: rgba(197, 160, 89, 0.42) !important;
     box-shadow: 0 18px 36px rgba(5, 12, 28, 0.08);
+}
+
+.audience-card-link-wrapper:focus-visible .audience-card {
+    border-color: var(--brand-gold) !important;
+    box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.24), 0 18px 36px rgba(5, 12, 28, 0.08);
 }
 
 .audience-card-icon {

@@ -41,6 +41,10 @@ Route::controller(SiteController::class)->group(function () {
     Route::get('/about', 'about')->name('about');
     Route::get('/about-detail', 'aboutDetail')->name('about-detail');
     Route::get('/catelogue', 'catalogue')->name('catalogue');
+    Route::get('/for-students', 'forStudents')->name('for-students');
+    Route::get('/for-parents', 'forParents')->name('for-parents');
+    Route::get('/study-abroad-guidance', 'studyAbroadGuidance')->name('study-abroad-guidance');
+    Route::get('/job-computer-skills', 'jobComputerSkills')->name('job-computer-skills');
     Route::get('/faq', 'faq')->name('faq');
     Route::get('/privacy-policy', 'privacyPolicy')->name('privacy-policy');
     Route::get('/terms-and-conditions', 'termsAndConditions')->name('terms-and-conditions');

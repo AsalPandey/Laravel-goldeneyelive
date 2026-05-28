@@ -62,6 +62,7 @@
                 'problem' => 'Not sure which course to choose after school or college?',
                 'benefit' => 'Compare options by goal, timing, and current level.',
                 'source' => 'audience-student',
+                'route' => route('for-students'),
             ],
             [
                 'icon' => 'fa fa-users',
@@ -69,6 +70,7 @@
                 'problem' => 'Need clarity on fees, timing, safety, and course fit?',
                 'benefit' => 'We explain course fit, fees, timing, expected outcomes, and next steps.',
                 'source' => 'audience-parent',
+                'route' => route('for-parents'),
             ],
             [
                 'icon' => 'fa fa-plane',
@@ -76,6 +78,7 @@
                 'problem' => 'Confused between IELTS, PTE, Japanese, or Korean?',
                 'benefit' => 'Match test prep with destination and timeline.',
                 'source' => 'audience-study-abroad',
+                'route' => route('study-abroad-guidance'),
             ],
             [
                 'icon' => 'fa fa-laptop-code',
@@ -83,6 +86,7 @@
                 'problem' => 'Want practical skills for work, office, or IT?',
                 'benefit' => 'Start with a skill path that fits your level.',
                 'source' => 'audience-job-computer-skills',
+                'route' => route('job-computer-skills'),
             ],
         ];
         $trustItems = [
@@ -157,15 +161,17 @@
             <div class="row g-3">
                 @foreach($audienceSegments as $segment)
                     <div class="col-md-6 col-xl-3">
-                        <article class="audience-card h-100 p-4 bg-zinc-50 border border-zinc-100">
-                            <div class="audience-card-icon mb-3">
-                                <i class="{{ $segment['icon'] }}"></i>
-                            </div>
-                            <h3 class="h6 fw-black text-brand-dark mb-3">{{ $segment['title'] }}</h3>
-                            <p class="text-zinc-600 mb-2" style="font-size: 12px; line-height: 1.6;">{{ $segment['problem'] }}</p>
-                            <p class="text-brand-dark fw-bold mb-4" style="font-size: 12px; line-height: 1.5;">{{ $segment['benefit'] }}</p>
-                            <a href="{{ $guidanceUrl($segment['source']) }}" data-cta="{{ $segment['source'] }}" class="audience-card-link">Ask for Course Help</a>
-                        </article>
+                        <a href="{{ $segment['route'] }}" data-cta="{{ $segment['source'] }}" class="audience-card-link-wrapper d-block h-100 text-decoration-none" aria-label="{{ $segment['title'] }} guidance page">
+                            <article class="audience-card h-100 p-4 bg-zinc-50 border border-zinc-100">
+                                <div class="audience-card-icon mb-3">
+                                    <i class="{{ $segment['icon'] }}"></i>
+                                </div>
+                                <h3 class="h6 fw-black text-brand-dark mb-3">{{ $segment['title'] }}</h3>
+                                <p class="text-zinc-600 mb-2" style="font-size: 12px; line-height: 1.6;">{{ $segment['problem'] }}</p>
+                                <p class="text-brand-dark fw-bold mb-4" style="font-size: 12px; line-height: 1.5;">{{ $segment['benefit'] }}</p>
+                                <span class="audience-card-link">View Course Details</span>
+                            </article>
+                        </a>
                     </div>
                 @endforeach
             </div>
