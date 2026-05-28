@@ -11,19 +11,29 @@ class SiteSetting extends Model
 
     protected $fillable = ['key', 'value', 'type'];
 
-    /**
-     * Get a setting value by key.
-     *
-     * @param  string  $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    public static function getValue($key, $default = null)
+    public static function getValue(string $key, mixed $default = null): mixed
     {
-        $setting = cache()->remember("setting_{$key}", 3600, function () use ($key) {
-            return self::where('key', $key)->first();
-        });
+        $cacheKey = "setting_{$key}";
+        $cachedValue = cache()->get($cacheKey);
 
-        return $setting ? $setting->value : $default;
+        if (is_scalar($cachedValue)) {
+            return $cachedValue;
+        }
+
+        if ($cachedValue !== null) {
+            cache()->forget($cacheKey);
+        }
+
+        $value = self::query()
+            ->where('key', $key)
+            ->value('value');
+
+        if ($value === null && ! self::query()->where('key', $key)->exists()) {
+            return $default;
+        }
+
+        cache()->put($cacheKey, $value, 3600);
+
+        return $value;
     }
 }
