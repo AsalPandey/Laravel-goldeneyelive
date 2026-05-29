@@ -78,7 +78,7 @@ class BrandingTest extends TestCase
 
         $this->assertDatabaseHas('site_settings', [
             'key' => 'whatsapp_number',
-            'value' => '9876543210',
+            'value' => '9779876543210',
         ]);
     }
 

@@ -2,10 +2,16 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Support\PublicCtaContract;
 use Illuminate\Validation\Rule;
 
 class ServicePillarRequest extends CMSRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $this->merge(PublicCtaContract::normalizeServicePillarPayload($this->all()));
+    }
+
     public function rules(): array
     {
         $pillarId = $this->route('service_pillar')?->id ?? $this->route('servicePillar')?->id;
@@ -18,7 +24,7 @@ class ServicePillarRequest extends CMSRequest
             'bullets' => ['nullable', 'array'],
             'bullets.*' => ['nullable', 'string', 'max:500'],
             'cta_label' => ['nullable', 'string', 'max:80'],
-            'cta_url' => ['nullable', 'string', 'max:500'],
+            'cta_url' => ['nullable', 'string', 'max:500', PublicCtaContract::publicUrlRule()],
             'is_featured' => ['nullable', 'boolean'],
             'status' => ['required', 'in:active,inactive'],
             'sort_order' => ['nullable', 'integer', 'min:0'],

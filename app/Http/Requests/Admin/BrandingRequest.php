@@ -3,13 +3,38 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\SiteSetting;
+use App\Support\PublicCtaContract;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class BrandingRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return auth()->user()->hasRole('Admin');
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge(PublicCtaContract::normalizeBrandingPayload($this->all()));
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            if (! $this->has('whatsapp_number') || filled($this->input('whatsapp_number'))) {
+                return;
+            }
+
+            $whatsappConfigured = filled(SiteSetting::getValue('whatsapp_number'))
+                || $this->filled('whatsapp_cta_text')
+                || $this->filled('whatsapp_button_text')
+                || $this->filled('whatsapp_prefill_message');
+
+            if ($whatsappConfigured) {
+                $validator->errors()->add('whatsapp_number', 'The whatsapp number is required while the WhatsApp widget is configured.');
+            }
+        });
     }
 
     public function rules(): array
@@ -22,7 +47,11 @@ class BrandingRequest extends FormRequest
             'site_email' => ['nullable', 'email', 'max:255'],
             'site_phone' => ['nullable', 'string', 'max:255'],
             'site_address' => ['nullable', 'string', 'max:500'],
-            'whatsapp_number' => ['nullable', 'string', 'max:20'],
+            'whatsapp_number' => ['nullable', 'string', 'max:20', PublicCtaContract::whatsappNumberRule()],
+            'whatsapp_cta_text' => ['nullable', 'string', 'max:50'],
+            'whatsapp_button_text' => ['nullable', 'string', 'max:50'],
+            'whatsapp_cta_subtext' => ['nullable', 'string', 'max:255'],
+            'whatsapp_prefill_message' => ['nullable', 'string', 'max:500'],
             'facebook_url' => ['nullable', 'url', 'max:255'],
             'instagram_url' => ['nullable', 'url', 'max:255'],
             'linkedin_url' => ['nullable', 'url', 'max:255'],
@@ -40,6 +69,14 @@ class BrandingRequest extends FormRequest
             'schema_markup' => ['nullable', 'string'],
             'meta_keywords' => ['nullable', 'string'],
             'image_size_limit' => ['nullable', 'integer', 'min:512', 'max:10240'],
+            'hero_cta_1_text' => ['nullable', 'string', 'max:50'],
+            'hero_cta_2_text' => ['nullable', 'string', 'max:50'],
+            'hero_cta_text' => ['nullable', 'string', 'max:50'],
+            'popup_button_text' => ['nullable', 'string', 'max:50'],
+            'sticky_cta_text' => ['nullable', 'string', 'max:50'],
+            'blog_cta_btn' => ['nullable', 'string', 'max:50'],
+            'faq_btn_text' => ['nullable', 'string', 'max:50'],
+            'popup_register_link' => ['nullable', 'string', 'max:500', PublicCtaContract::publicUrlRule()],
 
             // Image paths (vault selection)
             'site_logo_path' => ['nullable', 'string', 'max:255'],
