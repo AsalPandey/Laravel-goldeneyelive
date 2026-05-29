@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SEORequest;
 use App\Models\SiteSetting;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class SEOController extends Controller
@@ -22,22 +24,23 @@ class SEOController extends Controller
     /**
      * Display the SEO Authority Center
      */
-    public function index()
+    public function index(): View
     {
         $settings = SiteSetting::all()->pluck('value', 'key');
+        $robotsTxtWarning = SEORequest::ROBOTS_FULL_SITE_BLOCK_WARNING;
 
         // Ensure robots.txt default if not set
         if (! isset($settings['robots_txt'])) {
             $settings['robots_txt'] = "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: ".url('/sitemap.xml');
         }
 
-        return view('admin.seo.index', compact('settings'));
+        return view('admin.seo.index', compact('settings', 'robotsTxtWarning'));
     }
 
     /**
      * Update SEO Settings
      */
-    public function update(SEORequest $request)
+    public function update(SEORequest $request): RedirectResponse
     {
         $validated = $request->validated();
         $data = [];

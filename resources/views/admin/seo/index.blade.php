@@ -122,15 +122,31 @@
                 <div class="seo-card">
                     <div class="section-icon bg-zinc-900 text-white"><i class="fas fa-terminal"></i></div>
                     <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">Crawler Controls (Robots.txt)</h3>
+                    @php
+                        $robotsTxtValue = old('robots_txt', $settings['robots_txt'] ?? '');
+                        $robotsTxtBlocksFullSite = \App\Http\Requests\Admin\SEORequest::robotsTxtBlocksFullSite($robotsTxtValue);
+                    @endphp
                     
                     <div class="guide-box">
                         <div class="guide-title"><i class="fas fa-compass"></i> User Guide: Robots.txt</div>
-                        <p class="guide-text">Tell search engine robots which pages they can or cannot crawl. Be careful: Disallowing "/" will hide your entire site from Google!</p>
+                        <p class="guide-text">Tell search engine robots which pages they can or cannot crawl. For production, avoid <code>Disallow: /</code> unless you intentionally want to hide the whole website from search engines.</p>
                     </div>
 
                     <div>
                         <label class="premium-label">Robots.txt Content</label>
-                        <textarea name="robots_txt" rows="6" class="premium-input font-mono text-xs">{{ $settings['robots_txt'] ?? '' }}</textarea>
+                        <textarea name="robots_txt" rows="6" class="premium-input font-mono text-xs @error('robots_txt') border-rose-500 @enderror">{{ $robotsTxtValue }}</textarea>
+                        @error('robots_txt') <p class="text-rose-500 text-[10px] mt-1 font-bold uppercase">{{ $message }}</p> @enderror
+
+                        @if($robotsTxtBlocksFullSite)
+                            <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-900">
+                                {{ $robotsTxtWarning }}
+                            </div>
+                        @endif
+
+                        <label class="mt-4 flex items-start gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-sm font-semibold text-zinc-700">
+                            <input type="checkbox" name="robots_txt_deindex_confirm" value="1" @checked(old('robots_txt_deindex_confirm')) class="mt-1 rounded border-zinc-300 text-[#C5A059] focus:ring-[#C5A059]">
+                            <span>I understand this robots.txt may block the entire website from Google and other search engines.</span>
+                        </label>
                     </div>
                 </div>
 
