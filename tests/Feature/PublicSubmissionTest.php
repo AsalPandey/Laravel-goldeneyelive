@@ -10,12 +10,22 @@ use App\Models\JoinNowQuery;
 use App\Models\NewsLetter;
 use App\Models\SiteSetting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class PublicSubmissionTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        cache()->forget('setting_recaptcha_site_key');
+        cache()->forget('setting_recaptcha_secret_key');
+    }
 
     public function test_contact_form_submits_without_recaptcha_when_recaptcha_is_not_configured(): void
     {
@@ -56,6 +66,29 @@ class PublicSubmissionTest extends TestCase
         $this->assertDatabaseMissing(Contact::class, [
             'email' => 'asha@example.com',
         ]);
+    }
+
+    public function test_contact_form_rejects_overlong_message(): void
+    {
+        Mail::fake();
+
+        $response = $this->from(route('contact'))->post(route('contact-submit'), [
+            'name' => 'Asha Sharma',
+            'phone' => '9823456780',
+            'email' => 'asha@example.com',
+            'subject' => 'Course question',
+            'message' => str_repeat('a', 5001),
+        ]);
+
+        $response
+            ->assertRedirect(route('contact'))
+            ->assertSessionHasErrors('message');
+
+        $this->assertDatabaseMissing(Contact::class, [
+            'email' => 'asha@example.com',
+        ]);
+
+        Mail::assertNothingQueued();
     }
 
     public function test_join_now_form_accepts_visible_required_fields_only(): void
@@ -149,6 +182,29 @@ class PublicSubmissionTest extends TestCase
         ]);
     }
 
+    public function test_join_now_form_rejects_overlong_query_and_goal(): void
+    {
+        Mail::fake();
+
+        $response = $this->from(route('join-now'))->post(route('join-now-submit'), [
+            'full_name' => 'Asha Sharma',
+            'phone' => '9823456780',
+            'help_topic' => 'Choosing a course',
+            'queries' => str_repeat('q', 5001),
+            'goal' => str_repeat('g', 5001),
+        ]);
+
+        $response
+            ->assertRedirect(route('join-now'))
+            ->assertSessionHasErrors(['queries', 'goal']);
+
+        $this->assertDatabaseMissing(JoinNowQuery::class, [
+            'phone' => '9823456780',
+        ]);
+
+        Mail::assertNothingQueued();
+    }
+
     public function test_join_now_form_accepts_supported_nepal_phone_formats(): void
     {
         Mail::fake();
@@ -225,6 +281,75 @@ class PublicSubmissionTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors('g-recaptcha-response');
+    }
+
+    public function test_contact_form_passes_with_configured_recaptcha_token(): void
+    {
+        Mail::fake();
+        Http::fake([
+            'https://www.google.com/recaptcha/api/siteverify' => Http::response(['success' => true]),
+        ]);
+
+        SiteSetting::create([
+            'key' => 'recaptcha_site_key',
+            'value' => 'site-key',
+            'type' => 'text',
+        ]);
+
+        SiteSetting::create([
+            'key' => 'recaptcha_secret_key',
+            'value' => 'secret-key',
+            'type' => 'text',
+        ]);
+
+        $response = $this->from(route('contact'))->post(route('contact-submit'), [
+            'name' => 'Asha Sharma',
+            'phone' => '9823456780',
+            'email' => 'asha@example.com',
+            'subject' => 'Course question',
+            'message' => 'I want to know more about IELTS classes.',
+            'g-recaptcha-response' => 'valid-token',
+        ]);
+
+        $response->assertRedirect(route('contact'));
+
+        $this->assertDatabaseHas(Contact::class, [
+            'email' => 'asha@example.com',
+            'subject' => 'Course question',
+        ]);
+
+        Http::assertSent(fn ($request): bool => $request->url() === 'https://www.google.com/recaptcha/api/siteverify'
+            && $request['secret'] === 'secret-key'
+            && $request['response'] === 'valid-token');
+        Mail::assertQueued(ContactMail::class);
+    }
+
+    public function test_production_missing_recaptcha_keys_logs_warning_without_crashing(): void
+    {
+        Mail::fake();
+        Log::spy();
+        $this->app->detectEnvironment(fn (): string => 'production');
+
+        $response = $this->from(route('contact'))->post(route('contact-submit'), [
+            'name' => 'Asha Sharma',
+            'phone' => '9823456780',
+            'email' => 'asha@example.com',
+            'subject' => 'Course question',
+            'message' => 'I want to know more about IELTS classes.',
+        ]);
+
+        $response->assertRedirect(route('contact'));
+
+        $this->assertDatabaseHas(Contact::class, [
+            'email' => 'asha@example.com',
+            'subject' => 'Course question',
+        ]);
+
+        Log::shouldHaveReceived('warning')
+            ->with('Production reCAPTCHA is not fully configured.', [
+                'missing_keys' => ['recaptcha_site_key', 'recaptcha_secret_key'],
+            ])
+            ->once();
     }
 
     public function test_join_now_form_fails_with_invalid_course_slug(): void

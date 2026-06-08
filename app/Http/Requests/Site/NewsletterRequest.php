@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Site;
 
-use App\Models\SiteSetting;
+use App\Support\Recaptcha;
 use Illuminate\Foundation\Http\FormRequest;
 
 class NewsletterRequest extends FormRequest
@@ -18,7 +18,7 @@ class NewsletterRequest extends FormRequest
             'email' => ['required', 'email', 'max:255'],
         ];
 
-        if (SiteSetting::getValue('recaptcha_secret_key')) {
+        if (Recaptcha::challengeRequired()) {
             $rules['g-recaptcha-response'] = ['required', 'string'];
         }
 

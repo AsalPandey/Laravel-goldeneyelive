@@ -79,9 +79,12 @@ Route::controller(CoursesController::class)->group(function () {
 */
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::redirect('/admin', '/admin/dashboard');
-    Route::redirect('/dashboard', '/admin/dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::middleware('role:Admin|Staff')->group(function () {
+        Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        Route::redirect('/admin', '/admin/dashboard');
+    });
 
     // Admin/Staff Only Sub-routes
     Route::middleware(['role:Admin|Staff', 'image.limit'])->group(function () {

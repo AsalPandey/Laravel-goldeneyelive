@@ -13,8 +13,9 @@ use App\Models\Course;
 use App\Models\JoinNowQuery;
 use App\Models\NewsLetter;
 use App\Models\SiteSetting;
-use GuzzleHttp\Client;
+use App\Support\Recaptcha;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -301,26 +302,26 @@ class ContactController extends Controller
     /**
      * Verify reCAPTCHA with Google API
      */
-    private function verifyRecaptcha($response): bool
+    private function verifyRecaptcha(?string $response): bool
     {
-        $secret = SiteSetting::getValue('recaptcha_secret_key');
+        Recaptcha::reportProductionMisconfiguration();
+
+        $secret = Recaptcha::secretKey();
         if (! $secret) {
-            return true;
+            return ! Recaptcha::hasConfiguredKey() && ! app()->isProduction();
         }
 
         try {
-            $client = new Client(['timeout' => 5.0, 'connect_timeout' => 2.0]);
-            $res = $client->post('https://www.google.com/recaptcha/api/siteverify', [
-                'form_params' => [
+            $verificationResponse = Http::asForm()
+                ->timeout(5)
+                ->connectTimeout(2)
+                ->post('https://www.google.com/recaptcha/api/siteverify', [
                     'secret' => $secret,
                     'response' => $response,
                     'remoteip' => request()->ip(),
-                ],
-            ]);
+                ]);
 
-            $body = json_decode((string) $res->getBody());
-
-            return $body->success;
+            return (bool) data_get($verificationResponse->json(), 'success', false);
         } catch (\Exception $e) {
             logger()->error('reCAPTCHA Verification Error: '.$e->getMessage());
 

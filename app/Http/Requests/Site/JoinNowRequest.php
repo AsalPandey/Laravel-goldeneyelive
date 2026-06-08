@@ -4,7 +4,7 @@ namespace App\Http\Requests\Site;
 
 use App\Models\AnalyticsEvent;
 use App\Models\Course;
-use App\Models\SiteSetting;
+use App\Support\Recaptcha;
 use Closure;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -99,10 +99,10 @@ class JoinNowRequest extends FormRequest
             'preferred_course' => ['nullable', 'string', 'max:255'],
             'contactMethod' => ['nullable', 'string', 'max:255'],
             'address' => ['nullable', 'string', 'max:500'],
-            'queries' => ['nullable', 'string'],
+            'queries' => ['nullable', 'string', 'max:5000'],
             'current_education_level' => ['nullable', 'string', 'max:255'],
             'preferred_batch_time' => ['nullable', 'string', 'max:255'],
-            'goal' => ['nullable', 'string', 'max:1000'],
+            'goal' => ['nullable', 'string', 'max:5000'],
             'lead_source' => ['nullable', 'string', 'max:255'],
             'landing_page' => ['nullable', 'string', 'max:500'],
             'cta_id' => ['nullable', 'string', 'max:255'],
@@ -113,7 +113,7 @@ class JoinNowRequest extends FormRequest
             'inquiry_intent' => ['nullable', 'string', 'max:255'],
         ];
 
-        if (SiteSetting::getValue('recaptcha_secret_key')) {
+        if (Recaptcha::challengeRequired()) {
             $rules['g-recaptcha-response'] = ['required', 'string'];
         }
 

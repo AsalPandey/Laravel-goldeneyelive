@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Site;
 
 use App\Models\AnalyticsEvent;
-use App\Models\SiteSetting;
+use App\Support\Recaptcha;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,13 +23,13 @@ class ContactRequest extends FormRequest
             'phone' => ['required', 'string', 'max:20', 'regex:'.self::PHONE_REGEX],
             'email' => ['required', 'email', 'max:255'],
             'subject' => ['required', 'string', 'max:255'],
-            'message' => ['required', 'string'],
+            'message' => ['required', 'string', 'max:5000'],
             'lead_source' => ['nullable', 'string', 'max:255'],
             'landing_page' => ['nullable', 'string', 'max:500'],
             'cta_id' => ['nullable', 'string', 'max:255'],
         ];
 
-        if (SiteSetting::getValue('recaptcha_secret_key')) {
+        if (Recaptcha::challengeRequired()) {
             $rules['g-recaptcha-response'] = ['required', 'string'];
         }
 
