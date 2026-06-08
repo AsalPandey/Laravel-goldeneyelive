@@ -16,13 +16,13 @@ Official Hostinger references:
 
 ## Current Project Requirements
 
-- PHP: `^8.3` from `composer.json`.
+- PHP: `^8.4` from `composer.json`.
 - Laravel: `^13.0`.
 - Build output: `public/build`.
 - Public document root should point to Laravel `public`.
 - Database: MySQL/MariaDB through Hostinger hPanel.
 
-Hostinger docs show PHP version is changed from hPanel PHP Configuration. Before deployment, confirm your hosting plan offers PHP 8.3 or newer. If PHP 8.3+ is not available, do not deploy this project to that plan without changing hosting/runtime.
+Hostinger docs show PHP version is changed from hPanel PHP Configuration. Before deployment, confirm your hosting plan offers PHP 8.4 or newer. If PHP 8.4+ is not available, do not deploy this project to that plan without changing hosting/runtime.
 
 ## Recommended Folder Layout
 
@@ -81,7 +81,7 @@ The ZIP already includes `vendor/` and `public/build/`, so it can be uploaded th
 ## Upload Steps
 
 1. In Hostinger hPanel, add or confirm the domain.
-2. Set PHP version to 8.3 or newer.
+2. Set PHP version to 8.4 or newer.
 3. Enable SSH if your plan supports it.
 4. Create a MySQL database and database user in hPanel.
 5. Import `goldeneye_hostinger_release_20260504-080254.sql` with phpMyAdmin.
