@@ -1042,6 +1042,23 @@ h1, h2, h3, h4, h5, h6, .section-title {
     padding-top: 1.5rem;
 }
 
+.course-help-page-header {
+    scroll-margin-top: 88px;
+}
+
+.course-help-section {
+    scroll-margin-top: 88px;
+}
+
+.course-help-intro h2 {
+    text-wrap: balance;
+}
+
+.course-help-card {
+    max-width: 1050px;
+    margin-inline: auto;
+}
+
 @media (max-width: 575px) {
     .course-view-toggle {
         width: 100%;
@@ -1495,29 +1512,45 @@ h1, h2, h3, h4, h5, h6, .section-title {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1px;
+    height: auto;
+    padding: 0.75rem 1rem 0;
+    line-height: 1;
+    opacity: 1;
+    transform: none;
 }
 
-.form-conversational .form-control {
-    min-height: 54px;
+.form-conversational .form-floating > .form-control,
+.form-conversational .form-floating > .form-select {
+    height: auto;
+    min-height: 64px;
     border: 1px solid #cbd5e1 !important;
-    padding: 0.8rem 1rem;
+    padding: 1.75rem 1rem 0.62rem;
     border-radius: 10px;
     transition: all 0.3s ease;
     background: #fff !important;
     color: var(--brand-dark);
-}
-
-.form-conversational .form-select {
-    min-height: 54px;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 10px;
-    background-color: #fff !important;
-    color: var(--brand-dark);
+    font-size: 1rem;
     font-weight: 700;
+    line-height: 1.35;
 }
 
-.form-conversational .form-control::placeholder {
-    color: #64748b;
+.form-conversational .form-floating > .form-select {
+    padding-right: 2.75rem;
+}
+
+.form-conversational .form-floating > textarea.form-control {
+    min-height: 96px;
+    padding-top: 1.9rem;
+    resize: vertical;
+}
+
+.form-conversational .form-floating > .form-control::placeholder {
+    color: transparent;
+}
+
+.form-conversational .form-floating > .form-control:focus::placeholder {
+    color: #94a3b8;
+    opacity: 0.75;
 }
 
 .form-conversational .form-control:focus,
@@ -1541,12 +1574,16 @@ h1, h2, h3, h4, h5, h6, .section-title {
 
 .form-conversational .form-text {
     color: #475569;
+    line-height: 1.45;
+    margin-top: 0.45rem;
 }
 
 .form-conversational .form-floating > .form-control:focus ~ label,
 .form-conversational .form-floating > .form-control:not(:placeholder-shown) ~ label,
 .form-conversational .form-floating > .form-select ~ label {
     color: #334155;
+    opacity: 1;
+    transform: none;
 }
 
 /* Quick Inquiry Tab */

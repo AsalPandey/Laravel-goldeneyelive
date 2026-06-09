@@ -18,7 +18,7 @@
         $optionalHasErrors = $errors->hasAny(['email', 'current_education_level', 'course', 'preferred_batch_time', 'goal', 'queries', 'contactMethod', 'address']);
     @endphp
 
-    <div class="container-fluid page-header mb-5" style="background: linear-gradient(rgba(5, 12, 28, 0.85), rgba(5, 12, 28, 0.85)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
+    <div class="container-fluid page-header course-help-page-header mb-4" style="background: linear-gradient(rgba(5, 12, 28, 0.85), rgba(5, 12, 28, 0.85)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
@@ -35,11 +35,11 @@
         </div>
     </div>
 
-    <div class="container-xxl py-5">
+    <div class="container-xxl course-help-section py-4">
         <div class="container">
             <div class="row g-4 justify-content-center">
-                <div class="col-lg-8 col-md-12 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="text-center mb-4">
+                <div class="col-xl-7 col-lg-8 col-md-12 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="text-center mb-3 course-help-intro">
                         <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Course Guidance</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Send your goal. We will guide you before enrollment.</h2>
                         <p class="text-zinc-600 mb-0" style="font-size: 14px;">Start with three required details. Add more only if you want a more specific reply.</p>
@@ -51,7 +51,7 @@
                         </div>
                     @endif
 
-                    <div class="premium-card p-4 p-lg-5 shadow-lg form-conversational">
+                    <div class="premium-card p-4 p-lg-5 shadow-lg form-conversational course-help-card">
                         <form action="{{ route('join-now-submit') }}" method="POST" id="joinNow" novalidate data-analytics-form="course-help" data-source-page="{{ $sourcePage }}" data-source-section="{{ $sourceSection }}" data-selected-course="{{ $selectedCourseContext }}" data-audience-type="{{ $audienceType }}" data-inquiry-intent="{{ $inquiryIntent }}">
                             @csrf
                             <input type="hidden" name="lead_source" value="{{ old('lead_source', $sourceSection) }}">

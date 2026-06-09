@@ -141,6 +141,8 @@ class PublicCtaRenderingTest extends TestCase
         ]))
             ->assertOk()
             ->assertSee('Ask for Course Help', false)
+            ->assertSee('course-help-page-header', false)
+            ->assertSee('course-help-card', false)
             ->assertSee('Find the right course before you enroll', false)
             ->assertSee('I need help choosing the right program', false)
             ->assertSee('name="selected_course" value="ielts-masterclass"', false)
@@ -183,6 +185,9 @@ class PublicCtaRenderingTest extends TestCase
         $this->assertStringContainsString('a:focus-visible', $css);
         $this->assertStringContainsString('min-height: 44px', $css);
         $this->assertStringContainsString('.form-conversational .form-select', $css);
+        $this->assertStringContainsString('.form-conversational .form-floating > .form-control::placeholder', $css);
+        $this->assertStringContainsString('color: transparent', $css);
+        $this->assertStringContainsString('scroll-margin-top: 88px', $css);
         $this->assertStringContainsString('border: 1px solid #cbd5e1 !important', $css);
         $this->assertStringContainsString('.form-conversational .form-control.is-invalid', $css);
         $this->assertStringContainsString('.whatsapp-btn-container', $css);
