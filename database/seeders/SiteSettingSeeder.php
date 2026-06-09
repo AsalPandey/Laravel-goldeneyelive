@@ -49,7 +49,7 @@ class SiteSettingSeeder extends Seeder
             'external_review_screenshot' => ['', 'image'],
             'external_review_proof_note' => ['Ask the academy team for current Google review proof or verified review screenshots before enrollment.', 'text'],
             'speakable_selectors' => ['.hero-hook-title, .section-title, h1, h2', 'text'],
-            'robots_txt' => ["User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: /sitemap.xml", 'text'],
+            'robots_txt' => ["User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: https://goldeneye.edu.np/sitemap.xml", 'text'],
             'geo_latitude' => ['28.2126', 'text'],
             'geo_longitude' => ['83.9786', 'text'],
             'google_maps_embed' => ['https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3515.823438031535!2d83.97858907530514!3d28.212555675898857!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399595ab361d716d%3A0xcf953250b7312903!2sGoldenEye%20Academy!5e0!3m2!1sen!2snp!4v1714100000000!5m2!1sen!2snp', 'text'],

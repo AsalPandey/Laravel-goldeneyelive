@@ -55,6 +55,10 @@ class PublicCtaGuardrailTest extends TestCase
             'key' => 'whatsapp_cta_text',
             'value' => 'Message on WhatsApp',
         ]);
+        $this->assertDatabaseHas(SiteSetting::class, [
+            'key' => 'faq_btn_text',
+            'value' => 'Ask for Course Help',
+        ]);
         $this->assertDatabaseMissing(SiteSetting::class, [
             'value' => 'Ask for Course Guidance',
         ]);

@@ -38,9 +38,7 @@
     @yield('schema_markup')
 
     {{-- Global Site Schema Injection --}}
-    @if(isset($settings['schema_markup']) && $settings['schema_markup'])
-        @jsonld($settings['schema_markup'])
-    @endif
+    @jsonld(json_encode(\App\Support\StructuredData::siteGraph($settings ?? [])))
 
     {{-- Open Graph / Facebook --}}
     <meta property="og:type" content="website">
@@ -117,52 +115,4 @@
         }
     </style>
 
-    @php
-        $speakableSelectors = array_values(array_filter(array_map('trim', explode(',', $settings['speakable_selectors'] ?? ''))));
-    @endphp
-
-    {{-- JSON-LD Organization Schema (Global) --}}
-    <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "EducationalOrganization",
-        "name": "{{ $settings['site_name'] ?? 'GoldenEye' }} {{ $settings['site_name_suffix'] ?? 'Academy' }}",
-        "url": "{{ url('/') }}",
-        "logo": "{{ \App\Support\PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png') }}",
-        "foundingDate": "2008",
-        "description": "{{ $settings['meta_description'] ?? 'GoldenEye Academy helps learners in Pokhara choose study abroad, language, computer, office, and web development courses with guidance before enrollment.' }}",
-        "address": {
-            "@@type": "PostalAddress",
-            "streetAddress": "{{ $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal' }}",
-            "addressLocality": "Pokhara",
-            "addressRegion": "Gandaki",
-            "postalCode": "33700",
-            "addressCountry": "NP"
-        },
-        "geo": {
-            "@@type": "GeoCoordinates",
-            "latitude": "{{ $settings['geo_latitude'] ?? '28.2172' }}",
-            "longitude": "{{ $settings['geo_longitude'] ?? '83.9825' }}"
-        },
-        "contactPoint": {
-            "@@type": "ContactPoint",
-            "telephone": "{{ $settings['site_phone'] ?? '+977-61-572599' }}",
-            "contactType": "customer service",
-            "areaServed": "NP",
-            "availableLanguage": ["English", "Nepali"]
-        },
-        "sameAs": [
-            "{{ $settings['facebook_url'] ?? 'https://www.facebook.com/goldeneyeacademy' }}",
-            "{{ $settings['instagram_url'] ?? 'https://www.instagram.com/goldeneye.academy/' }}",
-            "{{ $settings['linkedin_url'] ?? 'https://www.linkedin.com/company/golden-eye-academy/' }}"
-        ]
-        @if(!empty($speakableSelectors))
-        ,
-        "speakable": {
-            "@@type": "SpeakableSpecification",
-            "cssSelector": @json($speakableSelectors)
-        }
-        @endif
-    }
-    </script>
 </head>

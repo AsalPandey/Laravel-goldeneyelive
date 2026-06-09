@@ -46,19 +46,21 @@ class PublicSettingsCleanupCommandTest extends TestCase
             ['key' => 'hero_cta_2_text', 'value' => 'See Courses', 'type' => 'text'],
             ['key' => 'whatsapp_cta_text', 'value' => 'Message us on WhatsApp', 'type' => 'text'],
             ['key' => 'whatsapp_button_text', 'value' => 'Message us on WhatsApp', 'type' => 'text'],
+            ['key' => 'faq_btn_text', 'value' => 'Ask for Course Guidance', 'type' => 'text'],
             ['key' => 'whatsapp_cta_subtext', 'value' => 'CASUAL QUESTIONS. QUICK REPLY.', 'type' => 'text'],
             ['key' => 'whatsapp_prefill_message', 'value' => 'CASUAL QUESTIONS. QUICK REPLY.', 'type' => 'text'],
             ['key' => 'sticky_cta_text', 'value' => 'Custom Safe Label', 'type' => 'text'],
         ]);
 
         $this->artisan('goldeneye:normalize-public-settings')
-            ->expectsOutputToContain('Total changes: 6')
+            ->expectsOutputToContain('Total changes: 7')
             ->assertExitCode(0);
 
         $this->assertDatabaseHas(SiteSetting::class, ['key' => 'hero_cta_1_text', 'value' => 'Ask for Course Help']);
         $this->assertDatabaseHas(SiteSetting::class, ['key' => 'hero_cta_2_text', 'value' => 'View Course Details']);
         $this->assertDatabaseHas(SiteSetting::class, ['key' => 'whatsapp_cta_text', 'value' => 'Message on WhatsApp']);
         $this->assertDatabaseHas(SiteSetting::class, ['key' => 'whatsapp_button_text', 'value' => 'Message on WhatsApp']);
+        $this->assertDatabaseHas(SiteSetting::class, ['key' => 'faq_btn_text', 'value' => 'Ask for Course Help']);
         $this->assertDatabaseHas(SiteSetting::class, ['key' => 'whatsapp_cta_subtext', 'value' => '']);
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'whatsapp_prefill_message',

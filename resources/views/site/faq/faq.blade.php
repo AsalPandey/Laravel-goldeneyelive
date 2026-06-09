@@ -11,6 +11,7 @@
             'source_section' => 'faq-lead-block',
             'inquiry_intent' => 'course_guidance',
         ]);
+        $faqButtonText = \App\Support\PublicCtaContract::normalizeLabel($settings['faq_btn_text'] ?? null, 'help');
     @endphp
 
     {{-- Advanced FAQ Schema for AEO --}}
@@ -103,7 +104,7 @@
                         <div class="flex justify-center mt-10">
                             <button id="readMoreBtn" onclick="toggleFAQs()" class="btn btn-primary px-5 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-all" style="font-size: 11px;">
                                 <i class="fa fa-chevron-down me-2"></i> 
-                                <span>{{ $settings['faq_btn_text'] ?? 'Explore More FAQs' }}</span>
+                                <span>{{ $faqButtonText }}</span>
                             </button>
                         </div>
                     @endif

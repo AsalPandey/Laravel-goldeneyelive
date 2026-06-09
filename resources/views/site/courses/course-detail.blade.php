@@ -1,7 +1,11 @@
 @extends('site.layout.app')
-@section('page_title', ($course->meta_title ?? $course->name) . ' - GoldenEye Academy')
+@php
+    $coursePageTitle = \App\Support\StructuredData::titleWithBrand($course->meta_title ?: $course->name);
+    $courseMetaDescription = \App\Support\StructuredData::courseMetaDescription($course);
+@endphp
+@section('page_title', $coursePageTitle)
 @section('og_title', $course->name . ' Course at GoldenEye Academy')
-@section('meta_description', $course->meta_description ?? Str::limit(strip_tags($course->description), 160))
+@section('meta_description', $courseMetaDescription)
 @section('meta_keywords', $course->meta_keywords ?? '')
 @section('aeo_summary', strip_tags($course->aeo_summary ?? ''))
 @section('og_image', \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg'))
@@ -12,9 +16,7 @@
 @section('tracking_inquiry_intent', 'course_guidance')
 
 @section('schema_markup')
-    @if($course->schema_markup)
-        @jsonld($course->schema_markup)
-    @endif
+    @jsonld(json_encode(\App\Support\StructuredData::courseSchema($course, $settings ?? [])))
 @endsection
 
 @section('content')
@@ -115,46 +117,6 @@
             ? \Illuminate\Support\Str::limit(trim(\Illuminate\Support\Str::before(strip_tags($testimonial->content), '.')) ?: strip_tags($testimonial->content), 100)
             : 'Students use course guidance and practice to improve confidence before their next academic or career step.';
     @endphp
-
-    <script type="application/ld+json">
-    {
-      "@@context": "https://schema.org",
-      "@@type": "Course",
-      "name": @json($course->name),
-      "description": @json($descriptionText),
-      "image": "{{ $courseImage }}",
-      "provider": {
-        "@@type": "EducationalOrganization",
-        "name": @json(($settings['site_name'] ?? 'GoldenEye') . ' ' . ($settings['site_name_suffix'] ?? 'Academy')),
-        "url": "{{ url('/') }}",
-        "logo": "{{ \App\Support\PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png') }}",
-        "address": {
-          "@@type": "PostalAddress",
-          "streetAddress": "{{ $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal' }}",
-          "addressLocality": "Pokhara",
-          "addressCountry": "NP"
-        }
-      },
-      "hasCourseInstance": {
-        "@@type": "CourseInstance",
-        "courseMode": "Onsite",
-        "location": "Pokhara, Nepal",
-        "duration": "{{ $course->duration }}",
-        "instructor": {
-          "@@type": "Person",
-          "name": @json($instructor?->name ?? $course->instructor)
-        }
-      },
-      "offers": {
-        "@@type": "Offer",
-        "price": "{{ preg_replace('/[^0-9]/', '', $course->price) ?: '0' }}",
-        "priceCurrency": "NPR",
-        "category": "Professional Education",
-        "availability": "https://schema.org/InStock",
-        "url": "{{ url()->current() }}"
-      }
-    }
-    </script>
 
     <section class="container-fluid p-0 overflow-hidden" style="background: linear-gradient(135deg, rgba(5, 12, 28, 0.94), rgba(5, 12, 28, 0.76)), url('{{ $courseImage }}'); background-size: cover; background-position: center; color: white;">
         <div class="container py-5">
