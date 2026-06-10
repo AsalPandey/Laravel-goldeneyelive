@@ -1,10 +1,16 @@
 @extends('site.layout.app')
 @section('page_title', 'Study Abroad, Language & Computer Courses in Pokhara - GoldenEye Academy')
 @section('meta_description', 'GoldenEye Academy in Pokhara helps students choose study abroad prep, IELTS, PTE, Japanese, Korean, computer, office, and web development courses.')
+@php
+    $homeHeroImage = \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png');
+@endphp
+@section('preload_assets')
+    <link rel="preload" as="image" href="{{ $homeHeroImage }}" fetchpriority="high">
+@endsection
 
 	@section('content')
 	    @php
-	        $heroImage = \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png');
+	        $heroImage = $homeHeroImage;
 	        $heroBadge = trim((string) ($settings['hero_badge_text'] ?? 'GoldenEye Academy, Pokhara')) ?: 'GoldenEye Academy, Pokhara';
 	        $heroTitle = trim((string) ($settings['hero_hook_headline'] ?? $settings['hero_title'] ?? 'Study Abroad, Language & Computer Courses in Pokhara')) ?: 'Study Abroad, Language & Computer Courses in Pokhara';
 	        $heroBody = trim(strip_tags((string) ($settings['hero_hook_body'] ?? $settings['hero_subtitle'] ?? 'Not sure which course to choose? Tell us your goal. We will help you compare study abroad, language, computer, and IT options before enrollment.'))) ?: 'Not sure which course to choose? Tell us your goal. We will help you compare study abroad, language, computer, and IT options before enrollment.';
@@ -195,7 +201,7 @@
                         <div class="col-lg-3 col-md-6">
                             <article class="premium-card p-0 border border-zinc-100 shadow-sm rounded-xl overflow-hidden h-100 d-flex flex-column bg-white">
                                 <div class="aspect-[16/9] overflow-hidden bg-zinc-100">
-                                    <img class="img-fluid w-100 h-100 object-cover" loading="lazy" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $course->name }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'">
+                                    <img class="img-fluid w-100 h-100 object-cover" loading="lazy" decoding="async" width="640" height="360" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $course->name }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'">
                                 </div>
                                 <div class="p-4 flex-grow-1 d-flex flex-column">
                                     <h3 class="h6 fw-black text-brand-dark mb-2" style="line-height: 1.3;">{{ $course->name }}</h3>
@@ -285,7 +291,7 @@
                         <div class="col-lg-4 col-md-6">
                             <article class="premium-card p-4 h-100 border border-zinc-100 shadow-sm rounded-xl bg-zinc-50">
                                 <div class="d-flex align-items-center gap-3 mb-3">
-                                    <img src="{{ \App\Support\PublicAsset::url($testimonial->photo ?? null, 'site/img/testimonial-1.jpg') }}" onerror="this.src='{{ asset('site/img/testimonial-1.jpg') }}'" alt="{{ $testimonial->student_name ?? 'GoldenEye student' }}" class="rounded-circle object-cover border border-white shadow-sm" style="width: 54px; height: 54px;">
+                                    <img src="{{ \App\Support\PublicAsset::url($testimonial->photo ?? null, 'site/img/testimonial-1.jpg') }}" onerror="this.src='{{ asset('site/img/testimonial-1.jpg') }}'" alt="{{ $testimonial->student_name ?? 'GoldenEye student' }}" class="rounded-circle object-cover border border-white shadow-sm" loading="lazy" decoding="async" width="54" height="54" style="width: 54px; height: 54px;">
                                     <div>
                                         <h3 class="mb-1 fw-black text-brand-dark" style="font-size: 13px;">{{ $testimonial->student_name ?? 'Student' }}</h3>
                                         <small class="text-zinc-500 fw-bold d-block" style="font-size: 10px;">Course completed: {{ $testimonial->course_name ?? 'GoldenEye learner' }}</small>
@@ -315,7 +321,7 @@
                         <div class="col-md-6 col-lg-3">
                             <article class="h-100 p-4 bg-white border border-zinc-100 rounded-xl">
                                 <div class="d-flex align-items-center gap-3 mb-3">
-                                    <img src="{{ \App\Support\PublicAsset::url($teacher->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $teacher->name }}" class="rounded-circle object-cover" style="width: 58px; height: 58px;">
+                                    <img src="{{ \App\Support\PublicAsset::url($teacher->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $teacher->name }}" class="rounded-circle object-cover" loading="lazy" decoding="async" width="58" height="58" style="width: 58px; height: 58px;">
                                     <div>
                                         <h3 class="mb-1 fw-black text-brand-dark" style="font-size: 13px;">{{ $teacher->name }}</h3>
                                         <p class="mb-0 text-zinc-500 fw-bold" style="font-size: 10px; line-height: 1.4;">{{ $teacher->designation }}</p>
@@ -347,7 +353,7 @@
                     <div class="col-lg-7">
                         <div class="p-4 bg-zinc-50 border border-zinc-100 rounded-xl h-100">
                             @if($externalReviewScreenshot !== '')
-                                <img src="{{ \App\Support\PublicAsset::url($externalReviewScreenshot, 'site/img/testimonial-1.jpg') }}" alt="Verified review proof for GoldenEye Academy" class="img-fluid rounded-xl mb-3">
+                                <img src="{{ \App\Support\PublicAsset::url($externalReviewScreenshot, 'site/img/testimonial-1.jpg') }}" alt="Verified review proof for GoldenEye Academy" class="img-fluid rounded-xl mb-3" loading="lazy" decoding="async" width="640" height="360">
                             @endif
                             @if($externalReviewUrl !== '')
                                 <a href="{{ $externalReviewUrl }}" target="_blank" rel="noopener" class="text-brand-dark fw-black text-decoration-none">

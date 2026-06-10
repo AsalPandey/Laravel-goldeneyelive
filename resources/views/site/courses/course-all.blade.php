@@ -94,7 +94,7 @@
                         <div class="col-lg-4">
                             <article class="premium-card h-100 overflow-hidden d-flex flex-column">
                                 <div class="position-relative aspect-[16/9] overflow-hidden bg-zinc-100">
-                                    <img class="w-100 h-100 object-cover" loading="lazy" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
+                                    <img class="w-100 h-100 object-cover" loading="lazy" decoding="async" width="640" height="360" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
                                     <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full font-black uppercase tracking-[0.25em]" style="font-size: 8px;">{{ $course->badge_text ?? 'Hot Course' }}</span>
                                 </div>
                                 <div class="p-4 flex-grow-1 d-flex flex-column">
@@ -155,7 +155,7 @@
                         <div class="col-lg-4 col-md-6">
                             <article class="premium-card p-0 overflow-hidden h-100 d-flex flex-column border border-zinc-100 shadow-lg rounded-xl">
                                 <div class="position-relative overflow-hidden aspect-[16/9] bg-zinc-100">
-                                    <img class="w-100 h-100 object-cover" loading="lazy" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
+                                    <img class="w-100 h-100 object-cover" loading="lazy" decoding="async" width="640" height="360" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
                                     <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2 py-1 m-3 rounded-full font-black uppercase tracking-widest shadow-lg" style="font-size: 8px;">{{ $course->badge_text ?? 'Available' }}</span>
                                 </div>
                                 <div class="p-4 flex-grow-1 d-flex flex-column">

@@ -41,7 +41,7 @@
 <!-- Navbar Start -->
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top p-0 site-navbar">
     <a href="{{ route('home') }}" class="navbar-brand site-navbar-brand d-flex align-items-center px-3 px-lg-4 text-decoration-none">
-        <img class="img-logo me-2 object-contain" src="{{ \App\Support\PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png') }}" onerror="this.src='{{ asset('site/img/logo.png') }}'" alt="{{ $settings['site_name'] ?? 'GoldenEye' }}" style="height: 55px; width: auto;">
+        <img class="img-logo me-2 object-contain" src="{{ \App\Support\PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png') }}" onerror="this.src='{{ asset('site/img/logo.png') }}'" alt="{{ $settings['site_name'] ?? 'GoldenEye' }}" decoding="async" width="55" height="55" style="height: 55px; width: auto;">
         <h4 class="m-0 text-brand-gold font-black tracking-tighter d-flex align-items-center site-brand-wordmark">
             {{ $settings['site_name'] ?? 'GoldenEye' }} 
             <span class="site-brand-pill">{{ $settings['site_name_suffix'] ?? 'Academy' }}</span>

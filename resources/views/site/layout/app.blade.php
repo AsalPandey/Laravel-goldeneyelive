@@ -163,7 +163,7 @@
                         <i class="fa fa-times"></i>
                     </button>
                     <div class="site-notice-popup-media">
-                        <img src="{{ $noticePopupData->image }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $noticePopupData->title }}">
+                        <img src="{{ $noticePopupData->image }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $noticePopupData->title }}" loading="lazy" decoding="async" width="1001" height="561">
                     </div>
                     <div class="site-notice-popup-body">
 	                        <span class="site-notice-badge">{{ $noticePopupData->badge ?: 'Guidance First' }}</span>

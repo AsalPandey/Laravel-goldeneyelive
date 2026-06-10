@@ -2,6 +2,7 @@
 @php
     $coursePageTitle = \App\Support\StructuredData::titleWithBrand($course->meta_title ?: $course->name);
     $courseMetaDescription = \App\Support\StructuredData::courseMetaDescription($course);
+    $courseHeroImage = \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg');
 @endphp
 @section('page_title', $coursePageTitle)
 @section('og_title', $course->name . ' Course at GoldenEye Academy')
@@ -9,6 +10,9 @@
 @section('meta_keywords', $course->meta_keywords ?? '')
 @section('aeo_summary', strip_tags($course->aeo_summary ?? ''))
 @section('og_image', \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg'))
+@section('preload_assets')
+    <link rel="preload" as="image" href="{{ $courseHeroImage }}" fetchpriority="high">
+@endsection
 @section('tracking_event', 'course_detail_view')
 @section('tracking_source_page', 'course-detail')
 @section('tracking_source_section', 'course-detail-view')
@@ -43,7 +47,7 @@
         $batchTiming = 'Morning, day, and evening batch options. Confirm current timing before enrollment.';
         $supportDetails = 'Practice, feedback, progress guidance, and completion support where applicable.';
         $nextBatch = 'Ask for current intake and available seats';
-        $courseImage = \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg');
+        $courseImage = $courseHeroImage;
         $breadcrumbCategoryName = $course->courseCategory?->name ?? $course->category;
         $breadcrumbCategorySlug = $course->courseCategory?->slug ?? $course->category_slug;
         $sectionGuidanceUrl = fn (string $sourceSection) => route('join-now', [
@@ -328,7 +332,7 @@
                         <div class="h-100 p-4 p-lg-5 bg-white border border-zinc-100 rounded-xl shadow-sm">
                             <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Instructor profile</span>
                             <div class="d-flex align-items-start gap-4 mt-3">
-                                <img src="{{ \App\Support\PublicAsset::url($instructor?->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $instructor?->name ?? $course->instructor }}" class="rounded-circle object-cover flex-shrink-0" style="width: 86px; height: 86px;">
+                                <img src="{{ \App\Support\PublicAsset::url($instructor?->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $instructor?->name ?? $course->instructor }}" class="rounded-circle object-cover flex-shrink-0" loading="lazy" decoding="async" width="86" height="86" style="width: 86px; height: 86px;">
                                 <div>
                                     <h2 class="h5 fw-black text-brand-dark mb-1">{{ $instructor?->name ?? $course->instructor }}</h2>
                                     <p class="text-brand-gold fw-black mb-2" style="font-size: 12px;">{{ $instructor?->designation ?? 'Course Instructor' }}</p>
@@ -356,7 +360,7 @@
                             </div>
                             <div class="col-lg-8">
                                 <div class="d-flex flex-column flex-md-row gap-4 align-items-md-center bg-white border border-zinc-100 rounded-xl p-4">
-                                    <img src="{{ \App\Support\PublicAsset::url($testimonial->photo ?? null, 'site/img/user.png') }}" alt="{{ $testimonial->student_name }}" class="rounded-circle object-cover flex-shrink-0" style="width: 82px; height: 82px;">
+                                    <img src="{{ \App\Support\PublicAsset::url($testimonial->photo ?? null, 'site/img/user.png') }}" alt="{{ $testimonial->student_name }}" class="rounded-circle object-cover flex-shrink-0" loading="lazy" decoding="async" width="82" height="82" style="width: 82px; height: 82px;">
                                     <div>
                                         <h3 class="h6 fw-black text-brand-dark mb-1">{{ $testimonial->student_name }}</h3>
                                         <p class="text-brand-gold fw-black mb-2" style="font-size: 11px;">Course completed: {{ $testimonial->course_name }}</p>
@@ -382,7 +386,7 @@
                             <div class="col-lg-7">
                                 <div class="p-4 bg-zinc-50 border border-zinc-100 rounded-xl h-100">
                                     @if($externalReviewScreenshot !== '')
-                                        <img src="{{ \App\Support\PublicAsset::url($externalReviewScreenshot, 'site/img/testimonial-1.jpg') }}" alt="Verified review proof for GoldenEye Academy" class="img-fluid rounded-xl mb-3">
+                                        <img src="{{ \App\Support\PublicAsset::url($externalReviewScreenshot, 'site/img/testimonial-1.jpg') }}" alt="Verified review proof for GoldenEye Academy" class="img-fluid rounded-xl mb-3" loading="lazy" decoding="async" width="640" height="360">
                                     @endif
                                     @if($externalReviewUrl !== '')
                                         <a href="{{ $externalReviewUrl }}" target="_blank" rel="noopener" class="text-brand-dark fw-black text-decoration-none">
