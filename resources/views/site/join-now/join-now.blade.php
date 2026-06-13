@@ -1,5 +1,5 @@
 @extends('site.layout.app')
-@section('page_title', 'Ask for Course Help - ' . ($settings['site_name'] ?? 'GoldenEye Academy'))
+@section('page_title', 'Ask for Course Help - ' . \App\Support\StructuredData::siteName($settings ?? []))
 @section('content')
     @php
         $sourcePage = request('source_page', url()->previous() ?: url()->current());
@@ -27,7 +27,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center mb-0">
                             <li class="breadcrumb-item"><a class="text-white opacity-50" href="{{ route('home') }}">Home</a></li>
-                            <li class="breadcrumb-item text-brand-gold active font-bold uppercase" aria-current="page">Course Guidance</li>
+                            <li class="breadcrumb-item text-brand-gold active font-bold uppercase" aria-current="page">Course Help</li>
                         </ol>
                     </nav>
                 </div>
@@ -40,7 +40,7 @@
             <div class="row g-4 justify-content-center">
                 <div class="col-xl-7 col-lg-8 col-md-12 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="text-center mb-3 course-help-intro">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Course Guidance</span>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Course Help</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Send your goal. We will guide you before enrollment.</h2>
                         <p class="text-zinc-600 mb-0" style="font-size: 14px;">Start with three required details. Add more only if you want a more specific reply.</p>
                     </div>
@@ -112,7 +112,7 @@
                                     <div id="extraDetails" class="optional-details-panel mt-1 {{ $optionalHasErrors ? '' : 'd-none' }}">
                                         <div class="course-help-step mb-4">
                                             <span>Step 2</span>
-                                            <strong>Optional details for better guidance</strong>
+                                            <strong>Optional details for better course information</strong>
                                         </div>
 
                                         <div class="row g-4">

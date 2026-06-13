@@ -33,7 +33,11 @@
     $headerHelpLabel = strtolower($headerHelpLabel) === 'ask for course guidance' ? 'Ask for Course Help' : $headerHelpLabel;
     $navWhatsappNumber = $settings['whatsapp_number'] ?? '9779856058599';
     $navWhatsappCleanNumber = str_replace(['+', ' ', '-'], '', $navWhatsappNumber);
-    $navWhatsappMessage = rawurlencode($settings['whatsapp_prefill_message'] ?? 'Hi GoldenEye Academy, I need course guidance.');
+    $displaySiteName = \App\Support\StructuredData::siteName($settings ?? []);
+    $displaySiteNameParts = preg_split('/\s+/', $displaySiteName) ?: [];
+    $displaySiteSuffix = array_pop($displaySiteNameParts) ?: '';
+    $displaySitePrefix = implode(' ', $displaySiteNameParts) ?: $displaySiteName;
+    $navWhatsappMessage = rawurlencode($settings['whatsapp_prefill_message'] ?? 'Hi Golden Eye Academy, I have a question about classes and enrollment.');
     $navWhatsappLabel = trim((string) ($settings['whatsapp_cta_text'] ?? $settings['whatsapp_button_text'] ?? 'Message on WhatsApp')) ?: 'Message on WhatsApp';
     $navWhatsappLabel = $navWhatsappLabel === 'Message us on WhatsApp' ? 'Message on WhatsApp' : $navWhatsappLabel;
 @endphp
@@ -41,10 +45,12 @@
 <!-- Navbar Start -->
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top p-0 site-navbar">
     <a href="{{ route('home') }}" class="navbar-brand site-navbar-brand d-flex align-items-center px-3 px-lg-4 text-decoration-none">
-        <img class="img-logo me-2 object-contain" src="{{ \App\Support\PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png') }}" onerror="this.src='{{ asset('site/img/logo.png') }}'" alt="{{ $settings['site_name'] ?? 'GoldenEye' }}" decoding="async" width="55" height="55" style="height: 55px; width: auto;">
+        <img class="img-logo me-2 object-contain" src="{{ \App\Support\PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png') }}" onerror="this.src='{{ asset('site/img/logo.png') }}'" alt="{{ $displaySiteName }}" decoding="async" width="55" height="55" style="height: 55px; width: auto;">
         <h4 class="m-0 text-brand-gold font-black tracking-tighter d-flex align-items-center site-brand-wordmark">
-            {{ $settings['site_name'] ?? 'GoldenEye' }} 
-            <span class="site-brand-pill">{{ $settings['site_name_suffix'] ?? 'Academy' }}</span>
+            {{ $displaySitePrefix }}
+            @if($displaySiteSuffix !== '')
+                <span class="site-brand-pill">{{ $displaySiteSuffix }}</span>
+            @endif
         </h4>
     </a>
     <button type="button" class="navbar-toggler me-4 d-flex align-items-center d-lg-none p-2 rounded-xl shadow-sm transition-all active:scale-95 border-brand-gold"
@@ -72,7 +78,7 @@
         <div class="navbar-nav site-mobile-nav p-4 d-lg-none">
             <a href="{{ route('home') }}" class="nav-item nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
             <a href="{{ route('courses-all') }}" class="nav-item nav-link {{ request()->routeIs('courses', 'courses-all', 'course-category', 'course-catagory', 'courses-detail') ? 'active' : '' }}">Courses</a>
-            <a href="{{ route('courses-all', ['search' => 'study abroad IELTS PTE']) }}" class="nav-item nav-link">Study Abroad</a>
+            <a href="{{ route('courses-all', ['search' => 'IELTS PTE Language']) }}" class="nav-item nav-link">IELTS / PTE</a>
             <a href="{{ route('courses-all', ['search' => 'Computer Office Skills']) }}" class="nav-item nav-link">Computer Skills</a>
             <a href="{{ route('courses-all', ['search' => 'Japanese Korean Language']) }}" class="nav-item nav-link">Languages</a>
             <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>

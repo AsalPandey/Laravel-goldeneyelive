@@ -9,7 +9,7 @@
                 <div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="h-1px w-12 bg-brand-gold"></div>
-                        <span class="text-[10px] font-black uppercase tracking-[0.3em] text-brand-gold">{{ $settings['site_name'] ?? 'GoldenEye' }} Academy CMS</span>
+                        <span class="text-[10px] font-black uppercase tracking-[0.3em] text-brand-gold">{{ $settings['site_name'] ?? 'Golden Eye' }} Academy CMS</span>
                     </div>
                     <h1 class="text-5xl font-heading font-black tracking-tighter text-white uppercase mb-2">
                         Command <span class="text-brand-gold">Center</span>
@@ -188,7 +188,7 @@
                     <i class="fas fa-graduation-cap text-4xl"></i>
                 </div>
                 <h2 class="text-4xl font-heading font-black text-white uppercase mb-4 tracking-tighter">Your Future <span class="text-brand-gold">Starts Here</span></h2>
-                <p class="max-w-md mx-auto text-zinc-400 font-medium mb-10 leading-relaxed italic">Welcome to the GoldenEye Student Portal. Your educational journey is being prepared. Soon you'll access courses, assignments, and grades right here.</p>
+                <p class="max-w-md mx-auto text-zinc-400 font-medium mb-10 leading-relaxed italic">Welcome to the Golden Eye Student Portal. Your educational journey is being prepared. Soon you'll access courses, assignments, and grades right here.</p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <a href="{{ route('profile.edit') }}" class="px-8 py-4 bg-brand-gold text-brand-dark rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all shadow-xl hover:scale-105 active:scale-95">
                         Complete Profile

@@ -1,6 +1,6 @@
 @extends('site.layout.app')
-@section('page_title', 'Contact GoldenEye Academy - ' . ($settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal'))
-@section('meta_description', 'Contact GoldenEye Academy for questions about courses, enrollment, and course guidance. Visit us at ' . ($settings['site_address'] ?? 'Srijana Chowk, Pokhara') . ' or call ' . ($settings['site_phone'] ?? '061-572599') . '.')
+@section('page_title', 'Contact Golden Eye Academy - ' . ($settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal'))
+@section('meta_description', 'Contact Golden Eye Academy for questions about courses, classes, enrollment, and academic support. Visit us at ' . ($settings['site_address'] ?? 'Srijana Chowk, Pokhara') . ' or call ' . ($settings['site_phone'] ?? '061-572599') . '.')
 @section('content')
     <style>
         .contact-field > label {
@@ -24,7 +24,7 @@
     <!-- Header Start -->
     <div class="container-fluid page-header py-4 mb-4 wow fadeIn" data-wow-delay="0.1s" style="background: linear-gradient(rgba(5, 12, 28, 0.85), rgba(5, 12, 28, 0.85)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
         <div class="container py-4 text-center">
-            <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['contact_header_title'] ?? 'Message GoldenEye Academy' }}</h1>
+            <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['contact_header_title'] ?? 'Message Golden Eye Academy' }}</h1>
             <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 10px;">Course, fee, and timing questions</p>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center mb-0">
@@ -141,7 +141,7 @@
                                             @forelse($categories as $cat)
                                                 <option value="{{ $cat->name }}">{{ $cat->name }}</option>
                                             @empty
-                                                <option value="IELTS / PTE / Study Abroad">IELTS / PTE / Study Abroad</option>
+                                                <option value="IELTS / PTE / Language Preparation">IELTS / PTE / Language Preparation</option>
                                                 <option value="Computer Skills / Office Package">Computer Skills / Office Package</option>
                                                 <option value="Web Development / IT Career">Web Development / IT Career</option>
                                                 <option value="Language Classes">Language Classes</option>

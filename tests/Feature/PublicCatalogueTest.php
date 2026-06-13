@@ -22,7 +22,7 @@ class PublicCatalogueTest extends TestCase
             ->assertSee('Service Catalogue', false)
             ->assertSee('Course Catalogue', false)
             ->assertSee('Flexible Learning Support', false)
-            ->assertSee('Study Abroad Test Prep', false)
+            ->assertSee('IELTS, PTE and Language Preparation', false)
             ->assertSee('IELTS Preparation for Band 7 Goal', false)
             ->assertSee('Message on WhatsApp', false)
             ->assertSee('Ask for Course Help', false)

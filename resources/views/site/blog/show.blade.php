@@ -1,6 +1,6 @@
 @extends('site.layout.app')
-@section('page_title', $post->meta_title ?? $post->title . ' - GoldenEye Academy')
-@section('og_title', $post->title . ' | GoldenEye Blog')
+@section('page_title', $post->meta_title ?? $post->title . ' - Golden Eye Academy')
+@section('og_title', $post->title . ' | Golden Eye Academy Blog')
 @section('meta_description', $post->meta_description ?? Str::limit(strip_tags($post->content), 160))
 @section('meta_keywords', $post->meta_keywords ?? '')
 @section('aeo_summary', $post->aeo_summary ?? '')
@@ -55,11 +55,11 @@
                       "image": "{{ \App\Support\PublicAsset::url($post->image ?? null, 'site/img/carousel-1.png') }}",
                       "author": {
                         "@@type": "Person",
-                        "name": @json($post->author ?? 'GoldenEye Academy')
+                        "name": @json($post->author ?? 'Golden Eye Academy')
                       },
                       "publisher": {
                         "@@type": "Organization",
-                        "name": @json(($settings['site_name'] ?? 'GoldenEye') . ' ' . ($settings['site_name_suffix'] ?? 'Academy')),
+                        "name": @json(\App\Support\StructuredData::siteName($settings ?? [])),
                         "logo": {
                           "@@type": "ImageObject",
                           "url": "{{ url('site/img/logo.png') }}"

@@ -14,9 +14,9 @@ class NoticeSeeder extends Seeder
     {
         $notices = [
             [
-                'title' => 'Course Guidance Before Enrollment',
-                'subtitle' => 'Not sure whether to choose IELTS, PTE, Korean, Japanese, computer skills, or web development? Send a quick course-help request first.',
-                'badge' => 'Guidance First',
+                'title' => 'Course Information Before Enrollment',
+                'subtitle' => 'Ask about IELTS/PTE, Korean, Japanese, English, computer, office, web development, or IT classes before choosing your batch.',
+                'badge' => 'Academy Support',
                 'image' => 'site/img/carousel-1.png',
                 'link' => '/join-now?course=undecided&selected_course=undecided&source_page=notice&source_section=course-roadmap-popup&inquiry_intent=course_guidance',
                 'button_text' => 'Ask for Course Help',
@@ -36,8 +36,8 @@ class NoticeSeeder extends Seeder
                 'is_urgent' => false,
             ],
             [
-                'title' => 'Parent and Student Help Desk',
-                'subtitle' => 'Parents can discuss course direction, timing, fees, and student readiness before enrollment.',
+                'title' => 'Parent and Student Support Desk',
+                'subtitle' => 'Parents can discuss class options, timing, fees, and student readiness before enrollment.',
                 'badge' => 'For Parents',
                 'image' => 'site/img/about.jpg',
                 'link' => '/join-now?course=undecided&selected_course=undecided&source_page=notice&source_section=parent-help-desk&inquiry_intent=course_guidance',

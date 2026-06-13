@@ -1,6 +1,6 @@
 @extends('site.layout.app')
-@section('page_title', 'Study Abroad, Language & Computer Courses in Pokhara - GoldenEye Academy')
-@section('meta_description', 'GoldenEye Academy in Pokhara helps students choose study abroad prep, IELTS, PTE, Japanese, Korean, computer, office, and web development courses.')
+@section('page_title', 'Golden Eye Academy | Established Academy in Pokhara Since 2008')
+@section('meta_description', 'Established in 2008, Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.')
 @php
     $homeHeroImage = \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png');
 @endphp
@@ -11,9 +11,9 @@
 	@section('content')
 	    @php
 	        $heroImage = $homeHeroImage;
-	        $heroBadge = trim((string) ($settings['hero_badge_text'] ?? 'GoldenEye Academy, Pokhara')) ?: 'GoldenEye Academy, Pokhara';
-	        $heroTitle = trim((string) ($settings['hero_hook_headline'] ?? $settings['hero_title'] ?? 'Study Abroad, Language & Computer Courses in Pokhara')) ?: 'Study Abroad, Language & Computer Courses in Pokhara';
-	        $heroBody = trim(strip_tags((string) ($settings['hero_hook_body'] ?? $settings['hero_subtitle'] ?? 'Not sure which course to choose? Tell us your goal. We will help you compare study abroad, language, computer, and IT options before enrollment.'))) ?: 'Not sure which course to choose? Tell us your goal. We will help you compare study abroad, language, computer, and IT options before enrollment.';
+	        $heroBadge = trim((string) ($settings['hero_badge_text'] ?? 'Golden Eye Academy, Pokhara')) ?: 'Golden Eye Academy, Pokhara';
+	        $heroTitle = trim((string) ($settings['hero_hook_headline'] ?? $settings['hero_title'] ?? 'Established academy in Pokhara since 2008.')) ?: 'Established academy in Pokhara since 2008.';
+	        $heroBody = trim(strip_tags((string) ($settings['hero_hook_body'] ?? $settings['hero_subtitle'] ?? 'Golden Eye Academy offers practical classes and skill-based batches for IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT learners in Pokhara.'))) ?: 'Golden Eye Academy offers practical classes and skill-based batches for IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT learners in Pokhara.';
 	        $heroPrimaryCta = trim((string) ($settings['hero_cta_1_text'] ?? $settings['hero_cta_text'] ?? 'Ask for Course Help')) ?: 'Ask for Course Help';
 	        $heroPrimaryCta = strtolower($heroPrimaryCta) === 'ask for course guidance' ? 'Ask for Course Help' : $heroPrimaryCta;
 	        $heroSecondaryCta = trim((string) ($settings['hero_cta_2_text'] ?? 'View Course Details')) ?: 'View Course Details';
@@ -25,7 +25,7 @@
             'inquiry_intent' => 'course_guidance',
         ]);
         $whatsappCleanNumber = str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599');
-        $whatsappMessage = rawurlencode($settings['whatsapp_prefill_message'] ?? 'Hi GoldenEye Academy, I need help choosing the right course.');
+        $whatsappMessage = rawurlencode($settings['whatsapp_prefill_message'] ?? 'Hi Golden Eye Academy, I have a question about classes and enrollment.');
         $courseBenefit = function ($course): string {
             $description = trim(strip_tags((string) $course->description));
             $sentence = trim(\Illuminate\Support\Str::before($description, '.'));
@@ -36,7 +36,7 @@
             $text = strtolower($course->name.' '.$course->category.' '.$course->badge_text);
 
             return match (true) {
-                str_contains($text, 'ielts'), str_contains($text, 'pte') => 'Study abroad applicants',
+                str_contains($text, 'ielts'), str_contains($text, 'pte') => 'Exam preparation learners',
                 str_contains($text, 'japanese'), str_contains($text, 'korean') => 'Language learners',
                 str_contains($text, 'office'), str_contains($text, 'computer') => 'Job and office skills',
                 str_contains($text, 'web'), str_contains($text, 'it') => 'IT career starters',
@@ -56,7 +56,7 @@
                 ->take(3)
                 ->implode(', ');
 
-            return $matches ?: 'Course guidance and classroom support';
+            return $matches ?: 'Classroom practice and academic support';
         };
         $externalReviewUrl = trim((string) ($settings['google_business_profile_url'] ?? ''));
         $externalReviewScreenshot = trim((string) ($settings['external_review_screenshot'] ?? ''));
@@ -80,9 +80,9 @@
             ],
             [
                 'icon' => 'fa fa-plane',
-                'title' => 'I am planning Study Abroad',
-                'problem' => 'Confused between IELTS, PTE, Japanese, or Korean?',
-                'benefit' => 'Match test prep with destination and timeline.',
+                'title' => 'I need IELTS / PTE',
+                'problem' => 'Comparing IELTS, PTE, Japanese, or Korean classes?',
+                'benefit' => 'Match exam preparation with your goal and batch timing.',
                 'source' => 'audience-study-abroad',
                 'route' => route('study-abroad-guidance'),
             ],
@@ -97,7 +97,7 @@
         ];
         $trustItems = [
             'Trusted by students in Pokhara since 2008',
-            '15+ years of guidance',
+            'Established in 2008',
             $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal',
             'Phone: '.($settings['site_phone'] ?? '061-572599'),
             'Email: '.($settings['site_email'] ?? 'goldeneyeacademy2008@gmail.com'),
@@ -105,14 +105,14 @@
         ];
         $localAdvantages = [
             $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal',
-            'Guidance before enrollment',
-            'Study abroad, language, computer, office, and IT tracks',
+            'Academic support before enrollment',
+            'IELTS/PTE, language, computer, office, and IT classes',
             'Phone and WhatsApp follow-up: '.($settings['site_phone'] ?? '061-572599'),
         ];
         $parentClarityItems = [
             'Course fit before payment',
             'Fee and duration clarity',
-            'Batch timing guidance',
+            'Batch timing support',
             'Realistic outcomes, not guarantees',
         ];
     @endphp
@@ -162,12 +162,12 @@
         <div class="container">
             <div class="text-center mb-4">
                 <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Start here</span>
-                <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">What kind of guidance do you need?</h2>
+                <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Which class are you interested in?</h2>
             </div>
             <div class="row g-3">
                 @foreach($audienceSegments as $segment)
                     <div class="col-md-6 col-xl-3">
-                        <a href="{{ $segment['route'] }}" data-cta="{{ $segment['source'] }}" class="audience-card-link-wrapper d-block h-100 text-decoration-none" aria-label="{{ $segment['title'] }} guidance page">
+                        <a href="{{ $segment['route'] }}" data-cta="{{ $segment['source'] }}" class="audience-card-link-wrapper d-block h-100 text-decoration-none" aria-label="{{ $segment['title'] }} information page">
                             <article class="audience-card h-100 p-4 bg-zinc-50 border border-zinc-100">
                                 <div class="audience-card-icon mb-3">
                                     <i class="{{ $segment['icon'] }}"></i>
@@ -259,8 +259,8 @@
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-5">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Why GoldenEye</span>
-                    <h2 class="h3 fw-black text-white mt-2 mb-3">Local guidance before enrollment</h2>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Why Golden Eye Academy</span>
+                    <h2 class="h3 fw-black text-white mt-2 mb-3">Practical classes with academic support</h2>
                     <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Students can prepare with mock tests, practical assignments, instructor feedback, and clear weekly progress where the course requires it.</p>
                 </div>
                 <div class="col-lg-7">
@@ -291,10 +291,10 @@
                         <div class="col-lg-4 col-md-6">
                             <article class="premium-card p-4 h-100 border border-zinc-100 shadow-sm rounded-xl bg-zinc-50">
                                 <div class="d-flex align-items-center gap-3 mb-3">
-                                    <img src="{{ \App\Support\PublicAsset::url($testimonial->photo ?? null, 'site/img/testimonial-1.jpg') }}" onerror="this.src='{{ asset('site/img/testimonial-1.jpg') }}'" alt="{{ $testimonial->student_name ?? 'GoldenEye student' }}" class="rounded-circle object-cover border border-white shadow-sm" loading="lazy" decoding="async" width="54" height="54" style="width: 54px; height: 54px;">
+                                    <img src="{{ \App\Support\PublicAsset::url($testimonial->photo ?? null, 'site/img/testimonial-1.jpg') }}" onerror="this.src='{{ asset('site/img/testimonial-1.jpg') }}'" alt="{{ $testimonial->student_name ?? 'Golden Eye student' }}" class="rounded-circle object-cover border border-white shadow-sm" loading="lazy" decoding="async" width="54" height="54" style="width: 54px; height: 54px;">
                                     <div>
                                         <h3 class="mb-1 fw-black text-brand-dark" style="font-size: 13px;">{{ $testimonial->student_name ?? 'Student' }}</h3>
-                                        <small class="text-zinc-500 fw-bold d-block" style="font-size: 10px;">Course completed: {{ $testimonial->course_name ?? 'GoldenEye learner' }}</small>
+                                        <small class="text-zinc-500 fw-bold d-block" style="font-size: 10px;">Course completed: {{ $testimonial->course_name ?? 'Golden Eye learner' }}</small>
                                     </div>
                                 </div>
                                 <p class="text-brand-dark fw-black mb-2" style="font-size: 12px; line-height: 1.55;">Specific progress/result: {{ $testimonialProgress($testimonial) }}</p>
@@ -313,7 +313,7 @@
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-8">
                         <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Instructors</span>
-                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Guidance from experienced teachers</h2>
+                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Experienced faculty for practical classes</h2>
                     </div>
                 </div>
                 <div class="row g-3">
@@ -328,10 +328,10 @@
                                     </div>
                                 </div>
                                 <div class="d-grid gap-2">
-                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Subject expertise:</strong> {{ $teacher->designation ?: 'Course guidance' }}</p>
-                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Years of experience:</strong> Confirm current profile with the academy team</p>
+                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Subject expertise:</strong> {{ $teacher->designation ?: 'Academic support' }}</p>
+                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Class support:</strong> Practical lessons, student questions, and progress feedback</p>
                                     <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Courses taught:</strong> {{ $teacherCourseNames($teacher) }}</p>
-                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Credibility note:</strong> {{ \Illuminate\Support\Str::limit(strip_tags($teacher->bio ?? 'Supports students with course guidance, practice, and feedback.'), 110) }}</p>
+                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Credibility note:</strong> {{ \Illuminate\Support\Str::limit(strip_tags($teacher->bio ?? 'Supports students with classroom practice, academic support, and feedback.'), 110) }}</p>
                                 </div>
                             </article>
                         </div>
@@ -353,7 +353,7 @@
                     <div class="col-lg-7">
                         <div class="p-4 bg-zinc-50 border border-zinc-100 rounded-xl h-100">
                             @if($externalReviewScreenshot !== '')
-                                <img src="{{ \App\Support\PublicAsset::url($externalReviewScreenshot, 'site/img/testimonial-1.jpg') }}" alt="Verified review proof for GoldenEye Academy" class="img-fluid rounded-xl mb-3" loading="lazy" decoding="async" width="640" height="360">
+                                <img src="{{ \App\Support\PublicAsset::url($externalReviewScreenshot, 'site/img/testimonial-1.jpg') }}" alt="Verified review proof for Golden Eye Academy" class="img-fluid rounded-xl mb-3" loading="lazy" decoding="async" width="640" height="360">
                             @endif
                             @if($externalReviewUrl !== '')
                                 <a href="{{ $externalReviewUrl }}" target="_blank" rel="noopener" class="text-brand-dark fw-black text-decoration-none">
@@ -419,8 +419,8 @@
             <div class="row align-items-center justify-content-between g-4">
                 <div class="col-lg-8">
                     <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Next step</span>
-                    <h2 class="h3 fw-black text-white mt-3 mb-3">Still confused about which course fits you?</h2>
-                    <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Send your goal. Our team will guide you before enrollment.</p>
+                    <h2 class="h3 fw-black text-white mt-3 mb-3">Need course and batch information?</h2>
+                    <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Send your goal. Our academy team will explain suitable classes before enrollment.</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
                     <a href="{{ $guidanceUrl('homepage-final') }}" data-cta="homepage-final-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask for Course Help</a>

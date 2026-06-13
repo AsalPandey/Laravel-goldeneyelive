@@ -1,7 +1,7 @@
 @extends('site.layout.app')
 
-@section('page_title', ($category->meta_title ?? $category->name . ' - GoldenEye Academy'))
-@section('meta_description', ($category->meta_description ?? 'Browse our specialized ' . $category->name . ' courses at GoldenEye Academy Pokhara.'))
+@section('page_title', ($category->meta_title ?? $category->name . ' - Golden Eye Academy'))
+@section('meta_description', ($category->meta_description ?? 'Browse our specialized ' . $category->name . ' courses at Golden Eye Academy Pokhara.'))
 @section('meta_keywords', ($category->meta_keywords ?? $category->name . ', courses, academy, pokhara'))
 
 @section('content')
@@ -79,7 +79,7 @@
                             <div class="p-5 text-center flex flex-col flex-grow">
                                 <div class="mb-3 d-inline-flex align-items-center justify-content-center gap-2 text-brand-dark fw-black text-uppercase tracking-widest" style="font-size: 8px;">
                                     <i class="fa fa-check-circle text-brand-gold" aria-hidden="true"></i>
-                                    Practical guidance available
+                                    Practical class support available
                                 </div>
                                 <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 15px;">{{ $course->name }}</h6>
                                 <p class="text-zinc-500 extra-small mb-4 line-clamp-2" style="font-size: 11px;">{{ Str::limit(strip_tags($course->description), 100) }}</p>

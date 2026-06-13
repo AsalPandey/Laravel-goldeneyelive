@@ -21,8 +21,8 @@ class CourseSeeder extends Seeder
                 'badge_text' => 'Test Prep',
                 'slug' => 'ielts-masterclass',
                 'category_slug' => 'study-abroad-test-prep',
-                'description' => 'Planning abroad and unsure how to prepare for IELTS? This course gives students a weekly plan with mock tests, writing correction, speaking practice, and instructor feedback. Best for students who want to understand their test path before paying for applications or documents.',
-                'course_outline' => "IELTS format and scoring\nListening strategy and note-taking\nReading speed and accuracy\nWriting Task 1 and Task 2 structures\nSpeaking confidence labs\nWeekly mock tests and score review\nDestination and timeline planning",
+                'description' => 'Preparing for IELTS? This course gives students a weekly class plan with mock tests, writing correction, speaking practice, listening and reading drills, and instructor feedback. Best for learners who want exam-focused preparation with clear progress support.',
+                'course_outline' => "IELTS format and scoring\nListening strategy and note-taking\nReading speed and accuracy\nWriting Task 1 and Task 2 structures\nSpeaking confidence labs\nWeekly mock tests and score review\nExam goal and batch planning",
                 'photo' => 'site/img/ielts-preparation.jpg',
                 'price' => 'Rs. 7,000',
                 'rating_star' => '0',
@@ -192,7 +192,7 @@ class CourseSeeder extends Seeder
                 'slug' => 'corporate-office-package',
                 'category_slug' => 'computer-classes',
                 'description' => 'Applying for office, admin, front desk, or support roles? This package helps learners practice Word, Excel, PowerPoint, email, and file-management skills used in daily office work.',
-                'course_outline' => "MS Word documentation\nExcel data handling\nPowerPoint presentation design\nEmail etiquette\nCloud collaboration\nOffice file management\nWorkplace digital habits",
+                'course_outline' => "MS Word document formatting\nExcel data handling\nPowerPoint presentation design\nEmail etiquette\nCloud collaboration\nOffice file management\nWorkplace digital habits",
                 'photo' => 'site/img/computer-office-package.jpg',
                 'price' => 'Rs. 7,000',
                 'rating_star' => '0',
@@ -221,21 +221,21 @@ class CourseSeeder extends Seeder
                 'meta_keywords' => 'Chinese language Pokhara, Mandarin class Nepal',
             ],
             [
-                'name' => 'Course Guidance Before Enrollment',
-                'badge_text' => 'Guidance First',
+                'name' => 'Course Information Before Enrollment',
+                'badge_text' => 'Enrollment Support',
                 'slug' => 'free-course-roadmap-help',
                 'category_slug' => 'other-classes',
-                'description' => 'Not sure what to study next? Share your goal, current level, budget, and preferred timing so students, parents, job seekers, and abroad applicants can compare options before enrollment.',
-                'course_outline' => "Goal diagnosis\nCurrent level review\nCourse comparison\nStudy abroad or job path guidance\nTimeline planning\nRecommended next step\nFollow-up contact plan",
+                'description' => 'Not sure which class fits your goal? Share your current level, budget, and preferred timing so the academy team can explain suitable course and batch options before enrollment.',
+                'course_outline' => "Goal review\nCurrent level review\nCourse comparison\nClass and batch information\nAcademic support options\nRecommended next step\nFollow-up contact plan",
                 'photo' => 'site/img/cat-4.jpg',
                 'price' => 'Free',
                 'rating_star' => '0',
                 'rating_count' => '0',
-                'capacity' => 'Guidance Call',
+                'capacity' => 'Support Call',
                 'duration' => '30 Minutes',
-                'instructor' => 'Course Help Team',
+                'instructor' => 'Academic Support Team',
                 'is_featured' => true,
-                'meta_keywords' => 'free course help Pokhara, course guidance Nepal, career guidance',
+                'meta_keywords' => 'course information Pokhara, enrollment support Nepal, academic support',
             ],
         ];
 
@@ -243,13 +243,13 @@ class CourseSeeder extends Seeder
             $category = $categories->get($courseData['category_slug']);
 
             $courseData['category_id'] = $category?->id;
-            $courseData['category'] = $category?->name ?? 'Course Guidance and Events';
+            $courseData['category'] = $category?->name ?? 'Academic Support and Events';
             $courseData['category_slug'] = $category?->slug ?? 'other-classes';
             $courseData['status'] = 'active';
-            $courseData['meta_title'] = $courseData['name'].' | GoldenEye Academy';
+            $courseData['meta_title'] = $courseData['name'].' | Golden Eye Academy';
             $courseData['display_order'] = ($index + 1) * 10;
             $courseData['meta_description'] = $courseData['description'];
-            $courseData['aeo_summary'] = $courseData['name'].' helps learners compare fit, practice the core skills, and understand the next step before enrollment.';
+            $courseData['aeo_summary'] = $courseData['name'].' helps learners understand class fit, practice core skills, and review enrollment support before joining.';
             $courseData['schema_markup'] = json_encode([
                 '@context' => 'https://schema.org',
                 '@type' => 'Course',
@@ -257,7 +257,7 @@ class CourseSeeder extends Seeder
                 'description' => $courseData['description'],
                 'provider' => [
                     '@type' => 'Organization',
-                    'name' => 'GoldenEye Academy',
+                    'name' => 'Golden Eye Academy',
                 ],
             ]);
 

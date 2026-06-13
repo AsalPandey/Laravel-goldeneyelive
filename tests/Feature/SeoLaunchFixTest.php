@@ -118,7 +118,7 @@ class SeoLaunchFixTest extends TestCase
         $nodes = $this->jsonLdNodes($this->get(route('home'))->assertOk()->getContent());
 
         $this->assertSame(1, $this->countSchemaType($nodes, 'EducationalOrganization'));
-        $this->assertTrue(collect($nodes)->contains(fn (array $node): bool => ($node['name'] ?? null) === 'GoldenEye Academy'));
+        $this->assertTrue(collect($nodes)->contains(fn (array $node): bool => ($node['name'] ?? null) === 'Golden Eye Academy'));
     }
 
     public function test_course_page_outputs_one_dynamic_course_schema_entity(): void
@@ -150,8 +150,8 @@ class SeoLaunchFixTest extends TestCase
 
         $this->get(route('courses-detail', $brandedCourse->slug))
             ->assertOk()
-            ->assertSee('<title>IELTS Masterclass for Band 7+ | GoldenEye Academy</title>', false)
-            ->assertDontSee('GoldenEye Academy - GoldenEye Academy', false);
+            ->assertSee('<title>IELTS Masterclass for Band 7+ | Golden Eye Academy</title>', false)
+            ->assertDontSee('GoldenEye Academy - Golden Eye Academy', false);
 
         $fallbackCourse = Course::factory()->create([
             'name' => 'Office Skills Starter',
@@ -164,7 +164,7 @@ class SeoLaunchFixTest extends TestCase
 
         $html = $this->get(route('courses-detail', $fallbackCourse->slug))
             ->assertOk()
-            ->assertSee('<title>Office Skills Starter - GoldenEye Academy</title>', false)
+            ->assertSee('<title>Office Skills Starter - Golden Eye Academy</title>', false)
             ->getContent();
 
         $this->assertNotNull($this->metaDescription($html));

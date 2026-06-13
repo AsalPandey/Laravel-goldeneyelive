@@ -15,7 +15,7 @@ class PublicBlogVisibilityTest extends TestCase
         BlogPost::factory()->create([
             'title' => 'Scholarship Planning Guide',
             'slug' => 'scholarship-planning-guide',
-            'author' => 'GoldenEye Editorial Desk',
+            'author' => 'Golden Eye Editorial Desk',
             'category' => 'Scholarships',
             'status' => 'published',
         ]);
@@ -29,7 +29,7 @@ class PublicBlogVisibilityTest extends TestCase
 
         $this->get(route('blog-detail', 'scholarship-planning-guide'))
             ->assertOk()
-            ->assertSee('GoldenEye Editorial Desk')
+            ->assertSee('Golden Eye Editorial Desk')
             ->assertSee('Scholarships');
     }
 

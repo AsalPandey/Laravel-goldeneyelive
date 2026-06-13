@@ -1,6 +1,6 @@
 @extends('site.layout.app')
-@section('page_title', 'Courses - Computer, Web Development & Language Training at GoldenEye Academy')
-@section('meta_description', 'Browse computer classes, language courses, IELTS/TOEFL preparation, and web development training at GoldenEye Academy, Pokhara.')
+@section('page_title', 'Courses - Computer, Web Development & Language Classes at Golden Eye Academy')
+@section('meta_description', 'Browse computer classes, language courses, IELTS/TOEFL preparation, and web development classes at Golden Eye Academy, Pokhara.')
 @section('content')
     @php
         $guidanceUrl = fn (string $sourceSection, string $selectedCourse = 'undecided') => route('join-now', [
@@ -108,7 +108,7 @@
                             <div class="p-5 text-center flex flex-col flex-grow">
                                 <div class="mb-4 d-inline-flex align-items-center justify-content-center gap-2 text-brand-dark fw-black text-uppercase tracking-widest" style="font-size: 8px;">
                                     <i class="fa fa-check-circle text-brand-gold" aria-hidden="true"></i>
-                                    Practical guidance available
+                                    Practical class support available
                                 </div>
                                 <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 15px;">{{ $course->name }}</h6>
                                 <p class="text-zinc-500 extra-small mb-4 line-clamp-2 italic" style="font-size: 11px;">{{ Str::limit(strip_tags($course->description), 100) }}</p>

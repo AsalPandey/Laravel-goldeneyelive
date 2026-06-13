@@ -73,7 +73,7 @@
             <div class="copyright">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="{{ url('/') }}">{{ $settings['site_name'] ?? 'GoldenEye' }} {{ $settings['site_name_suffix'] ?? 'Academy' }}</a> (Est. 2008), All Rights Reserved.
+                        &copy; <a class="border-bottom" href="{{ url('/') }}">{{ \App\Support\StructuredData::siteName($settings ?? []) }}</a> (Est. 2008), All Rights Reserved.
                     </div>
                     <div class="col-md-6 text-center text-md-end">
                         <div class="footer-menu">

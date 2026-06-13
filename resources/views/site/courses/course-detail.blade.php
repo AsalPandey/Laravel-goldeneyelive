@@ -5,7 +5,7 @@
     $courseHeroImage = \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg');
 @endphp
 @section('page_title', $coursePageTitle)
-@section('og_title', $course->name . ' Course at GoldenEye Academy')
+@section('og_title', $course->name . ' Course at Golden Eye Academy')
 @section('meta_description', $courseMetaDescription)
 @section('meta_keywords', $course->meta_keywords ?? '')
 @section('aeo_summary', strip_tags($course->aeo_summary ?? ''))
@@ -32,11 +32,11 @@
         $bestFor = $descriptionBestFor !== '' && $descriptionBestFor !== $descriptionText
             ? ucfirst($descriptionBestFor)
             : match (true) {
-                str_contains($courseText, 'ielts'), str_contains($courseText, 'pte') => 'Study abroad applicants who need test preparation and score planning',
+                str_contains($courseText, 'ielts'), str_contains($courseText, 'pte') => 'Learners who need exam-focused IELTS/PTE preparation and score planning',
                 str_contains($courseText, 'japanese'), str_contains($courseText, 'korean'), str_contains($courseText, 'language') => 'Students preparing for language, study, or work goals',
                 str_contains($courseText, 'office'), str_contains($courseText, 'computer') => 'Learners who need practical computer confidence for study or office work',
                 str_contains($courseText, 'web'), str_contains($courseText, 'it') => 'Beginners who want project-based IT and web development skills',
-                default => 'Students who want a clearer course decision before enrollment',
+                default => 'Students who want clear class information before enrollment',
             };
         $level = match (true) {
             str_contains($courseText, 'basic'), str_contains($courseText, 'starter'), str_contains($courseText, 'foundation'), str_contains($courseText, 'n5') => 'Beginner',
@@ -45,7 +45,7 @@
         };
         $mode = 'In-person classes in Pokhara with guided practice';
         $batchTiming = 'Morning, day, and evening batch options. Confirm current timing before enrollment.';
-        $supportDetails = 'Practice, feedback, progress guidance, and completion support where applicable.';
+        $supportDetails = 'Practice, feedback, progress support, and completion support where applicable.';
         $nextBatch = 'Ask for current intake and available seats';
         $courseImage = $courseHeroImage;
         $breadcrumbCategoryName = $course->courseCategory?->name ?? $course->category;
@@ -58,13 +58,13 @@
             'inquiry_intent' => 'course_guidance',
         ]);
         $whatsappCleanNumber = str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599');
-        $whatsappMessage = rawurlencode('Hi GoldenEye Academy, I want guidance for '.$course->name.'.');
+        $whatsappMessage = rawurlencode('Hi Golden Eye Academy, I have a question about '.$course->name.' classes.');
         $externalReviewUrl = trim((string) ($settings['google_business_profile_url'] ?? ''));
         $externalReviewScreenshot = trim((string) ($settings['external_review_screenshot'] ?? ''));
         $externalReviewNote = trim((string) ($settings['external_review_proof_note'] ?? 'Ask the academy team for current Google review proof or verified review screenshots before enrollment.'));
         $instructorCourseList = isset($instructorCourses) && $instructorCourses->isNotEmpty()
             ? $instructorCourses->implode(', ')
-            : ($course->name ?: 'Course guidance and classroom support');
+            : ($course->name ?: 'Classroom practice and academic support');
         $outlineWithBreaks = preg_replace('/<(?:br\s*\/?|\/li|\/p|\/div)>/i', "\n", (string) $course->course_outline);
         $outlineItems = collect(preg_split('/\r\n|\r|\n/', strip_tags((string) $outlineWithBreaks)))
             ->map(fn ($item) => trim(html_entity_decode($item)))
@@ -105,21 +105,21 @@
             ['label' => 'Curriculum', 'value' => 'Clear lessons based on the course outline below.'],
             ['label' => 'Practical assignments', 'value' => 'Regular tasks help students apply what they learn in class.'],
             ['label' => 'Mock tests/practice', 'value' => str_contains($courseText, 'ielts') || str_contains($courseText, 'pte') || str_contains($courseText, 'topik') || str_contains($courseText, 'jlpt') ? 'Exam-style practice and mock review are part of the learning path.' : 'Practice sessions and guided exercises build confidence step by step.'],
-            ['label' => 'Feedback/support', 'value' => 'Students can ask questions, review weak areas, and get next-step guidance.'],
+            ['label' => 'Feedback/support', 'value' => 'Students can ask questions, review weak areas, and get next-step support.'],
             ['label' => 'Outcome', 'value' => $outcome],
         ];
         $parentViewItems = [
             ['label' => 'Total fee', 'value' => $course->price ?: 'Confirm current fee with the academy team.'],
             ['label' => 'Duration', 'value' => $course->duration ?: 'Confirm duration before enrollment.'],
             ['label' => 'Batch timing', 'value' => $batchTiming],
-            ['label' => 'Instructor credentials', 'value' => ($instructor?->designation ?: $course->instructor).' - '.\Illuminate\Support\Str::limit(strip_tags($instructor?->bio ?? 'course-specific guidance and classroom support'), 110)],
-            ['label' => 'Safety/trust', 'value' => 'Local Pokhara academy with guidance-first enrollment, parent-friendly communication, and no-pressure course discussion.'],
+            ['label' => 'Instructor credentials', 'value' => ($instructor?->designation ?: $course->instructor).' - '.\Illuminate\Support\Str::limit(strip_tags($instructor?->bio ?? 'course-specific academic support and classroom practice'), 110)],
+            ['label' => 'Safety/trust', 'value' => 'Local Pokhara academy with enrollment support, parent-friendly communication, and no-pressure course discussion.'],
             ['label' => 'Support included', 'value' => $supportDetails],
             ['label' => 'Not guaranteed', 'value' => 'Scores, visas, jobs, or placements are not guaranteed. Progress depends on attendance, practice, and student readiness.'],
         ];
         $testimonialResult = $testimonial
             ? \Illuminate\Support\Str::limit(trim(\Illuminate\Support\Str::before(strip_tags($testimonial->content), '.')) ?: strip_tags($testimonial->content), 100)
-            : 'Students use course guidance and practice to improve confidence before their next academic or career step.';
+            : 'Students use classroom practice and academic support to improve confidence before their next academic or career step.';
     @endphp
 
     <section class="container-fluid p-0 overflow-hidden" style="background: linear-gradient(135deg, rgba(5, 12, 28, 0.94), rgba(5, 12, 28, 0.76)), url('{{ $courseImage }}'); background-size: cover; background-position: center; color: white;">
@@ -324,7 +324,7 @@
                                 <div class="course-dark-row"><span>Fee</span><strong>{{ $course->price ?: 'Available on request' }}</strong></div>
                                 <div class="course-dark-row"><span>Duration</span><strong>{{ $course->duration ?: 'Confirm with academy' }}</strong></div>
                                 <div class="course-dark-row"><span>Batch timing</span><strong>{{ $batchTiming }}</strong></div>
-                                <div class="course-dark-row"><span>Seat guidance</span><strong>{{ $course->capacity ?: 'Ask for current availability' }}</strong></div>
+                                <div class="course-dark-row"><span>Seat availability</span><strong>{{ $course->capacity ?: 'Ask for current availability' }}</strong></div>
                             </div>
                         </div>
                     </div>
@@ -336,12 +336,12 @@
                                 <div>
                                     <h2 class="h5 fw-black text-brand-dark mb-1">{{ $instructor?->name ?? $course->instructor }}</h2>
                                     <p class="text-brand-gold fw-black mb-2" style="font-size: 12px;">{{ $instructor?->designation ?? 'Course Instructor' }}</p>
-                                    <p class="text-zinc-600 mb-3" style="font-size: 13px; line-height: 1.65;">{{ \Illuminate\Support\Str::limit(strip_tags($instructor?->bio ?? 'Supports students with course-specific classroom guidance, practice, and feedback.'), 150) }}</p>
+                                    <p class="text-zinc-600 mb-3" style="font-size: 13px; line-height: 1.65;">{{ \Illuminate\Support\Str::limit(strip_tags($instructor?->bio ?? 'Supports students with course-specific classroom practice, academic support, and feedback.'), 150) }}</p>
                                     <div class="d-flex flex-wrap gap-2">
                                         <span class="course-info-pill">Subject expertise: {{ $course->category ?: $course->name }}</span>
-                                        <span class="course-info-pill">Years of experience: Confirm current profile with academy team</span>
+                                        <span class="course-info-pill">Class support: Practical lessons, student questions, and progress feedback</span>
                                         <span class="course-info-pill">Courses taught: {{ $instructorCourseList }}</span>
-                                        <span class="course-info-pill">Credibility note: {{ \Illuminate\Support\Str::limit(strip_tags($instructor?->bio ?? 'Course-specific guidance and classroom support.'), 90) }}</span>
+                                        <span class="course-info-pill">Credibility note: {{ \Illuminate\Support\Str::limit(strip_tags($instructor?->bio ?? 'Course-specific academic support and classroom practice.'), 90) }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -386,7 +386,7 @@
                             <div class="col-lg-7">
                                 <div class="p-4 bg-zinc-50 border border-zinc-100 rounded-xl h-100">
                                     @if($externalReviewScreenshot !== '')
-                                        <img src="{{ \App\Support\PublicAsset::url($externalReviewScreenshot, 'site/img/testimonial-1.jpg') }}" alt="Verified review proof for GoldenEye Academy" class="img-fluid rounded-xl mb-3" loading="lazy" decoding="async" width="640" height="360">
+                                        <img src="{{ \App\Support\PublicAsset::url($externalReviewScreenshot, 'site/img/testimonial-1.jpg') }}" alt="Verified review proof for Golden Eye Academy" class="img-fluid rounded-xl mb-3" loading="lazy" decoding="async" width="640" height="360">
                                     @endif
                                     @if($externalReviewUrl !== '')
                                         <a href="{{ $externalReviewUrl }}" target="_blank" rel="noopener" class="text-brand-dark fw-black text-decoration-none">
@@ -427,7 +427,7 @@
                         <div class="col-lg-8">
                             <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Inquiry CTA</span>
                             <h2 id="inquiry-heading" class="h3 fw-black text-white mt-2 mb-3">Want to check if {{ $course->name }} fits you?</h2>
-                            <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Send your goal, current level, preferred timing, and parent questions. We will help you compare options before enrollment.</p>
+                            <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Send your goal, current level, preferred timing, and parent questions. We will explain suitable class options before enrollment.</p>
                         </div>
                         <div class="col-lg-4 d-flex flex-column gap-2">
                             <a href="{{ $sectionGuidanceUrl('course-detail-final') }}" data-cta="course-detail-final-guidance" class="btn btn-primary py-3 rounded-xl fw-black text-uppercase tracking-widest">Ask for Course Help</a>

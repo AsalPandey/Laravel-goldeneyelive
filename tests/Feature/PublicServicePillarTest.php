@@ -18,11 +18,11 @@ class PublicServicePillarTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertSee('Study Abroad, Language &amp; Computer Courses in Pokhara', false);
-        $response->assertSee('Not sure which course to choose? Tell us your goal. We will help you compare study abroad, language, computer, and IT options before enrollment.');
+        $response->assertSee('Established academy in Pokhara since 2008', false);
+        $response->assertSee('Golden Eye Academy offers practical classes and skill-based batches', false);
         $response->assertSee('I am a Student');
         $response->assertSee('I am a Parent');
-        $response->assertSee('I am planning Study Abroad');
+        $response->assertSee('I need IELTS / PTE');
         $response->assertSee('I want Job/Computer Skills');
         $response->assertDontSee("Don't just study. Build your competitive edge.");
         $response->assertDontSee('Learn Your Way: Digital-First Flexibility');
@@ -56,8 +56,8 @@ class PublicServicePillarTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertSee('Study Abroad, Language &amp; Computer Courses in Pokhara', false);
-        $response->assertSeeInOrder(['I am a Student', 'I am a Parent', 'I am planning Study Abroad', 'I want Job/Computer Skills']);
+        $response->assertSee('Established academy in Pokhara since 2008', false);
+        $response->assertSeeInOrder(['I am a Student', 'I am a Parent', 'I need IELTS / PTE', 'I want Job/Computer Skills']);
         $response->assertDontSee('First Pillar');
         $response->assertDontSee('Third Pillar');
         $response->assertDontSee('Hidden Pillar');

@@ -1,6 +1,6 @@
 @extends('site.layout.app')
-@section('page_title', ($settings['about_header_title'] ?? 'About Us') . ' - ' . ($settings['site_name'] ?? 'GoldenEye Academy'))
-@section('meta_description', $settings['meta_description'] ?? 'Learn about GoldenEye Academy, an independent educational institution established in 2008 in Pokhara, Nepal.')
+@section('page_title', ($settings['about_header_title'] ?? 'About Golden Eye Academy') . ' - ' . \App\Support\StructuredData::siteName($settings ?? []))
+@section('meta_description', $settings['meta_description'] ?? 'Learn about Golden Eye Academy, an established academy serving Pokhara learners since 2008 through practical classes and academic support.')
 
 @section('schema_markup')
     {{-- Person Schema for Teachers (AEO/GEO) --}}
@@ -18,7 +18,7 @@
           "description": @json($teacher->bio ?? ''),
           "worksFor": {
             "@@type": "EducationalOrganization",
-            "name": @json(($settings['site_name'] ?? 'GoldenEye') . ' ' . ($settings['site_name_suffix'] ?? 'Academy'))
+            "name": @json(\App\Support\StructuredData::siteName($settings ?? []))
           },
           "sameAs": [
             "{{ $teacher->facebook_url ?? '' }}",
@@ -38,7 +38,7 @@
         <div class="container py-4">
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
-                    <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter mb-4" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['about_header_title'] ?? 'About GoldenEye Academy' }}</h1>
+                    <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter mb-4" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['about_header_title'] ?? 'About Golden Eye Academy' }}</h1>
                     <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 11px;">Est. 2008</p>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center mb-0">
@@ -61,7 +61,7 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-graduation-cap fs-6"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_1_title'] ?? 'Guidance Before Enrollment' }}</h6>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_1_title'] ?? 'Enrollment Support' }}</h6>
                         <p class="extra-small text-zinc-500 mb-0">{{ $settings['about_feat_1_desc'] ?? 'Understand course fit, timing, fees, and support before you enroll.' }}</p>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
             <div class="row g-5">
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 350px;">
                     <div class="position-relative h-100">
-                        <img class="img-fluid position-absolute w-100 h-100 rounded-xl shadow-xl object-cover" src="{{ \App\Support\PublicAsset::url($settings['about_image'] ?? null, 'site/img/about.jpg') }}" alt="GoldenEye Academy Building">
+                        <img class="img-fluid position-absolute w-100 h-100 rounded-xl shadow-xl object-cover" src="{{ \App\Support\PublicAsset::url($settings['about_image'] ?? null, 'site/img/about.jpg') }}" alt="Golden Eye Academy Building">
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
@@ -111,9 +111,9 @@
                         <div style="width: 30px; height: 2px; background: var(--brand-gold);"></div>
                         <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Our Story</span>
                     </div>
-                    <h2 class="h3 fw-black text-brand-dark mb-4 uppercase tracking-tighter">{{ $settings['about_content_title'] ?? 'Welcome to GoldenEye Academy' }}</h2>
+                    <h2 class="h3 fw-black text-brand-dark mb-4 uppercase tracking-tighter">{{ $settings['about_content_title'] ?? 'Welcome to Golden Eye Academy' }}</h2>
                     <div class="mb-5 text-zinc-600 leading-relaxed fs-6 border-start-4 border-brand-gold/20 ps-4 italic">
-                        @sanitize($settings['about_content'] ?? 'Established in 2008, GoldenEye Academy helps learners compare courses before enrollment. We focus on practical classes, clear timing and fee discussions, and realistic next steps.')
+                        @sanitize($settings['about_content'] ?? 'Established in 2008, Golden Eye Academy supports learners with practical classes, clear timing and fee discussions, experienced faculty, and realistic next steps.')
                     </div>
                     <div class="row gy-3 gx-4 mb-5">
                         <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_1'] ?? 'Experienced Teachers' }}</p></div>
@@ -194,7 +194,7 @@
                     <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Instructor profiles</span>
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
                 </div>
-                <h2 class="h2 fw-black text-brand-dark uppercase tracking-tighter">Teachers and Course Help Team</h2>
+                <h2 class="h2 fw-black text-brand-dark uppercase tracking-tighter">Teachers and Academic Support Team</h2>
             </div>
             <div class="row g-4 justify-content-center">
                 @foreach($teachers as $teacher)

@@ -19,7 +19,7 @@
         ]);
 
         $whatsappNumber = str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599');
-        $whatsappMessage = rawurlencode('Hi GoldenEye Academy, I need course help. Source: '.$landingPage['source_page']);
+        $whatsappMessage = rawurlencode('Hi Golden Eye Academy, I have a question about classes and enrollment. Source: '.$landingPage['source_page']);
     @endphp
 
     <section class="container-fluid page-header mb-0" style="background: linear-gradient(rgba(5, 12, 28, 0.88), rgba(5, 12, 28, 0.82)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
@@ -77,8 +77,8 @@
             <div class="row g-4">
                 <div class="col-lg-6">
                     <div class="h-100">
-                        <span class="text-brand-gold font-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Why GoldenEye helps</span>
-                        <h2 class="h3 fw-black text-brand-dark mt-3 mb-3">Guidance before enrollment</h2>
+                        <span class="text-brand-gold font-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Why Golden Eye Academy helps</span>
+                        <h2 class="h3 fw-black text-brand-dark mt-3 mb-3">Academic support before enrollment</h2>
                         <p class="text-zinc-600 mb-4" style="line-height: 1.7;">{{ $landingPage['why'] }}</p>
                         <a href="{{ $courseHelpUrl('why_goldeneye') }}" data-cta="audience-why-course-help" data-cta-label="Ask for Course Help" data-source-page="{{ $landingPage['source_page'] }}" data-source-section="why_goldeneye" data-selected-course="{{ $landingPage['selected_course'] }}" data-audience-type="{{ $landingPage['audience_type'] }}" data-inquiry-intent="{{ $landingPage['inquiry_intent'] }}" class="btn btn-primary py-3 px-5 rounded-xl fw-black text-uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
                     </div>

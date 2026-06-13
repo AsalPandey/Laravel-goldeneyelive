@@ -1,6 +1,6 @@
 <head>
     <meta charset="utf-8">
-    <title>@yield('page_title', $settings['meta_title'] ?? 'GoldenEye Academy - Preparing for Global Opportunities Since 2008')</title>
+    <title>@yield('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Established Academy in Pokhara Since 2008')</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
@@ -18,9 +18,9 @@
     @include('site.layout.analytics')
     
     {{-- SEO / GEO / AEO Meta Tags --}}
-    <meta content="@yield('meta_keywords', $settings['meta_keywords'] ?? 'Web Development, Computer Classes, Language Classes, IELTS, TOEFL, GoldenEye Academy, Pokhara, Nepal')" name="keywords">
-    <meta name="description" content="@yield('meta_description', $settings['meta_description'] ?? 'GoldenEye Academy offers expert-led Web Development, Computer, and Language courses in Pokhara, Nepal. IELTS, TOEFL, Korean preparation since 2008.')">
-    <meta name="author" content="GoldenEye Academy">
+    <meta content="@yield('meta_keywords', $settings['meta_keywords'] ?? 'Golden Eye Academy, IELTS Pokhara, PTE Pokhara, Computer Classes, Language Classes, IT Classes, Pokhara, Nepal')" name="keywords">
+    <meta name="description" content="@yield('meta_description', $settings['meta_description'] ?? 'Established in 2008, Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.')">
+    <meta name="author" content="Golden Eye Academy">
     <meta name="geo.region" content="NP-DH" />
     <meta name="geo.placename" content="Pokhara" />
     <meta name="geo.position" content="{{ ($settings['geo_latitude'] ?? '28.2172') . ';' . ($settings['geo_longitude'] ?? '83.9825') }}" />
@@ -43,15 +43,15 @@
     {{-- Open Graph / Facebook --}}
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'GoldenEye Academy - Preparing for Global Opportunities Since 2008'))">
-    <meta property="og:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Expert-led Web Development and Language courses in Pokhara.')">
+    <meta property="og:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Established Academy in Pokhara Since 2008'))">
+    <meta property="og:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Practical classes in IELTS/PTE, language, computer, office, web development, and IT subjects in Pokhara since 2008.')">
     <meta property="og:image" content="@yield('og_image', \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/logo.png'))">
 
     {{-- Twitter --}}
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'GoldenEye Academy - Preparing for Global Opportunities Since 2008'))">
-    <meta property="twitter:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Expert-led Web Development and Language courses in Pokhara.')">
+    <meta property="twitter:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Established Academy in Pokhara Since 2008'))">
+    <meta property="twitter:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Practical classes in IELTS/PTE, language, computer, office, web development, and IT subjects in Pokhara since 2008.')">
     <meta property="twitter:image" content="@yield('og_image', \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/logo.png'))">
 
     <link rel="canonical" href="{{ url()->current() }}">

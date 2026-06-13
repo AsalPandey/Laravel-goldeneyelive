@@ -44,7 +44,7 @@ class SeoRobotsTxtGuardrailTest extends TestCase
         ]);
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'meta_title',
-            'value' => 'GoldenEye Academy SEO',
+            'value' => 'Golden Eye Academy SEO',
         ]);
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'meta_description',

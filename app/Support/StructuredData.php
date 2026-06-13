@@ -55,9 +55,13 @@ final class StructuredData
         ], $schema));
     }
 
-    public static function titleWithBrand(?string $title, string $brand = 'GoldenEye Academy'): string
+    public static function titleWithBrand(?string $title, string $brand = 'Golden Eye Academy'): string
     {
-        $cleanTitle = trim(strip_tags((string) $title));
+        $cleanTitle = trim(str_replace(
+            ['GoldenEye Academy', 'GoldenEye'],
+            ['Golden Eye Academy', 'Golden Eye'],
+            strip_tags((string) $title),
+        ));
         $cleanBrand = trim($brand);
 
         if ($cleanTitle === '') {
@@ -76,10 +80,10 @@ final class StructuredData
         $adminDescription = trim(strip_tags((string) $course->meta_description));
 
         if ($adminDescription !== '') {
-            return $adminDescription;
+            return self::normalizeBrandText($adminDescription);
         }
 
-        return Str::limit(trim(strip_tags((string) $course->description)), 155, '');
+        return self::normalizeBrandText(Str::limit(trim(strip_tags((string) $course->description)), 155, ''));
     }
 
     /**
@@ -88,7 +92,7 @@ final class StructuredData
      */
     private static function organizationSchema(array $settings): array
     {
-        $siteName = trim(($settings['site_name'] ?? 'GoldenEye').' '.($settings['site_name_suffix'] ?? 'Academy'));
+        $siteName = self::siteName($settings);
         $socialLinks = array_values(array_filter([
             $settings['facebook_url'] ?? 'https://www.facebook.com/goldeneyeacademy',
             $settings['instagram_url'] ?? 'https://www.instagram.com/goldeneye.academy/',
@@ -103,7 +107,7 @@ final class StructuredData
             'url' => url('/'),
             'logo' => PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png'),
             'foundingDate' => '2008',
-            'description' => $settings['meta_description'] ?? 'GoldenEye Academy helps learners in Pokhara choose study abroad, language, computer, office, and web development courses with guidance before enrollment.',
+            'description' => $settings['meta_description'] ?? 'Established in 2008, Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.',
             'address' => [
                 '@type' => 'PostalAddress',
                 'streetAddress' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal',
@@ -156,7 +160,7 @@ final class StructuredData
                 'courseMode' => 'Onsite',
                 'location' => [
                     '@type' => 'Place',
-                    'name' => trim(($settings['site_name'] ?? 'GoldenEye').' '.($settings['site_name_suffix'] ?? 'Academy')),
+                    'name' => self::siteName($settings),
                     'address' => [
                         '@type' => 'PostalAddress',
                         'streetAddress' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal',
@@ -188,7 +192,13 @@ final class StructuredData
      */
     private static function mergeOrganizationSchema(array $default, array $admin): array
     {
-        return self::withoutEmptyValues(array_replace_recursive($default, self::withoutContext($admin), [
+        $admin = self::withoutContext($admin);
+
+        if (isset($admin['name']) && in_array(Str::lower((string) $admin['name']), ['goldeneye academy', 'goldeneye'], true)) {
+            $admin['name'] = $default['name'] ?? 'Golden Eye Academy';
+        }
+
+        return self::withoutEmptyValues(array_replace_recursive($default, $admin, [
             '@id' => self::organizationId(),
         ]));
     }
@@ -196,6 +206,37 @@ final class StructuredData
     private static function organizationId(): string
     {
         return url('/').'#organization';
+    }
+
+    /**
+     * @param  array<string, mixed>  $settings
+     */
+    public static function siteName(array $settings): string
+    {
+        $name = trim((string) ($settings['site_name'] ?? 'Golden Eye'));
+        $suffix = trim((string) ($settings['site_name_suffix'] ?? 'Academy'));
+        $name = self::normalizeBrandText($name);
+
+        if (Str::lower($name) === 'goldeneye') {
+            $name = 'Golden Eye';
+        }
+
+        if ($suffix !== '' && Str::endsWith(Str::lower($name), ' '.Str::lower($suffix))) {
+            return $name;
+        }
+
+        $fullName = trim($name.' '.$suffix);
+
+        return $fullName === '' ? 'Golden Eye Academy' : $fullName;
+    }
+
+    private static function normalizeBrandText(string $value): string
+    {
+        return str_replace(
+            ['GoldenEye Academy', 'GoldenEye'],
+            ['Golden Eye Academy', 'Golden Eye'],
+            $value,
+        );
     }
 
     /**

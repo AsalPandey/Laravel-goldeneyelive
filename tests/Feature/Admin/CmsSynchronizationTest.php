@@ -23,7 +23,7 @@ class CmsSynchronizationTest extends TestCase
         $response = $this->actingAs($admin)->post(route('admin.blog.store'), [
             'title' => 'Career Planning Update',
             'slug' => 'career-planning-update',
-            'author' => 'GoldenEye Editorial Desk',
+            'author' => 'Golden Eye Editorial Desk',
             'category' => 'Academy News',
             'content' => '<p>Public blog content.</p>',
             'status' => 'published',
@@ -33,7 +33,7 @@ class CmsSynchronizationTest extends TestCase
 
         $this->assertDatabaseHas(BlogPost::class, [
             'slug' => 'career-planning-update',
-            'author' => 'GoldenEye Editorial Desk',
+            'author' => 'Golden Eye Editorial Desk',
             'category' => 'Academy News',
             'status' => 'published',
         ]);
@@ -65,6 +65,6 @@ class CmsSynchronizationTest extends TestCase
             ->assertSee('Message on WhatsApp', false)
             ->assertDontSee('Message us on WhatsApp', false)
             ->assertDontSee('Casual questions. Quick reply.', false)
-            ->assertSee('Hi%20GoldenEye%20Academy%2C%20I%20have%20a%20quick%20question.%20Can%20you%20help%20me%20choose%20the%20right%20course%3F', false);
+            ->assertSee('Hi%20Golden%20Eye%20Academy%2C%20I%20have%20a%20quick%20question.%20Can%20you%20help%20me%20choose%20the%20right%20course%3F', false);
     }
 }

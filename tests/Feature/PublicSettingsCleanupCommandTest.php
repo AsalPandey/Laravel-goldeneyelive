@@ -64,7 +64,7 @@ class PublicSettingsCleanupCommandTest extends TestCase
         $this->assertDatabaseHas(SiteSetting::class, ['key' => 'whatsapp_cta_subtext', 'value' => '']);
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'whatsapp_prefill_message',
-            'value' => 'Hi GoldenEye Academy, I have a quick question. Can you help me choose the right course?',
+            'value' => 'Hi Golden Eye Academy, I have a question about classes and enrollment.',
         ]);
         $this->assertDatabaseHas(SiteSetting::class, ['key' => 'sticky_cta_text', 'value' => 'Custom Safe Label']);
     }

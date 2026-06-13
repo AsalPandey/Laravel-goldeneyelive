@@ -1,6 +1,6 @@
 @extends('site.layout.app')
 
-@section('page_title', 'Career Guide & FAQs - GoldenEye Academy')
+@section('page_title', 'Course FAQs - Golden Eye Academy')
 
 @section('content')
     @php
@@ -39,7 +39,7 @@
     <!-- Header Start -->
     <div class="container-fluid page-header py-4 mb-4 wow fadeIn" data-wow-delay="0.1s" style="background: linear-gradient(rgba(5, 12, 28, 0.85), rgba(5, 12, 28, 0.85)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
         <div class="container py-4 text-center">
-            <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['faq_header_title'] ?? 'Career Guide' }}</h1>
+            <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['faq_header_title'] ?? 'Frequently Asked Questions' }}</h1>
             <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 10px;">Common Questions</p>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center mb-0">
@@ -57,7 +57,7 @@
             <div class="text-center wow fadeInUp mb-12" data-wow-delay="0.1s">
                 <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
-                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Help & Support</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Admissions & Support</span>
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
                 </div>
                 <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Frequently Asked <span class="text-brand-gold">Questions</span></h2>
@@ -115,11 +115,11 @@
                             <i class="fas fa-question-circle fa-6x text-brand-gold"></i>
                         </div>
                         <div class="relative z-10">
-                            <h4 class="font-black mb-2 uppercase tracking-tighter text-brand-gold">{{ $settings['faq_lead_title'] ?? 'Still Have Questions?' }}</h4>
-                            <p class="mb-4 text-white/60 extra-small leading-relaxed">Send a quick question and our team will help you choose the right next step.</p>
+                            <h4 class="font-black mb-2 uppercase tracking-tighter text-brand-gold">{{ $settings['faq_lead_title'] ?? 'Need class information before enrollment?' }}</h4>
+                            <p class="mb-4 text-white/60 extra-small leading-relaxed">Send a quick question and our academy team will explain suitable courses, class timing, and enrollment support.</p>
                             <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
                                 <a href="{{ $faqGuidanceUrl }}" data-cta="faq-course-guidance" class="btn btn-primary py-2.5 px-5 rounded-lg shadow-lg font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 10px;">Ask for Course Help</a>
-                                <a href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599') }}?text={{ rawurlencode('Hi GoldenEye Academy, I have a quick question about courses.') }}" target="_blank" rel="noopener" data-cta="faq-whatsapp" class="btn btn-outline-brand-gold py-2.5 px-5 rounded-lg font-black uppercase tracking-widest hover:bg-brand-gold hover:text-brand-dark transition-all" style="font-size: 10px;">Message on WhatsApp</a>
+                                <a href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599') }}?text={{ rawurlencode('Hi Golden Eye Academy, I have a question about classes and enrollment.') }}" target="_blank" rel="noopener" data-cta="faq-whatsapp" class="btn btn-outline-brand-gold py-2.5 px-5 rounded-lg font-black uppercase tracking-widest hover:bg-brand-gold hover:text-brand-dark transition-all" style="font-size: 10px;">Message on WhatsApp</a>
                             </div>
                         </div>
                     </div>

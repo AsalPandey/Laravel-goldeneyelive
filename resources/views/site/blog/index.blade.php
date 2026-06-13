@@ -1,5 +1,5 @@
 @extends('site.layout.app')
-@section('page_title', 'Academy Blog - GoldenEye Academy Pokhara')
+@section('page_title', 'Academy Blog - Golden Eye Academy Pokhara')
 @section('content')
     @php
         $blogGuidanceUrl = route('join-now', [
@@ -43,7 +43,7 @@
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <span class="section-title">{{ $settings['blog_tagline'] ?? 'Academy Insights' }}</span>
-                <h2 class="h3 mb-5 font-black uppercase tracking-tight">{{ $settings['blog_section_title'] ?? 'Latest From GoldenEye' }}</h2>
+                <h2 class="h3 mb-5 font-black uppercase tracking-tight">{{ $settings['blog_section_title'] ?? 'Latest From Golden Eye Academy' }}</h2>
             </div>
             <div class="row g-4 justify-content-center">
                 @foreach($posts as $post)

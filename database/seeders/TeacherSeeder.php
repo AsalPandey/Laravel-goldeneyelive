@@ -14,12 +14,12 @@ class TeacherSeeder extends Seeder
                 'name' => 'Shankar Pokharel',
                 'designation' => 'Founder and Academic Director',
                 'photo' => 'site/img/message-chairperson.jpg',
-                'bio' => 'Guides the academy vision, parent guidance, course direction, and long-term student development strategy.',
+                'bio' => 'Leads the academy vision, parent communication, course direction, and long-term student development strategy.',
                 'is_featured' => true,
             ],
             [
-                'name' => 'Course Help Team',
-                'designation' => 'Course Guidance and Admissions',
+                'name' => 'Academic Support Team',
+                'designation' => 'Admissions and Academic Support',
                 'photo' => 'site/img/team-1.jpg',
                 'bio' => 'Helps students, parents, abroad applicants, and job seekers compare programs before enrollment.',
                 'is_featured' => true,
@@ -42,7 +42,7 @@ class TeacherSeeder extends Seeder
                 'name' => 'Surendra Bhattarai',
                 'designation' => 'Computer and Office Skills Lead',
                 'photo' => 'site/img/team-3.jpg',
-                'bio' => 'Trains students in practical computer skills, office package, Excel, documentation, and digital confidence.',
+                'bio' => 'Supports students in practical computer skills, office package, Excel, document handling, and digital confidence.',
                 'is_featured' => true,
             ],
             [
@@ -65,10 +65,10 @@ class TeacherSeeder extends Seeder
             $teacher['status'] = 'active';
             $teacher['facebook_url'] = 'https://www.facebook.com/goldeneyeacademy';
             $teacher['linkedin_url'] = 'https://www.linkedin.com/company/golden-eye-academy/';
-            $teacher['meta_title'] = $teacher['name'].' | GoldenEye Academy Faculty';
+            $teacher['meta_title'] = $teacher['name'].' | Golden Eye Academy Faculty';
             $teacher['meta_description'] = $teacher['bio'];
-            $teacher['meta_keywords'] = 'GoldenEye Academy faculty, '.$teacher['designation'];
-            $teacher['aeo_summary'] = $teacher['name'].' supports GoldenEye Academy learners as '.$teacher['designation'].'.';
+            $teacher['meta_keywords'] = 'Golden Eye Academy faculty, '.$teacher['designation'];
+            $teacher['aeo_summary'] = $teacher['name'].' supports Golden Eye Academy learners as '.$teacher['designation'].'.';
 
             Teacher::updateOrCreate(
                 ['name' => $teacher['name']],

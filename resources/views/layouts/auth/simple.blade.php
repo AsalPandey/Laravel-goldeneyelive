@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="text-center">
-                    <p class="text-xs text-zinc-500 font-medium tracking-wide">© {{ date('Y') }} {{ $settings['site_name'] ?? 'GoldenEye' }} Academy. All rights reserved.</p>
+                    <p class="text-xs text-zinc-500 font-medium tracking-wide">© {{ date('Y') }} {{ \App\Support\StructuredData::siteName($settings ?? []) }}. All rights reserved.</p>
                 </div>
             </div>
         </div>

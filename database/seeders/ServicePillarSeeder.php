@@ -29,13 +29,13 @@ class ServicePillarSeeder extends Seeder
                 'sort_order' => 10,
             ],
             [
-                'title' => 'Local Guidance and Exposure',
+                'title' => 'Local Academic Support and Exposure',
                 'icon' => 'fa fa-handshake',
-                'summary' => 'Local guidance, practical exposure, and events that help students understand real options.',
+                'summary' => 'Local academic support, practical exposure, and events that help students understand real class options.',
                 'bullets' => [
                     'Career conversations that help students understand real workplace expectations.',
                     'Workshops and sessions with practical examples from relevant fields.',
-                    'Community events where students can ask questions and compare next steps.',
+                    'Community events where students can ask questions and compare course options.',
                 ],
                 'cta_label' => 'Ask for Course Help',
                 'cta_url' => '/contact',
@@ -43,13 +43,13 @@ class ServicePillarSeeder extends Seeder
                 'sort_order' => 20,
             ],
             [
-                'title' => 'Career and College Guidance',
+                'title' => 'Career and College Support',
                 'icon' => 'fa fa-bullseye',
-                'summary' => 'Guided pathway planning for post-SEE, Plus Two, scholarships, and university questions.',
+                'summary' => 'Student support for post-SEE, Plus Two, scholarships, and college questions.',
                 'bullets' => [
-                    'Post-SEE and Plus Two Path Guidance: Help students compare streams, colleges, and future paths.',
-                    'Scholarship Direction: Guide students toward realistic funding and admission options.',
-                    'Parent-Friendly Guidance: Explain choices clearly so families can decide with confidence.',
+                    'Post-SEE and Plus Two Support: Help students compare streams, colleges, and future paths.',
+                    'Scholarship Information: Explain realistic funding and admission options.',
+                    'Parent-Friendly Support: Explain choices clearly so families can decide with confidence.',
                 ],
                 'cta_label' => 'Ask for Course Help',
                 'cta_url' => '/join-now?course=undecided&selected_course=undecided&source_page=service-pillar&source_section=career-college-blueprint&inquiry_intent=course_guidance',
@@ -59,9 +59,9 @@ class ServicePillarSeeder extends Seeder
             [
                 'title' => 'Practical Job and Computer Skills',
                 'icon' => 'fa fa-lightbulb',
-                'summary' => 'Practical training for computer skills, office work, IT basics, and communication.',
+                'summary' => 'Practical classes for computer skills, office work, IT basics, and communication.',
                 'bullets' => [
-                    'Practical training in IT, computer skills, office productivity, and communication.',
+                    'Practical classes in IT, computer skills, office productivity, and communication.',
                     'Practice for interviews, job tasks, and daily workplace confidence.',
                     'Build outputs that students can explain during interviews or admissions conversations.',
                 ],
@@ -73,11 +73,11 @@ class ServicePillarSeeder extends Seeder
             [
                 'title' => 'Languages and Test Preparation',
                 'icon' => 'fa fa-globe-asia',
-                'summary' => 'Language, IELTS, PTE, Japanese, Korean, and study-abroad preparation for global education goals.',
+                'summary' => 'Language, IELTS, PTE, Japanese, Korean, and exam preparation classes for international study goals.',
                 'bullets' => [
                     'Focused preparation for IELTS, PTE, and language requirements.',
                     'Practical Japanese, Korean, English, and Chinese classes for study, work, or daily communication.',
-                    'Timeline Guidance: Match test prep with destination, application, and intake planning.',
+                    'Batch Planning: Match test preparation with exam goals, timeline, and class availability.',
                 ],
                 'cta_label' => 'View Course Details',
                 'cta_url' => '/courses-all',
@@ -123,9 +123,9 @@ class ServicePillarSeeder extends Seeder
                     ...$pillar,
                     'slug' => $slug,
                     'status' => 'active',
-                    'meta_title' => $pillar['title'].' | GoldenEye Academy',
+                    'meta_title' => $pillar['title'].' | Golden Eye Academy',
                     'meta_description' => $pillar['summary'],
-                    'meta_keywords' => 'GoldenEye Academy, '.$pillar['title'],
+                    'meta_keywords' => 'Golden Eye Academy, '.$pillar['title'],
                     'aeo_summary' => $pillar['summary'],
                     'schema_markup' => json_encode([
                         '@context' => 'https://schema.org',
@@ -134,7 +134,7 @@ class ServicePillarSeeder extends Seeder
                         'description' => $pillar['summary'],
                         'provider' => [
                             '@type' => 'EducationalOrganization',
-                            'name' => 'GoldenEye Academy',
+                            'name' => 'Golden Eye Academy',
                         ],
                     ]),
                 ],

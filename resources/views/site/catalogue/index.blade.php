@@ -1,11 +1,11 @@
 @extends('site.layout.app')
-@section('page_title', 'GoldenEye Academy Catalogue - Courses, Services & Learning Paths')
-@section('meta_description', 'Explore GoldenEye Academy courses, service areas, and learning paths. Compare options, then message the team for quick course help before enrolling.')
+@section('page_title', 'Golden Eye Academy Catalogue - Courses, Classes & Learning Paths')
+@section('meta_description', 'Explore Golden Eye Academy courses, service areas, and learning paths. Compare class options, then message the academy team before enrolling.')
 
 @section('content')
     @php
         $whatsappCleanNumber = str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599');
-        $whatsappMessage = rawurlencode($settings['whatsapp_prefill_message'] ?? 'Hi GoldenEye Academy, I have a quick question. Can you help me choose the right course?');
+        $whatsappMessage = rawurlencode($settings['whatsapp_prefill_message'] ?? 'Hi Golden Eye Academy, I have a question about classes and enrollment.');
         $guidanceUrl = fn (string $sourceSection, string $selectedCourse = 'undecided') => route('join-now', [
             'course' => $selectedCourse,
             'selected_course' => $selectedCourse,
@@ -21,7 +21,7 @@
                 <div class="col-lg-8">
                     <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Full Catalogue</span>
                     <h1 class="display-5 fw-black mt-3 mb-3 text-white" style="letter-spacing: 0;">Courses, services, and next-step paths in one place.</h1>
-                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8; max-width: 760px;">Browse the full GoldenEye Academy offer, compare what fits your goal, then send a quick message before you enroll.</p>
+                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8; max-width: 760px;">Browse the full Golden Eye Academy offer, compare classes that fit your goal, then send a quick message before you enroll.</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
                     <a href="{{ $guidanceUrl('catalogue-hero') }}" data-cta="catalogue-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask for Course Help</a>
@@ -113,7 +113,7 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-8">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Course Guidance</span>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Course Information</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Open a course, or ask us to compare options.</h2>
                     </div>
                     <div class="col-lg-4 text-lg-end">

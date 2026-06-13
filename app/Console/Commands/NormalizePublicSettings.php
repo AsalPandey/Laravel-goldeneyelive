@@ -35,7 +35,7 @@ class NormalizePublicSettings extends Command
      */
     private const ExactSiteTextReplacements = [
         'whatsapp_cta_subtext' => '',
-        'whatsapp_prefill_message' => 'Hi GoldenEye Academy, I have a quick question. Can you help me choose the right course?',
+        'whatsapp_prefill_message' => 'Hi Golden Eye Academy, I have a question about classes and enrollment.',
     ];
 
     /**

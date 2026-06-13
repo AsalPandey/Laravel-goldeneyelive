@@ -19,7 +19,7 @@
                 <x-app-logo-icon class="size-5 fill-brand-gold animate-pulse" />
             </div>
         </div>
-        <p class="text-brand-gold fw-black text-uppercase tracking-[0.4em]" style="font-size: 10px;">{{ $settings['site_name'] ?? 'GoldenEye' }} Academy</p>
+        <p class="text-brand-gold fw-black text-uppercase tracking-[0.4em]" style="font-size: 10px;">{{ \App\Support\StructuredData::siteName($settings ?? []) }}</p>
     </div>
 
     <!-- Fail-safe Spinner Removal -->
@@ -55,10 +55,10 @@
 	        ]);
 	        $courseHelpCtaText = trim((string) ($settings['popup_button_text'] ?? 'Ask for Course Help')) ?: 'Ask for Course Help';
 	        $courseHelpCtaText = strtolower($courseHelpCtaText) === 'ask for course guidance' ? 'Ask for Course Help' : $courseHelpCtaText;
-	        $popupBadgeText = trim((string) ($settings['notice_badge_text'] ?? 'Guidance First')) ?: 'Guidance First';
+	        $popupBadgeText = trim((string) ($settings['notice_badge_text'] ?? 'Academy Support')) ?: 'Academy Support';
 	        $popupDismissText = trim((string) ($settings['notice_dismiss_text'] ?? 'Close')) ?: 'Close';
-	        $popupTitleText = trim((string) ($settings['popup_title'] ?? 'Course Guidance Before Enrollment')) ?: 'Course Guidance Before Enrollment';
-	        $popupSubtitleText = trim((string) ($settings['popup_subtitle'] ?? $settings['popup_description'] ?? 'Not sure whether to choose IELTS, PTE, Korean, Japanese, computer skills, or web development? Send a quick course-help request first.')) ?: 'Not sure whether to choose IELTS, PTE, Korean, Japanese, computer skills, or web development? Send a quick course-help request first.';
+	        $popupTitleText = trim((string) ($settings['popup_title'] ?? 'Need course information before enrollment?')) ?: 'Need course information before enrollment?';
+	        $popupSubtitleText = trim((string) ($settings['popup_subtitle'] ?? $settings['popup_description'] ?? 'Ask about IELTS/PTE, Korean, Japanese, English, computer, office, web development, or IT classes before choosing your batch.')) ?: 'Ask about IELTS/PTE, Korean, Japanese, English, computer, office, web development, or IT classes before choosing your batch.';
 	        $popupLink = trim((string) ($settings['popup_register_link'] ?? '')) ?: $courseHelpPopupLink;
 
 	        $buildNoticeData = function ($notice) use ($courseHelpCtaText, $courseHelpPopupLink, $popupDismissText) {
@@ -67,7 +67,7 @@
 
 	            return (object) [
 	                'id' => 'notice_'.$notice->id,
-	                'badge' => $notice->badge ?? 'Guidance First',
+	                'badge' => $notice->badge ?? 'Academy Support',
 	                'title' => $notice->title,
 	                'subtitle' => $notice->subtitle,
 	                'button_text' => $noticeButtonText,
@@ -166,7 +166,7 @@
                         <img src="{{ $noticePopupData->image }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $noticePopupData->title }}" loading="lazy" decoding="async" width="1001" height="561">
                     </div>
                     <div class="site-notice-popup-body">
-	                        <span class="site-notice-badge">{{ $noticePopupData->badge ?: 'Guidance First' }}</span>
+	                        <span class="site-notice-badge">{{ $noticePopupData->badge ?: 'Academy Support' }}</span>
 	                        <h2>{{ $noticePopupData->title }}</h2>
 	                        @if($noticePopupData->subtitle)
 	                            <p>{{ $noticePopupData->subtitle }}</p>
@@ -213,12 +213,12 @@
 	                        return false;
 	                    }
 
-	                    return cta.includes('course-help')
-	                        || cta.includes('course-guidance')
-	                        || label.includes('ask for course help')
-	                        || label.includes('ask for course guidance')
-	                        || label.includes('course guidance');
-	                }
+                    return cta.includes('course-help')
+                        || cta.includes('course-guidance')
+                        || label.includes('ask for course help')
+                        || label.includes('course help')
+                        || label.includes('course information');
+                }
 
 	                function syncPopupCtaFromLink(link) {
 	                    const popupCta = popupCtaElement();
@@ -334,7 +334,7 @@
 	    @php
 	        $whatsappNumber = $settings['whatsapp_number'] ?? '9779856058599';
 	        $whatsappCleanNumber = str_replace(['+', ' ', '-'], '', $whatsappNumber);
-	        $whatsappMessage = rawurlencode($settings['whatsapp_prefill_message'] ?? 'Hi GoldenEye Academy, I have a quick question. Can you help me choose the right course?');
+	        $whatsappMessage = rawurlencode($settings['whatsapp_prefill_message'] ?? 'Hi Golden Eye Academy, I have a question about classes and enrollment.');
 	        $whatsappCtaText = trim((string) ($settings['whatsapp_cta_text'] ?? $settings['whatsapp_button_text'] ?? 'Message on WhatsApp')) ?: 'Message on WhatsApp';
 	        $whatsappCtaText = $whatsappCtaText === 'Message us on WhatsApp' ? 'Message on WhatsApp' : $whatsappCtaText;
 	        $whatsappCtaSubtext = trim((string) ($settings['whatsapp_cta_subtext'] ?? ''));

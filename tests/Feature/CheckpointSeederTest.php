@@ -67,7 +67,7 @@ class CheckpointSeederTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Study Abroad, Language &amp; Computer Courses in Pokhara', false)
+            ->assertSee('Established academy in Pokhara since 2008')
             ->assertSee('Trusted by students in Pokhara since 2008')
             ->assertSee('Srijana Chowk, Pokhara, Nepal')
             ->assertSee('Specific progress/result:')
@@ -77,7 +77,7 @@ class CheckpointSeederTest extends TestCase
             ->assertSee('Courses students ask about most')
             ->assertSee('Browse by learning goal')
             ->assertSee('Real students. Practical progress.')
-            ->assertSee('Still confused about which course fits you?')
+            ->assertSee('Need course and batch information?')
             ->assertSee('Message on WhatsApp')
             ->assertSee('Ask for Course Help');
 
@@ -110,7 +110,7 @@ class CheckpointSeederTest extends TestCase
         $this->assertSame($category->id, $course->category_id);
 
         $response = $this->actingAs($admin)->put(route('admin.categories.update', $category), [
-            'name' => 'Study Abroad and Test Prep',
+            'name' => 'IELTS, PTE and Language Preparation',
             'slug' => 'study-abroad-test-prep',
             'status' => 'active',
             'order_priority' => 10,
@@ -127,12 +127,12 @@ class CheckpointSeederTest extends TestCase
 
         $this->assertDatabaseHas(CourseCategory::class, [
             'id' => $category->id,
-            'name' => 'Study Abroad and Test Prep',
+            'name' => 'IELTS, PTE and Language Preparation',
         ]);
 
         $this->assertDatabaseHas(Course::class, [
             'id' => $course->id,
-            'category' => 'Study Abroad and Test Prep',
+            'category' => 'IELTS, PTE and Language Preparation',
             'category_slug' => 'study-abroad-test-prep',
         ]);
     }

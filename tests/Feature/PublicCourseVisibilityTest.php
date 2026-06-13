@@ -55,7 +55,7 @@ class PublicCourseVisibilityTest extends TestCase
     public function test_courses_page_uses_cms_display_order_and_filters_by_category_and_search(): void
     {
         $category = CourseCategory::factory()->create([
-            'name' => 'Study Abroad Test Prep',
+            'name' => 'IELTS, PTE and Language Preparation',
             'slug' => 'study-abroad-test-prep',
             'status' => 'active',
             'order_priority' => 1,
@@ -109,7 +109,7 @@ class PublicCourseVisibilityTest extends TestCase
 
         $response->assertOk()
             ->assertSee('IELTS Preparation for Band 7 Goal', false)
-            ->assertSee('Planning abroad and unsure how to prepare for IELTS?', false)
+            ->assertSee('Preparing for IELTS?', false)
             ->assertSee('Best for:', false)
             ->assertSee('Duration: 6 Weeks', false)
             ->assertSee('Fee: Rs. 7,000', false)
@@ -143,7 +143,7 @@ class PublicCourseVisibilityTest extends TestCase
             ->assertSee('Instructor profile', false)
             ->assertSee('Aakash Subedi', false)
             ->assertSee('IELTS and PTE Specialist', false)
-            ->assertSee('Years of experience', false)
+            ->assertSee('Class support', false)
             ->assertSee('Courses taught:', false)
             ->assertSee('Credibility note:', false)
             ->assertSee('Student result', false)
@@ -162,7 +162,7 @@ class PublicCourseVisibilityTest extends TestCase
     public function test_course_detail_breadcrumb_uses_clickable_actual_category_name(): void
     {
         $category = CourseCategory::factory()->create([
-            'name' => 'Study Abroad Test Prep',
+            'name' => 'IELTS, PTE and Language Preparation',
             'slug' => 'study-abroad-test-prep',
             'status' => 'active',
         ]);
@@ -180,7 +180,7 @@ class PublicCourseVisibilityTest extends TestCase
             ->assertOk()
             ->assertSee('href="'.route('courses-all').'"', false)
             ->assertSee('href="'.route('courses-all', ['category' => $category->slug]).'"', false)
-            ->assertSee('Study Abroad Test Prep', false)
+            ->assertSee('IELTS, PTE and Language Preparation', false)
             ->assertDontSee('Generic Category', false);
     }
 

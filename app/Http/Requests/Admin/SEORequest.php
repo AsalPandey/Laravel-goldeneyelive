@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Support\PublicCtaContract;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -12,6 +13,30 @@ class SEORequest extends FormRequest
     public function authorize(): bool
     {
         return auth()->user()->hasRole('Admin');
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $fields = [
+            'meta_title',
+            'meta_keywords',
+            'meta_description',
+            'aeo_summary',
+            'site_name',
+            'schema_markup',
+        ];
+
+        $normalized = [];
+
+        foreach ($fields as $field) {
+            if ($this->has($field)) {
+                $normalized[$field] = PublicCtaContract::normalizeBrandText((string) $this->input($field));
+            }
+        }
+
+        if ($normalized !== []) {
+            $this->merge($normalized);
+        }
     }
 
     public function withValidator(Validator $validator): void

@@ -58,7 +58,7 @@
                     <div class="space-y-6">
                         <div>
                             <label class="premium-label">Global Meta Title</label>
-                            <input type="text" name="meta_title" value="{{ $settings['meta_title'] ?? '' }}" class="premium-input @error('meta_title') border-rose-500 @enderror" placeholder="GoldenEye Academy — Best IT & Language Training in Pokhara">
+                            <input type="text" name="meta_title" value="{{ $settings['meta_title'] ?? '' }}" class="premium-input @error('meta_title') border-rose-500 @enderror" placeholder="Golden Eye Academy | Established Academy in Pokhara Since 2008">
                             @error('meta_title') <p class="text-rose-500 text-[10px] mt-1 font-bold uppercase">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -68,7 +68,7 @@
                         </div>
                         <div>
                             <label class="premium-label">Global Keywords (Comma Separated)</label>
-                            <input type="text" name="meta_keywords" value="{{ $settings['meta_keywords'] ?? '' }}" class="premium-input" placeholder="it training, web development, ielts pokhara">
+                            <input type="text" name="meta_keywords" value="{{ $settings['meta_keywords'] ?? '' }}" class="premium-input" placeholder="academy pokhara, web development classes, ielts pokhara">
                         </div>
                     </div>
                 </div>
@@ -80,13 +80,13 @@
                     
                     <div class="guide-box">
                         <div class="guide-title"><i class="fas fa-brain"></i> User Guide: AI Mastery</div>
-                        <p class="guide-text">Answer Engines like ChatGPT and Perplexity look for concise "AEO Briefs". Describe your academy in 2-3 sentences as if you're answering the question "What is GoldenEye Academy?".</p>
+                        <p class="guide-text">Answer Engines like ChatGPT and Perplexity look for concise "AEO Briefs". Describe your academy in 2-3 sentences as if you're answering the question "What is Golden Eye Academy?".</p>
                     </div>
 
                     <div class="space-y-6">
                         <div>
                             <label class="premium-label">Global AI/AEO Brief</label>
-                            <textarea name="aeo_summary" rows="4" class="premium-input" placeholder="GoldenEye Academy is a premier educational institution in Pokhara since 2008, specializing in...">{{ $settings['aeo_summary'] ?? '' }}</textarea>
+                            <textarea name="aeo_summary" rows="4" class="premium-input" placeholder="Golden Eye Academy is an established academy in Pokhara since 2008, offering IELTS/PTE, language, computer, office, web development, and IT classes.">{{ $settings['aeo_summary'] ?? '' }}</textarea>
                         </div>
                         <div>
                             <label class="premium-label">Speakable Selectors (CSS)</label>
@@ -163,7 +163,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div>
                             <label class="premium-label">Institution Name</label>
-                            <input type="text" name="site_name" value="{{ $settings['site_name'] ?? 'GoldenEye' }}" class="premium-input">
+                            <input type="text" name="site_name" value="{{ $settings['site_name'] ?? 'Golden Eye' }}" class="premium-input">
                         </div>
                         <div>
                             <label class="premium-label">Brand Suffix</label>

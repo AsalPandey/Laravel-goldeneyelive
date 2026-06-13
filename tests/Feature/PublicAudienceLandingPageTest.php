@@ -22,14 +22,14 @@ class PublicAudienceLandingPageTest extends TestCase
             ],
             [
                 'route' => 'for-parents',
-                'headline' => 'Need clear course guidance for your child?',
+                'headline' => 'Need clear course information for your child?',
                 'source_page' => 'for_parents',
                 'audience_type' => 'parent',
                 'inquiry_intent' => 'parent_course_guidance',
             ],
             [
                 'route' => 'study-abroad-guidance',
-                'headline' => 'Planning to study abroad from Pokhara?',
+                'headline' => 'Preparing for international study goals?',
                 'source_page' => 'study_abroad_guidance',
                 'audience_type' => 'study_abroad_applicant',
                 'inquiry_intent' => 'study_abroad_course_guidance',

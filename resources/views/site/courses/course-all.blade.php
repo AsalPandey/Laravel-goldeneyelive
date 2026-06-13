@@ -1,7 +1,7 @@
 @extends('site.layout.app')
 
-@section('page_title', $settings['courses_title'] ?? 'Courses - GoldenEye Academy')
-@section('meta_description', $settings['courses_subtitle'] ?? 'Browse GoldenEye Academy courses by category, search by goal, and ask the team before choosing your next course.')
+@section('page_title', $settings['courses_title'] ?? 'Courses - Golden Eye Academy')
+@section('meta_description', $settings['courses_subtitle'] ?? 'Browse Golden Eye Academy courses by category, search by subject, and ask the academy team before enrollment.')
 
 @section('content')
     @php
@@ -41,9 +41,9 @@
         <div class="container py-4">
             <div class="row align-items-center g-4">
                 <div class="col-lg-7">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Find your next step</span>
-                    <h1 class="display-5 fw-black mt-3 mb-3 text-white" style="letter-spacing: 0;">Choose a course by goal, not guesswork.</h1>
-                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8;">Search by course, skill, language, exam, or job goal. Compare the details first, then ask us before you enroll.</p>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Courses and batches</span>
+                    <h1 class="display-5 fw-black mt-3 mb-3 text-white" style="letter-spacing: 0;">Explore practical classes by subject.</h1>
+                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8;">Search by course, skill, language, exam, or job goal. Compare the details first, then ask about class timing before you enroll.</p>
                 </div>
                 <div class="col-lg-5">
                     <form action="{{ route('courses-all') }}" method="GET" class="bg-white/10 border border-white/10 rounded-2xl p-3 shadow-2xl" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="courses-filter" data-cta-label="View Course Details">
@@ -83,7 +83,7 @@
                     <div class="col-lg-7">
                         <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Popular courses</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Courses students ask about first.</h2>
-                        <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Start here if you want to compare common options before choosing a batch.</p>
+                        <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Start here if you want to compare common classes before choosing a batch.</p>
                     </div>
                     <div class="col-lg-4 text-lg-end">
                         <a href="{{ $guidanceUrl('popular-courses') }}" data-cta="popular-course-guidance" class="btn btn-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
@@ -142,7 +142,7 @@
                             All available courses
                         @endif
                     </h2>
-                    <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Open the course details first, then ask for guidance with the course context attached.</p>
+                    <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Open the course details first, then ask for class and enrollment support with the course context attached.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
                     <span class="text-zinc-500 font-bold" style="font-size: 12px;">{{ $courses->total() }} course{{ $courses->total() === 1 ? '' : 's' }} found</span>

@@ -95,7 +95,7 @@ class PublicCtaGuardrailTest extends TestCase
 
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'whatsapp_prefill_message',
-            'value' => 'alert("x")Hi GoldenEye Academy',
+            'value' => 'alert("x")Hi Golden Eye Academy',
         ]);
         $this->assertDatabaseMissing(SiteSetting::class, [
             'key' => 'whatsapp_prefill_message',

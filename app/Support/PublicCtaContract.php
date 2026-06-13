@@ -42,6 +42,17 @@ final class PublicCtaContract
     ];
 
     /**
+     * @var array<int, string>
+     */
+    private const BrandingTextFields = [
+        'site_name',
+        'schema_markup',
+        'meta_keywords',
+        'google_maps_embed',
+        'external_review_proof_note',
+    ];
+
+    /**
      * @return array<string, mixed>
      */
     public static function normalizeBrandingPayload(array $input): array
@@ -65,6 +76,12 @@ final class PublicCtaContract
 
         if (array_key_exists('whatsapp_prefill_message', $input)) {
             $normalized['whatsapp_prefill_message'] = self::normalizeWhatsappMessage($input['whatsapp_prefill_message'] ?? null);
+        }
+
+        foreach (self::BrandingTextFields as $field) {
+            if (array_key_exists($field, $input)) {
+                $normalized[$field] = self::normalizeBrandText(self::cleanText($input[$field] ?? null));
+            }
         }
 
         return $normalized;
@@ -167,7 +184,9 @@ final class PublicCtaContract
     {
         $value = trim(strip_tags((string) $message));
 
-        return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/', '', $value) ?? '';
+        $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/', '', $value) ?? '';
+
+        return self::normalizeBrandText($value);
     }
 
     public static function isSafePublicUrl(mixed $url): bool
@@ -305,5 +324,14 @@ final class PublicCtaContract
         $text = trim(strip_tags((string) $value));
 
         return preg_replace('/\s+/', ' ', $text) ?? '';
+    }
+
+    public static function normalizeBrandText(string $value): string
+    {
+        return str_replace(
+            ['GoldenEye Academy', 'GoldenEye%20Academy', 'GoldenEye'],
+            ['Golden Eye Academy', 'Golden%20Eye%20Academy', 'Golden Eye'],
+            $value,
+        );
     }
 }

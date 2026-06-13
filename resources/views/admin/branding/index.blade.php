@@ -72,7 +72,7 @@
                             <img src="{{ asset($settings['site_logo'] ?? 'site/img/logo.png') }}" class="max-w-full max-h-full object-contain">
                         </div>
                         <div class="flex-1 text-center md:text-left">
-                            <h2 class="text-3xl font-black tracking-tighter leading-none mb-2">{{ $settings['site_name'] ?? 'GoldenEye' }} {{ $settings['site_name_suffix'] ?? 'Academy' }}</h2>
+                            <h2 class="text-3xl font-black tracking-tighter leading-none mb-2">{{ $settings['site_name'] ?? 'Golden Eye' }} {{ $settings['site_name_suffix'] ?? 'Academy' }}</h2>
                             <p class="text-zinc-400 text-sm font-medium italic">"{{ Str::limit($settings['meta_description'] ?? 'Tagline not set...', 80) }}"</p>
                             <div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
                                 <span class="text-[10px] font-bold text-zinc-500 uppercase flex items-center gap-2"><i class="fa fa-envelope text-[#C5A059]"></i> {{ $settings['site_email'] ?? 'Not Set' }}</span>
@@ -138,7 +138,7 @@
                                 @if($isAdmin)
                                 <div>
                                     <label class="premium-label">Institution Name</label>
-                                    <input type="text" name="site_name" value="{{ $settings['site_name'] ?? 'GoldenEye' }}" class="premium-input font-black text-[#050C1C]" placeholder="e.g. GoldenEye">
+                                    <input type="text" name="site_name" value="{{ $settings['site_name'] ?? 'Golden Eye' }}" class="premium-input font-black text-[#050C1C]" placeholder="e.g. Golden Eye">
                                 </div>
                                 <div>
                                     <label class="premium-label">Brand Suffix</label>
@@ -201,7 +201,7 @@
                             </div>
                             <div>
                                 <label class="premium-label">About Section Title</label>
-                                <input type="text" name="about_section_title" value="{{ $settings['about_section_title'] ?? 'Why GoldenEye?' }}" class="premium-input">
+                                <input type="text" name="about_section_title" value="{{ $settings['about_section_title'] ?? 'Why Golden Eye?' }}" class="premium-input">
                             </div>
                             <div>
                                 <label class="premium-label">Testimonials Title</label>
@@ -228,9 +228,9 @@
                             </div>
                             <div>
                                 <label class="premium-label">WhatsApp CTA Text</label>
-                                <input type="text" name="whatsapp_cta_text" value="{{ $settings['whatsapp_cta_text'] ?? $settings['whatsapp_button_text'] ?? 'Message us on WhatsApp' }}" class="premium-input" placeholder="Message us on WhatsApp">
-                                <input type="text" name="whatsapp_cta_subtext" value="{{ $settings['whatsapp_cta_subtext'] ?? 'Casual questions. Quick reply.' }}" class="premium-input mt-3" placeholder="Casual questions. Quick reply.">
-                                <textarea name="whatsapp_prefill_message" rows="2" class="premium-input h-auto py-3 mt-3" placeholder="Prefilled WhatsApp message">{{ $settings['whatsapp_prefill_message'] ?? 'Hi GoldenEye Academy, I have a quick question. Can you help me choose the right course?' }}</textarea>
+                                <input type="text" name="whatsapp_cta_text" value="{{ $settings['whatsapp_cta_text'] ?? $settings['whatsapp_button_text'] ?? 'Message on WhatsApp' }}" class="premium-input" placeholder="Message on WhatsApp">
+                                <input type="text" name="whatsapp_cta_subtext" value="{{ $settings['whatsapp_cta_subtext'] ?? 'Quick reply for course questions.' }}" class="premium-input mt-3" placeholder="Quick reply for course questions.">
+                                <textarea name="whatsapp_prefill_message" rows="2" class="premium-input h-auto py-3 mt-3" placeholder="Prefilled WhatsApp message">{{ $settings['whatsapp_prefill_message'] ?? 'Hi Golden Eye Academy, I have a question about classes and enrollment.' }}</textarea>
                             </div>
                             <div class="pt-6 border-t border-zinc-100">
                                 <label class="premium-label">Sticky Inquiry Labels</label>
@@ -371,7 +371,7 @@
                                 </div>
                                 <div>
                                     <label class="premium-label">Section Title</label>
-                                    <input type="text" name="about_title" value="{{ $settings['about_title'] ?? '' }}" class="premium-input" placeholder="e.g. Welcome to GoldenEye">
+                                    <input type="text" name="about_title" value="{{ $settings['about_title'] ?? '' }}" class="premium-input" placeholder="e.g. Welcome to Golden Eye">
                                 </div>
                                 <div>
                                     <label class="premium-label">Section Summary Text (Rich Text)</label>
