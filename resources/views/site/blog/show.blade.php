@@ -84,9 +84,6 @@
                         @sanitize($post->content)
                     </div>
 
-                    @if($post->schema_markup)
-                        @jsonld($post->schema_markup)
-                    @endif
                 </article>
 
                 <!-- Sidebar -->

@@ -20,7 +20,7 @@
                 required
                 autofocus
                 autocomplete="email"
-                placeholder="admin@goldeneye.edu.np"
+                placeholder="authorized-account@example.com"
             />
 
             <!-- Password -->

@@ -3,15 +3,38 @@
 namespace Database\Seeders;
 
 use App\Models\SiteSetting;
+use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 
 class SiteSettingSeeder extends Seeder
 {
+    use PreventsProductionBaselineSeeding;
+
+    /**
+     * @var array<int, string>
+     */
+    private const ENVIRONMENT_BOUND_KEYS = [
+        'bing_webmaster_id',
+        'external_review_screenshot',
+        'geo_latitude',
+        'geo_longitude',
+        'google_analytics_id',
+        'google_business_profile_url',
+        'google_maps_embed',
+        'google_search_console_id',
+        'image_size_limit',
+        'recaptcha_secret_key',
+        'recaptcha_site_key',
+        'robots_txt',
+    ];
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        $this->preventProductionBaselineSeeding();
+
         $settings = [
             'site_name' => ['Golden Eye', 'text'],
             'site_name_suffix' => ['Academy', 'text'],
@@ -182,13 +205,16 @@ class SiteSettingSeeder extends Seeder
         foreach ($settings as $key => $setting) {
             [$value, $type] = is_array($setting) ? $setting : [$setting, 'text'];
 
-            SiteSetting::updateOrCreate(
-                ['key' => $key],
-                [
-                    'value' => $value,
-                    'type' => $type,
-                ],
-            );
+            $attributes = [
+                'value' => $value,
+                'type' => $type,
+            ];
+
+            if (in_array($key, self::ENVIRONMENT_BOUND_KEYS, true)) {
+                SiteSetting::firstOrCreate(['key' => $key], $attributes);
+            } else {
+                SiteSetting::updateOrCreate(['key' => $key], $attributes);
+            }
 
             cache()->forget("setting_{$key}");
         }

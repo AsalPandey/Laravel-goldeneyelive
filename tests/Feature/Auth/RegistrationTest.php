@@ -2,42 +2,42 @@
 
 namespace Tests\Feature\Auth;
 
-use Database\Seeders\RoleSeeder;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
+    public function test_public_registration_routes_are_not_registered(): void
     {
-        parent::setUp();
+        $this->assertFalse(Route::has('register'));
+        $this->assertFalse(Route::has('register.store'));
 
-        $this->skipUnlessFortifyHas(Features::registration());
-        $this->seed(RoleSeeder::class);
+        $this->get('/register')->assertNotFound();
+        $this->post('/register')->assertNotFound();
     }
 
-    public function test_registration_screen_can_be_rendered(): void
+    public function test_direct_registration_attempt_cannot_create_any_user(): void
     {
-        $response = $this->get(route('register'));
-
-        $response->assertOk();
-    }
-
-    public function test_new_users_can_register(): void
-    {
-        $response = $this->post(route('register.store'), [
-            'name' => 'John Doe',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+        $this->post('/register', [
+            'name' => 'Unapproved Account',
+            'email' => 'unapproved@example.test',
+            'password' => 'test-only-password',
+            'password_confirmation' => 'test-only-password',
         ]);
 
-        $response->assertSessionHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+        $this->assertDatabaseCount(User::class, 0);
+        $this->assertGuest();
+    }
 
-        $this->assertAuthenticated();
+    public function test_login_screen_has_no_public_registration_link(): void
+    {
+        $this->get(route('login'))
+            ->assertOk()
+            ->assertDontSee('New Account?')
+            ->assertDontSee('Register');
     }
 }

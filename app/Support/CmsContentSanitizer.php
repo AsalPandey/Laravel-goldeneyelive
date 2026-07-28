@@ -6,6 +6,7 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use Illuminate\Support\Str;
+use JsonException;
 
 class CmsContentSanitizer
 {
@@ -77,13 +78,24 @@ class CmsContentSanitizer
             return null;
         }
 
-        $decoded = json_decode($json, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE || ! is_array($decoded)) {
+        try {
+            $decoded = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
             return null;
         }
 
-        return json_encode($decoded, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        if (! is_array($decoded)) {
+            return null;
+        }
+
+        try {
+            return json_encode(
+                $decoded,
+                JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+            );
+        } catch (JsonException) {
+            return null;
+        }
     }
 
     private static function sanitizeNode(DOMNode $node): void

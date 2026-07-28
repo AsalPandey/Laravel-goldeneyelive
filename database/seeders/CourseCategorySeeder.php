@@ -3,15 +3,20 @@
 namespace Database\Seeders;
 
 use App\Models\CourseCategory;
+use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 
 class CourseCategorySeeder extends Seeder
 {
+    use PreventsProductionBaselineSeeding;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        $this->preventProductionBaselineSeeding();
+
         $categories = [
             [
                 'name' => 'IELTS, PTE and Language Preparation',

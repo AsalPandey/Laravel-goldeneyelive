@@ -3,16 +3,24 @@
 namespace Database\Seeders;
 
 use App\Models\BlogPost;
+use Carbon\CarbonImmutable;
+use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class BlogSeeder extends Seeder
 {
+    use PreventsProductionBaselineSeeding;
+
+    private const BASELINE_PUBLISHED_AT = '2026-07-01 00:00:00';
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        $this->preventProductionBaselineSeeding();
+
         $posts = [
             [
                 'title' => 'Which Course Should I Choose After SEE or Plus Two?',
@@ -83,7 +91,8 @@ class BlogSeeder extends Seeder
         foreach ($posts as $index => $post) {
             $post['slug'] = Str::slug($post['title']);
             $post['status'] = 'published';
-            $post['published_at'] = now()->subDays($index + 1);
+            $post['published_at'] = BlogPost::where('slug', $post['slug'])->value('published_at')
+                ?? CarbonImmutable::parse(self::BASELINE_PUBLISHED_AT)->subDays($index);
             $post['meta_title'] = $post['title'].' | Golden Eye Academy';
             $post['meta_description'] = Str::limit(strip_tags($post['content']), 155, '');
             $post['aeo_summary'] = Str::limit(strip_tags($post['content']), 240, '');

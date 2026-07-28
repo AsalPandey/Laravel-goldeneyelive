@@ -3,12 +3,17 @@
 namespace Database\Seeders;
 
 use App\Models\FAQ;
+use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 
 class FAQSeeder extends Seeder
 {
+    use PreventsProductionBaselineSeeding;
+
     public function run(): void
     {
+        $this->preventProductionBaselineSeeding();
+
         $faqs = [
             ['What courses does Golden Eye Academy offer?', 'Golden Eye Academy offers IELTS, PTE, Japanese, Korean, English, computer office skills, web development, IT classes, and course information before enrollment.', 10],
             ['Can I visit before enrollment?', 'Yes. Students, parents, and learners can contact or visit the academy team to ask about classes, batch timing, fees, and course options before enrollment.', 20],

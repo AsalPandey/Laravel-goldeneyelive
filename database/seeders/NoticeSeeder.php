@@ -3,15 +3,20 @@
 namespace Database\Seeders;
 
 use App\Models\Notice;
+use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 
 class NoticeSeeder extends Seeder
 {
+    use PreventsProductionBaselineSeeding;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        $this->preventProductionBaselineSeeding();
+
         $notices = [
             [
                 'title' => 'Course Information Before Enrollment',

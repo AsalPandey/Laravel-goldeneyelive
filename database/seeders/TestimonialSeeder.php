@@ -3,12 +3,17 @@
 namespace Database\Seeders;
 
 use App\Models\Testimonial;
+use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 
 class TestimonialSeeder extends Seeder
 {
+    use PreventsProductionBaselineSeeding;
+
     public function run(): void
     {
+        $this->preventProductionBaselineSeeding();
+
         $testimonials = [
             [
                 'student_name' => 'Sandesh Mahat',

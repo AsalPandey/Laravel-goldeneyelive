@@ -13,17 +13,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
-            CourseCategorySeeder::class,
-            CourseSeeder::class,
-            NoticeSeeder::class,
-            FAQSeeder::class,
-            BlogSeeder::class,
-            SiteSettingSeeder::class,
-            ServicePillarSeeder::class,
-            TeacherSeeder::class,
-            TestimonialSeeder::class,
         ]);
 
-        $this->command->info('All checkpoint seeders completed. Admin: admin@goldeneye.edu.np / password');
+        $this->command->info('System reference seeding completed.');
     }
 }

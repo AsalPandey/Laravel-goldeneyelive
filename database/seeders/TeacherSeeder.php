@@ -3,12 +3,17 @@
 namespace Database\Seeders;
 
 use App\Models\Teacher;
+use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 
 class TeacherSeeder extends Seeder
 {
+    use PreventsProductionBaselineSeeding;
+
     public function run(): void
     {
+        $this->preventProductionBaselineSeeding();
+
         $teachers = [
             [
                 'name' => 'Shankar Pokharel',

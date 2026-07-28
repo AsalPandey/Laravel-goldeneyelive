@@ -12,7 +12,8 @@ use App\Models\SiteSetting;
 use App\Models\Teacher;
 use App\Models\Testimonial;
 use App\Models\User;
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\LiveSiteSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -22,7 +23,7 @@ class CheckpointSeederTest extends TestCase
 
     public function test_checkpoint_seeders_populate_cms_content_without_missing_assets(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         $this->assertGreaterThanOrEqual(5, CourseCategory::count());
         $this->assertGreaterThanOrEqual(12, Course::count());
@@ -63,7 +64,7 @@ class CheckpointSeederTest extends TestCase
 
     public function test_seeded_public_pages_render_dynamic_cms_content(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         $this->get(route('home'))
             ->assertOk()
@@ -101,9 +102,11 @@ class CheckpointSeederTest extends TestCase
 
     public function test_admin_cms_can_update_seeded_category_and_sync_course_fields(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
+        $this->seed(RoleSeeder::class);
 
-        $admin = User::where('email', 'admin@goldeneye.edu.np')->firstOrFail();
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
         $category = CourseCategory::where('slug', 'study-abroad-test-prep')->firstOrFail();
 
         $course = Course::where('slug', 'ielts-masterclass')->firstOrFail();
@@ -139,9 +142,11 @@ class CheckpointSeederTest extends TestCase
 
     public function test_admin_branding_accepts_seeded_dynamic_image_paths(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
+        $this->seed(RoleSeeder::class);
 
-        $admin = User::where('email', 'admin@goldeneye.edu.np')->firstOrFail();
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
 
         $response = $this->actingAs($admin)->post(route('admin.branding.update'), [
             'hero_title' => 'Choose Your Next Step With Clarity',

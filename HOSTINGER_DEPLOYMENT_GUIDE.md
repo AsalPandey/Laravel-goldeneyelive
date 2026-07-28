@@ -146,34 +146,36 @@ php artisan view:clear
 
 Run `php artisan key:generate --force` only if `APP_KEY` is still empty. If you imported both the main SQL and patch SQL, do not run `php artisan migrate --force`; the imported database already contains the migrated schema and seeded CMS content.
 
-## Seeder Decision
+## Seeder and Account Safety
 
-The provided SQL already contains checkpoint CMS content and admin/staff users.
-
-Only when you intentionally want to reload checkpoint CMS content:
+The default `DatabaseSeeder` is a system-reference entry point. It creates the
+required roles idempotently and does not create users or restore CMS content:
 
 ```bash
 php artisan db:seed --force
 ```
 
-The seeders are designed to be non-destructive and idempotent. They use stable keys/slugs and do not truncate tables.
+`LiveSiteSeeder` preserves the owner-approved baseline content for fresh local
+installations and controlled recovery work. It refuses production execution
+until the guarded preview/apply/rollback recovery workflow is available. Do not
+add it to routine deployment scripts.
 
-If you want only public content without users/roles, use:
+Privileged accounts are never created by seeders. To create a new authorized
+Admin or Staff account, use the dedicated provisioning command with the real
+account owner details:
 
 ```bash
-php artisan db:seed --class=LiveSiteSeeder --force
+php artisan account:provision-privileged <authorized-email> --name="<account-owner>" --role=<Admin-or-Staff>
 ```
 
-For a full admin-ready checkpoint, use the default `DatabaseSeeder`.
+The command generates no reusable credential. It sends a one-time password
+setup link and refuses to alter an existing account. Existing account holders
+must use the normal password-reset workflow when their credential is unknown.
 
-Default seeded admin:
-
-```text
-Email: admin@goldeneye.edu.np
-Password: password
-```
-
-Change this password immediately after first login.
+Public self-registration is intentionally disabled. Login and password reset
+remain available to authorized accounts. Registration may be deliberately
+re-enabled later by restoring `Features::registration()` in `config/fortify.php`
+only after an approved student portal and authorization model exist.
 
 ## Point Domain to Laravel Public
 

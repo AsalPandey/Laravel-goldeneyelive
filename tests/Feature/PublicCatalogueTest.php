@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\LiveSiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,7 +12,7 @@ class PublicCatalogueTest extends TestCase
 
     public function test_catalogue_renders_seeded_services_categories_courses_and_conversion_ctas(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         $this->assertSame(url('/catelogue'), route('catalogue'));
 
@@ -36,7 +36,7 @@ class PublicCatalogueTest extends TestCase
 
     public function test_catalogue_is_hidden_from_homepage_navigation_and_footer(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         $this->get(route('home'))
             ->assertOk()

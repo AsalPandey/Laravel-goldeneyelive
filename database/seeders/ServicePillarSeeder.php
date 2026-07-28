@@ -3,16 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\ServicePillar;
+use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class ServicePillarSeeder extends Seeder
 {
+    use PreventsProductionBaselineSeeding;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        $this->preventProductionBaselineSeeding();
+
         $pillars = [
             [
                 'title' => 'Flexible Learning Support',

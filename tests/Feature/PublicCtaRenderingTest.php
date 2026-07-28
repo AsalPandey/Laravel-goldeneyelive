@@ -6,7 +6,7 @@ use App\Models\Course;
 use App\Models\JoinNowQuery;
 use App\Models\Notice;
 use App\Models\SiteSetting;
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\LiveSiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -17,7 +17,7 @@ class PublicCtaRenderingTest extends TestCase
 
     public function test_public_navigation_is_simplified_for_desktop_and_mobile(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         SiteSetting::where('key', 'whatsapp_number')->update(['value' => '+977 980-000-0000']);
 
@@ -67,7 +67,7 @@ class PublicCtaRenderingTest extends TestCase
 
     public function test_homepage_renders_sales_ctas_and_whatsapp_chat_prompt(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         SiteSetting::where('key', 'whatsapp_number')->update(['value' => '+977 980-000-0000']);
 
@@ -162,7 +162,7 @@ class PublicCtaRenderingTest extends TestCase
 
     public function test_contact_page_forms_have_accessible_labels_errors_and_phone_help(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         $this->get(route('contact'))
             ->assertOk()

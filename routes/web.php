@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FAQController;
+use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\SEOController;
 use App\Http\Controllers\Admin\ServicePillarController;
@@ -109,6 +110,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('testimonials/{id}/toggle-featured', [TestimonialController::class, 'toggleFeatured'])->name('testimonials.toggle-featured');
             Route::resource('notices', NoticeController::class);
             Route::patch('notices/{id}/toggle', [NoticeController::class, 'toggleStatus'])->name('notices.toggle');
+            Route::get('media', [MediaController::class, 'index'])->name('media.index');
+            Route::post('media', [MediaController::class, 'store'])->name('media.store');
 
             // Admin Only: Site Authority & Security Settings
             Route::middleware('role:Admin')->group(function () {

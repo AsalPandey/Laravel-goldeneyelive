@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\SiteSetting;
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\LiveSiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -101,7 +101,7 @@ class PublicCourseVisibilityTest extends TestCase
 
     public function test_course_detail_page_renders_deep_decision_sections_and_contextual_ctas(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         SiteSetting::where('key', 'whatsapp_number')->update(['value' => '+977 980-000-0000']);
 

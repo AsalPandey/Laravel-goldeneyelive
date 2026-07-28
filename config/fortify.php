@@ -144,7 +144,8 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Public registration is intentionally disabled. Re-enable this feature
+        // only when an approved student account workflow and authorization model exist.
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

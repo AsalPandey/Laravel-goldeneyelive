@@ -34,12 +34,14 @@
                     <flux:sidebar.item icon="chat-bubble-bottom-center-text" :href="route('admin.faq.index')" :current="request()->routeIs('admin.faq.*')" wire:navigate>
                         {{ __('Manage FAQs') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="sparkles" :href="route('admin.branding.index')" :current="request()->routeIs('admin.branding.*')" wire:navigate>
-                        {{ __('Branding Center') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="globe-alt" :href="route('admin.seo.index')" :current="request()->routeIs('admin.seo.*')" wire:navigate>
-                        {{ __('SEO & AI Authority') }}
-                    </flux:sidebar.item>
+                    @role('Admin')
+                        <flux:sidebar.item icon="sparkles" :href="route('admin.branding.index')" :current="request()->routeIs('admin.branding.*')" wire:navigate>
+                            {{ __('Branding Center') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="globe-alt" :href="route('admin.seo.index')" :current="request()->routeIs('admin.seo.*')" wire:navigate>
+                            {{ __('SEO & AI Authority') }}
+                        </flux:sidebar.item>
+                    @endrole
                     <flux:sidebar.item icon="users" :href="route('admin.teachers.index')" :current="request()->routeIs('admin.teachers.*')" wire:navigate>
                         {{ __('Manage Teachers') }}
                     </flux:sidebar.item>
@@ -142,6 +144,7 @@
 
         @fluxScripts
         
+        @role('Admin|Staff')
         {{-- Global Media Vault Picker Modal --}}
         <div id="mediaVaultModal" class="hidden fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
             <div class="bg-white dark:bg-zinc-900 rounded-3xl w-full max-w-5xl h-[80vh] flex flex-col shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-700">
@@ -163,9 +166,16 @@
                         {{-- Populated via JS --}}
                     </div>
                 </div>
-                <div class="px-8 py-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
+                <div class="px-8 py-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex flex-wrap justify-between items-center gap-3">
                     <p class="text-[10px] text-neutral-400 font-bold italic">Note: Only images in site/img/ are managed here.</p>
-                    <a href="{{ route('admin.branding.index') }}" target="_blank" class="text-xs font-black uppercase text-brand-gold hover:underline">Manage Vault Files</a>
+                    <form action="{{ route('admin.media.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-wrap items-center justify-end gap-2">
+                        @csrf
+                        <input type="file" name="image" accept="image/jpeg,image/png,image/gif" required class="max-w-56 text-[10px] text-neutral-500">
+                        <button type="submit" class="rounded-lg bg-brand-dark px-3 py-2 text-[9px] font-black uppercase text-brand-gold">Upload Image</button>
+                    </form>
+                    @role('Admin')
+                        <a href="{{ route('admin.branding.index') }}" target="_blank" class="text-xs font-black uppercase text-brand-gold hover:underline">Open Brand Center</a>
+                    @endrole
                 </div>
             </div>
         </div>
@@ -206,7 +216,11 @@
                 loading.classList.remove('hidden');
 
                 try {
-                    const response = await fetch('{{ route("admin.branding.index") }}?json=true');
+                    const response = await fetch('{{ route("admin.media.index") }}', {
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                    });
                     const data = await response.json();
                     
                     grid.innerHTML = '';
@@ -264,5 +278,6 @@
                 } catch(e) {}
             };
         </script>
+        @endrole
     </body>
 </html>

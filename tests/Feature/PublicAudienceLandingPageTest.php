@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\LiveSiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -61,7 +61,7 @@ class PublicAudienceLandingPageTest extends TestCase
 
     public function test_homepage_audience_cards_link_to_their_landing_pages(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         $this->get(route('home'))
             ->assertOk()
@@ -76,7 +76,7 @@ class PublicAudienceLandingPageTest extends TestCase
 
     public function test_mobile_sticky_navbar_contract_does_not_duplicate_navigation(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(LiveSiteSeeder::class);
 
         $html = $this->get(route('home'))->assertOk()->getContent();
 

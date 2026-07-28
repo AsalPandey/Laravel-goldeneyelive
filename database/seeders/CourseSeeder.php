@@ -4,15 +4,20 @@ namespace Database\Seeders;
 
 use App\Models\Course;
 use App\Models\CourseCategory;
+use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 
 class CourseSeeder extends Seeder
 {
+    use PreventsProductionBaselineSeeding;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        $this->preventProductionBaselineSeeding();
+
         $categories = CourseCategory::all()->keyBy('slug');
 
         $courses = [
