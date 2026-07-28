@@ -1,24 +1,36 @@
 <x-layouts::app :title="__('Contact Inquiries')">
     <div class="flex h-full w-full flex-1 flex-col gap-6 p-6">
-        <div class="flex items-center justify-between pb-4 border-b border-neutral-100">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-neutral-100">
             <div class="space-y-1">
                 <h1 class="text-3xl font-black text-neutral-900 tracking-tight uppercase">Contact <span class="text-brand-gold">Inquiries</span></h1>
                 <p class="text-neutral-500 text-sm">Review and manage general website inquiries.</p>
             </div>
             <div class="flex items-center gap-4">
-                <form action="{{ route('admin.submissions.contact-display') }}" method="GET" class="flex items-center gap-2">
+                <form action="{{ route('admin.submissions.contact-display') }}" method="GET" class="flex flex-wrap items-center gap-2">
+                    <input type="hidden" name="view" value="{{ $showArchived ? 'archived' : 'active' }}">
                     <div class="relative">
                         <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs"></i>
                         <input type="search" name="search" value="{{ request('search') }}" placeholder="Search inquiries..." class="pl-10 pr-4 py-2.5 rounded-xl border-neutral-200 bg-white text-xs w-64 focus:border-brand-gold focus:ring-0">
                     </div>
+                    <select name="status" class="rounded-xl border-neutral-200 bg-white px-3 py-2.5 text-xs focus:border-brand-gold focus:ring-0">
+                        <option value="">All statuses</option>
+                        @foreach($statusOptions as $value => $label)
+                            <option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
                     <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-xs font-black uppercase text-white hover:bg-brand-gold hover:text-brand-dark transition-all">
                         <i class="fa fa-search"></i> Search
                     </button>
-                    @if(request('search'))
-                        <a href="{{ route('admin.submissions.contact-display') }}" class="inline-flex items-center rounded-xl bg-neutral-100 px-4 py-2.5 text-xs font-black uppercase text-neutral-600 hover:bg-neutral-200 transition-all">Clear</a>
+                    @if(request('search') || request('status'))
+                        <a href="{{ route('admin.submissions.contact-display', $showArchived ? ['view' => 'archived'] : []) }}" class="inline-flex items-center rounded-xl bg-neutral-100 px-4 py-2.5 text-xs font-black uppercase text-neutral-600 hover:bg-neutral-200 transition-all">Clear</a>
                     @endif
                 </form>
             </div>
+        </div>
+
+        <div class="flex gap-2">
+            <a href="{{ route('admin.submissions.contact-display') }}" class="rounded-xl px-4 py-2 text-xs font-black uppercase {{ $showArchived ? 'bg-neutral-100 text-neutral-600' : 'bg-neutral-900 text-white' }}">Active</a>
+            <a href="{{ route('admin.submissions.contact-display', ['view' => 'archived']) }}" class="rounded-xl px-4 py-2 text-xs font-black uppercase {{ $showArchived ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-600' }}">Archived</a>
         </div>
 
         <div class="overflow-x-auto rounded-2xl border border-neutral-100 bg-white shadow-sm">
@@ -26,7 +38,9 @@
                 <thead class="bg-neutral-50/50">
                     <tr>
                         <th scope="col" class="px-6 py-4 text-left">
-                            <input type="checkbox" id="selectAll" class="rounded border-neutral-300 text-brand-gold focus:ring-brand-gold">
+                            @unless($showArchived)
+                                <input type="checkbox" id="selectAll" class="rounded border-neutral-300 text-brand-gold focus:ring-brand-gold">
+                            @endunless
                         </th>
                         <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Inquirer Profile</th>
                         <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Subject / Intent</th>
@@ -39,16 +53,18 @@
                     @forelse($contacts as $contact)
                     <tr class="hover:bg-neutral-50/30 transition-all select-row">
                         <td class="px-6 py-5">
-                            <input type="checkbox" name="ids[]" value="{{ $contact->id }}" class="row-checkbox rounded border-neutral-300 text-brand-gold focus:ring-brand-gold">
+                            @unless($showArchived)
+                                <input type="checkbox" name="ids[]" value="{{ $contact->id }}" class="row-checkbox rounded border-neutral-300 text-brand-gold focus:ring-brand-gold">
+                            @endunless
                         </td>
                         <td class="px-6 py-5">
                             <div class="text-sm font-black text-neutral-900 leading-tight">{{ $contact->name }}</div>
                             <div class="text-[10px] text-neutral-400 font-bold uppercase mt-0.5">{{ $contact->email }} &bull; {{ $contact->phone }}</div>
-                            <div class="text-[9px] text-neutral-400 italic mt-1 opacity-60">Submitted {{ $contact->created_at->diffForHumans() }}</div>
+                            <div class="text-[9px] text-neutral-400 italic mt-1 opacity-60">Submitted {{ $contact->created_at->format('M d, Y g:i A') }} &bull; {{ $contact->created_at->diffForHumans() }}</div>
                         </td>
                         <td class="px-6 py-5">
                             <div class="text-[11px] font-black text-neutral-800 uppercase tracking-tighter">{{ $contact->subject }}</div>
-                            <div class="max-w-xs truncate text-[11px] text-neutral-500 italic mt-0.5" title="{{ $contact->message }}">"{{ $contact->message }}"</div>
+                            <div class="max-w-md whitespace-pre-wrap text-[11px] text-neutral-500 italic mt-0.5">"{{ $contact->message }}"</div>
                         </td>
                         <td class="px-6 py-5">
                             @if($contact->admin_notes)
@@ -57,7 +73,7 @@
                                 <div class="text-[9px] text-neutral-300 uppercase tracking-widest italic font-bold">No Notes Added</div>
                             @endif
                             @if($contact->replied_at)
-                                <div class="text-[8px] text-emerald-500 font-black uppercase mt-1">Processed {{ $contact->replied_at->diffForHumans() }}</div>
+                                <div class="text-[8px] text-emerald-500 font-black uppercase mt-1">First follow-up {{ $contact->replied_at->diffForHumans() }}</div>
                             @endif
                         </td>
                         <td class="px-6 py-5">
@@ -65,28 +81,41 @@
                                 {{ $contact->status == 'new' ? 'text-blue-700 border-blue-100 bg-blue-50' : '' }}
                                 {{ $contact->status == 'contacted' ? 'text-brand-gold border-brand-gold/10 bg-brand-gold/10' : '' }}
                                 {{ $contact->status == 'resolved' ? 'text-emerald-700 border-emerald-100 bg-emerald-50' : '' }}
+                                {{ $contact->status == 'invalid' ? 'text-rose-700 border-rose-100 bg-rose-50' : '' }}
                                 {{ $contact->status == 'rejected' ? 'text-rose-700 border-rose-100 bg-rose-50' : '' }}
                                 {{ $contact->status == 'reviewed' ? 'text-neutral-700 border-neutral-100 bg-neutral-50' : '' }}
                             ">
-                                {{ $contact->status }}
+                                {{ $statusOptions[$contact->status] ?? ucfirst($contact->status) }}
                             </span>
+                            @if($showArchived)
+                                <span class="mt-1 block text-[9px] font-black uppercase text-neutral-500">Archived {{ $contact->deleted_at?->format('M d, Y g:i A') }}</span>
+                            @endif
                         </td>
                         <td class="px-6 py-5 text-right">
                             <div class="flex justify-end gap-2 pr-4">
                                 <button onclick="openEditModal({{ json_encode($contact) }})" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-brand-gold hover:border-brand-gold/20 hover:shadow-lg transition-all">
                                     <i class="fa fa-eye text-xs"></i>
                                 </button>
-                                <form action="{{ route('admin.submissions.contact.destroy', $contact->id) }}" method="POST" onsubmit="return confirm('Archive this message forever?')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-400 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all">
-                                        <i class="fa fa-trash-alt text-xs"></i>
-                                    </button>
-                                </form>
+                                @if($showArchived)
+                                    <form action="{{ route('admin.submissions.contact.restore', $contact->id) }}" method="POST" onsubmit="return confirm('Restore this inquiry to the active list?')">
+                                        @csrf @method('PATCH')
+                                        <button type="submit" title="Restore inquiry" class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-700 hover:bg-emerald-100 transition-all">
+                                            <i class="fa fa-undo text-xs"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('admin.submissions.contact.destroy', $contact->id) }}" method="POST" onsubmit="return confirm('Archive this inquiry? You can restore it later.')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" title="Archive inquiry" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-400 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all">
+                                            <i class="fa fa-archive text-xs"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="6" class="py-24 text-center text-neutral-400 font-medium italic">No inquiries found in the website database.</td></tr>
+                    <tr><td colspan="6" class="py-24 text-center text-neutral-400 font-medium italic">{{ $showArchived ? 'No archived contact inquiries found.' : 'No active contact inquiries found.' }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -95,21 +124,23 @@
             {{ $contacts->links() }}
         </div>
 
+        @unless($showArchived)
         <!-- Bulk Actions Bar -->
         <div id="bulkActionsBar" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-6 z-[1000] transition-all transform translate-y-24 opacity-0">
             <span class="text-sm font-bold"><span id="selectedCount">0</span> inquiries selected</span>
             <div class="h-6 w-px bg-neutral-700"></div>
-            <form action="{{ route('admin.submissions.bulk-delete') }}" method="POST" onsubmit="return confirm('Delete all selected inquiries forever?')">
+            <form action="{{ route('admin.submissions.bulk-delete') }}" method="POST" onsubmit="return confirm('Archive all selected inquiries? You can restore them later.')">
                 @csrf
                 <input type="hidden" name="type" value="contact">
                 <div id="bulkIdsContainer"></div>
                 <button type="submit" class="flex items-center gap-2 text-rose-400 hover:text-rose-300 transition-colors text-sm font-black uppercase tracking-wider">
-                    <i class="fa fa-trash-alt"></i>
-                    Bulk Delete
+                    <i class="fa fa-archive"></i>
+                    Bulk Archive
                 </button>
             </form>
             <button onclick="unselectAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
         </div>
+        @endunless
     </div>
 
     <!-- Edit/Detail Modal -->
@@ -152,11 +183,9 @@
                         <div class="space-y-2">
                             <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">Communication Status</label>
                             <select name="status" id="modal_status" class="w-full px-4 py-3 rounded-xl border-neutral-100 bg-neutral-50 text-xs font-black uppercase tracking-widest focus:ring-brand-gold focus:border-brand-gold transition-all cursor-pointer">
-                                <option value="new">New Inquiry</option>
-                                <option value="reviewed">Reviewed</option>
-                                <option value="contacted">Contacted</option>
-                                <option value="resolved">Resolved</option>
-                                <option value="rejected">Rejected</option>
+                                @foreach($statusOptions as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -169,7 +198,9 @@
                 </div>
                 <div class="px-8 py-6 border-t border-neutral-100 bg-neutral-50/50 flex justify-end gap-3">
                     <button type="button" onclick="closeModal()" class="px-6 py-3 text-xs font-black uppercase text-neutral-500 hover:text-neutral-800 transition-colors">Discard</button>
-                    <button type="submit" class="px-8 py-3 rounded-xl bg-brand-gold text-brand-dark text-xs font-black uppercase shadow-lg hover:bg-brand-dark hover:text-brand-gold transition-all">Update Submission</button>
+                    @unless($showArchived)
+                        <button type="submit" class="px-8 py-3 rounded-xl bg-brand-gold text-brand-dark text-xs font-black uppercase shadow-lg hover:bg-brand-dark hover:text-brand-gold transition-all">Update Submission</button>
+                    @endunless
                 </div>
             </form>
         </div>

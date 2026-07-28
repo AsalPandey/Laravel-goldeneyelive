@@ -16,6 +16,7 @@ use App\Models\SiteSetting;
 use App\Support\Recaptcha;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -39,22 +40,10 @@ class ContactController extends Controller
             return back()->withErrors(['g-recaptcha-response' => 'Security verification failed. Please try again.'])->withInput();
         }
 
-        // Prevent Duplicate Inquiries (last 6h)
-        $existing = Contact::where('email', $validated['email'])
-            ->where('subject', $validated['subject'])
-            ->where('created_at', '>=', now()->subHours(6))
-            ->first();
-
-        if ($existing) {
-            Alert::info('Message Received', 'We have already received your message. Our team will get back to you shortly.');
-
-            return back();
-        }
-
         $validated['lead_source'] = $validated['lead_source'] ?? 'website';
         $validated['landing_page'] = $validated['landing_page'] ?? url()->previous();
 
-        Contact::create($validated);
+        $contact = Contact::create($validated);
 
         Alert::success('Success', SiteSetting::getValue('contact_success_message', 'We appreciate your feedback. Our team will contact you soon.'));
 
@@ -66,9 +55,12 @@ class ContactController extends Controller
                 'dataType' => 'contactMail',
                 ...$validated,
             ]));
-        } catch (\Exception $e) {
-            // Log error with context but don't break for user
-            logger()->error("Contact Mail failure for {$validated['email']}: ".$e->getMessage());
+        } catch (\Throwable $exception) {
+            Log::warning('Inquiry notification could not be queued.', [
+                'inquiry_type' => 'contact',
+                'inquiry_id' => $contact->id,
+                'exception' => $exception::class,
+            ]);
         }
 
         return back();
@@ -84,18 +76,24 @@ class ContactController extends Controller
         if ($request->filled('g-recaptcha-response')) {
             $isHuman = $this->verifyRecaptcha($request->input('g-recaptcha-response'));
             if (! $isHuman) {
-                return back()->withErrors(['g-recaptcha-response' => 'Security verification failed. Please try again.'])->withInput();
+                return back()
+                    ->withErrors(['g-recaptcha-response' => 'Security verification failed. Please try again.'], 'newsletter')
+                    ->with('newsletter_validation_errors', [
+                        'g-recaptcha-response' => ['Security verification failed. Please try again.'],
+                    ])
+                    ->withInput();
             }
         }
 
-        $exists = NewsLetter::where('email', $validated['email'])->exists();
-        if ($exists) {
+        $subscriber = NewsLetter::query()->createOrFirst([
+            'email' => $validated['email'],
+        ]);
+
+        if (! $subscriber->wasRecentlyCreated) {
             Alert::info('Already Subscribed', 'This email is already part of our newsletter list.');
 
             return back();
         }
-
-        NewsLetter::create(['email' => $validated['email']]);
 
         Alert::success('Success', SiteSetting::getValue('newsletter_success_message', 'Your email has been added to our newsletter.'));
 
@@ -133,17 +131,6 @@ class ContactController extends Controller
         }
 
         $courseName = $course?->name ?? 'Need help choosing a program';
-
-        $existing = JoinNowQuery::where('phone', $validated['phone'])
-            ->where('course', $courseName)
-            ->where('created_at', '>=', now()->subDay())
-            ->first();
-
-        if ($existing) {
-            Alert::info('Request Received', 'We have already received your course help request. Our team is processing it.');
-
-            return back();
-        }
 
         $leadScore = $this->calculateJoinNowLeadScore($validated, $course);
 
@@ -208,8 +195,12 @@ class ContactController extends Controller
                 ...$submissionData,
                 'course' => $courseName,
             ]));
-        } catch (\Exception $e) {
-            logger()->error('Enrollment Mail failure for '.($validated['email'] ?? 'no-email')." (Course: {$courseName}): ".$e->getMessage());
+        } catch (\Throwable $exception) {
+            Log::warning('Inquiry notification could not be queued.', [
+                'inquiry_type' => 'course_help',
+                'inquiry_id' => $submission->id,
+                'exception' => $exception::class,
+            ]);
         }
 
         return back()->with('success', SiteSetting::getValue('enroll_success_message', 'Thank you! We received your inquiry. Our team will contact you soon.'));

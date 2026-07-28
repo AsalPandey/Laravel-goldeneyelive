@@ -24,7 +24,7 @@ class BulkActionTest extends TestCase
         Role::firstOrCreate(['name' => 'Student']);
     }
 
-    public function test_admin_can_bulk_delete_contacts()
+    public function test_admin_can_bulk_archive_contacts()
     {
         $admin = User::factory()->create();
         $admin->assignRole('Admin');
@@ -40,9 +40,11 @@ class BulkActionTest extends TestCase
 
         $response->assertStatus(302);
         $this->assertEquals(0, Contact::count());
+        $this->assertEquals(3, Contact::onlyTrashed()->count());
+        $this->assertEquals(3, Contact::withTrashed()->count());
     }
 
-    public function test_admin_can_bulk_delete_enrollments()
+    public function test_admin_can_bulk_archive_enrollments()
     {
         $admin = User::factory()->create();
         $admin->assignRole('Admin');
@@ -58,9 +60,11 @@ class BulkActionTest extends TestCase
 
         $response->assertStatus(302);
         $this->assertEquals(0, JoinNowQuery::count());
+        $this->assertEquals(3, JoinNowQuery::onlyTrashed()->count());
+        $this->assertEquals(3, JoinNowQuery::withTrashed()->count());
     }
 
-    public function test_admin_can_mark_enrollment_as_enrolled()
+    public function test_admin_can_mark_enrollment_as_enrolled_without_falsely_recording_contact()
     {
         $admin = User::factory()->create();
         $admin->assignRole('Admin');
@@ -81,7 +85,7 @@ class BulkActionTest extends TestCase
             'admin_notes' => 'Student completed admission.',
         ]);
 
-        $this->assertNotNull($enrollment->refresh()->followed_up_at);
+        $this->assertNull($enrollment->refresh()->followed_up_at);
     }
 
     public function test_admin_can_bulk_delete_subscribers()

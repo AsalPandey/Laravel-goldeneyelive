@@ -132,10 +132,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('contacts', [SubmissionController::class, 'contact_display'])->name('contact-display');
                 Route::patch('contacts/{id}/status', [SubmissionController::class, 'updateContactStatus'])->name('contact.status.update');
                 Route::delete('contacts/{id}', [SubmissionController::class, 'destroyContact'])->name('contact.destroy');
+                Route::patch('contacts/{id}/restore', [SubmissionController::class, 'restoreContact'])->name('contact.restore');
 
                 Route::get('enrollments', [SubmissionController::class, 'join_now_display'])->name('join_now-display');
                 Route::patch('enrollments/{id}/status', [SubmissionController::class, 'updateJoinStatus'])->name('join_now.status.update');
                 Route::delete('enrollments/{id}', [SubmissionController::class, 'destroyJoin'])->name('join_now.destroy');
+                Route::patch('enrollments/{id}/restore', [SubmissionController::class, 'restoreJoin'])->name('join_now.restore');
 
                 Route::get('newsletter', [SubmissionController::class, 'newsletter_display'])->name('newsletter-display');
                 Route::delete('newsletter/{id}', [SubmissionController::class, 'destroyNewsletter'])->name('newsletter.destroy');

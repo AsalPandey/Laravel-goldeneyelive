@@ -55,15 +55,25 @@
                 <div class="col-lg-3 col-md-6">
                     <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_social_title'] ?? 'Stay Connected' }}</h6>
                     <p class="extra-small mb-3">{{ $settings['footer_newsletter_desc'] ?? 'Sign up for career insights & class updates.' }}</p>
+                    @php
+                        $newsletterValidationErrors = session('newsletter_validation_errors', []);
+                        $newsletterEmailError = data_get($newsletterValidationErrors, 'email.0');
+                        $newsletterRecaptchaError = data_get($newsletterValidationErrors, 'g-recaptcha-response.0');
+                    @endphp
                     <form action="{{ route('newsletter') }}" method="POST" id="newsletterForm">
                         @csrf
                         <div class="d-flex flex-column flex-sm-row gap-2 mx-auto mb-3" style="max-width: 420px;">
-                            <input class="form-control border-0 flex-grow-1 py-3 px-3 bg-white text-brand-dark rounded-lg extra-small" type="email" name="email" id="newsletter_email" placeholder="Your Email Address" required>
+                            <input class="form-control border-0 flex-grow-1 py-3 px-3 bg-white text-brand-dark rounded-lg extra-small {{ $newsletterEmailError ? 'is-invalid' : '' }}" type="email" name="email" id="newsletter_email" placeholder="Your Email Address" value="{{ old('email') }}" required aria-invalid="{{ $newsletterEmailError ? 'true' : 'false' }}" @if($newsletterEmailError) aria-describedby="newsletterEmailError" @endif>
                             <button type="submit" class="btn btn-primary py-3 px-4 rounded-lg font-black uppercase tracking-widest shadow-lg flex-shrink-0" style="font-size: 9px;">Join</button>
                         </div>
+                        @if($newsletterEmailError)
+                            <div id="newsletterEmailError" class="text-danger small mt-2">{{ $newsletterEmailError }}</div>
+                        @endif
                         @if(isset($settings['recaptcha_site_key']) && !empty($settings['recaptcha_site_key']))
                         <div class="g-recaptcha" data-sitekey="{{ $settings['recaptcha_site_key'] }}" data-size="compact" data-theme="dark"></div>
-                        @error('g-recaptcha-response') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
+                        @if($newsletterRecaptchaError)
+                            <div class="text-danger small mt-2">{{ $newsletterRecaptchaError }}</div>
+                        @endif
                         @endif
                     </form>
                 </div>

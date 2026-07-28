@@ -8,6 +8,7 @@ use App\Models\Contact;
 use App\Models\JoinNowQuery;
 use App\Models\NewsLetter;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class SubmissionController extends Controller
@@ -18,8 +19,14 @@ class SubmissionController extends Controller
     public function contact_display(Request $request)
     {
         $search = trim((string) $request->input('search', ''));
+        $showArchived = $request->string('view')->toString() === 'archived';
+        $status = $request->string('status')->toString();
+        $statusOptions = Contact::STATUS_LABELS;
 
-        $contacts = Contact::query()
+        $contacts = ($showArchived ? Contact::onlyTrashed() : Contact::query())
+            ->when(array_key_exists($status, $statusOptions), function ($query) use ($status) {
+                $query->where('status', $status);
+            })
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -33,13 +40,13 @@ class SubmissionController extends Controller
             ->paginate(30)
             ->withQueryString();
 
-        return view('admin.contact-display', compact('contacts'));
+        return view('admin.contact-display', compact('contacts', 'showArchived', 'statusOptions'));
     }
 
     public function updateContactStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:new,reviewed,contacted,resolved,rejected',
+            'status' => ['required', Rule::in(array_keys(Contact::STATUS_LABELS))],
             'admin_notes' => 'nullable|string',
         ]);
 
@@ -50,7 +57,7 @@ class SubmissionController extends Controller
             'admin_notes' => $request->admin_notes,
         ];
 
-        if ($request->status !== 'new' && ! $contact->replied_at) {
+        if ($request->status === 'contacted' && ! $contact->replied_at) {
             $data['replied_at'] = now();
         }
 
@@ -63,7 +70,15 @@ class SubmissionController extends Controller
     public function destroyContact($id)
     {
         Contact::findOrFail($id)->delete();
-        Alert::success('Removed', 'The inquiry has been deleted.');
+        Alert::success('Archived', 'The inquiry was archived and can be restored.');
+
+        return back();
+    }
+
+    public function restoreContact($id)
+    {
+        Contact::onlyTrashed()->findOrFail($id)->restore();
+        Alert::success('Restored', 'The inquiry was returned to the active list.');
 
         return back();
     }
@@ -74,8 +89,14 @@ class SubmissionController extends Controller
     public function join_now_display(Request $request)
     {
         $search = trim((string) $request->input('search', ''));
+        $showArchived = $request->string('view')->toString() === 'archived';
+        $status = $request->string('status')->toString();
+        $statusOptions = JoinNowQuery::STATUS_LABELS;
 
-        $joinNowQueries = JoinNowQuery::query()
+        $joinNowQueries = ($showArchived ? JoinNowQuery::onlyTrashed() : JoinNowQuery::query())
+            ->when(array_key_exists($status, $statusOptions), function ($query) use ($status) {
+                $query->where('status', $status);
+            })
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('firstName', 'like', "%{$search}%")
@@ -101,13 +122,13 @@ class SubmissionController extends Controller
             ->paginate(30)
             ->withQueryString();
 
-        return view('admin.join-now-display', compact('joinNowQueries'));
+        return view('admin.join-now-display', compact('joinNowQueries', 'showArchived', 'statusOptions'));
     }
 
     public function updateJoinStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:new,reviewed,contacted,enrolled,resolved,rejected',
+            'status' => ['required', Rule::in(array_keys(JoinNowQuery::STATUS_LABELS))],
             'admin_notes' => 'nullable|string',
         ]);
 
@@ -119,7 +140,7 @@ class SubmissionController extends Controller
             'admin_notes' => $request->admin_notes,
         ];
 
-        if ($request->status !== 'new' && ! $query->followed_up_at) {
+        if ($request->status === 'contacted' && ! $query->followed_up_at) {
             $data['followed_up_at'] = now();
         }
 
@@ -153,7 +174,15 @@ class SubmissionController extends Controller
     public function destroyJoin($id)
     {
         JoinNowQuery::findOrFail($id)->delete();
-        Alert::success('Removed', 'The enrollment record has been deleted.');
+        Alert::success('Archived', 'The course inquiry was archived and can be restored.');
+
+        return back();
+    }
+
+    public function restoreJoin($id)
+    {
+        JoinNowQuery::onlyTrashed()->findOrFail($id)->restore();
+        Alert::success('Restored', 'The course inquiry was returned to the active list.');
 
         return back();
     }
@@ -198,19 +227,23 @@ class SubmissionController extends Controller
         $ids = $request->input('ids');
         $type = $request->input('type');
 
+        $action = 'removed';
+
         switch ($type) {
             case 'contact':
                 Contact::whereIn('id', $ids)->delete();
+                $action = 'archived';
                 break;
             case 'join_now':
                 JoinNowQuery::whereIn('id', $ids)->delete();
+                $action = 'archived';
                 break;
             case 'newsletter':
                 NewsLetter::whereIn('id', $ids)->delete();
                 break;
         }
 
-        Alert::success('Bulk Action Complete', count($ids).' records have been removed successfully.');
+        Alert::success('Bulk Action Complete', count($ids)." records have been {$action} successfully.");
 
         return back();
     }
