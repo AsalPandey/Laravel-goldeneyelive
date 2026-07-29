@@ -103,20 +103,20 @@
                         </td>
                         <td class="px-6 py-5">
                             <div class="flex justify-center gap-2">
-                                @if($course->slug)
-                                <a href="{{ route('courses-detail', $course->slug) }}" target="_blank" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-blue-600 hover:border-blue-200 hover:shadow-lg transition-all" title="View on Site" aria-label="View {{ $course->name }} on site">
-                                    <i class="fa fa-globe text-xs"></i>
+                                <a href="{{ route('admin.courses.preview', $course) }}" target="_blank" rel="noopener" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-blue-600 hover:border-blue-200 hover:shadow-lg transition-all" title="Preview course" aria-label="Preview {{ $course->name }}">
+                                    <i class="fa fa-eye text-xs"></i>
                                 </a>
-                                @endif
                                 <a href="{{ route('admin.courses.edit', $course->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-brand-gold hover:border-brand-gold/20 hover:shadow-lg transition-all" title="Edit Course" aria-label="Edit {{ $course->name }}">
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
+                                @role('Admin')
                                 <form action="{{ route('admin.courses.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Retract this course from the public curriculum?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all" title="Delete Course" aria-label="Delete {{ $course->name }}">
                                         <i class="fa fa-trash-alt text-xs"></i>
                                     </button>
                                 </form>
+                                @endrole
                             </div>
                         </td>
                     </tr>

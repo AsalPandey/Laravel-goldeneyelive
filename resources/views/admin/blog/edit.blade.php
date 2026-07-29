@@ -2,7 +2,10 @@
     <div class="max-w-4xl mx-auto p-6">
         <div class="mb-6 flex items-center justify-between">
             <h1 class="text-2xl font-semibold text-neutral-900 dark:text-white">Edit: {{ $post->title }}</h1>
-            <a href="{{ route('admin.blog.index') }}" class="text-sm font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400">Back to List</a>
+            <div class="flex items-center gap-4">
+                <a href="{{ route('admin.blog.preview', $post) }}" target="_blank" rel="noopener" class="text-sm font-bold text-blue-600 hover:text-blue-800">Preview</a>
+                <a href="{{ route('admin.blog.index') }}" class="text-sm font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400">Back to List</a>
+            </div>
         </div>
 
         <div class="rounded-xl border border-neutral-200 bg-white p-8 shadow-sm dark:border-neutral-700 dark:bg-neutral-800">
@@ -42,9 +45,9 @@
                         @error('status') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Publish Date & Time</label>
-                        <input type="datetime-local" name="published_at" value="{{ old('published_at', $post->published_at?->format('Y-m-d\TH:i')) }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
-                        <p class="mt-1 text-xs text-neutral-500">Keep the existing date, choose a future time to schedule, or leave blank to preserve the current date (website timezone: {{ config('app.timezone') }}).</p>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Publish Date & Time (Nepal time)</label>
+                        <input type="datetime-local" name="published_at" value="{{ old('published_at', \App\Support\CmsDateTime::forStaffInput($post->published_at)) }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        <p class="mt-1 text-xs text-neutral-500">Choose a future Nepal time to schedule, or leave blank to preserve the saved date.</p>
                         @error('published_at') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>

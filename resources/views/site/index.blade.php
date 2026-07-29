@@ -1,9 +1,10 @@
 @extends('site.layout.app')
-@section('page_title', 'Golden Eye Academy | Established Academy in Pokhara Since 2008')
-@section('meta_description', 'Established in 2008, Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.')
 @php
+    $homepageContent = \App\Support\CmsPublicContent::homepage($settings ?? []);
     $homeHeroImage = \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png');
 @endphp
+@section('page_title', $homepageContent['meta_title'])
+@section('meta_description', $homepageContent['meta_description'])
 @section('preload_assets')
     <link rel="preload" as="image" href="{{ $homeHeroImage }}" fetchpriority="high">
 @endsection
@@ -61,62 +62,19 @@
         $externalReviewUrl = trim((string) ($settings['google_business_profile_url'] ?? ''));
         $externalReviewScreenshot = trim((string) ($settings['external_review_screenshot'] ?? ''));
         $externalReviewNote = trim((string) ($settings['external_review_proof_note'] ?? 'Ask the academy team for current Google review proof or verified review screenshots before enrollment.'));
-        $audienceSegments = [
-            [
-                'icon' => 'fa fa-graduation-cap',
-                'title' => 'I am a Student',
-                'problem' => 'Not sure which course to choose after school or college?',
-                'benefit' => 'Compare options by goal, timing, and current level.',
-                'source' => 'audience-student',
-                'route' => route('for-students'),
-            ],
-            [
-                'icon' => 'fa fa-users',
-                'title' => 'I am a Parent',
-                'problem' => 'Need clarity on fees, timing, safety, and course fit?',
-                'benefit' => 'We explain course fit, fees, timing, expected outcomes, and next steps.',
-                'source' => 'audience-parent',
-                'route' => route('for-parents'),
-            ],
-            [
-                'icon' => 'fa fa-plane',
-                'title' => 'I need IELTS / PTE',
-                'problem' => 'Comparing IELTS, PTE, Japanese, or Korean classes?',
-                'benefit' => 'Match exam preparation with your goal and batch timing.',
-                'source' => 'audience-study-abroad',
-                'route' => route('study-abroad-guidance'),
-            ],
-            [
-                'icon' => 'fa fa-laptop-code',
-                'title' => 'I want Job/Computer Skills',
-                'problem' => 'Want practical skills for work, office, or IT?',
-                'benefit' => 'Start with a skill path that fits your level.',
-                'source' => 'audience-job-computer-skills',
-                'route' => route('job-computer-skills'),
-            ],
-        ];
-        $trustItems = [
-            'Trusted by students in Pokhara since 2008',
-            'Established in 2008',
-            $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal',
-            'Phone: '.($settings['site_phone'] ?? '061-572599'),
-            'Email: '.($settings['site_email'] ?? 'goldeneyeacademy2008@gmail.com'),
-            'Morning, day, and evening batches',
-        ];
-        $localAdvantages = [
-            $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal',
-            'Academic support before enrollment',
-            'IELTS/PTE, language, computer, office, and IT classes',
-            'Phone and WhatsApp follow-up: '.($settings['site_phone'] ?? '061-572599'),
-        ];
-        $parentClarityItems = [
-            'Course fit before payment',
-            'Fee and duration clarity',
-            'Batch timing support',
-            'Realistic outcomes, not guarantees',
-        ];
+        $audienceSegments = collect($homepageContent['audience_cards'])
+            ->filter(fn (array $segment): bool => $segment['is_active'])
+            ->map(fn (array $segment): array => [
+                ...$segment,
+                'route' => route($segment['route']),
+            ])
+            ->values();
+        $trustItems = $homepageContent['trust_items'];
+        $localAdvantages = $homepageContent['why_items'];
+        $parentClarityItems = $homepageContent['parent_items'];
     @endphp
 
+    @if($homepageContent['sections']['hero'])
 	    <section class="container-fluid p-0 position-relative overflow-hidden home-hero" style="background: linear-gradient(135deg, rgba(5, 12, 28, 0.94), rgba(5, 12, 28, 0.78)), url('{{ $heroImage }}'); background-size: cover; background-position: center; color: white;">
 	        <div class="container py-5">
 	            <div class="row align-items-center g-4 home-hero-row">
@@ -142,7 +100,9 @@
             </div>
         </div>
     </section>
+    @endif
 
+    @if($homepageContent['sections']['trust'] && count($trustItems) > 0)
     <section class="py-4 bg-brand-dark border-y border-brand-gold/10">
         <div class="container">
             <div class="row g-3 align-items-center">
@@ -157,12 +117,14 @@
             </div>
         </div>
     </section>
+    @endif
 
+    @if($homepageContent['sections']['audience'] && $audienceSegments->isNotEmpty())
     <section class="py-5 bg-white">
         <div class="container">
             <div class="text-center mb-4">
-                <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Start here</span>
-                <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Which class are you interested in?</h2>
+                <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['audience_tagline'] }}</span>
+                <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['audience_title'] }}</h2>
             </div>
             <div class="row g-3">
                 @foreach($audienceSegments as $segment)
@@ -175,7 +137,7 @@
                                 <h3 class="h6 fw-black text-brand-dark mb-3">{{ $segment['title'] }}</h3>
                                 <p class="text-zinc-600 mb-2" style="font-size: 12px; line-height: 1.6;">{{ $segment['problem'] }}</p>
                                 <p class="text-brand-dark fw-bold mb-4" style="font-size: 12px; line-height: 1.5;">{{ $segment['benefit'] }}</p>
-                                <span class="audience-card-link">View Course Details</span>
+                                <span class="audience-card-link">{{ $segment['cta_text'] }}</span>
                             </article>
                         </a>
                     </div>
@@ -183,17 +145,18 @@
             </div>
         </div>
     </section>
+    @endif
 
-    @if(isset($courses) && $courses->count() > 0)
+    @if($homepageContent['sections']['courses'] && isset($courses) && $courses->count() > 0)
         <section class="py-5 bg-zinc-50/60">
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-7">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Popular courses</span>
-                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Courses students ask about most</h2>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['courses_tagline'] }}</span>
+                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['courses_title'] }}</h2>
                     </div>
                     <div class="col-lg-4 text-lg-end">
-                        <a href="{{ route('courses-all') }}" data-cta="homepage-all-course-details" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">View Course Details</a>
+                        <a href="{{ route('courses-all') }}" data-cta="homepage-all-course-details" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">{{ $homepageContent['courses_cta_text'] }}</a>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -225,12 +188,12 @@
         </section>
     @endif
 
-    @if(isset($categories) && count($categories) > 0)
+    @if($homepageContent['sections']['categories'] && isset($categories) && count($categories) > 0)
         <section class="py-5 bg-white">
             <div class="container">
                 <div class="mb-4">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Course categories</span>
-                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Browse by learning goal</h2>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['categories_tagline'] }}</span>
+                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['categories_title'] }}</h2>
                 </div>
                 <div class="row g-3">
                     @foreach($categories->take(6) as $category)
@@ -255,13 +218,14 @@
         </section>
     @endif
 
+    @if($homepageContent['sections']['why'] && count($localAdvantages) > 0)
     <section class="py-5 bg-brand-dark text-white">
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-5">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Why Golden Eye Academy</span>
-                    <h2 class="h3 fw-black text-white mt-2 mb-3">Practical classes with academic support</h2>
-                    <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Students can prepare with mock tests, practical assignments, instructor feedback, and clear weekly progress where the course requires it.</p>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['why_tagline'] }}</span>
+                    <h2 class="h3 fw-black text-white mt-2 mb-3">{{ $homepageContent['why_title'] }}</h2>
+                    <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $homepageContent['why_description'] }}</p>
                 </div>
                 <div class="col-lg-7">
                     <div class="row g-3">
@@ -278,13 +242,14 @@
             </div>
         </div>
     </section>
+    @endif
 
-    @if(isset($testimonials) && $testimonials->count() > 0)
+    @if($homepageContent['sections']['testimonials'] && isset($testimonials) && $testimonials->count() > 0)
         <section class="py-5 bg-white">
             <div class="container">
                 <div class="text-center mb-4">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Student results</span>
-                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Real students. Practical progress.</h2>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['testimonials_tagline'] }}</span>
+                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['testimonials_title'] }}</h2>
                 </div>
                 <div class="row g-4 justify-content-center">
                     @foreach($testimonials->take(3) as $testimonial)
@@ -307,13 +272,13 @@
         </section>
     @endif
 
-    @if(isset($teachers) && $teachers->count() > 0)
+    @if($homepageContent['sections']['faculty'] && isset($teachers) && $teachers->count() > 0)
         <section class="py-5 bg-zinc-50/60">
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-8">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Instructors</span>
-                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Experienced faculty for practical classes</h2>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['faculty_tagline'] }}</span>
+                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['faculty_title'] }}</h2>
                     </div>
                 </div>
                 <div class="row g-3">
@@ -341,13 +306,13 @@
         </section>
     @endif
 
-    @if($externalReviewNote !== '' || $externalReviewUrl !== '' || $externalReviewScreenshot !== '')
+    @if($homepageContent['sections']['reviews'] && ($externalReviewNote !== '' || $externalReviewUrl !== '' || $externalReviewScreenshot !== ''))
         <section class="py-5 bg-white">
             <div class="container">
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-5">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">External social proof</span>
-                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-3">Review proof can be verified before enrollment</h2>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['reviews_tagline'] }}</span>
+                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-3">{{ $homepageContent['reviews_title'] }}</h2>
                         <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $externalReviewNote }}</p>
                     </div>
                     <div class="col-lg-7">
@@ -369,13 +334,14 @@
         </section>
     @endif
 
+    @if($homepageContent['sections']['parents'] && count($parentClarityItems) > 0)
     <section class="py-5 bg-white">
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-5">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">For parents</span>
-                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-3">Clear answers before your child enrolls</h2>
-                    <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">For parents, we explain course fit, fees, timing, expected outcomes, and realistic next steps before enrollment. No pressure. Visit, call, or message us to understand the right option for your child.</p>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['parent_tagline'] }}</span>
+                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-3">{{ $homepageContent['parent_title'] }}</h2>
+                    <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $homepageContent['parent_description'] }}</p>
                 </div>
                 <div class="col-lg-7">
                     <div class="row g-3">
@@ -392,13 +358,14 @@
             </div>
         </div>
     </section>
+    @endif
 
-    @if(isset($faqs) && $faqs->count() > 0)
+    @if($homepageContent['sections']['faq'] && isset($faqs) && $faqs->count() > 0)
         <section class="py-5 bg-zinc-50/60">
             <div class="container">
                 <div class="text-center mb-4">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">FAQ</span>
-                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Common questions before enrollment</h2>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['faq_tagline'] }}</span>
+                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['faq_title'] }}</h2>
                 </div>
                 <div class="row g-3 justify-content-center">
                     @foreach($faqs as $faq)
@@ -414,19 +381,21 @@
         </section>
     @endif
 
+    @if($homepageContent['sections']['final'])
     <section class="conversion-final py-5">
         <div class="container">
             <div class="row align-items-center justify-content-between g-4">
                 <div class="col-lg-8">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Next step</span>
-                    <h2 class="h3 fw-black text-white mt-3 mb-3">Need course and batch information?</h2>
-                    <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Send your goal. Our academy team will explain suitable classes before enrollment.</p>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['final_tagline'] }}</span>
+                    <h2 class="h3 fw-black text-white mt-3 mb-3">{{ $homepageContent['final_title'] }}</h2>
+                    <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $homepageContent['final_description'] }}</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
-                    <a href="{{ $guidanceUrl('homepage-final') }}" data-cta="homepage-final-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask for Course Help</a>
-                    <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="homepage-final-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Message on WhatsApp</a>
+                    <a href="{{ $guidanceUrl('homepage-final') }}" data-cta="homepage-final-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">{{ $homepageContent['final_primary_cta_text'] }}</a>
+                    <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="homepage-final-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">{{ $homepageContent['final_secondary_cta_text'] }}</a>
                 </div>
             </div>
         </div>
     </section>
+    @endif
 @endsection

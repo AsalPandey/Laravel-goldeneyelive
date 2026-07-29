@@ -84,12 +84,14 @@
                                 <a href="{{ route('admin.testimonials.edit', $testimonial->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 hover:shadow-lg transition-all">
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
+                                @role('Admin')
                                 <form action="{{ route('admin.testimonials.destroy', $testimonial->id) }}" method="POST" onsubmit="return confirm('Remove this testimonial from the public site?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all">
                                         <i class="fa fa-trash-alt text-xs"></i>
                                     </button>
                                 </form>
+                                @endrole
                             </div>
                         </td>
                     </tr>

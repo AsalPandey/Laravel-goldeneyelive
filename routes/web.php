@@ -91,24 +91,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:Admin|Staff', 'image.limit'])->group(function () {
         // CMS: Academy Management
         Route::prefix('admin')->name('admin.')->group(function () {
-            Route::resource('courses', CourseController::class);
-            Route::resource('categories', CourseCategoryController::class);
+            Route::get('courses/{course}/preview', [CoursesController::class, 'preview'])->name('courses.preview');
+            Route::get('blog/{post}/preview', [PublicBlogController::class, 'preview'])->name('blog.preview');
+            Route::resource('courses', CourseController::class)->except('destroy');
+            Route::resource('categories', CourseCategoryController::class)->except('destroy');
             Route::patch('categories/{id}/toggle-status', [CourseCategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
-            Route::resource('service-pillars', ServicePillarController::class);
+            Route::resource('service-pillars', ServicePillarController::class)->except('destroy');
             Route::patch('service-pillars/{service_pillar}/toggle-status', [ServicePillarController::class, 'toggleStatus'])->name('service-pillars.toggle-status');
             Route::patch('courses/{id}/toggle-status', [CourseController::class, 'toggleStatus'])->name('courses.toggle-status');
             Route::patch('courses/{id}/toggle-featured', [CourseController::class, 'toggleFeatured'])->name('courses.toggle-featured');
-            Route::resource('blog', BlogController::class);
+            Route::resource('blog', BlogController::class)->except('destroy');
             Route::patch('blog/{id}/toggle-status', [BlogController::class, 'toggleStatus'])->name('blog.toggle-status');
-            Route::resource('faq', FAQController::class);
+            Route::resource('faq', FAQController::class)->except('destroy');
             Route::patch('faq/{id}/toggle-status', [FAQController::class, 'toggleStatus'])->name('faq.toggle-status');
-            Route::resource('teachers', TeacherController::class);
+            Route::resource('teachers', TeacherController::class)->except('destroy');
             Route::patch('teachers/{id}/toggle-status', [TeacherController::class, 'toggleStatus'])->name('teachers.toggle-status');
             Route::patch('teachers/{id}/toggle-featured', [TeacherController::class, 'toggleFeatured'])->name('teachers.toggle-featured');
-            Route::resource('testimonials', TestimonialController::class);
+            Route::resource('testimonials', TestimonialController::class)->except('destroy');
             Route::patch('testimonials/{id}/toggle-status', [TestimonialController::class, 'toggleStatus'])->name('testimonials.toggle-status');
             Route::patch('testimonials/{id}/toggle-featured', [TestimonialController::class, 'toggleFeatured'])->name('testimonials.toggle-featured');
-            Route::resource('notices', NoticeController::class);
+            Route::resource('notices', NoticeController::class)->except('destroy');
             Route::patch('notices/{id}/toggle', [NoticeController::class, 'toggleStatus'])->name('notices.toggle');
             Route::get('media', [MediaController::class, 'index'])->name('media.index');
             Route::post('media', [MediaController::class, 'store'])->name('media.store');
@@ -120,6 +122,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             // Admin Only: Site Authority & Security Settings
             Route::middleware('role:Admin')->group(function () {
+                Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
+                Route::delete('categories/{category}', [CourseCategoryController::class, 'destroy'])->name('categories.destroy');
+                Route::delete('service-pillars/{service_pillar}', [ServicePillarController::class, 'destroy'])->name('service-pillars.destroy');
+                Route::delete('blog/{blog}', [BlogController::class, 'destroy'])->name('blog.destroy');
+                Route::delete('faq/{faq}', [FAQController::class, 'destroy'])->name('faq.destroy');
+                Route::delete('teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
+                Route::delete('testimonials/{testimonial}', [TestimonialController::class, 'destroy'])->name('testimonials.destroy');
+                Route::delete('notices/{notice}', [NoticeController::class, 'destroy'])->name('notices.destroy');
+
                 // Destructive asset operations
                 Route::delete('branding/asset', [BrandingController::class, 'destroyAsset'])->name('branding.asset.destroy');
                 Route::post('branding/asset/purge', [BrandingController::class, 'purgeAssets'])->name('branding.asset.purge');

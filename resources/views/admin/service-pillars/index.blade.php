@@ -61,6 +61,7 @@
                                     <a href="{{ route('admin.service-pillars.edit', $pillar) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-orange-600 hover:border-orange-200 hover:shadow-lg transition-all">
                                         <i class="fa fa-pencil-alt text-xs"></i>
                                     </a>
+                                    @role('Admin')
                                     <form action="{{ route('admin.service-pillars.destroy', $pillar) }}" method="POST" onsubmit="return confirm('Delete this service pillar?')">
                                         @csrf
                                         @method('DELETE')
@@ -68,6 +69,7 @@
                                             <i class="fa fa-trash-alt text-xs"></i>
                                         </button>
                                     </form>
+                                    @endrole
                                 </div>
                             </td>
                         </tr>

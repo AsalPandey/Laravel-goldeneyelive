@@ -151,6 +151,12 @@
         </script>
     @endif
 
+    @if($isPreview ?? false)
+        <div class="bg-warning-subtle border-y border-warning px-3 py-3 text-center text-brand-dark" role="status">
+            <strong>Staff preview:</strong> this content is not necessarily visible on the public website.
+        </div>
+    @endif
+
     <main id="main-content" tabindex="-1">
         @yield('content')
     </main>

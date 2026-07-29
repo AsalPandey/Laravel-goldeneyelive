@@ -130,7 +130,8 @@ class Phase4aCmsReliabilityTest extends TestCase
 
         $this->get(route('courses-detail', $course->slug))
             ->assertOk()
-            ->assertSee('Ask the academy to confirm the faculty assigned to the current batch.')
+            ->assertDontSee('Ask the academy to confirm the faculty assigned to the current batch.')
+            ->assertDontSee('Instructor credentials')
             ->assertDontSee('Unrelated Faculty Profile')
             ->assertDontSee('Unrelated Testimonial Student')
             ->assertDontSee('Instructor profile');
@@ -197,6 +198,7 @@ class Phase4aCmsReliabilityTest extends TestCase
     {
         $now = Carbon::parse('2026-07-29 08:00:00');
         $future = $now->copy()->addDays(2);
+        $expectedStoredFuture = Carbon::parse($future->format('Y-m-d H:i:s'), 'Asia/Kathmandu')->utc();
         $this->travelTo($now);
 
         $this->actingAs($this->staff)
@@ -210,21 +212,21 @@ class Phase4aCmsReliabilityTest extends TestCase
             ->assertRedirect(route('admin.blog.index'));
 
         $scheduled = BlogPost::where('slug', 'scheduled-cms-article')->firstOrFail();
-        $this->assertTrue($scheduled->published_at->equalTo($future));
+        $this->assertTrue($scheduled->published_at->equalTo($expectedStoredFuture));
 
         $this->actingAs($this->staff)
             ->patch(route('admin.blog.toggle-status', $scheduled))
             ->assertRedirect();
         $scheduled->refresh();
         $this->assertSame('draft', $scheduled->status);
-        $this->assertTrue($scheduled->published_at->equalTo($future));
+        $this->assertTrue($scheduled->published_at->equalTo($expectedStoredFuture));
 
         $this->actingAs($this->staff)
             ->patch(route('admin.blog.toggle-status', $scheduled))
             ->assertRedirect();
         $scheduled->refresh();
         $this->assertSame('published', $scheduled->status);
-        $this->assertTrue($scheduled->published_at->equalTo($future));
+        $this->assertTrue($scheduled->published_at->equalTo($expectedStoredFuture));
 
         $this->actingAs($this->staff)
             ->post(route('admin.blog.store'), [

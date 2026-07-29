@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Http\Controllers\Admin\BrandingController;
 use App\Models\SiteSetting;
+use App\Support\CmsPublicContent;
 use App\Support\PublicCtaContract;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
@@ -23,17 +24,35 @@ class BrandingRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
-            if (! $this->has('whatsapp_number') || filled($this->input('whatsapp_number'))) {
-                return;
+            if ($this->has('whatsapp_number') && blank($this->input('whatsapp_number'))) {
+                $whatsappConfigured = filled(SiteSetting::getValue('whatsapp_number'))
+                    || $this->filled('whatsapp_cta_text')
+                    || $this->filled('whatsapp_button_text')
+                    || $this->filled('whatsapp_prefill_message');
+
+                if ($whatsappConfigured) {
+                    $validator->errors()->add('whatsapp_number', 'The whatsapp number is required while the WhatsApp widget is configured.');
+                }
             }
 
-            $whatsappConfigured = filled(SiteSetting::getValue('whatsapp_number'))
-                || $this->filled('whatsapp_cta_text')
-                || $this->filled('whatsapp_button_text')
-                || $this->filled('whatsapp_prefill_message');
+            foreach (array_keys(CmsPublicContent::audienceDefinitions()) as $audienceKey) {
+                $prefix = "audience_{$audienceKey}";
+                $pageStatus = $this->input(
+                    "{$prefix}_status",
+                    SiteSetting::getValue("{$prefix}_status", 'active'),
+                );
+                $sectionStatuses = collect(['hero', 'guidance', 'support', 'final'])
+                    ->map(fn (string $section): mixed => $this->input(
+                        "{$prefix}_{$section}_status",
+                        SiteSetting::getValue("{$prefix}_{$section}_status", 'active'),
+                    ));
 
-            if ($whatsappConfigured) {
-                $validator->errors()->add('whatsapp_number', 'The whatsapp number is required while the WhatsApp widget is configured.');
+                if ($pageStatus === 'active' && $sectionStatuses->every(fn (mixed $status): bool => $status === 'inactive')) {
+                    $validator->errors()->add(
+                        "{$prefix}_status",
+                        'Keep at least one section visible before making this audience page active.',
+                    );
+                }
             }
         });
     }
@@ -106,6 +125,13 @@ class BrandingRequest extends FormRequest
             'external_review_screenshot' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"],
         ];
 
+        foreach (CmsPublicContent::imageKeys() as $imageKey) {
+            $rules[$imageKey.'_path'] = ['nullable', 'string', 'max:255'];
+            $rules[$imageKey] = ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"];
+        }
+
+        $rules = array_merge($rules, CmsPublicContent::validationRules());
+
         $isAdmin = $this->user()?->hasRole('Admin') ?? false;
 
         if (! $isAdmin) {
@@ -114,7 +140,7 @@ class BrandingRequest extends FormRequest
             }
         }
 
-        foreach (BrandingController::TEXT_KEYS as $key) {
+        foreach (array_merge(BrandingController::TEXT_KEYS, CmsPublicContent::textKeys()) as $key) {
             if (! $isAdmin && in_array($key, BrandingController::SENSITIVE_KEYS, true)) {
                 continue;
             }

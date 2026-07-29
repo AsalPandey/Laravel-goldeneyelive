@@ -2,7 +2,10 @@
     <div class="max-w-4xl mx-auto p-6">
         <div class="mb-6 flex items-center justify-between">
             <h1 class="text-2xl font-semibold text-neutral-900 dark:text-white">Edit Course: {{ $course->name }}</h1>
-            <a href="{{ route('admin.courses.index') }}" class="text-sm font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200">Back to List</a>
+            <div class="flex items-center gap-4">
+                <a href="{{ route('admin.courses.preview', $course) }}" target="_blank" rel="noopener" class="text-sm font-bold text-blue-600 hover:text-blue-800">Preview</a>
+                <a href="{{ route('admin.courses.index') }}" class="text-sm font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200">Back to List</a>
+            </div>
         </div>
 
         <div class="rounded-xl border border-neutral-200 bg-white p-8 shadow-sm dark:border-neutral-700 dark:bg-neutral-800">

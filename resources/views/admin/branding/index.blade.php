@@ -336,6 +336,8 @@
                             <i class="fa fa-sync-alt"></i> Visual Refresh
                         </button>
                         <select id="pageEditorSelector" onchange="switchPageEditor(this.value)" class="premium-input w-72 h-12 text-[10px] font-black uppercase border-zinc-100 shadow-sm focus:ring-4 focus:ring-[#C5A059]/10">
+                            <option value="page-home-sections">Homepage Sections & Cards</option>
+                            <option value="page-audience-pages">Audience Landing Pages</option>
                             <option value="page-home-about">🏠 Home & About Summaries</option>
                             <option value="page-about-full">🏢 About Us (Full Details)</option>
                             <option value="page-courses">🎓 Courses Catalogue</option>
@@ -349,6 +351,14 @@
                             <i class="fas fa-external-link-alt mr-2"></i> View Live
                         </a>
                     </div>
+                </div>
+
+                <div id="page-home-sections" class="page-editor-section" style="display: none;">
+                    @include('admin.branding.partials.homepage-content')
+                </div>
+
+                <div id="page-audience-pages" class="page-editor-section" style="display: none;">
+                    @include('admin.branding.partials.audience-content')
                 </div>
 
                 {{-- Page: Home/About Summary --}}
@@ -719,12 +729,12 @@
             <div id="tab-marketing" class="branding-tab-content space-y-10">
                 <div class="guide-box">
                     <div class="guide-title"><i class="fas fa-info-circle"></i> Branding Guide: Marketing Tools</div>
-                    <p class="guide-text">Manage the **Flash Notice** (floating popup) and the **Sticky Conversion Bar**. **reCAPTCHA:** Keys are required for contact forms to prevent spam. Keep the **Image Upload Limit** around 2048KB for optimal performance.</p>
+                    <p class="guide-text">The **Main Campaign Popup** below is the existing image-led campaign popup. Popup-style notices and the top announcement bar are managed separately under **Notices**. The **Sticky Conversion Bar** remains the fixed inquiry prompt.</p>
                 </div>
                 <div class="brand-card max-w-4xl bg-orange-50/30 border-orange-100">
                     <div class="flex items-center gap-4 mb-8">
                         <div class="p-3 bg-zinc-950 text-[#C5A059] rounded-2xl"><i class="fa fa-bullhorn"></i></div>
-                        <h3 class="text-xl font-black uppercase text-zinc-800">Flash Notice & Sticky Conversion</h3>
+                        <h3 class="text-xl font-black uppercase text-zinc-800">Main Campaign Popup & Sticky Conversion</h3>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -999,6 +1009,8 @@
 
             const previewBtn = document.getElementById('pagePreviewBtn');
             const routes = {
+                'page-home-sections': '{{ route("home") }}',
+                'page-audience-pages': '{{ route("for-students") }}',
                 'page-home-about': '{{ route("home") }}',
                 'page-about-full': '{{ route("about") }}',
                 'page-courses': '{{ route("courses") }}',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\NoticeRequest;
 use App\Models\Notice;
+use App\Support\CmsDateTime;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -37,6 +38,9 @@ class NoticeController extends Controller
     public function store(NoticeRequest $request)
     {
         $validated = $request->validated();
+        $validated['display_type'] ??= 'popup';
+        $validated['starts_at'] = CmsDateTime::fromStaffInput($validated['starts_at'] ?? null);
+        $validated['expires_at'] = CmsDateTime::fromStaffInput($validated['expires_at'] ?? null);
 
         if ($validated['status'] === 'active') {
             Notice::where('status', 'active')
@@ -72,6 +76,15 @@ class NoticeController extends Controller
         $oldImage = $notice->image;
 
         $validated = $request->validated();
+        $validated['display_type'] = $validated['display_type'] ?? $notice->display_type ?? 'popup';
+        $validated['starts_at'] = CmsDateTime::fromStaffInput(
+            $validated['starts_at'] ?? null,
+            $notice->starts_at,
+        );
+        $validated['expires_at'] = CmsDateTime::fromStaffInput(
+            $validated['expires_at'] ?? null,
+            $notice->expires_at,
+        );
 
         if (isset($validated['status']) && $validated['status'] === 'active' && $notice->status !== 'active') {
             Notice::where('status', 'active')

@@ -11,6 +11,7 @@ use App\Models\Notice;
 use App\Models\SiteSetting;
 use App\Models\Teacher;
 use App\Models\Testimonial;
+use App\Support\CmsPublicContent;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -34,6 +35,10 @@ class BrandingController extends Controller
         'site_footer_logo',
         'breadcrumb_bg',
         'cta_bg',
+        'audience_students_image',
+        'audience_parents_image',
+        'audience_study_abroad_image',
+        'audience_job_computer_skills_image',
     ];
 
     const TEXT_KEYS = [
@@ -248,8 +253,22 @@ class BrandingController extends Controller
 
         $activeNotice = Notice::where('status', 'active')->first();
         $isAdmin = auth()->user()->hasRole('Admin');
+        $settingsArray = $settings->toArray();
+        $homepageContent = CmsPublicContent::homepage($settingsArray);
+        $homepageSectionDefinitions = CmsPublicContent::homepageSectionDefinitions();
+        $audiencePages = CmsPublicContent::audiencePages($settingsArray);
 
-        return view('admin.branding.index', compact('settings', 'images', 'brandCompleteness', 'usedAssets', 'activeNotice', 'isAdmin'));
+        return view('admin.branding.index', compact(
+            'settings',
+            'images',
+            'brandCompleteness',
+            'usedAssets',
+            'activeNotice',
+            'isAdmin',
+            'homepageContent',
+            'homepageSectionDefinitions',
+            'audiencePages',
+        ));
     }
 
     /**
@@ -264,7 +283,7 @@ class BrandingController extends Controller
         $validated = $request->validated();
 
         $textKeys = array_values(array_filter(
-            self::TEXT_KEYS,
+            array_merge(self::TEXT_KEYS, CmsPublicContent::textKeys()),
             fn (string $key): bool => $isAdmin || ! in_array($key, self::SENSITIVE_KEYS, true),
         ));
 

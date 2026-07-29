@@ -10,7 +10,9 @@ use App\Models\Teacher;
 use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class CoursesController extends Controller
 {
@@ -25,7 +27,7 @@ class CoursesController extends Controller
     /**
      * All courses with pagination
      */
-    public function coursesAll(Request $request)
+    public function coursesAll(Request $request): View
     {
         $search = trim((string) $request->query('search'));
         $categorySlug = $request->query('category');
@@ -83,13 +85,33 @@ class CoursesController extends Controller
     /**
      * Course details
      */
-    public function coursesDetail($slug)
+    public function coursesDetail(string $slug): View
     {
         $course = Course::publiclyVisible()
             ->with('courseCategory')
             ->where('slug', $slug)
             ->firstOrFail();
 
+        return view('site.courses.course-detail', $this->courseDetailViewData($course));
+    }
+
+    public function preview(Course $course): Response
+    {
+        $course->loadMissing('courseCategory');
+
+        return response()
+            ->view('site.courses.course-detail', [
+                ...$this->courseDetailViewData($course),
+                'isPreview' => true,
+            ])
+            ->header('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function courseDetailViewData(Course $course): array
+    {
         $instructor = Teacher::where('status', 'active')
             ->where('name', $course->instructor)
             ->first();
@@ -121,7 +143,7 @@ class CoursesController extends Controller
             ->limit(4)
             ->get();
 
-        return view('site.courses.course-detail', compact('course', 'instructor', 'instructorCourses', 'testimonial', 'faqs'));
+        return compact('course', 'instructor', 'instructorCourses', 'testimonial', 'faqs');
     }
 
     /**

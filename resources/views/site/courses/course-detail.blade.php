@@ -1,4 +1,8 @@
 @extends('site.layout.app')
+@if($isPreview ?? false)
+    @section('robots', 'noindex, nofollow, noarchive')
+    @section('canonical_url', route('courses-detail', $course->slug))
+@endif
 @php
     $coursePageTitle = \App\Support\StructuredData::titleWithBrand($course->meta_title ?: $course->name);
     $courseMetaDescription = \App\Support\StructuredData::courseMetaDescription($course);
@@ -112,13 +116,17 @@
             ['label' => 'Total fee', 'value' => $course->price ?: 'Confirm current fee with the academy team.'],
             ['label' => 'Duration', 'value' => $course->duration ?: 'Confirm duration before enrollment.'],
             ['label' => 'Batch timing', 'value' => $batchTiming],
-            ['label' => 'Instructor credentials', 'value' => $instructor
-                ? ($instructor->designation ?: $instructor->name).' - '.\Illuminate\Support\Str::limit(strip_tags($instructor->bio), 110)
-                : 'Ask the academy to confirm the faculty assigned to the current batch.'],
             ['label' => 'Safety/trust', 'value' => 'Local Pokhara academy with enrollment support, parent-friendly communication, and no-pressure course discussion.'],
             ['label' => 'Support included', 'value' => $supportDetails],
             ['label' => 'Not guaranteed', 'value' => 'Scores, visas, jobs, or placements are not guaranteed. Progress depends on attendance, practice, and student readiness.'],
         ];
+
+        if ($instructor) {
+            array_splice($parentViewItems, 3, 0, [[
+                'label' => 'Instructor credentials',
+                'value' => ($instructor->designation ?: $instructor->name).' - '.\Illuminate\Support\Str::limit(strip_tags($instructor->bio), 110),
+            ]]);
+        }
         $testimonialResult = $testimonial
             ? \Illuminate\Support\Str::limit(trim(\Illuminate\Support\Str::before(strip_tags($testimonial->content), '.')) ?: strip_tags($testimonial->content), 100)
             : 'Students use classroom practice and academic support to improve confidence before their next academic or career step.';

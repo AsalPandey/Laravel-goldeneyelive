@@ -5,6 +5,10 @@
 @section('meta_keywords', $post->meta_keywords ?? '')
 @section('aeo_summary', $post->aeo_summary ?? '')
 @section('og_image', \App\Support\PublicAsset::url($post->image ?? null, 'site/img/carousel-1.png'))
+@if($isPreview ?? false)
+    @section('robots', 'noindex, nofollow, noarchive')
+    @section('canonical_url', route('blog-detail', $post->slug))
+@endif
 
 @section('schema_markup')
     @if($post->schema_markup)

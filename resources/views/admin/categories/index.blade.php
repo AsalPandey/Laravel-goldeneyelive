@@ -91,12 +91,14 @@
                                 <a href="{{ route('admin.categories.edit', $category->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-orange-600 hover:border-orange-200 hover:shadow-lg transition-all" title="Edit Category" aria-label="Edit {{ $category->name }}">
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
+                                @role('Admin')
                                 <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Delete this category? This cannot be undone.')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all {{ $category->total_courses_count > 0 ? 'opacity-30 cursor-not-allowed' : '' }}" title="Delete Category" aria-label="Delete {{ $category->name }}" {{ $category->total_courses_count > 0 ? 'disabled' : '' }}>
                                         <i class="fa fa-trash-alt text-xs"></i>
                                     </button>
                                 </form>
+                                @endrole
                             </div>
                         </td>
                     </tr>

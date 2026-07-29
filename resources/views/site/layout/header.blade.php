@@ -3,6 +3,9 @@
     <title>@yield('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Established Academy in Pokhara Since 2008')</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @if(trim($__env->yieldContent('robots', '')) !== '')
+        <meta name="robots" content="@yield('robots')">
+    @endif
     
     @if(isset($settings['google_analytics_id']) && $settings['google_analytics_id'])
     <!-- Google tag (gtag.js) -->
@@ -54,7 +57,7 @@
     <meta property="twitter:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Practical classes in IELTS/PTE, language, computer, office, web development, and IT subjects in Pokhara since 2008.')">
     <meta property="twitter:image" content="@yield('og_image', \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/logo.png'))">
 
-    <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="canonical" href="@yield('canonical_url', url()->current())">
 
     <!-- Favicon -->
     <link href="{{ \App\Support\PublicAsset::url($settings['site_favicon'] ?? ($settings['site_logo'] ?? null), 'site/img/logo.png') }}" rel="icon">

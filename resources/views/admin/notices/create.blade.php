@@ -12,6 +12,12 @@
 
         <form action="{{ route('admin.notices.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
             @csrf
+            @if($errors->any())
+                <div class="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-800" role="alert">
+                    <p class="text-xs font-black uppercase">Please correct these notice fields:</p>
+                    <ul class="mt-2 list-disc pl-5 text-sm">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+                </div>
+            @endif
             
             <div class="bg-white rounded-[2rem] border border-zinc-100 p-10 shadow-xl space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -39,9 +45,20 @@
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Status</label>
                         <select name="status" class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
-                            <option value="active">Active (Visible)</option>
-                            <option value="inactive">Inactive (Hidden)</option>
+                            <option value="active" @selected(old('status') === 'active')>Active (Visible)</option>
+                            <option value="inactive" @selected(old('status', 'inactive') === 'inactive')>Inactive (Hidden)</option>
                         </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Button Action Text</label>
+                        <input type="text" name="button_text" value="{{ old('button_text', 'Ask for Course Help') }}" maxlength="50"
+                               class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Destination Link</label>
+                        <input type="text" name="link" value="{{ old('link') }}"
+                               class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all"
+                               placeholder="/join-now or https://...">
                     </div>
                 </div>
 
@@ -54,9 +71,17 @@
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Display Style</label>
                         <select name="display_type" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
-                            <option value="popup">Pop-up Modal (Standard)</option>
-                            <option value="bar">Sticky Top Bar (Global)</option>
+                            <option value="popup" @selected(old('display_type', 'popup') === 'popup')>Popup-style notice</option>
+                            <option value="bar" @selected(old('display_type') === 'bar')>Top announcement bar</option>
                         </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Starts At (Nepal time, optional)</label>
+                        <input type="datetime-local" name="starts_at" value="{{ old('starts_at') }}" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Expires At (Nepal time, optional)</label>
+                        <input type="datetime-local" name="expires_at" value="{{ old('expires_at') }}" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
                     </div>
                     <div class="flex items-center gap-3 pt-4">
                         <label class="relative inline-flex items-center cursor-pointer">

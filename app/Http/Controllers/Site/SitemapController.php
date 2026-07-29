@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use App\Models\Course;
+use App\Models\SiteSetting;
+use App\Support\CmsPublicContent;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 
@@ -15,14 +17,11 @@ class SitemapController extends Controller
         $xml = cache()->remember('sitemap_xml', 86400, function () {
             $courses = Course::publiclyVisible()->select('slug', 'updated_at')->get();
             $posts = BlogPost::publiclyVisible()->select('slug', 'updated_at')->get();
+            $settings = SiteSetting::pluck('value', 'key')->toArray();
 
             $entries = collect([
                 route('home'),
                 route('about'),
-                route('for-students'),
-                route('for-parents'),
-                route('study-abroad-guidance'),
-                route('job-computer-skills'),
                 route('faq'),
                 route('contact'),
                 route('courses-all'),
@@ -35,6 +34,15 @@ class SitemapController extends Controller
                 'changefreq' => 'weekly',
                 'priority' => '0.8',
             ]);
+
+            $audienceEntries = collect(CmsPublicContent::audiencePages($settings))
+                ->filter(fn (array $page): bool => $page['is_active'])
+                ->map(fn (array $page): array => [
+                    'loc' => route($page['route']),
+                    'lastmod' => null,
+                    'changefreq' => 'weekly',
+                    'priority' => '0.8',
+                ]);
 
             $courseEntries = $courses->map(fn (Course $course): array => [
                 'loc' => route('courses-detail', $course->slug),
@@ -51,6 +59,7 @@ class SitemapController extends Controller
             ]);
 
             $entries = $entries
+                ->concat($audienceEntries)
                 ->concat($courseEntries)
                 ->concat($postEntries);
 

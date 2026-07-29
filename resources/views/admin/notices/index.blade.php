@@ -16,6 +16,10 @@
             </div>
         </div>
 
+        <div class="rounded-2xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-900">
+            Notices can appear as either a popup-style notice or a top announcement bar. The separate image-led Main Campaign Popup is managed under Website Content → Marketing Tools. Scheduled times below use Nepal time.
+        </div>
+
         <div class="overflow-x-auto rounded-3xl border border-zinc-100 bg-white shadow-xl">
             <table class="min-w-full divide-y divide-zinc-200">
                 <thead class="bg-zinc-50/50">
@@ -43,6 +47,14 @@
                                         <div class="text-[8px] font-black text-white uppercase tracking-widest bg-brand-dark px-2 py-0.5 rounded-full">{{ $notice->badge ?? 'ANNOUNCEMENT' }}</div>
                                         <div class="text-[8px] font-black text-brand-gold uppercase tracking-widest bg-brand-gold/10 px-2 py-0.5 rounded-full border border-brand-gold/20">{{ $notice->display_type ?? 'popup' }}</div>
                                     </div>
+                                    @if($notice->starts_at || $notice->expires_at)
+                                        <div class="text-[9px] text-neutral-500">
+                                            {{ $notice->starts_at ? 'Starts '.\App\Support\CmsDateTime::forStaffDisplay($notice->starts_at) : 'Starts immediately' }}
+                                            ·
+                                            {{ $notice->expires_at ? 'Ends '.\App\Support\CmsDateTime::forStaffDisplay($notice->expires_at) : 'No end date' }}
+                                            (Nepal time)
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </td>
@@ -65,12 +77,14 @@
                                 <a href="{{ route('admin.notices.edit', $notice->id) }}" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-zinc-100 text-neutral-600 hover:bg-brand-gold hover:text-brand-dark hover:shadow-lg transition-all border border-zinc-200 hover:border-brand-gold">
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
+                                @role('Admin')
                                 <form action="{{ route('admin.notices.destroy', $notice->id) }}" method="POST" onsubmit="return confirm('Permanently delete this notice?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-zinc-100 text-neutral-600 hover:bg-rose-500 hover:text-white hover:shadow-lg transition-all border border-zinc-200 hover:border-rose-500">
                                         <i class="fa fa-trash-alt text-xs"></i>
                                     </button>
                                 </form>
+                                @endrole
                             </div>
                         </td>
                     </tr>

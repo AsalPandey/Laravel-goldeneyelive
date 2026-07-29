@@ -12,6 +12,12 @@
 
         <form action="{{ route('admin.notices.update', $notice->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf @method('PUT')
+            @if($errors->any())
+                <div class="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-800" role="alert">
+                    <p class="text-xs font-black uppercase">Please correct these notice fields:</p>
+                    <ul class="mt-2 list-disc pl-5 text-sm">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+                </div>
+            @endif
             
             <div class="bg-white rounded-3xl border border-neutral-100 p-8 shadow-sm space-y-6">
                 <div>
@@ -67,19 +73,19 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Starts At (Optional)</label>
-                        <input type="datetime-local" name="starts_at" value="{{ old('starts_at', $notice->starts_at ? \Carbon\Carbon::parse($notice->starts_at)->format('Y-m-d\TH:i') : '') }}" 
+                        <input type="datetime-local" name="starts_at" value="{{ old('starts_at', \App\Support\CmsDateTime::forStaffInput($notice->starts_at)) }}"
                                class="w-full bg-white border-none rounded-xl p-4 text-sm font-bold text-neutral-900 focus:ring-2 focus:ring-orange-500 transition-all">
                     </div>
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Expires At (Optional)</label>
-                        <input type="datetime-local" name="expires_at" value="{{ old('expires_at', $notice->expires_at ? \Carbon\Carbon::parse($notice->expires_at)->format('Y-m-d\TH:i') : '') }}" 
+                        <input type="datetime-local" name="expires_at" value="{{ old('expires_at', \App\Support\CmsDateTime::forStaffInput($notice->expires_at)) }}"
                                class="w-full bg-white border-none rounded-xl p-4 text-sm font-bold text-neutral-900 focus:ring-2 focus:ring-orange-500 transition-all">
                     </div>
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Display Style</label>
                         <select name="display_type" class="w-full bg-white border-none rounded-xl p-4 text-sm font-bold text-neutral-900 focus:ring-2 focus:ring-orange-500 transition-all">
-                            <option value="popup" {{ $notice->display_type === 'popup' ? 'selected' : '' }}>Pop-up Modal (Standard)</option>
-                            <option value="bar" {{ $notice->display_type === 'bar' ? 'selected' : '' }}>Sticky Top Bar (Global)</option>
+                            <option value="popup" {{ old('display_type', $notice->display_type) === 'popup' ? 'selected' : '' }}>Popup-style notice</option>
+                            <option value="bar" {{ old('display_type', $notice->display_type) === 'bar' ? 'selected' : '' }}>Top announcement bar</option>
                         </select>
                     </div>
                     <div class="flex items-center gap-3 pt-4">

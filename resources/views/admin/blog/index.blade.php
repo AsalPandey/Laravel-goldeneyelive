@@ -87,19 +87,27 @@
                             </div>
                         </td>
                         <td class="px-6 py-5 text-[11px] font-bold text-neutral-500">
-                            {{ $post->published_at?->format('M d, Y H:i') ?? 'Not scheduled' }}
+                            {{ $post->published_at ? \App\Support\CmsDateTime::forStaffDisplay($post->published_at) : 'Not scheduled' }}
+                            @if($post->published_at)
+                                <span class="block text-[9px] uppercase text-neutral-400">Nepal time</span>
+                            @endif
                         </td>
                         <td class="px-6 py-5 text-right">
                             <div class="flex justify-end gap-2">
+                                <a href="{{ route('admin.blog.preview', $post) }}" target="_blank" rel="noopener" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-blue-600 hover:border-blue-200 hover:shadow-lg transition-all" title="Preview article" aria-label="Preview {{ $post->title }}">
+                                    <i class="fa fa-eye"></i>
+                                </a>
                                 <a href="{{ route('admin.blog.edit', $post->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-lg transition-all">
                                     <i class="fa fa-highlighter"></i>
                                 </a>
+                                @role('Admin')
                                 <form action="{{ route('admin.blog.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Retract this article and delete permanently?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-rose-500 hover:border-rose-200 hover:shadow-lg transition-all">
                                         <i class="fa fa-eraser"></i>
                                     </button>
                                 </form>
+                                @endrole
                             </div>
                         </td>
                     </tr>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BlogRequest;
 use App\Models\BlogPost;
+use App\Support\CmsDateTime;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -59,6 +60,8 @@ class BlogController extends Controller
             ? (new BlogPost)->generateUniqueSlug($request->slug)
             : (new BlogPost)->generateUniqueSlug($validated['title']);
 
+        $validated['published_at'] = CmsDateTime::fromStaffInput($validated['published_at'] ?? null);
+
         if ($validated['status'] === 'published' && blank($validated['published_at'] ?? null)) {
             $validated['published_at'] = now();
         }
@@ -96,7 +99,12 @@ class BlogController extends Controller
             ? $post->generateUniqueSlug($request->slug, $id)
             : $post->generateUniqueSlug($validated['title'], $id);
 
-        if (blank($validated['published_at'] ?? null)) {
+        if (filled($validated['published_at'] ?? null)) {
+            $validated['published_at'] = CmsDateTime::fromStaffInput(
+                $validated['published_at'],
+                $post->published_at,
+            );
+        } else {
             $validated['published_at'] = $post->published_at;
         }
 
