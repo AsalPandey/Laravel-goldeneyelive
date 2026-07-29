@@ -17,8 +17,9 @@
             <label class="block text-xs font-black uppercase text-zinc-500 mb-2 tracking-widest">Custom SEO Meta Title</label>
             <input type="text" name="meta_title" value="{{ old('meta_title', $model?->meta_title) }}" 
                    class="w-full rounded-xl border-zinc-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white h-12 px-4 text-sm"
+                   maxlength="255"
                    placeholder="Defaults to content title if empty...">
-            <p class="text-[10px] text-zinc-400 mt-2">Optimal length: 50-60 characters.</p>
+            <p class="text-[10px] text-zinc-400 mt-2">Keep it specific and avoid repeating “Golden Eye Academy”; the public fallback adds the brand where needed.</p>
         </div>
         @endif
 
@@ -26,7 +27,7 @@
             <label class="block text-xs font-black uppercase text-zinc-500 mb-2 tracking-widest">SEO Meta Description</label>
             <textarea name="meta_description" rows="2" 
                       class="w-full rounded-xl border-zinc-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white p-4 text-sm">{{ old('meta_description', $model?->meta_description) }}</textarea>
-            <p class="text-[10px] text-zinc-400 mt-2">Optimal length: 150-160 characters. Used by Google in search snippets.</p>
+            <p class="text-[10px] text-zinc-400 mt-2">Write a concise, factual summary. Search engines may choose a different snippet for a query.</p>
         </div>
 
         <div>
@@ -43,6 +44,7 @@
                       placeholder="A concise 2-sentence summary for AI models like Perplexity/ChatGPT...">{{ old('aeo_summary', $model?->aeo_summary) }}</textarea>
         </div>
 
+        @role('Admin')
         <div class="md:col-span-2">
             <label class="block text-xs font-black uppercase text-zinc-500 mb-2 tracking-widest">Custom Schema Markup (JSON-LD)</label>
             <textarea name="schema_markup" rows="3" 
@@ -50,6 +52,7 @@
                       placeholder='{ "@@context": "https://schema.org", ... }'>{{ old('schema_markup', $model?->schema_markup) }}</textarea>
             <p class="text-[10px] text-zinc-400 mt-2">Advanced: Inject custom JSON-LD specifically for this page. Will be added to the head.</p>
         </div>
+        @endrole
     </div>
     
     <div class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-100 dark:border-amber-900/30">
@@ -57,7 +60,7 @@
             <i class="fas fa-lightbulb text-amber-500 mt-1"></i>
             <div>
                 <p class="text-[11px] font-black uppercase text-amber-800 dark:text-amber-200 leading-none mb-1">User Guide: {{ $title }}</p>
-                <p class="text-[10px] text-amber-700 dark:text-amber-300 leading-relaxed">AI engines (ChatGPT/Gemini) prioritize the <strong>AEO Summary</strong>. Make it factual and direct. Google prioritizes the <strong>Meta Title</strong> and <strong>Description</strong>. Use the <strong>Schema</strong> field only if you need to override the automatic institutional data.</p>
+                <p class="text-[10px] text-amber-700 dark:text-amber-300 leading-relaxed">Keep the <strong>AEO Summary</strong>, <strong>Meta Title</strong>, and <strong>Description</strong> factual and consistent with the visible page. Preview before publishing and avoid duplicate titles.</p>
             </div>
         </div>
     </div>

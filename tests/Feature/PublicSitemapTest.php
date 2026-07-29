@@ -42,10 +42,10 @@ class PublicSitemapTest extends TestCase
             ->assertSee(route('job-computer-skills'), false)
             ->assertSee(route('courses-detail', 'professional-web-development'), false)
             ->assertSee(route('courses-all'), false)
+            ->assertSee(route('catalogue'), false)
             ->assertSee(route('blog-detail', 'career-guide'), false)
             ->assertDontSee('courses-all?category=', false)
             ->assertDontSee('<loc>'.route('courses').'</loc>', false)
-            ->assertDontSee('<loc>'.route('catalogue').'</loc>', false)
             ->assertSee('<lastmod>', false);
     }
 }

@@ -1,6 +1,6 @@
 @extends('site.layout.app')
 @section('page_title', 'Golden Eye Academy Catalogue - Courses, Classes & Learning Paths')
-@section('meta_description', 'Explore Golden Eye Academy courses, service areas, and learning paths. Compare class options, then message the academy team before enrolling.')
+@section('meta_description', 'Explore Golden Eye Academy courses, services, and learning paths. Compare class options, then message the academy team before enrolling.')
 
 @section('content')
     @php

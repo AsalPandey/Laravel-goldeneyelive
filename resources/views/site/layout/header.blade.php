@@ -1,10 +1,26 @@
+@php
+    $brandName = \App\Support\StructuredData::siteName($settings ?? []);
+    $defaultTitle = $settings['meta_title'] ?? 'Golden Eye Academy | Courses and Classes in Pokhara';
+    $requestedTitle = trim($__env->yieldContent('page_title', $defaultTitle));
+    $pageTitle = $requestedTitle !== '' ? $requestedTitle : $defaultTitle;
+    $defaultDescription = $settings['meta_description'] ?? 'Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.';
+    $requestedDescription = trim($__env->yieldContent('meta_description', $defaultDescription));
+    $pageDescription = $requestedDescription !== '' ? $requestedDescription : $defaultDescription;
+    $requestedCanonical = trim($__env->yieldContent('canonical_url', ''));
+    $canonicalUrl = $requestedCanonical !== ''
+        ? \App\Support\CanonicalUrl::normalize($requestedCanonical)
+        : \App\Support\CanonicalUrl::current();
+    $robotsDirective = trim($__env->yieldContent('robots', ''));
+    $ogTitle = trim($__env->yieldContent('og_title', $pageTitle)) ?: $pageTitle;
+    $ogImage = trim($__env->yieldContent('og_image', \App\Support\PublicAsset::canonicalUrl($settings['hero_image'] ?? null, 'site/img/logo.png')));
+@endphp
 <head>
     <meta charset="utf-8">
-    <title>@yield('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Courses and Classes in Pokhara')</title>
+    <title>{{ $pageTitle }}</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @if(trim($__env->yieldContent('robots', '')) !== '')
-        <meta name="robots" content="@yield('robots')">
+    @if($robotsDirective !== '')
+        <meta name="robots" content="{{ $robotsDirective }}">
     @endif
     
     @if(isset($settings['google_analytics_id']) && $settings['google_analytics_id'])
@@ -22,12 +38,13 @@
     
     {{-- SEO / GEO / AEO Meta Tags --}}
     <meta content="@yield('meta_keywords', $settings['meta_keywords'] ?? 'Golden Eye Academy, IELTS Pokhara, PTE Pokhara, Computer Classes, Language Classes, IT Classes, Pokhara, Nepal')" name="keywords">
-    <meta name="description" content="@yield('meta_description', $settings['meta_description'] ?? 'Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.')">
+    <meta name="description" content="{{ $pageDescription }}">
     <meta name="author" content="Golden Eye Academy">
-    <meta name="geo.region" content="NP-DH" />
     <meta name="geo.placename" content="Pokhara" />
-    <meta name="geo.position" content="{{ ($settings['geo_latitude'] ?? '28.2172') . ';' . ($settings['geo_longitude'] ?? '83.9825') }}" />
-    <meta name="ICBM" content="{{ ($settings['geo_latitude'] ?? '28.2172') . ', ' . ($settings['geo_longitude'] ?? '83.9825') }}" />
+    @if(filled($settings['geo_latitude'] ?? null) && filled($settings['geo_longitude'] ?? null))
+        <meta name="geo.position" content="{{ $settings['geo_latitude'].';'.$settings['geo_longitude'] }}" />
+        <meta name="ICBM" content="{{ $settings['geo_latitude'].', '.$settings['geo_longitude'] }}" />
+    @endif
     <meta name="aeo-summary" content="@yield('aeo_summary', $settings['aeo_summary'] ?? '')">
 
     @if(!empty($settings['google_search_console_id']))
@@ -41,23 +58,24 @@
     @yield('schema_markup')
 
     {{-- Global Site Schema Injection --}}
-    @jsonld(json_encode(\App\Support\StructuredData::siteGraph($settings ?? [])))
+    @jsonld(json_encode(\App\Support\StructuredData::siteGraph($settings ?? [], $pageTitle, $pageDescription, $canonicalUrl)))
 
     {{-- Open Graph / Facebook --}}
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Courses and Classes in Pokhara'))">
-    <meta property="og:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Practical IELTS/PTE, language, computer, office, web development, and IT classes in Pokhara.')">
-    <meta property="og:image" content="@yield('og_image', \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/logo.png'))">
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta property="og:site_name" content="{{ $brandName }}">
+    <meta property="og:title" content="{{ $ogTitle }}">
+    <meta property="og:description" content="{{ $pageDescription }}">
+    <meta property="og:image" content="{{ $ogImage }}">
 
     {{-- Twitter --}}
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Courses and Classes in Pokhara'))">
-    <meta property="twitter:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Practical IELTS/PTE, language, computer, office, web development, and IT classes in Pokhara.')">
-    <meta property="twitter:image" content="@yield('og_image', \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/logo.png'))">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ $canonicalUrl }}">
+    <meta name="twitter:title" content="{{ $ogTitle }}">
+    <meta name="twitter:description" content="{{ $pageDescription }}">
+    <meta name="twitter:image" content="{{ $ogImage }}">
 
-    <link rel="canonical" href="@yield('canonical_url', url()->current())">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
 
     <!-- Favicon -->
     <link href="{{ \App\Support\PublicAsset::url($settings['site_favicon'] ?? ($settings['site_logo'] ?? null), 'site/img/logo.png') }}" rel="icon">

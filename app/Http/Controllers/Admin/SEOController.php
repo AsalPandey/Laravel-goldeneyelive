@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SEORequest;
 use App\Models\SiteSetting;
+use App\Support\CanonicalUrl;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -31,7 +32,7 @@ class SEOController extends Controller
 
         // Ensure robots.txt default if not set
         if (! isset($settings['robots_txt'])) {
-            $settings['robots_txt'] = "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: ".url('/sitemap.xml');
+            $settings['robots_txt'] = "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: ".CanonicalUrl::route('sitemap');
         }
 
         return view('admin.seo.index', compact('settings', 'robotsTxtWarning'));

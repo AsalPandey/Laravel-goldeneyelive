@@ -4,14 +4,22 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
-use Illuminate\Http\Request;
+use App\Support\CanonicalUrl;
+use Illuminate\Http\Response;
 
 class RobotsController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(): Response
     {
-        $robots = SiteSetting::getValue('robots_txt', "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: ".url('/sitemap.xml'));
+        $robots = trim((string) SiteSetting::getValue(
+            'robots_txt',
+            "User-agent: *\nDisallow: /admin\nDisallow: /login",
+        ));
+        $sitemapDirective = 'Sitemap: '.CanonicalUrl::route('sitemap');
+        $robots = trim(preg_replace('/^Sitemap\s*:.*(?:\R|$)/mi', '', $robots) ?? $robots);
+        $robots .= "\n\n".$sitemapDirective;
 
-        return response($robots, 200)->header('Content-Type', 'text/plain');
+        return response($robots."\n", 200)
+            ->header('Content-Type', 'text/plain; charset=UTF-8');
     }
 }

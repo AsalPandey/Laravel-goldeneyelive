@@ -1,5 +1,5 @@
 @extends('site.layout.app')
-@section('page_title', ($settings['about_header_title'] ?? 'About Golden Eye Academy') . ' - ' . \App\Support\StructuredData::siteName($settings ?? []))
+@section('page_title', \App\Support\StructuredData::titleWithBrand($settings['about_header_title'] ?? 'About Golden Eye Academy', \App\Support\StructuredData::siteName($settings ?? [])))
 @section('meta_description', $settings['meta_description'] ?? 'Learn about Golden Eye Academy and its language, test preparation, computer, office, web development, and IT classes in Pokhara.')
 
 @section('schema_markup')
@@ -14,16 +14,12 @@
           "@@type": "Person",
           "name": @json($teacher->name ?? ''),
           "jobTitle": @json($teacher->designation ?? ''),
-          "image": "{{ \App\Support\PublicAsset::url($teacher->photo ?? null, 'site/img/team-1.jpg') }}",
+          "image": "{{ \App\Support\PublicAsset::canonicalUrl($teacher->photo ?? null, 'site/img/team-1.jpg') }}",
           "description": @json($teacher->bio ?? ''),
           "worksFor": {
-            "@@type": "EducationalOrganization",
-            "name": @json(\App\Support\StructuredData::siteName($settings ?? []))
+            "@@id": "{{ \App\Support\StructuredData::organizationId() }}"
           },
-          "sameAs": [
-            "{{ $teacher->facebook_url ?? '' }}",
-            "{{ $teacher->linkedin_url ?? '' }}"
-          ]
+          "sameAs": @json(array_values(array_filter([$teacher->facebook_url ?? null, $teacher->linkedin_url ?? null], 'filled')))
         }{{ !$loop->last ? ',' : '' }}
         @endif
         @endforeach

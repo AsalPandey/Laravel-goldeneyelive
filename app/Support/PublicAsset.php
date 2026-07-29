@@ -18,6 +18,17 @@ class PublicAsset
         return asset($resolvedPath);
     }
 
+    public static function canonicalUrl(?string $path, string $fallback = 'site/img/carousel-1.png'): string
+    {
+        $resolvedPath = self::path($path, $fallback);
+
+        if (Str::startsWith($resolvedPath, ['http://', 'https://', '//'])) {
+            return $resolvedPath;
+        }
+
+        return CanonicalUrl::to('/'.$resolvedPath);
+    }
+
     public static function path(?string $path, string $fallback = 'site/img/carousel-1.png'): string
     {
         $candidate = self::normalize($path);

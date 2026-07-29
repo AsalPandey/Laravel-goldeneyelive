@@ -2,6 +2,10 @@
 
 @section('page_title', $settings['courses_title'] ?? 'Courses - Golden Eye Academy')
 @section('meta_description', $settings['courses_subtitle'] ?? 'Browse Golden Eye Academy courses by category, search by subject, and ask the academy team before enrollment.')
+@if(request()->filled('search') || request()->filled('category'))
+    @section('robots', 'noindex, follow')
+    @section('canonical_url', \App\Support\CanonicalUrl::route('courses-all'))
+@endif
 
 @section('content')
     @php
@@ -14,7 +18,7 @@
         ]);
     @endphp
 
-    @if(count($courses) > 0)
+    @if(!request()->filled('search') && !request()->filled('category') && $courses->total() >= 3)
         <script type="application/ld+json">
         {
           "@@context": "https://schema.org",
@@ -26,9 +30,12 @@
               "position": {{ (($courses->currentPage() - 1) * $courses->perPage()) + $index + 1 }},
               "item": {
                 "@@type": "Course",
-                "url": "{{ route('courses-detail', $course->slug) }}",
+                "url": "{{ \App\Support\CanonicalUrl::route('courses-detail', ['slug' => $course->slug]) }}",
                 "name": @json($course->name),
-                "description": @json(strip_tags($course->description))
+                "description": @json(strip_tags($course->description)),
+                "provider": {
+                  "@@id": "{{ \App\Support\StructuredData::organizationId() }}"
+                }
               }
             }{{ !$loop->last ? ',' : '' }}
             @endforeach

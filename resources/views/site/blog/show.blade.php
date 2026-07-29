@@ -1,19 +1,18 @@
 @extends('site.layout.app')
 @section('page_title', $post->meta_title ?? $post->title . ' - Golden Eye Academy')
 @section('og_title', $post->title . ' | Golden Eye Academy Blog')
-@section('meta_description', $post->meta_description ?? Str::limit(strip_tags($post->content), 160))
+@section('og_type', 'article')
+@section('meta_description', filled($post->meta_description) ? $post->meta_description : Str::limit(strip_tags($post->content), 160))
 @section('meta_keywords', $post->meta_keywords ?? '')
 @section('aeo_summary', $post->aeo_summary ?? '')
-@section('og_image', \App\Support\PublicAsset::url($post->image ?? null, 'site/img/carousel-1.png'))
+@section('og_image', \App\Support\PublicAsset::canonicalUrl($post->image ?? null, 'site/img/carousel-1.png'))
 @if($isPreview ?? false)
     @section('robots', 'noindex, nofollow, noarchive')
     @section('canonical_url', route('blog-detail', $post->slug))
 @endif
 
 @section('schema_markup')
-    @if($post->schema_markup)
-        @jsonld($post->schema_markup)
-    @endif
+    @jsonld(json_encode(\App\Support\StructuredData::articleSchema($post, $settings ?? [])))
 @endsection
 @section('content')
     @php
@@ -50,30 +49,6 @@
         <div class="container">
             <div class="row g-5">
                 <article class="col-lg-8">
-                    {{-- Default Article Schema for GEO --}}
-                    <script type="application/ld+json">
-                    {
-                      "@@context": "https://schema.org",
-                      "@@type": "Article",
-                      "headline": @json($post->title),
-                      "image": "{{ \App\Support\PublicAsset::url($post->image ?? null, 'site/img/carousel-1.png') }}",
-                      "author": {
-                        "@@type": "Person",
-                        "name": @json($post->author ?? 'Golden Eye Academy')
-                      },
-                      "publisher": {
-                        "@@type": "Organization",
-                        "name": @json(\App\Support\StructuredData::siteName($settings ?? [])),
-                        "logo": {
-                          "@@type": "ImageObject",
-                          "url": "{{ url('site/img/logo.png') }}"
-                        }
-                      },
-                      "datePublished": "{{ $post->created_at->toIso8601String() }}",
-                      "dateModified": "{{ $post->updated_at->toIso8601String() }}"
-                    }
-                    </script>
-
                     @if($post->image)
                     <img class="img-fluid w-100 rounded-xl shadow-lg mb-4" src="{{ \App\Support\PublicAsset::url($post->image ?? null, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $post->title }}" style="max-height: 350px; object-fit: cover;">
                     @endif
@@ -96,7 +71,7 @@
                         <h6 class="mb-4 font-black uppercase tracking-tight text-brand-dark" style="font-size: 14px;">{{ $settings['recent_posts_title'] ?? 'Recent Posts' }}</h6>
                         @foreach($recentPosts as $rPost)
                         <div class="d-flex mb-3 align-items-center">
-                            <img src="{{ \App\Support\PublicAsset::url($rPost->image ?? null, 'site/img/carousel-1.png') }}" class="rounded-lg" style="width: 50px; height: 50px; object-fit: cover;">
+                            <img src="{{ \App\Support\PublicAsset::url($rPost->image ?? null, 'site/img/carousel-1.png') }}" class="rounded-lg" width="50" height="50" alt="{{ $rPost->title }}" loading="lazy" decoding="async" style="width: 50px; height: 50px; object-fit: cover;">
                             <div class="ps-3">
                                 <h6 class="mb-1" style="font-size: 12px;"><a href="{{ route('blog-detail', $rPost->slug) }}" class="text-dark hover:text-brand-gold">{{ Str::limit($rPost->title, 40) }}</a></h6>
                                 <small class="text-muted" style="font-size: 9px;">{{ $rPost->created_at->format('M d, Y') }}</small>

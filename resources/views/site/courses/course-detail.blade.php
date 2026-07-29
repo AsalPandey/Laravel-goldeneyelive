@@ -11,6 +11,7 @@
 @section('page_title', $coursePageTitle)
 @section('og_title', $course->name . ' Course at Golden Eye Academy')
 @section('meta_description', $courseMetaDescription)
+@section('og_image', \App\Support\PublicAsset::canonicalUrl($course->photo ?? null, 'site/img/cat-1.jpg'))
 @section('meta_keywords', $course->meta_keywords ?? '')
 @section('aeo_summary', strip_tags($course->aeo_summary ?? ''))
 @section('og_image', \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg'))

@@ -18,12 +18,7 @@ class SeoLaunchFixTest extends TestCase
 
     public function test_robots_txt_static_file_and_route_use_valid_sitemap_directives(): void
     {
-        $staticRobots = file_get_contents(public_path('robots.txt'));
-
-        $this->assertIsString($staticRobots);
-        $this->assertStringNotContainsString('{{', $staticRobots);
-        $this->assertStringContainsString('Sitemap: https://goldeneye.edu.np/sitemap.xml', $staticRobots);
-        $this->assertDoesNotMatchRegularExpression('/^Disallow:\s*\/\s*$/mi', $staticRobots);
+        $this->assertFileDoesNotExist(public_path('robots.txt'));
 
         $response = $this->get('/robots.txt')->assertOk();
         $content = $response->getContent();
@@ -31,6 +26,7 @@ class SeoLaunchFixTest extends TestCase
         $this->assertStringNotContainsString('{{', $content);
         $this->assertMatchesRegularExpression('/^Sitemap:\s*https?:\/\/[^\s]+\/sitemap\.xml\s*$/mi', $content);
         $this->assertDoesNotMatchRegularExpression('/^Disallow:\s*\/\s*$/mi', $content);
+        $this->assertSame(1, preg_match_all('/^Sitemap\s*:/mi', $content));
     }
 
     public function test_faq_page_renders_the_cms_label_inside_the_reveal_button(): void
@@ -147,6 +143,8 @@ class SeoLaunchFixTest extends TestCase
         $this->assertCount(1, $courseNodes);
         $this->assertSame('Dynamic IELTS Masterclass', $courseNodes[0]['name'] ?? null);
         $this->assertSame('Advanced', $courseNodes[0]['educationalLevel'] ?? null);
+        $this->assertArrayNotHasKey('offers', $courseNodes[0]);
+        $this->assertArrayNotHasKey('hasCourseInstance', $courseNodes[0]);
         $this->assertSame(1, $this->countSchemaType($nodes, 'EducationalOrganization'));
     }
 

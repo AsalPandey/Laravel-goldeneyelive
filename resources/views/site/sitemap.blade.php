@@ -6,8 +6,6 @@
         @if($entry['lastmod'])
         <lastmod>{{ $entry['lastmod'] }}</lastmod>
         @endif
-        <changefreq>{{ $entry['changefreq'] }}</changefreq>
-        <priority>{{ $entry['priority'] }}</priority>
     </url>
     @endforeach
 </urlset>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\CanonicalUrl;
+
 abstract class Controller
 {
     /**
@@ -24,6 +26,7 @@ abstract class Controller
             'site_settings',
             'site_active_categories',
             'sitemap_xml',
+            'sitemap_xml_'.hash('xxh128', CanonicalUrl::baseUrl()),
             'site_shared_data',
         ], $extraKeys));
 

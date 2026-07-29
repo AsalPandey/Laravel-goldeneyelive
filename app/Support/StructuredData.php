@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\BlogPost;
 use App\Models\Course;
 use Illuminate\Support\Str;
 
@@ -11,24 +12,57 @@ final class StructuredData
      * @param  array<string, mixed>  $settings
      * @return array<string, mixed>
      */
-    public static function siteGraph(array $settings): array
-    {
+    public static function siteGraph(
+        array $settings,
+        ?string $pageTitle = null,
+        ?string $pageDescription = null,
+        ?string $canonicalUrl = null,
+    ): array {
         $organization = self::organizationSchema($settings);
-        $extraSchemas = [];
+        $canonicalUrl ??= CanonicalUrl::current();
+        $speakableSelectors = array_values(array_filter(
+            array_map('trim', explode(',', (string) ($settings['speakable_selectors'] ?? ''))),
+        ));
 
         foreach (self::schemaNodes(self::decodeSchema($settings['schema_markup'] ?? null)) as $node) {
             if (self::isOrganizationSchema($node)) {
                 $organization = self::mergeOrganizationSchema($organization, $node);
 
-                continue;
+                break;
             }
-
-            $extraSchemas[] = self::withoutContext($node);
         }
 
         return self::withoutEmptyValues([
             '@context' => 'https://schema.org',
-            '@graph' => array_values(array_merge([$organization], $extraSchemas)),
+            '@graph' => [
+                $organization,
+                [
+                    '@type' => 'WebSite',
+                    '@id' => CanonicalUrl::to('/').'#website',
+                    'url' => CanonicalUrl::to('/'),
+                    'name' => self::siteName($settings),
+                    'publisher' => [
+                        '@id' => self::organizationId(),
+                    ],
+                ],
+                self::withoutEmptyValues([
+                    '@type' => 'WebPage',
+                    '@id' => $canonicalUrl.'#webpage',
+                    'url' => $canonicalUrl,
+                    'name' => $pageTitle,
+                    'description' => $pageDescription,
+                    'isPartOf' => [
+                        '@id' => CanonicalUrl::to('/').'#website',
+                    ],
+                    'about' => [
+                        '@id' => self::organizationId(),
+                    ],
+                    'speakable' => $speakableSelectors === [] ? null : [
+                        '@type' => 'SpeakableSpecification',
+                        'cssSelector' => $speakableSelectors,
+                    ],
+                ]),
+            ],
         ]);
     }
 
@@ -43,6 +77,12 @@ final class StructuredData
         foreach (self::schemaNodes(self::decodeSchema($course->schema_markup)) as $node) {
             if (self::schemaHasType($node, 'Course')) {
                 $adminCourseSchema = self::withoutContext($node);
+                unset(
+                    $adminCourseSchema['aggregateRating'],
+                    $adminCourseSchema['hasCourseInstance'],
+                    $adminCourseSchema['offers'],
+                    $adminCourseSchema['review'],
+                );
 
                 break;
             }
@@ -53,6 +93,55 @@ final class StructuredData
         return self::withoutEmptyValues(array_merge([
             '@context' => 'https://schema.org',
         ], $schema));
+    }
+
+    /**
+     * @param  array<string, mixed>  $settings
+     * @return array<string, mixed>
+     */
+    public static function articleSchema(BlogPost $post, array $settings): array
+    {
+        $adminArticleSchema = null;
+
+        foreach (self::schemaNodes(self::decodeSchema($post->schema_markup)) as $node) {
+            if (self::schemaHasType($node, 'Article') || self::schemaHasType($node, 'BlogPosting')) {
+                $adminArticleSchema = self::withoutContext($node);
+
+                break;
+            }
+        }
+
+        $url = CanonicalUrl::route('blog-detail', ['slug' => $post->slug]);
+        $description = trim(strip_tags((string) ($post->meta_description ?: $post->content)));
+        $publishedAt = $post->published_at ?? $post->created_at;
+
+        $schema = array_replace_recursive($adminArticleSchema ?? [], self::withoutEmptyValues([
+            '@type' => 'BlogPosting',
+            '@id' => $url.'#article',
+            'url' => $url,
+            'mainEntityOfPage' => [
+                '@id' => $url,
+            ],
+            'headline' => $post->title,
+            'description' => Str::limit($description, 160, ''),
+            'image' => PublicAsset::canonicalUrl($post->image ?? null, 'site/img/carousel-1.png'),
+            'author' => filled($post->author) ? [
+                '@type' => 'Person',
+                'name' => $post->author,
+            ] : [
+                '@id' => self::organizationId(),
+            ],
+            'publisher' => [
+                '@id' => self::organizationId(),
+            ],
+            'datePublished' => $publishedAt?->toIso8601String(),
+            'dateModified' => $post->updated_at?->toIso8601String(),
+        ]));
+
+        return self::withoutEmptyValues([
+            '@context' => 'https://schema.org',
+            ...$schema,
+        ]);
     }
 
     public static function titleWithBrand(?string $title, string $brand = 'Golden Eye Academy'): string
@@ -83,7 +172,13 @@ final class StructuredData
             return self::normalizeBrandText($adminDescription);
         }
 
-        return self::normalizeBrandText(Str::limit(trim(strip_tags((string) $course->description)), 155, ''));
+        $description = trim(strip_tags((string) $course->description));
+
+        if ($description === '') {
+            $description = $course->name.' at Golden Eye Academy in Pokhara. Ask the academy team for current class and enrollment details.';
+        }
+
+        return self::normalizeBrandText(Str::limit($description, 155, ''));
     }
 
     /**
@@ -94,46 +189,33 @@ final class StructuredData
     {
         $siteName = self::siteName($settings);
         $socialLinks = array_values(array_filter([
-            $settings['facebook_url'] ?? 'https://www.facebook.com/goldeneyeacademy',
-            $settings['instagram_url'] ?? 'https://www.instagram.com/goldeneye.academy/',
-            $settings['linkedin_url'] ?? 'https://www.linkedin.com/company/golden-eye-academy/',
-        ]));
-        $speakableSelectors = array_values(array_filter(array_map('trim', explode(',', (string) ($settings['speakable_selectors'] ?? '')))));
+            $settings['facebook_url'] ?? null,
+            $settings['instagram_url'] ?? null,
+            $settings['linkedin_url'] ?? null,
+            $settings['youtube_url'] ?? null,
+        ], 'filled'));
+        $hasCoordinates = filled($settings['geo_latitude'] ?? null) && filled($settings['geo_longitude'] ?? null);
 
         return self::withoutEmptyValues([
             '@type' => 'EducationalOrganization',
             '@id' => self::organizationId(),
             'name' => $siteName,
-            'url' => url('/'),
-            'logo' => PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png'),
+            'url' => CanonicalUrl::to('/'),
+            'logo' => PublicAsset::canonicalUrl($settings['site_logo'] ?? null, 'site/img/logo.png'),
             'description' => $settings['meta_description'] ?? 'Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.',
-            'address' => [
+            'address' => filled($settings['site_address'] ?? null) ? [
                 '@type' => 'PostalAddress',
-                'streetAddress' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal',
-                'addressLocality' => 'Pokhara',
-                'addressRegion' => 'Gandaki',
-                'postalCode' => '33700',
+                'streetAddress' => $settings['site_address'],
                 'addressCountry' => 'NP',
-            ],
-            'geo' => [
+            ] : null,
+            'geo' => $hasCoordinates ? [
                 '@type' => 'GeoCoordinates',
-                'latitude' => $settings['geo_latitude'] ?? '28.2172',
-                'longitude' => $settings['geo_longitude'] ?? '83.9825',
-            ],
+                'latitude' => $settings['geo_latitude'],
+                'longitude' => $settings['geo_longitude'],
+            ] : null,
             'email' => $settings['site_email'] ?? null,
-            'telephone' => $settings['site_phone'] ?? '+977-61-572599',
-            'contactPoint' => [
-                '@type' => 'ContactPoint',
-                'telephone' => $settings['site_phone'] ?? '+977-61-572599',
-                'contactType' => 'customer service',
-                'areaServed' => 'NP',
-                'availableLanguage' => ['English', 'Nepali'],
-            ],
+            'telephone' => $settings['site_phone'] ?? null,
             'sameAs' => $socialLinks,
-            'speakable' => $speakableSelectors === [] ? null : [
-                '@type' => 'SpeakableSpecification',
-                'cssSelector' => $speakableSelectors,
-            ],
         ]);
     }
 
@@ -147,39 +229,13 @@ final class StructuredData
 
         return self::withoutEmptyValues([
             '@type' => 'Course',
-            '@id' => url()->current().'#course',
+            '@id' => CanonicalUrl::route('courses-detail', ['slug' => $course->slug]).'#course',
+            'url' => CanonicalUrl::route('courses-detail', ['slug' => $course->slug]),
             'name' => $course->name,
             'description' => $description,
-            'image' => PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg'),
+            'image' => PublicAsset::canonicalUrl($course->photo ?? null, 'site/img/cat-1.jpg'),
             'provider' => [
                 '@id' => self::organizationId(),
-            ],
-            'hasCourseInstance' => [
-                '@type' => 'CourseInstance',
-                'courseMode' => 'Onsite',
-                'location' => [
-                    '@type' => 'Place',
-                    'name' => self::siteName($settings),
-                    'address' => [
-                        '@type' => 'PostalAddress',
-                        'streetAddress' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal',
-                        'addressLocality' => 'Pokhara',
-                        'addressCountry' => 'NP',
-                    ],
-                ],
-                'duration' => $course->duration,
-                'instructor' => [
-                    '@type' => 'Person',
-                    'name' => $course->instructor ?: null,
-                ],
-            ],
-            'offers' => [
-                '@type' => 'Offer',
-                'price' => preg_replace('/[^0-9]/', '', (string) $course->price) ?: '0',
-                'priceCurrency' => 'NPR',
-                'category' => 'Professional Education',
-                'availability' => 'https://schema.org/InStock',
-                'url' => url()->current(),
             ],
         ]);
     }
@@ -192,19 +248,30 @@ final class StructuredData
     private static function mergeOrganizationSchema(array $default, array $admin): array
     {
         $admin = self::withoutContext($admin);
+        $unsupportedProperties = [
+            'aggregateRating',
+            'areaServed',
+            'foundingDate',
+            'openingHours',
+            'review',
+        ];
+
+        foreach ($unsupportedProperties as $property) {
+            unset($admin[$property]);
+        }
 
         if (isset($admin['name']) && in_array(Str::lower((string) $admin['name']), ['goldeneye academy', 'goldeneye'], true)) {
             $admin['name'] = $default['name'] ?? 'Golden Eye Academy';
         }
 
-        return self::withoutEmptyValues(array_replace_recursive($default, $admin, [
+        return self::withoutEmptyValues(array_replace_recursive($admin, $default, [
             '@id' => self::organizationId(),
         ]));
     }
 
-    private static function organizationId(): string
+    public static function organizationId(): string
     {
-        return url('/').'#organization';
+        return CanonicalUrl::to('/').'#organization';
     }
 
     /**

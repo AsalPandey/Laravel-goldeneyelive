@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CMSRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class CMSRequest extends FormRequest
             'meta_description' => ['nullable', 'string'],
             'meta_keywords' => ['nullable', 'string'],
             'aeo_summary' => ['nullable', 'string'],
-            'schema_markup' => ['nullable', 'string', function ($attribute, $value, $fail) {
+            'schema_markup' => [Rule::prohibitedIf(fn (): bool => ! $this->user()?->hasRole('Admin')), 'nullable', 'string', function ($attribute, $value, $fail) {
                 if ($value && ! $this->isValidJson($value)) {
                     $fail('The '.$attribute.' must be a valid JSON-LD string.');
                 }

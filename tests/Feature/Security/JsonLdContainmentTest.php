@@ -3,7 +3,6 @@
 namespace Tests\Feature\Security;
 
 use App\Models\BlogPost;
-use App\Models\SiteSetting;
 use App\Support\CmsContentSanitizer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -31,19 +30,16 @@ class JsonLdContainmentTest extends TestCase
 
     public function test_rendered_cms_json_ld_cannot_create_a_second_script_element(): void
     {
-        cache()->flush();
-
-        SiteSetting::create([
-            'key' => 'schema_markup',
-            'value' => json_encode([
+        $post = BlogPost::factory()->create([
+            'status' => 'published',
+            'schema_markup' => json_encode([
                 '@context' => 'https://schema.org',
-                '@type' => 'Thing',
-                'name' => '</script><script id="phase-one-injected">window.phaseOneInjected=true</script>',
+                '@type' => 'BlogPosting',
+                'phaseMarker' => '</script><script id="phase-one-injected">window.phaseOneInjected=true</script>',
             ], JSON_THROW_ON_ERROR),
-            'type' => 'text',
         ]);
 
-        $content = $this->get(route('home'))
+        $content = $this->get(route('blog-detail', $post->slug))
             ->assertOk()
             ->content();
 

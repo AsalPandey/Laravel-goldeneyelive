@@ -1,5 +1,8 @@
 @extends('site.layout.app')
 @section('page_title', 'Ask for Course Help - ' . \App\Support\StructuredData::siteName($settings ?? []))
+@section('meta_description', 'Send Golden Eye Academy your course goal and contact details so the academy team can help you choose suitable classes in Pokhara.')
+@section('robots', 'noindex, follow')
+@section('canonical_url', \App\Support\CanonicalUrl::route('join-now'))
 @section('content')
     @php
         $sourcePage = request('source_page', url()->previous() ?: url()->current());

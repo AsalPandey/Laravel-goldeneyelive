@@ -1,6 +1,7 @@
 @extends('site.layout.app')
 
 @section('page_title', 'Course FAQs - Golden Eye Academy')
+@section('meta_description', 'Read answers about Golden Eye Academy courses, fees, class timing, enrollment, and learning support in Pokhara.')
 
 @section('content')
     @php
