@@ -1,6 +1,6 @@
 <head>
     <meta charset="utf-8">
-    <title>@yield('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Established Academy in Pokhara Since 2008')</title>
+    <title>@yield('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Courses and Classes in Pokhara')</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @if(trim($__env->yieldContent('robots', '')) !== '')
@@ -22,7 +22,7 @@
     
     {{-- SEO / GEO / AEO Meta Tags --}}
     <meta content="@yield('meta_keywords', $settings['meta_keywords'] ?? 'Golden Eye Academy, IELTS Pokhara, PTE Pokhara, Computer Classes, Language Classes, IT Classes, Pokhara, Nepal')" name="keywords">
-    <meta name="description" content="@yield('meta_description', $settings['meta_description'] ?? 'Established in 2008, Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.')">
+    <meta name="description" content="@yield('meta_description', $settings['meta_description'] ?? 'Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.')">
     <meta name="author" content="Golden Eye Academy">
     <meta name="geo.region" content="NP-DH" />
     <meta name="geo.placename" content="Pokhara" />
@@ -46,15 +46,15 @@
     {{-- Open Graph / Facebook --}}
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Established Academy in Pokhara Since 2008'))">
-    <meta property="og:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Practical classes in IELTS/PTE, language, computer, office, web development, and IT subjects in Pokhara since 2008.')">
+    <meta property="og:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Courses and Classes in Pokhara'))">
+    <meta property="og:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Practical IELTS/PTE, language, computer, office, web development, and IT classes in Pokhara.')">
     <meta property="og:image" content="@yield('og_image', \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/logo.png'))">
 
     {{-- Twitter --}}
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Established Academy in Pokhara Since 2008'))">
-    <meta property="twitter:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Practical classes in IELTS/PTE, language, computer, office, web development, and IT subjects in Pokhara since 2008.')">
+    <meta property="twitter:title" content="@yield('og_title', $__env->yieldContent('page_title', $settings['meta_title'] ?? 'Golden Eye Academy | Courses and Classes in Pokhara'))">
+    <meta property="twitter:description" content="@yield('meta_description', $settings['meta_description'] ?? 'Practical IELTS/PTE, language, computer, office, web development, and IT classes in Pokhara.')">
     <meta property="twitter:image" content="@yield('og_image', \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/logo.png'))">
 
     <link rel="canonical" href="@yield('canonical_url', url()->current())">

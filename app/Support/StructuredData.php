@@ -106,8 +106,7 @@ final class StructuredData
             'name' => $siteName,
             'url' => url('/'),
             'logo' => PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png'),
-            'foundingDate' => '2008',
-            'description' => $settings['meta_description'] ?? 'Established in 2008, Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.',
+            'description' => $settings['meta_description'] ?? 'Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.',
             'address' => [
                 '@type' => 'PostalAddress',
                 'streetAddress' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal',

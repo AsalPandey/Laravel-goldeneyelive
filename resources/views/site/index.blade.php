@@ -13,7 +13,7 @@
 	    @php
 	        $heroImage = $homeHeroImage;
 	        $heroBadge = trim((string) ($settings['hero_badge_text'] ?? 'Golden Eye Academy, Pokhara')) ?: 'Golden Eye Academy, Pokhara';
-	        $heroTitle = trim((string) ($settings['hero_hook_headline'] ?? $settings['hero_title'] ?? 'Established academy in Pokhara since 2008.')) ?: 'Established academy in Pokhara since 2008.';
+	        $heroTitle = trim((string) ($settings['hero_hook_headline'] ?? $settings['hero_title'] ?? 'Practical courses and classes in Pokhara.')) ?: 'Practical courses and classes in Pokhara.';
 	        $heroBody = trim(strip_tags((string) ($settings['hero_hook_body'] ?? $settings['hero_subtitle'] ?? 'Golden Eye Academy offers practical classes and skill-based batches for IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT learners in Pokhara.'))) ?: 'Golden Eye Academy offers practical classes and skill-based batches for IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT learners in Pokhara.';
 	        $heroPrimaryCta = trim((string) ($settings['hero_cta_1_text'] ?? $settings['hero_cta_text'] ?? 'Ask for Course Help')) ?: 'Ask for Course Help';
 	        $heroPrimaryCta = strtolower($heroPrimaryCta) === 'ask for course guidance' ? 'Ask for Course Help' : $heroPrimaryCta;
@@ -31,24 +31,13 @@
             $description = trim(strip_tags((string) $course->description));
             $sentence = trim(\Illuminate\Support\Str::before($description, '.'));
 
-            return \Illuminate\Support\Str::limit($sentence ?: 'Build practical skills with guided classes and clear next steps', 92);
-        };
-        $bestFor = function ($course): string {
-            $text = strtolower($course->name.' '.$course->category.' '.$course->badge_text);
-
-            return match (true) {
-                str_contains($text, 'ielts'), str_contains($text, 'pte') => 'Exam preparation learners',
-                str_contains($text, 'japanese'), str_contains($text, 'korean') => 'Language learners',
-                str_contains($text, 'office'), str_contains($text, 'computer') => 'Job and office skills',
-                str_contains($text, 'web'), str_contains($text, 'it') => 'IT career starters',
-                default => 'Students choosing a practical next step',
-            };
+            return \Illuminate\Support\Str::limit($sentence ?: 'Review the course page and confirm current details before enrollment.', 92);
         };
         $testimonialProgress = function ($testimonial): string {
             $content = trim(strip_tags((string) ($testimonial->content ?? '')));
             $sentence = trim(\Illuminate\Support\Str::before($content, '.'));
 
-            return \Illuminate\Support\Str::limit($sentence ?: $content ?: 'Progress details can be added from testimonials.', 105);
+            return \Illuminate\Support\Str::limit($sentence ?: $content, 105);
         };
         $teacherCourseNames = function ($teacher) use ($courses): string {
             $matches = collect($courses ?? [])
@@ -57,11 +46,11 @@
                 ->take(3)
                 ->implode(', ');
 
-            return $matches ?: 'Classroom practice and academic support';
+            return $matches;
         };
         $externalReviewUrl = trim((string) ($settings['google_business_profile_url'] ?? ''));
         $externalReviewScreenshot = trim((string) ($settings['external_review_screenshot'] ?? ''));
-        $externalReviewNote = trim((string) ($settings['external_review_proof_note'] ?? 'Ask the academy team for current Google review proof or verified review screenshots before enrollment.'));
+        $externalReviewNote = trim((string) ($settings['external_review_proof_note'] ?? ''));
         $audienceSegments = collect($homepageContent['audience_cards'])
             ->filter(fn (array $segment): bool => $segment['is_active'])
             ->map(fn (array $segment): array => [
@@ -172,8 +161,10 @@
                                     <div class="d-grid gap-2 mb-4 mt-auto">
                                         <span class="text-brand-dark fw-bold" style="font-size: 11px;"><i class="fa fa-clock text-brand-gold me-2"></i>{{ $course->duration }}</span>
                                         <span class="text-brand-dark fw-bold" style="font-size: 11px;"><i class="fa fa-tag text-brand-gold me-2"></i>{{ $course->price ?: 'Fee available on request' }}</span>
-                                        <span class="text-brand-dark fw-bold" style="font-size: 11px;"><i class="fa fa-calendar text-brand-gold me-2"></i>Morning, day, or evening batch</span>
-                                        <span class="text-zinc-500" style="font-size: 11px;">Best for: {{ $bestFor($course) }}</span>
+                                        <span class="text-brand-dark fw-bold" style="font-size: 11px;"><i class="fa fa-calendar text-brand-gold me-2"></i>{{ $homepageContent['courses_batch_note'] }}</span>
+                                        @if(filled($course->category))
+                                            <span class="text-zinc-500" style="font-size: 11px;">Category: {{ $course->category }}</span>
+                                        @endif
                                     </div>
                                     <div class="d-grid gap-2">
                                         <a href="{{ route('courses-detail', $course->slug) }}" data-cta="homepage-course-details" class="btn btn-primary py-2.5 rounded-lg font-black uppercase tracking-widest" style="font-size: 9px;">View Course Details</a>
@@ -259,10 +250,10 @@
                                     <img src="{{ \App\Support\PublicAsset::url($testimonial->photo ?? null, 'site/img/testimonial-1.jpg') }}" onerror="this.src='{{ asset('site/img/testimonial-1.jpg') }}'" alt="{{ $testimonial->student_name ?? 'Golden Eye student' }}" class="rounded-circle object-cover border border-white shadow-sm" loading="lazy" decoding="async" width="54" height="54" style="width: 54px; height: 54px;">
                                     <div>
                                         <h3 class="mb-1 fw-black text-brand-dark" style="font-size: 13px;">{{ $testimonial->student_name ?? 'Student' }}</h3>
-                                        <small class="text-zinc-500 fw-bold d-block" style="font-size: 10px;">Course completed: {{ $testimonial->course_name ?? 'Golden Eye learner' }}</small>
+                                        <small class="text-zinc-500 fw-bold d-block" style="font-size: 10px;">Course listed: {{ $testimonial->course_name }}</small>
                                     </div>
                                 </div>
-                                <p class="text-brand-dark fw-black mb-2" style="font-size: 12px; line-height: 1.55;">Specific progress/result: {{ $testimonialProgress($testimonial) }}</p>
+                                <p class="text-brand-dark fw-black mb-2" style="font-size: 12px; line-height: 1.55;">Feedback summary: {{ $testimonialProgress($testimonial) }}</p>
                                 <p class="text-zinc-600 mb-0" style="font-size: 13px; line-height: 1.7;">"{{ \Illuminate\Support\Str::limit(strip_tags($testimonial->content ?? ''), 135) }}"</p>
                             </article>
                         </div>
@@ -293,10 +284,15 @@
                                     </div>
                                 </div>
                                 <div class="d-grid gap-2">
-                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Subject expertise:</strong> {{ $teacher->designation ?: 'Academic support' }}</p>
-                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Class support:</strong> Practical lessons, student questions, and progress feedback</p>
-                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Courses taught:</strong> {{ $teacherCourseNames($teacher) }}</p>
-                                    <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Credibility note:</strong> {{ \Illuminate\Support\Str::limit(strip_tags($teacher->bio ?? 'Supports students with classroom practice, academic support, and feedback.'), 110) }}</p>
+                                    @if(filled($teacher->designation))
+                                        <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Profile role:</strong> {{ $teacher->designation }}</p>
+                                    @endif
+                                    @if($teacherCourseNames($teacher) !== '')
+                                        <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Matched courses:</strong> {{ $teacherCourseNames($teacher) }}</p>
+                                    @endif
+                                    @if(filled($teacher->bio))
+                                        <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Profile note:</strong> {{ \Illuminate\Support\Str::limit(strip_tags($teacher->bio), 110) }}</p>
+                                    @endif
                                 </div>
                             </article>
                         </div>
@@ -306,14 +302,16 @@
         </section>
     @endif
 
-    @if($homepageContent['sections']['reviews'] && ($externalReviewNote !== '' || $externalReviewUrl !== '' || $externalReviewScreenshot !== ''))
+    @if($homepageContent['sections']['reviews'] && ($externalReviewUrl !== '' || $externalReviewScreenshot !== ''))
         <section class="py-5 bg-white">
             <div class="container">
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-5">
                         <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['reviews_tagline'] }}</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-3">{{ $homepageContent['reviews_title'] }}</h2>
-                        <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $externalReviewNote }}</p>
+                        @if($externalReviewNote !== '')
+                            <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $externalReviewNote }}</p>
+                        @endif
                     </div>
                     <div class="col-lg-7">
                         <div class="p-4 bg-zinc-50 border border-zinc-100 rounded-xl h-100">
@@ -324,8 +322,6 @@
                                 <a href="{{ $externalReviewUrl }}" target="_blank" rel="noopener" class="text-brand-dark fw-black text-decoration-none">
                                     Google Business Profile <i class="fa fa-external-link-alt ms-1" aria-hidden="true"></i>
                                 </a>
-                            @else
-                                <p class="mb-0 text-zinc-600" style="font-size: 13px; line-height: 1.65;">The academy can share verified Google review proof or screenshots on request until the public profile link is added.</p>
                             @endif
                         </div>
                     </div>

@@ -29,6 +29,7 @@
             'home_courses_tagline' => ['Courses section tagline', 'courses_tagline'],
             'home_courses_title' => ['Courses section title', 'courses_title'],
             'home_courses_cta_text' => ['Courses section button', 'courses_cta_text'],
+            'home_courses_batch_note' => ['Course-card batch note', 'courses_batch_note'],
             'home_categories_tagline' => ['Categories section tagline', 'categories_tagline'],
             'home_categories_title' => ['Categories section title', 'categories_title'],
             'home_why_tagline' => ['Why section tagline', 'why_tagline'],

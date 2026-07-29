@@ -18,7 +18,7 @@ class PublicServicePillarTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertSee('Established academy in Pokhara since 2008', false);
+        $response->assertSee('Practical courses and classes in Pokhara.', false);
         $response->assertSee('Golden Eye Academy offers practical classes and skill-based batches', false);
         $response->assertSee('I am a Student');
         $response->assertSee('I am a Parent');
@@ -56,7 +56,7 @@ class PublicServicePillarTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertSee('Established academy in Pokhara since 2008', false);
+        $response->assertSee('Practical courses and classes in Pokhara.', false);
         $response->assertSeeInOrder(['I am a Student', 'I am a Parent', 'I need IELTS / PTE', 'I want Job/Computer Skills']);
         $response->assertDontSee('First Pillar');
         $response->assertDontSee('Third Pillar');

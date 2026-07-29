@@ -62,7 +62,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
         $this->get(route('home'))
             ->assertOk()
             ->assertSee('Which class are you interested in?')
-            ->assertSee('Practical classes with academic support');
+            ->assertSee('Course information before enrollment');
 
         $this->actingAs($this->staff)
             ->post(route('admin.branding.update'), [
@@ -157,11 +157,19 @@ class Phase4bCmsStaffHandoverTest extends TestCase
 
     public function test_structured_homepage_and_audience_fields_render_at_their_exact_public_consumers(): void
     {
-        Course::factory()->create(['status' => 'active']);
+        $course = Course::factory()->create(['status' => 'active']);
         CourseCategory::factory()->create(['status' => 'active']);
         Teacher::factory()->create(['status' => 'active']);
-        Testimonial::factory()->create(['status' => 'active']);
+        Testimonial::factory()->create([
+            'course_name' => $course->name,
+            'status' => 'active',
+        ]);
         FAQ::factory()->create(['status' => 'active']);
+        SiteSetting::create([
+            'key' => 'google_business_profile_url',
+            'value' => 'https://example.test/reviews',
+            'type' => 'text',
+        ]);
 
         $homepageFields = [
             'home_meta_title' => 'CMS4B homepage meta title',

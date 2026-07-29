@@ -38,7 +38,7 @@
                     @else
                         <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
                         <h2 class="h3 mb-4 font-black text-brand-dark uppercase tracking-tight">Our Journey at <br> Golden Eye Academy</h2>
-                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">Since its founding in 2008, Golden Eye Academy has been committed to delivering practical educational experiences. Through focused classes, faculty support, and clear course information, we help students build skills they can use in study, work, and daily communication.</p>
+                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">Golden Eye Academy provides language, test preparation, computer, office, web development, and IT classes in Pokhara. Students and parents can review course information and ask the academy to confirm current details before enrollment.</p>
 
                         <h3 class="h4 mb-3 font-black text-brand-dark uppercase tracking-tight">Our Mission</h3>
                         <p class="mb-4 extra-small text-zinc-600 leading-relaxed">Our mission is to help students and parents choose practical courses with clear information. We explain course fit, fees, timing, support, and realistic next steps before enrollment.</p>
@@ -47,7 +47,7 @@
                         <p class="mb-4 extra-small text-zinc-600 leading-relaxed">At Golden Eye Academy, we want learners in Pokhara to get practical preparation for study, work, language, and computer needs without pressure or confusion.</p>
 
                         <h3 class="h4 mb-3 font-black text-brand-dark uppercase tracking-tight">Our History</h3>
-                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">Golden Eye Academy was established in 2008 in Pokhara. Over the years, students and parents have visited us for IELTS/PTE preparation, language classes, computer skills, office skills, web development, IT classes, and academic support.</p>
+                        <p class="mb-4 extra-small text-zinc-600 leading-relaxed">The academy's current course pages cover IELTS/PTE preparation, language classes, computer skills, office skills, web development, IT classes, and academic support. Check the published details and contact the academy with questions.</p>
                     @endif
                 </div>
             </div>

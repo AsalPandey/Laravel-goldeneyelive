@@ -36,7 +36,7 @@ class PublicAudienceLandingPageTest extends TestCase
             ],
             [
                 'route' => 'job-computer-skills',
-                'headline' => 'Want practical computer or job-ready skills?',
+                'headline' => 'Want practical computer or workplace skills?',
                 'source_page' => 'job_computer_skills',
                 'audience_type' => 'job_skill_learner',
                 'inquiry_intent' => 'computer_skill_guidance',

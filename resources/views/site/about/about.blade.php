@@ -1,6 +1,6 @@
 @extends('site.layout.app')
 @section('page_title', ($settings['about_header_title'] ?? 'About Golden Eye Academy') . ' - ' . \App\Support\StructuredData::siteName($settings ?? []))
-@section('meta_description', $settings['meta_description'] ?? 'Learn about Golden Eye Academy, an established academy serving Pokhara learners since 2008 through practical classes and academic support.')
+@section('meta_description', $settings['meta_description'] ?? 'Learn about Golden Eye Academy and its language, test preparation, computer, office, web development, and IT classes in Pokhara.')
 
 @section('schema_markup')
     {{-- Person Schema for Teachers (AEO/GEO) --}}
@@ -39,7 +39,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
                     <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter mb-4" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['about_header_title'] ?? 'About Golden Eye Academy' }}</h1>
-                    <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 11px;">Est. 2008</p>
+                    <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 11px;">{{ $settings['logo_subtitle'] ?? 'Pokhara, Nepal' }}</p>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center mb-0">
                             <li class="breadcrumb-item"><a class="text-white opacity-50" href="{{ route('home') }}">Home</a></li>
@@ -62,7 +62,7 @@
                             <i class="fa fa-graduation-cap fs-6"></i>
                         </div>
                         <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_1_title'] ?? 'Enrollment Support' }}</h6>
-                        <p class="extra-small text-zinc-500 mb-0">{{ $settings['about_feat_1_desc'] ?? 'Understand course fit, timing, fees, and support before you enroll.' }}</p>
+                        <p class="extra-small text-zinc-500 mb-0">{{ $settings['about_feat_1_desc'] ?? 'Ask about course fit, current timing, fees, and support before enrollment.' }}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
@@ -71,7 +71,7 @@
                             <i class="fa fa-globe fa-lg"></i>
                         </div>
                         <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_2_title'] ?? 'Practical Learning' }}</h6>
-                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_2_desc'] ?? 'Mock tests, assignments, projects, and feedback where each course requires it.' }}</p>
+                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_2_desc'] ?? 'Review each course description and outline to understand its listed learning areas.' }}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
@@ -88,8 +88,8 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-award fa-lg"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_4_title'] ?? 'Follow-Up Support' }}</h6>
-                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_4_desc'] ?? 'The team stays available for questions after the first inquiry.' }}</p>
+                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_4_title'] ?? 'Current Information' }}</h6>
+                        <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_4_desc'] ?? 'Confirm current batches, availability, and instructor details before enrollment.' }}</p>
                     </div>
                 </div>
             </div>
@@ -115,13 +115,13 @@
                     <div class="mb-5 text-zinc-600 leading-relaxed fs-6 border-start-4 border-brand-gold/20 ps-4 italic">
                         @sanitize(filled($settings['about_page_content'] ?? null)
                             ? $settings['about_page_content']
-                            : ($settings['about_content'] ?? 'Established in 2008, Golden Eye Academy supports learners with practical classes, clear timing and fee discussions, experienced faculty, and realistic next steps.'))
+                            : ($settings['about_content'] ?? 'Review the course focus, fee, duration, outline, and available instructor information, then ask the academy to confirm the current schedule and support.'))
                     </div>
                     <div class="row gy-3 gx-4 mb-5">
-                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_1'] ?? 'Experienced Teachers' }}</p></div>
-                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_2'] ?? '100% Practical Learning' }}</p></div>
-                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_3'] ?? 'Career Direction Support' }}</p></div>
-                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_4'] ?? 'Est. 2008 - 15+ Years' }}</p></div>
+                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_1'] ?? 'Academic support before enrollment' }}</p></div>
+                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_2'] ?? 'Language, test prep, IT, and office skills' }}</p></div>
+                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_3'] ?? 'Support for students, parents, and learners' }}</p></div>
+                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_4'] ?? 'Current details confirmed before enrollment' }}</p></div>
                     </div>
                     <a class="btn btn-primary py-3 px-6 rounded-xl shadow-xl font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 11px;" href="{{ route('courses-all') }}">
                         View Course Details <i class="fas fa-arrow-right ms-2"></i>
@@ -159,22 +159,22 @@
                                 <tbody>
                                     <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50">
                                         <td class="py-4 ps-5 fw-bold text-zinc-700 small">What students learn</td>
-                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Lessons, practice work, and weekly progress</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Published course description and outline</td>
                                         <td class="py-4 text-center text-zinc-500 small">Ask for the course outline</td>
                                     </tr>
                                     <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50 bg-zinc-50/50">
                                         <td class="py-4 ps-5 fw-bold text-zinc-700 small">Batch timing and seat fit</td>
-                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Morning, day, and evening options when available</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> {{ $settings['course_confirmation_note'] ?? 'Confirm current batch timing, seat availability, and instructor details with the academy before enrollment.' }}</td>
                                         <td class="py-4 text-center text-zinc-500 small">Ask current batch size and timing</td>
                                     </tr>
                                     <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50">
                                         <td class="py-4 ps-5 fw-bold text-zinc-700 small">Who teaches it</td>
-                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Instructor profile and subject fit</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Stored instructor name and any matched active profile</td>
                                         <td class="py-4 text-center text-zinc-500 small">Ask who will teach your batch</td>
                                     </tr>
                                     <tr class="transition-all hover:bg-zinc-50 bg-zinc-50/50">
                                         <td class="py-4 ps-5 fw-bold text-zinc-700 small">What is not guaranteed</td>
-                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Realistic outcomes and next steps</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Limits and details to confirm</td>
                                         <td class="py-4 text-center text-zinc-500 small">Ask what depends on student practice</td>
                                     </tr>
                                 </tbody>

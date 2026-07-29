@@ -88,6 +88,7 @@ class BrandingController extends Controller
         'contact_header_title',
         'contact_page_content',
         'contact_success_message',
+        'course_confirmation_note',
         'courses_all_tagline',
         'courses_all_title',
         'courses_header_title',

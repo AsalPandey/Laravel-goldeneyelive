@@ -26,7 +26,7 @@ class BrandVoiceContentTest extends TestCase
         $html = $this->get(route('home'))
             ->assertOk()
             ->assertSee('Golden Eye Academy', false)
-            ->assertSee('Established academy in Pokhara since 2008', false)
+            ->assertSee('Practical courses and classes in Pokhara.', false)
             ->assertDontSee('Study Abroad, Language &amp; Computer Courses in Pokhara', false)
             ->assertDontSee('GoldenEye Academy', false)
             ->getContent();

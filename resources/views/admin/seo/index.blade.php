@@ -58,7 +58,7 @@
                     <div class="space-y-6">
                         <div>
                             <label class="premium-label">Global Meta Title</label>
-                            <input type="text" name="meta_title" value="{{ $settings['meta_title'] ?? '' }}" class="premium-input @error('meta_title') border-rose-500 @enderror" placeholder="Golden Eye Academy | Established Academy in Pokhara Since 2008">
+                            <input type="text" name="meta_title" value="{{ $settings['meta_title'] ?? '' }}" class="premium-input @error('meta_title') border-rose-500 @enderror" placeholder="Golden Eye Academy | Courses and Classes in Pokhara">
                             @error('meta_title') <p class="text-rose-500 text-[10px] mt-1 font-bold uppercase">{{ $message }}</p> @enderror
                         </div>
                         <div>
@@ -86,7 +86,7 @@
                     <div class="space-y-6">
                         <div>
                             <label class="premium-label">Global AI/AEO Brief</label>
-                            <textarea name="aeo_summary" rows="4" class="premium-input" placeholder="Golden Eye Academy is an established academy in Pokhara since 2008, offering IELTS/PTE, language, computer, office, web development, and IT classes.">{{ $settings['aeo_summary'] ?? '' }}</textarea>
+                            <textarea name="aeo_summary" rows="4" class="premium-input" placeholder="Golden Eye Academy in Pokhara provides IELTS/PTE, language, computer, office, web development, and IT classes.">{{ $settings['aeo_summary'] ?? '' }}</textarea>
                         </div>
                         <div>
                             <label class="premium-label">Speakable Selectors (CSS)</label>

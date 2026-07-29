@@ -99,6 +99,7 @@ class BrandingRequest extends FormRequest
             'faq_btn_text' => ['nullable', 'string', 'max:50'],
             'faq_btn_text_expanded' => ['nullable', 'string', 'max:50'],
             'footer_about_text' => ['nullable', 'string', 'max:1000'],
+            'course_confirmation_note' => ['nullable', 'string', 'max:500'],
             'popup_register_link' => ['nullable', 'string', 'max:500', PublicCtaContract::publicUrlRule()],
 
             // Image paths (vault selection)

@@ -216,7 +216,12 @@
                             </div>
                             <div>
                                 <label class="premium-label">Testimonials Title</label>
-                                <input type="text" name="testimonials_title" value="{{ $settings['testimonials_title'] ?? 'Join 5,000+ Success Stories' }}" class="premium-input">
+                                <input type="text" name="testimonials_title" value="{{ $settings['testimonials_title'] ?? 'Published Student Feedback' }}" class="premium-input">
+                            </div>
+                            <div>
+                                <label class="premium-label" for="course_confirmation_note">Course Detail Confirmation Note</label>
+                                <textarea id="course_confirmation_note" name="course_confirmation_note" rows="3" class="premium-input h-auto py-3">{{ old('course_confirmation_note', $settings['course_confirmation_note'] ?? 'Confirm current batch timing, seat availability, and instructor details with the academy before enrollment.') }}</textarea>
+                                <p class="helper-text">Shown where a course does not store a live schedule or availability value.</p>
                             </div>
                         </div>
                     </div>

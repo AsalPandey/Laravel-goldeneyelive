@@ -50,7 +50,12 @@ class SiteController extends Controller
                 ->limit(6)
                 ->get(),
             'teachers' => Teacher::where('status', 'active')->orderByDesc('is_featured')->latest()->limit(4)->get(),
-            'testimonials' => Testimonial::where('status', 'active')->orderByDesc('is_featured')->latest()->limit(6)->get(),
+            'testimonials' => Testimonial::where('status', 'active')
+                ->whereIn('course_name', Course::publiclyVisible()->select('name'))
+                ->orderByDesc('is_featured')
+                ->latest()
+                ->limit(6)
+                ->get(),
             'posts' => BlogPost::publiclyVisible()->latest('published_at')->limit(3)->get(),
             'servicePillars' => ServicePillar::active()->ordered()->get(),
             'faqs' => FAQ::where('status', 'active')
