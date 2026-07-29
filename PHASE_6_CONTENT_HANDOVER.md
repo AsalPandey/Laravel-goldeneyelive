@@ -52,6 +52,7 @@ Apply only owner-approved rows. Use a Staff account for ordinary content fields 
 | FAQ | `Are flexible class timings available?` | Current scheduling question | Conditional Phase 6 answer | Schedules change | Staff | FAQ | Confirm no fixed morning/day/evening claim remains |
 | FAQ | `Do you run events and workshops?` | Current event availability | Check notices or contact academy | Event schedules change | Staff | FAQ | Confirm current notice, if any, is separate from the FAQ |
 | FAQ | `Can I visit before enrollment?` | Visit planning | Contact before travelling to confirm opening time | Opening hours need owner verification | Staff | FAQ | Confirm contact actions still work |
+| Blog | `parents-guide-how-to-evaluate-a-training-institute` | Existing parent guide with a protected legacy URL | Keep the slug unchanged; use `Parents Guide: How to Evaluate an Academy` as the title and use “academy” throughout the article body | Remove outdated public terminology without breaking the existing URL | Staff | Parent-guide blog detail | Preview the article, confirm the visible title/body use “academy,” and confirm the public URL still uses the legacy slug |
 | Blog | Eight existing slugs listed below | Published educational guides | Use the expanded Phase 6 baseline only after Staff review | Improve structure without inventing academy facts | Staff | Blog index/detail | Preview each article, then update without changing slug or status |
 | Marketing Tools | Main Campaign Popup | Current academy campaign | No automatic replacement | Staff must select the active campaign | Staff | Site-wide popup | Test close, destination, image, and mobile layout |
 | Notices | Active popup notice | Current short campaign | No automatic replacement | Notice and main popup are independent | Staff | Site-wide popup notice | Confirm only the intended active popup notice appears |
@@ -71,6 +72,7 @@ The following slugs and `published` statuses are preserved:
 8. `why-you-should-ask-before-enrollment`
 
 Staff must preview each revised article before manually replacing live content. Do not change a live slug while applying the copy.
+The seventh slug is intentionally retained as a legacy public URL even though its visible title and article wording use “academy.”
 
 ## Owner-information register
 
