@@ -7,6 +7,8 @@ use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\FAQ;
 use App\Models\SiteSetting;
+use DOMDocument;
+use DOMXPath;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -31,40 +33,49 @@ class SeoLaunchFixTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('/^Disallow:\s*\/\s*$/mi', $content);
     }
 
-    public function test_faq_page_normalizes_stale_dynamic_button_text_without_removing_cms_control(): void
+    public function test_faq_page_renders_the_cms_label_inside_the_reveal_button(): void
     {
         cache()->flush();
 
         SiteSetting::create([
             'key' => 'faq_btn_text',
-            'value' => 'Ask for Course Guidance',
+            'value' => 'Load Every Remaining Answer',
             'type' => 'text',
         ]);
 
         FAQ::factory()->count(11)->create(['status' => 'active']);
 
-        $this->get(route('faq'))
-            ->assertOk()
-            ->assertSee('Ask for Course Help', false)
-            ->assertDontSee('Ask for Course Guidance', false);
+        $html = $this->get(route('faq'))->assertOk()->getContent();
+        $document = new DOMDocument;
+        @$document->loadHTML($html);
+        $xpath = new DOMXPath($document);
+        $button = $xpath->query('//*[@id="readMoreBtn"]')->item(0);
+
+        $this->assertNotNull($button);
+        $this->assertSame(
+            'Load Every Remaining Answer',
+            trim($xpath->query('./span', $button)->item(0)?->textContent ?? ''),
+        );
     }
 
-    public function test_normalize_public_settings_command_cleans_faq_button_text(): void
+    public function test_normalize_public_settings_command_preserves_staff_managed_faq_labels(): void
     {
-        SiteSetting::create([
-            'key' => 'faq_btn_text',
-            'value' => 'Ask for Course Guidance',
-            'type' => 'text',
+        SiteSetting::insert([
+            ['key' => 'faq_btn_text', 'value' => 'Load More Answers', 'type' => 'text'],
+            ['key' => 'faq_btn_text_expanded', 'value' => 'Show Fewer Answers', 'type' => 'text'],
         ]);
 
         $this->artisan('goldeneye:normalize-public-settings')
-            ->expectsOutputToContain('faq_btn_text')
-            ->expectsOutputToContain('Total changes: 1')
+            ->expectsOutputToContain('Total changes: 0')
             ->assertExitCode(0);
 
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'faq_btn_text',
-            'value' => 'Ask for Course Help',
+            'value' => 'Load More Answers',
+        ]);
+        $this->assertDatabaseHas(SiteSetting::class, [
+            'key' => 'faq_btn_text_expanded',
+            'value' => 'Show Fewer Answers',
         ]);
     }
 

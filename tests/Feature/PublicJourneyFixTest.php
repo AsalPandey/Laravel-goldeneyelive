@@ -119,19 +119,93 @@ class PublicJourneyFixTest extends TestCase
         $this->assertStringNotContainsString('.whatsapp-btn-container.is-hidden-over-hero', $css);
     }
 
-    public function test_faq_reveal_control_has_accurate_state_and_keyboard_native_markup(): void
+    public function test_faq_reveal_control_uses_cms_labels_and_accessible_native_button_markup(): void
     {
+        SiteSetting::insert([
+            [
+                'key' => 'faq_btn_text',
+                'value' => 'Reveal the Remaining Answers',
+                'type' => 'text',
+            ],
+            [
+                'key' => 'faq_btn_text_expanded',
+                'value' => 'Hide the Additional Answers',
+                'type' => 'text',
+            ],
+        ]);
         FAQ::factory()->count(12)->create(['status' => 'active']);
         cache()->forget('site_shared_data');
 
-        $this->get(route('faq'))
+        $response = $this->get(route('faq'))
             ->assertOk()
             ->assertSee('id="additionalFaqs" hidden', false)
-            ->assertSee('id="readMoreBtn" type="button" aria-expanded="false" aria-controls="additionalFaqs"', false)
-            ->assertSee('<span>Show More FAQs</span>', false)
-            ->assertSee('Show Fewer FAQs', false)
             ->assertSee('readMoreButton.addEventListener(\'click\'', false)
+            ->assertSee('expanded ? expandedLabel : collapsedLabel', false)
             ->assertDontSee('onclick="toggleFAQs()"', false);
+
+        $xpath = $this->xpath($response->getContent());
+        $button = $xpath->query('//*[@id="readMoreBtn"]')->item(0);
+
+        $this->assertNotNull($button);
+        $this->assertSame('button', $button->nodeName);
+        $this->assertSame('false', $button->attributes->getNamedItem('aria-expanded')?->nodeValue);
+        $this->assertSame('additionalFaqs', $button->attributes->getNamedItem('aria-controls')?->nodeValue);
+        $this->assertSame('Reveal the Remaining Answers', $button->attributes->getNamedItem('data-collapsed-label')?->nodeValue);
+        $this->assertSame('Hide the Additional Answers', $button->attributes->getNamedItem('data-expanded-label')?->nodeValue);
+        $this->assertSame('Reveal the Remaining Answers', trim($xpath->query('./span', $button)->item(0)?->textContent ?? ''));
+    }
+
+    public function test_faq_reveal_control_uses_safe_defaults_when_cms_labels_are_empty(): void
+    {
+        SiteSetting::insert([
+            ['key' => 'faq_btn_text', 'value' => '', 'type' => 'text'],
+            ['key' => 'faq_btn_text_expanded', 'value' => '', 'type' => 'text'],
+        ]);
+        FAQ::factory()->count(11)->create(['status' => 'active']);
+        cache()->forget('site_shared_data');
+
+        $xpath = $this->xpath($this->get(route('faq'))->assertOk()->getContent());
+        $button = $xpath->query('//*[@id="readMoreBtn"]')->item(0);
+
+        $this->assertNotNull($button);
+        $this->assertSame('Show More FAQs', $button->attributes->getNamedItem('data-collapsed-label')?->nodeValue);
+        $this->assertSame('Show Fewer FAQs', $button->attributes->getNamedItem('data-expanded-label')?->nodeValue);
+        $this->assertSame('Show More FAQs', trim($xpath->query('./span', $button)->item(0)?->textContent ?? ''));
+    }
+
+    public function test_faq_reveal_labels_do_not_change_public_status_or_priority_ordering(): void
+    {
+        FAQ::factory()->create([
+            'question' => 'First visible priority question',
+            'status' => 'active',
+            'order_priority' => 1,
+        ]);
+        FAQ::factory()->create([
+            'question' => 'Second visible priority question',
+            'status' => 'active',
+            'order_priority' => 2,
+        ]);
+        FAQ::factory()->count(9)->create([
+            'status' => 'active',
+            'order_priority' => 10,
+        ]);
+        FAQ::factory()->create([
+            'question' => 'Inactive private question',
+            'status' => 'inactive',
+            'order_priority' => 0,
+        ]);
+
+        $response = $this->get(route('faq'))
+            ->assertOk()
+            ->assertSee('First visible priority question')
+            ->assertSee('Second visible priority question')
+            ->assertDontSee('Inactive private question');
+        $html = $response->getContent();
+
+        $this->assertLessThan(
+            strpos($html, 'Second visible priority question'),
+            strpos($html, 'First visible priority question'),
+        );
     }
 
     public function test_404_has_one_heading_an_accurate_title_and_recovery_actions(): void

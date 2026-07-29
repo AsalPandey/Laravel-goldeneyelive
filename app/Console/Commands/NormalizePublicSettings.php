@@ -24,7 +24,6 @@ class NormalizePublicSettings extends Command
         'popup_button_text' => 'help',
         'sticky_cta_text' => 'help',
         'blog_cta_btn' => 'help',
-        'faq_btn_text' => 'help',
         'hero_cta_2_text' => 'course',
         'whatsapp_cta_text' => 'whatsapp',
         'whatsapp_button_text' => 'whatsapp',

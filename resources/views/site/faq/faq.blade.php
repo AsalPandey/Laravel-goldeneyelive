@@ -11,6 +11,12 @@
             'source_section' => 'faq-lead-block',
             'inquiry_intent' => 'course_guidance',
         ]);
+        $faqButtonText = filled($settings['faq_btn_text'] ?? null)
+            ? trim((string) $settings['faq_btn_text'])
+            : 'Show More FAQs';
+        $faqButtonTextExpanded = filled($settings['faq_btn_text_expanded'] ?? null)
+            ? trim((string) $settings['faq_btn_text_expanded'])
+            : 'Show Fewer FAQs';
     @endphp
 
     {{-- Advanced FAQ Schema for AEO --}}
@@ -108,9 +114,9 @@
 
                     @if (is_countable($faqs) && count($faqs) > 10)
                         <div class="flex justify-center mt-10">
-                            <button id="readMoreBtn" type="button" aria-expanded="false" aria-controls="additionalFaqs" class="btn btn-primary px-5 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-all" style="font-size: 11px;">
+                            <button id="readMoreBtn" type="button" aria-expanded="false" aria-controls="additionalFaqs" data-collapsed-label="{{ $faqButtonText }}" data-expanded-label="{{ $faqButtonTextExpanded }}" class="btn btn-primary px-5 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-all" style="font-size: 11px;">
                                 <i class="fa fa-chevron-down me-2" aria-hidden="true"></i>
-                                <span>Show More FAQs</span>
+                                <span>{{ $faqButtonText }}</span>
                             </button>
                         </div>
                     @endif
@@ -139,6 +145,8 @@
         document.addEventListener("DOMContentLoaded", function() {
             const additionalFaqs = document.getElementById('additionalFaqs');
             const readMoreButton = document.getElementById('readMoreBtn');
+            const collapsedLabel = readMoreButton?.dataset.collapsedLabel || 'Show More FAQs';
+            const expandedLabel = readMoreButton?.dataset.expandedLabel || 'Show Fewer FAQs';
 
             const setAdditionalFaqsExpanded = function (expanded, returnToList = false) {
                 if (!additionalFaqs || !readMoreButton) {
@@ -147,7 +155,7 @@
 
                 additionalFaqs.hidden = !expanded;
                 readMoreButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-                readMoreButton.querySelector('span').textContent = expanded ? 'Show Fewer FAQs' : 'Show More FAQs';
+                readMoreButton.querySelector('span').textContent = expanded ? expandedLabel : collapsedLabel;
                 readMoreButton.classList.toggle('active', expanded);
 
                 if (!expanded && returnToList) {

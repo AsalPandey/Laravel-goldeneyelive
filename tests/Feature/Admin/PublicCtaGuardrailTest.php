@@ -36,7 +36,8 @@ class PublicCtaGuardrailTest extends TestCase
                 'popup_button_text' => '',
                 'sticky_cta_text' => 'Book Free Counseling',
                 'blog_cta_btn' => 'Ask What Fits Me',
-                'faq_btn_text' => 'Contact Us',
+                'faq_btn_text' => 'Reveal More Answers',
+                'faq_btn_text_expanded' => 'Hide Additional Answers',
                 'whatsapp_cta_text' => 'Message us on WhatsApp',
                 'whatsapp_button_text' => 'WhatsApp',
                 'whatsapp_number' => '98 0000 0000',
@@ -57,11 +58,24 @@ class PublicCtaGuardrailTest extends TestCase
         ]);
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'faq_btn_text',
-            'value' => 'Ask for Course Help',
+            'value' => 'Reveal More Answers',
+        ]);
+        $this->assertDatabaseHas(SiteSetting::class, [
+            'key' => 'faq_btn_text_expanded',
+            'value' => 'Hide Additional Answers',
         ]);
         $this->assertDatabaseMissing(SiteSetting::class, [
             'value' => 'Ask for Course Guidance',
         ]);
+    }
+
+    public function test_branding_hub_exposes_both_faq_reveal_label_fields(): void
+    {
+        $this->actingAs($this->admin)
+            ->get(route('admin.branding.index'))
+            ->assertOk()
+            ->assertSee('name="faq_btn_text"', false)
+            ->assertSee('name="faq_btn_text_expanded"', false);
     }
 
     public function test_whatsapp_number_is_rejected_when_invalid_and_canonicalized_when_valid(): void

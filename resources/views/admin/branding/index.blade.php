@@ -534,6 +534,16 @@
                         <div class="border rounded-2xl overflow-hidden">
                             <textarea name="faq_page_content" id="editor_faq" class="w-full min-h-[300px]">{{ $settings['faq_page_content'] ?? '' }}</textarea>
                         </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                            <div>
+                                <label class="premium-label">Collapsed FAQ Button Text</label>
+                                <input type="text" name="faq_btn_text" value="{{ $settings['faq_btn_text'] ?? 'Show More FAQs' }}" class="premium-input" placeholder="Show More FAQs">
+                            </div>
+                            <div>
+                                <label class="premium-label">Expanded FAQ Button Text</label>
+                                <input type="text" name="faq_btn_text_expanded" value="{{ $settings['faq_btn_text_expanded'] ?? 'Show Fewer FAQs' }}" class="premium-input" placeholder="Show Fewer FAQs">
+                            </div>
+                        </div>
                     </div>
                 </div>
 

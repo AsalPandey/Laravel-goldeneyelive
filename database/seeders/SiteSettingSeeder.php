@@ -154,7 +154,8 @@ class SiteSettingSeeder extends Seeder
 
             'faq_header_title' => ['Frequently Asked Questions', 'text'],
             'faq_lead_title' => ['Need class information before enrollment?', 'text'],
-            'faq_btn_text' => ['Ask for Course Help', 'text'],
+            'faq_btn_text' => ['Show More FAQs', 'text'],
+            'faq_btn_text_expanded' => ['Show Fewer FAQs', 'text'],
             'faq_page_content' => ['<h2>Frequently Asked Questions</h2><p>Use these answers to understand courses, class timing, certificates, academic support, and enrollment. If you are unsure, send a quick course-help request.</p>', 'text'],
             'contact_header_title' => ['Contact Golden Eye Academy', 'text'],
             'contact_page_content' => ['<h3>Message our academy team</h3><p>Share your current class interest and goal. We will explain suitable courses, batch options, and enrollment support.</p>', 'text'],

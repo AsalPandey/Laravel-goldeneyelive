@@ -76,6 +76,7 @@ class BrandingRequest extends FormRequest
             'sticky_cta_text' => ['nullable', 'string', 'max:50'],
             'blog_cta_btn' => ['nullable', 'string', 'max:50'],
             'faq_btn_text' => ['nullable', 'string', 'max:50'],
+            'faq_btn_text_expanded' => ['nullable', 'string', 'max:50'],
             'popup_register_link' => ['nullable', 'string', 'max:500', PublicCtaContract::publicUrlRule()],
 
             // Image paths (vault selection)

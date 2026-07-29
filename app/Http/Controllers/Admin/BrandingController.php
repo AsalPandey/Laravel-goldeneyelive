@@ -93,6 +93,7 @@ class BrandingController extends Controller
         'enroll_success_message',
         'facebook_url',
         'faq_btn_text',
+        'faq_btn_text_expanded',
         'faq_header_title',
         'faq_lead_title',
         'faq_page_content',
