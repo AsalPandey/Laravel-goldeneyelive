@@ -22,13 +22,16 @@
                     <div>
                         <label class="premium-label">Publication Status</label>
                         <select name="status" required class="premium-input cursor-pointer">
-                            <option value="active" {{ $faq->status === 'active' ? 'selected' : '' }}>PUBLISHED (Live on Website)</option>
-                            <option value="inactive" {{ $faq->status === 'inactive' ? 'selected' : '' }}>ARCHIVED (Internal Only)</option>
+                            <option value="active" {{ old('status', $faq->status) === 'active' ? 'selected' : '' }}>PUBLISHED (Live on Website)</option>
+                            <option value="inactive" {{ old('status', $faq->status) === 'inactive' ? 'selected' : '' }}>ARCHIVED (Internal Only)</option>
                         </select>
+                        @error('status') <p class="mt-1 text-xs text-red-600 font-bold italic">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="premium-label">Display Priority (Higher = Top)</label>
-                        <input type="number" name="order_priority" value="{{ old('order_priority', $faq->order_priority) }}" class="premium-input" placeholder="0">
+                        <label class="premium-label">Display Order</label>
+                        <input type="number" min="0" name="order_priority" value="{{ old('order_priority', $faq->order_priority) }}" class="premium-input" placeholder="0">
+                        <p class="mt-1 text-xs text-neutral-500">Lower numbers appear first in Admin and on the public FAQ page.</p>
+                        @error('order_priority') <p class="mt-1 text-xs text-red-600 font-bold italic">{{ $message }}</p> @enderror
                     </div>
                 </div>
 

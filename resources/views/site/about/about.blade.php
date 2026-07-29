@@ -113,7 +113,9 @@
                     </div>
                     <h2 class="h3 fw-black text-brand-dark mb-4 uppercase tracking-tighter">{{ $settings['about_content_title'] ?? 'Welcome to Golden Eye Academy' }}</h2>
                     <div class="mb-5 text-zinc-600 leading-relaxed fs-6 border-start-4 border-brand-gold/20 ps-4 italic">
-                        @sanitize($settings['about_content'] ?? 'Established in 2008, Golden Eye Academy supports learners with practical classes, clear timing and fee discussions, experienced faculty, and realistic next steps.')
+                        @sanitize(filled($settings['about_page_content'] ?? null)
+                            ? $settings['about_page_content']
+                            : ($settings['about_content'] ?? 'Established in 2008, Golden Eye Academy supports learners with practical classes, clear timing and fee discussions, experienced faculty, and realistic next steps.'))
                     </div>
                     <div class="row gy-3 gx-4 mb-5">
                         <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_1'] ?? 'Experienced Teachers' }}</p></div>

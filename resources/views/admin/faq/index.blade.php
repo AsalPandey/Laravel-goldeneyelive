@@ -54,7 +54,7 @@
                         </td>
                         <td class="px-6 py-5">
                             <div class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider {{ $faq->order_priority > 0 ? 'bg-blue-50 text-blue-700' : 'bg-neutral-50 text-neutral-500' }}">
-                                Weight: {{ $faq->order_priority }}
+                                Display order: {{ $faq->order_priority }}
                             </div>
                         </td>
                         <td class="px-6 py-5">

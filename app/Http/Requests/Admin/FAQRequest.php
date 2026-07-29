@@ -11,7 +11,7 @@ class FAQRequest extends CMSRequest
             'answer' => ['required', 'string'],
             'category' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'in:active,inactive'],
-            'order_priority' => ['nullable', 'integer'],
+            'order_priority' => ['nullable', 'integer', 'min:0'],
         ]);
     }
 }

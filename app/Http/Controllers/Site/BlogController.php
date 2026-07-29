@@ -9,17 +9,17 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = BlogPost::where('status', 'published')->whereNotNull('slug')->latest()->paginate(9);
+        $posts = BlogPost::publiclyVisible()->latest('published_at')->paginate(9);
 
         return view('site.blog.index', compact('posts'));
     }
 
     public function show($slug)
     {
-        $post = BlogPost::where('slug', $slug)->where('status', 'published')->firstOrFail();
-        $recentPosts = BlogPost::where('status', 'published')
+        $post = BlogPost::publiclyVisible()->where('slug', $slug)->firstOrFail();
+        $recentPosts = BlogPost::publiclyVisible()
             ->where('id', '!=', $post->id)
-            ->latest()
+            ->latest('published_at')
             ->limit(3)
             ->get();
 

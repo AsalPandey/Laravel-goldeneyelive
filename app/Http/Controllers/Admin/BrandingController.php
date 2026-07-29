@@ -187,10 +187,10 @@ class BrandingController extends Controller
      * Settings that only Admins can modify (Security & SEO Infrastructure)
      */
     const SENSITIVE_KEYS = [
-        'google_analytics_id', 'google_maps_embed', 'google_search_console_id',
+        'bing_webmaster_id', 'google_analytics_id', 'google_maps_embed', 'google_search_console_id',
         'recaptcha_site_key', 'recaptcha_secret_key', 'robots_txt',
         'image_size_limit', 'geo_latitude', 'geo_longitude',
-        'schema_markup', 'aeo_summary', 'site_name', 'site_name_suffix',
+        'schema_markup', 'aeo_summary', 'site_name', 'site_name_suffix', 'speakable_selectors',
     ];
 
     /**
@@ -263,25 +263,22 @@ class BrandingController extends Controller
         // Validation handled by BrandingRequest
         $validated = $request->validated();
 
-        $textKeys = self::TEXT_KEYS;
-
-        if ($isAdmin) {
-            $textKeys = array_merge($textKeys, [
-                'recaptcha_site_key', 'recaptcha_secret_key',
-            ]);
-        }
+        $textKeys = array_values(array_filter(
+            self::TEXT_KEYS,
+            fn (string $key): bool => $isAdmin || ! in_array($key, self::SENSITIVE_KEYS, true),
+        ));
 
         // Optimize: Batch prepare text settings
         $settingsData = [];
         foreach ($textKeys as $key) {
-            if ($request->has($key)) {
+            if (array_key_exists($key, $validated)) {
                 // Security Check: Skip sensitive keys for non-admins
-                if (! $isAdmin && in_array($key, self::SENSITIVE_KEYS)) {
+                if (! $isAdmin && in_array($key, self::SENSITIVE_KEYS, true)) {
                     continue;
                 }
 
                 // Sanitize Google Maps: Extract src if user pastes full iframe
-                $value = $request->input($key) ?? '';
+                $value = $validated[$key] ?? '';
                 if ($key === 'google_maps_embed' && str_contains($value, '<iframe')) {
                     preg_match('/src=["\']([^"\']+)["\']/', $value, $match);
                     $value = $match[1] ?? $value;
@@ -312,8 +309,8 @@ class BrandingController extends Controller
                     'value' => $this->uploadAsset($request->file($imageKey)),
                     'type' => 'image',
                 ];
-            } elseif ($request->filled($pathKey)) {
-                $path = ltrim($request->input($pathKey), '/');
+            } elseif (filled($validated[$pathKey] ?? null)) {
+                $path = ltrim($validated[$pathKey], '/');
                 // Ensure manual paths start with site/img/ if they are intended to be local
                 if (! str_starts_with($path, 'http') && ! str_starts_with($path, 'site/')) {
                     $path = 'site/img/'.$path;
@@ -361,7 +358,7 @@ class BrandingController extends Controller
             'keys_updated' => array_keys($validated),
         ]);
 
-        Alert::success('Branding Updated', 'Website branding and settings have been synchronized successfully.');
+        Alert::success('Website Content Updated', 'Public website content and settings were saved successfully.');
 
         return back();
     }
@@ -376,6 +373,8 @@ class BrandingController extends Controller
         $file = $request->file('image');
 
         if ($request->has('replace_path') && $request->replace_path) {
+            abort_unless(auth()->user()->hasRole('Admin'), 403);
+
             $newPath = $this->uploadAsset($file, 'site/img', $request->replace_path);
 
             // Synchronize: Update all settings and models that were using this old asset path

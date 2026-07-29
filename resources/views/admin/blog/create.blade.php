@@ -38,9 +38,16 @@
                     <div>
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Status</label>
                         <select name="status" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
-                            <option value="draft">Draft</option>
-                            <option value="published">Published</option>
+                            <option value="draft" {{ old('status', 'draft') === 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>Published</option>
                         </select>
+                        @error('status') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Publish Date & Time</label>
+                        <input type="datetime-local" name="published_at" value="{{ old('published_at') }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        <p class="mt-1 text-xs text-neutral-500">Leave blank for immediate publication. A future time schedules the article (website timezone: {{ config('app.timezone') }}).</p>
+                        @error('published_at') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
 

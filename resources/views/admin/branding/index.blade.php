@@ -41,12 +41,12 @@
         {{-- Authority Header --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-zinc-100">
             <div>
-                <h1 class="text-4xl font-black text-zinc-900 tracking-tighter uppercase leading-none">Branding <span class="text-brand-gold">Authority</span></h1>
-                <p class="text-zinc-500 text-sm mt-3 font-medium">Simplify how you manage the academy's core identity, visuals, and global settings.</p>
+                <h1 class="text-4xl font-black text-zinc-900 tracking-tighter uppercase leading-none">Website <span class="text-brand-gold">Content</span></h1>
+                <p class="text-zinc-500 text-sm mt-3 font-medium">Manage the academy's public content, contact details, visuals, and campaign settings.</p>
             </div>
             <div class="flex flex-wrap items-center gap-4">
                 <a href="{{ route('home') }}" target="_blank" class="px-6 py-3 bg-zinc-100 text-zinc-600 rounded-2xl font-black text-xs uppercase hover:bg-zinc-200 transition-all">Live Preview</a>
-                <button form="brandingForm" type="submit" class="px-10 py-3 bg-brand-dark text-brand-gold rounded-2xl font-black text-xs uppercase shadow-2xl hover:bg-brand-gold hover:text-brand-dark transition-all transform active:scale-95">Deploy Brand Update</button>
+                <button form="brandingForm" type="submit" class="px-10 py-3 bg-brand-dark text-brand-gold rounded-2xl font-black text-xs uppercase shadow-2xl hover:bg-brand-gold hover:text-brand-dark transition-all transform active:scale-95">Save Website Content</button>
             </div>
         </div>
 
@@ -54,7 +54,7 @@
         <div class="brand-hub-tabs flex gap-10 border-b border-zinc-100 overflow-x-auto no-scrollbar">
             <button onclick="switchTab('visuals')" id="tabBtn-visuals" class="active pb-5 px-2 text-xs font-black uppercase tracking-[2px] whitespace-nowrap transition-all">Core Visuals</button>
             <button onclick="switchTab('contact')" id="tabBtn-contact" class="pb-5 px-2 text-xs font-black uppercase tracking-[2px] whitespace-nowrap transition-all">Contact & Socials</button>
-            <button onclick="switchTab('content')" id="tabBtn-content" class="pb-5 px-2 text-xs font-black uppercase tracking-[2px] whitespace-nowrap transition-all">Page Builder</button>
+            <button onclick="switchTab('content')" id="tabBtn-content" class="pb-5 px-2 text-xs font-black uppercase tracking-[2px] whitespace-nowrap transition-all">Page Content</button>
             <button onclick="switchTab('marketing')" id="tabBtn-marketing" class="pb-5 px-2 text-xs font-black uppercase tracking-[2px] whitespace-nowrap transition-all">Marketing Tools</button>
             <button onclick="switchTab('vault')" id="tabBtn-vault" class="pb-5 px-2 text-xs font-black uppercase tracking-[2px] whitespace-nowrap transition-all">Media Library</button>
         </div>
@@ -100,6 +100,17 @@
 
         <form id="brandingForm" action="{{ route('admin.branding.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
+
+            @if($errors->any())
+                <div class="mb-8 rounded-2xl border border-red-200 bg-red-50 p-5 text-red-800" role="alert">
+                    <p class="text-xs font-black uppercase tracking-widest">Please correct the following fields:</p>
+                    <ul class="mt-3 list-disc space-y-1 pl-5 text-sm">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             {{-- TAB: CORE VISUALS --}}
             <div id="tab-visuals" class="branding-tab-content active space-y-10">
@@ -312,13 +323,13 @@
             {{-- TAB: PAGE CONTENT --}}
             <div id="tab-content" class="branding-tab-content space-y-10">
                 <div class="guide-box">
-                    <div class="guide-title"><i class="fas fa-info-circle"></i> Branding Guide: Page Builder</div>
-                    <p class="guide-text">Select a page from the dropdown to edit its specific contents. **Tip:** After editing rich text fields (like the About message), use the "Deploy Brand Update" button at the bottom to save all changes at once.</p>
+                    <div class="guide-title"><i class="fas fa-info-circle"></i> Website Guide: Page Content</div>
+                    <p class="guide-text">Select a page to edit its existing content fields. After editing rich text fields, use the Save Website Content button to save all changes.</p>
                 </div>
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[32px] border border-zinc-100 shadow-sm">
                     <div>
-                        <h3 class="text-xl font-black uppercase text-zinc-800 mb-2">Dynamic Page Builder</h3>
-                        <p class="text-sm text-zinc-500">Edit content for individual pages across the academy site.</p>
+                        <h3 class="text-xl font-black uppercase text-zinc-800 mb-2">Page Content</h3>
+                        <p class="text-sm text-zinc-500">Edit content for existing public pages.</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-4">
                         <button type="button" onclick="initVisibleEditor()" class="text-[10px] font-black uppercase text-zinc-400 hover:text-[#C5A059] transition-all flex items-center gap-1">
@@ -371,11 +382,11 @@
                                 </div>
                                 <div>
                                     <label class="premium-label">Section Title</label>
-                                    <input type="text" name="about_title" value="{{ $settings['about_title'] ?? '' }}" class="premium-input" placeholder="e.g. Welcome to Golden Eye">
+                                    <input type="text" name="about_content_title" value="{{ $settings['about_content_title'] ?? $settings['about_title'] ?? '' }}" class="premium-input" placeholder="e.g. Welcome to Golden Eye">
                                 </div>
                                 <div>
                                     <label class="premium-label">Section Summary Text (Rich Text)</label>
-                                    <textarea name="about_text" id="editor_about_summary" rows="4" class="premium-input h-auto py-3 leading-relaxed">{{ $settings['about_text'] ?? '' }}</textarea>
+                                    <textarea name="about_content" id="editor_about_summary" rows="4" class="premium-input h-auto py-3 leading-relaxed">{{ $settings['about_content'] ?? $settings['about_text'] ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -829,12 +840,14 @@
                        </div>
                     </div>
                     <div class="flex items-center gap-4">
-                        <form action="{{ route('admin.branding.asset.purge') }}" method="POST" onsubmit="return confirm('Purge all unused assets?')">
-                            @csrf
-                            <button type="submit" class="px-6 py-4 rounded-2xl bg-red-50 text-red-600 border border-red-100 font-black uppercase text-[10px] hover:bg-red-600 hover:text-white transition-all">
-                                <i class="fa fa-broom mr-2"></i> Purge Unused
-                            </button>
-                        </form>
+                        @if($isAdmin)
+                            <form action="{{ route('admin.branding.asset.purge') }}" method="POST" onsubmit="return confirm('Purge all unused assets?')">
+                                @csrf
+                                <button type="submit" class="px-6 py-4 rounded-2xl bg-red-50 text-red-600 border border-red-100 font-black uppercase text-[10px] hover:bg-red-600 hover:text-white transition-all">
+                                    <i class="fa fa-broom mr-2"></i> Purge Unused
+                                </button>
+                            </form>
+                        @endif
                         <form action="{{ route('admin.branding.asset.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <label class="cursor-pointer bg-[#C5A059] text-[#050C1C] px-10 py-4 rounded-2xl font-black uppercase text-xs hover:bg-white transition-all flex items-center gap-3 shadow-xl">
@@ -872,7 +885,7 @@
             {{-- Floating Save Button --}}
             <button type="submit" id="brandingSubmitBtn" class="fixed bottom-10 right-10 z-50 bg-brand-dark text-brand-gold px-10 py-5 rounded-[24px] text-xs font-black uppercase tracking-[3px] shadow-2xl hover:scale-105 transition-all flex items-center gap-3 border-2 border-brand-gold/20 group">
                 <i class="fa fa-save text-lg group-hover:rotate-12 transition-transform"></i>
-                <span>Deploy Update</span>
+                <span>Save Content</span>
             </button>
         </form>
     </div>
@@ -987,7 +1000,7 @@
             const previewBtn = document.getElementById('pagePreviewBtn');
             const routes = {
                 'page-home-about': '{{ route("home") }}',
-                'page-about-full': '{{ route("about-detail") }}',
+                'page-about-full': '{{ route("about") }}',
                 'page-courses': '{{ route("courses") }}',
                 'page-blog': '{{ route("blog") }}',
                 'page-faq': '{{ route("faq") }}',

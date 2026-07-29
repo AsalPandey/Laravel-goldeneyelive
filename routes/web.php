@@ -40,7 +40,7 @@ Route::post('/analytics/events', [AnalyticsEventController::class, 'store'])
 Route::controller(SiteController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/about', 'about')->name('about');
-    Route::get('/about-detail', 'aboutDetail')->name('about-detail');
+    Route::redirect('/about-detail', '/about', 301)->name('about-detail');
     Route::get('/catalogue', 'catalogue')->name('catalogue');
     Route::get('/for-students', 'forStudents')->name('for-students');
     Route::get('/for-parents', 'forParents')->name('for-parents');
@@ -113,12 +113,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('media', [MediaController::class, 'index'])->name('media.index');
             Route::post('media', [MediaController::class, 'store'])->name('media.store');
 
+            // Website content and non-destructive media operations
+            Route::get('branding', [BrandingController::class, 'index'])->name('branding.index');
+            Route::post('branding/update', [BrandingController::class, 'update'])->name('branding.update');
+            Route::post('branding/asset', [BrandingController::class, 'storeAsset'])->name('branding.asset.store');
+
             // Admin Only: Site Authority & Security Settings
             Route::middleware('role:Admin')->group(function () {
-                // Brand Center: Centralized Website Control
-                Route::get('branding', [BrandingController::class, 'index'])->name('branding.index');
-                Route::post('branding/update', [BrandingController::class, 'update'])->name('branding.update');
-                Route::post('branding/asset', [BrandingController::class, 'storeAsset'])->name('branding.asset.store');
+                // Destructive asset operations
                 Route::delete('branding/asset', [BrandingController::class, 'destroyAsset'])->name('branding.asset.destroy');
                 Route::post('branding/asset/purge', [BrandingController::class, 'purgeAssets'])->name('branding.asset.purge');
 

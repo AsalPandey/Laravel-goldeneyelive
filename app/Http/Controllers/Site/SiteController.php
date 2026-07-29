@@ -49,7 +49,7 @@ class SiteController extends Controller
                 ->get(),
             'teachers' => Teacher::where('status', 'active')->orderByDesc('is_featured')->latest()->limit(4)->get(),
             'testimonials' => Testimonial::where('status', 'active')->orderByDesc('is_featured')->latest()->limit(6)->get(),
-            'posts' => BlogPost::where('status', 'published')->latest()->limit(3)->get(),
+            'posts' => BlogPost::publiclyVisible()->latest('published_at')->limit(3)->get(),
             'servicePillars' => ServicePillar::active()->ordered()->get(),
             'faqs' => FAQ::where('status', 'active')
                 ->orderBy('order_priority', 'asc')
@@ -84,11 +84,6 @@ class SiteController extends Controller
         return view('site.about.about', [
             'teachers' => $teachers,
         ]);
-    }
-
-    public function aboutDetail()
-    {
-        return view('site.about.about-detail');
     }
 
     public function catalogue()

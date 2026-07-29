@@ -92,11 +92,7 @@ class CoursesController extends Controller
 
         $instructor = Teacher::where('status', 'active')
             ->where('name', $course->instructor)
-            ->first()
-            ?? Teacher::where('status', 'active')
-                ->orderByDesc('is_featured')
-                ->latest()
-                ->first();
+            ->first();
 
         $instructorCourses = $instructor
             ? Course::publiclyVisible()
@@ -107,18 +103,10 @@ class CoursesController extends Controller
             : collect();
 
         $testimonial = Testimonial::where('status', 'active')
-            ->where(function ($query) use ($course) {
-                $query->where('course_name', $course->name)
-                    ->orWhere('course_name', 'like', '%'.strtok($course->name, ' ').'%')
-                    ->orWhere('course_name', 'like', '%'.$course->category.'%');
-            })
+            ->where('course_name', $course->name)
             ->orderByDesc('is_featured')
             ->latest()
-            ->first()
-            ?? Testimonial::where('status', 'active')
-                ->orderByDesc('is_featured')
-                ->latest()
-                ->first();
+            ->first();
 
         $faqs = FAQ::where('status', 'active')
             ->where(function ($query) use ($course) {

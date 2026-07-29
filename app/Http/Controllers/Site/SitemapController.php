@@ -14,7 +14,7 @@ class SitemapController extends Controller
     {
         $xml = cache()->remember('sitemap_xml', 86400, function () {
             $courses = Course::publiclyVisible()->select('slug', 'updated_at')->get();
-            $posts = BlogPost::where('status', 'published')->whereNotNull('slug')->select('slug', 'updated_at')->get();
+            $posts = BlogPost::publiclyVisible()->select('slug', 'updated_at')->get();
 
             $entries = collect([
                 route('home'),

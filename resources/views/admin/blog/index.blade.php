@@ -20,7 +20,7 @@
             </div>
             <div class="flex items-center gap-4 text-[11px] font-black uppercase text-neutral-400 tracking-widest">
                 <div class="flex items-center gap-2">
-                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Published: {{ \App\Models\BlogPost::where('status', 'published')->count() }}
+                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Public Now: {{ \App\Models\BlogPost::publiclyVisible()->count() }}
                 </div>
                 <div class="flex items-center gap-2 border-l border-neutral-100 pl-4">
                     <span class="h-2 w-2 rounded-full bg-amber-500"></span> Drafts: {{ \App\Models\BlogPost::where('status', 'draft')->count() }}
@@ -60,7 +60,12 @@
                             <form action="{{ route('admin.blog.toggle-status', $post->id) }}" method="POST">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="group transition-all">
-                                    @if($post->status === 'published')
+                                    @if($post->status === 'published' && $post->published_at?->isFuture())
+                                        <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 text-blue-700 px-3 py-1 text-[10px] font-black uppercase border border-blue-100 group-hover:bg-blue-100">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+                                            Scheduled
+                                        </span>
+                                    @elseif($post->status === 'published')
                                         <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-[10px] font-black uppercase border border-emerald-100 group-hover:bg-emerald-100">
                                             <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                             Published
@@ -82,7 +87,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-5 text-[11px] font-bold text-neutral-500">
-                            {{ $post->created_at->format('M d, Y') }}
+                            {{ $post->published_at?->format('M d, Y H:i') ?? 'Not scheduled' }}
                         </td>
                         <td class="px-6 py-5 text-right">
                             <div class="flex justify-end gap-2">

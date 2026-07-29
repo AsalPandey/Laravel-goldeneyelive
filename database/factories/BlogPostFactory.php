@@ -30,6 +30,7 @@ class BlogPostFactory extends Factory
             'author' => fake()->name(),
             'category' => fake()->randomElement(['News', 'Tips', 'Insights', 'Updates']),
             'status' => 'published',
+            'published_at' => now()->subDay(),
         ];
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\TestimonialRequest;
+use App\Models\Course;
 use App\Models\Testimonial;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
@@ -32,7 +33,9 @@ class TestimonialController extends Controller
 
     public function create()
     {
-        return view('admin.testimonials.create');
+        $courses = Course::orderBy('name')->get(['name', 'status']);
+
+        return view('admin.testimonials.create', compact('courses'));
     }
 
     public function store(TestimonialRequest $request)
@@ -58,8 +61,9 @@ class TestimonialController extends Controller
     public function edit(string $id)
     {
         $testimonial = Testimonial::findOrFail($id);
+        $courses = Course::orderBy('name')->get(['name', 'status']);
 
-        return view('admin.testimonials.edit', compact('testimonial'));
+        return view('admin.testimonials.edit', compact('testimonial', 'courses'));
     }
 
     public function update(TestimonialRequest $request, $id)

@@ -37,7 +37,7 @@ class BlogController extends Controller
 
         $post->update([
             'status' => $newStatus,
-            'published_at' => $newStatus === 'published' ? now() : $post->published_at,
+            'published_at' => $newStatus === 'published' ? ($post->published_at ?? now()) : $post->published_at,
         ]);
         $this->clearSiteCache();
 
@@ -59,7 +59,9 @@ class BlogController extends Controller
             ? (new BlogPost)->generateUniqueSlug($request->slug)
             : (new BlogPost)->generateUniqueSlug($validated['title']);
 
-        $validated['published_at'] = $validated['status'] === 'published' ? now() : null;
+        if ($validated['status'] === 'published' && blank($validated['published_at'] ?? null)) {
+            $validated['published_at'] = now();
+        }
 
         $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/blog', 'site/img/carousel-2.jpg');
 
@@ -94,7 +96,11 @@ class BlogController extends Controller
             ? $post->generateUniqueSlug($request->slug, $id)
             : $post->generateUniqueSlug($validated['title'], $id);
 
-        if ($post->status !== 'published' && $validated['status'] === 'published') {
+        if (blank($validated['published_at'] ?? null)) {
+            $validated['published_at'] = $post->published_at;
+        }
+
+        if ($validated['status'] === 'published' && $validated['published_at'] === null) {
             $validated['published_at'] = now();
         }
 

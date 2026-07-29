@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\SiteSetting;
+use App\Models\Testimonial;
 use Database\Seeders\LiveSiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -104,6 +105,12 @@ class PublicCourseVisibilityTest extends TestCase
         $this->seed(LiveSiteSeeder::class);
 
         SiteSetting::where('key', 'whatsapp_number')->update(['value' => '+977 980-000-0000']);
+        Testimonial::factory()->create([
+            'student_name' => 'Exact IELTS Student',
+            'course_name' => 'IELTS Preparation for Band 7 Goal',
+            'content' => 'The IELTS practice and feedback gave me a clear improvement plan.',
+            'status' => 'active',
+        ]);
 
         $response = $this->get(route('courses-detail', 'ielts-masterclass'));
 

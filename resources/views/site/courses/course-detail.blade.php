@@ -112,7 +112,9 @@
             ['label' => 'Total fee', 'value' => $course->price ?: 'Confirm current fee with the academy team.'],
             ['label' => 'Duration', 'value' => $course->duration ?: 'Confirm duration before enrollment.'],
             ['label' => 'Batch timing', 'value' => $batchTiming],
-            ['label' => 'Instructor credentials', 'value' => ($instructor?->designation ?: $course->instructor).' - '.\Illuminate\Support\Str::limit(strip_tags($instructor?->bio ?? 'course-specific academic support and classroom practice'), 110)],
+            ['label' => 'Instructor credentials', 'value' => $instructor
+                ? ($instructor->designation ?: $instructor->name).' - '.\Illuminate\Support\Str::limit(strip_tags($instructor->bio), 110)
+                : 'Ask the academy to confirm the faculty assigned to the current batch.'],
             ['label' => 'Safety/trust', 'value' => 'Local Pokhara academy with enrollment support, parent-friendly communication, and no-pressure course discussion.'],
             ['label' => 'Support included', 'value' => $supportDetails],
             ['label' => 'Not guaranteed', 'value' => 'Scores, visas, jobs, or placements are not guaranteed. Progress depends on attendance, practice, and student readiness.'],
@@ -316,7 +318,7 @@
 
             <section class="mb-5" aria-labelledby="fee-heading">
                 <div class="row g-4">
-                    <div class="col-lg-6">
+                    <div class="{{ $instructor ? 'col-lg-6' : 'col-12' }}">
                         <div class="h-100 p-4 p-lg-5 bg-brand-dark text-white rounded-xl">
                             <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Batch timing and fee</span>
                             <h2 id="fee-heading" class="h3 fw-black text-white mt-2 mb-4">Confirm schedule before enrollment</h2>
@@ -328,25 +330,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="h-100 p-4 p-lg-5 bg-white border border-zinc-100 rounded-xl shadow-sm">
-                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Instructor profile</span>
-                            <div class="d-flex align-items-start gap-4 mt-3">
-                                <img src="{{ \App\Support\PublicAsset::url($instructor?->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $instructor?->name ?? $course->instructor }}" class="rounded-circle object-cover flex-shrink-0" loading="lazy" decoding="async" width="86" height="86" style="width: 86px; height: 86px;">
-                                <div>
-                                    <h2 class="h5 fw-black text-brand-dark mb-1">{{ $instructor?->name ?? $course->instructor }}</h2>
-                                    <p class="text-brand-gold fw-black mb-2" style="font-size: 12px;">{{ $instructor?->designation ?? 'Course Instructor' }}</p>
-                                    <p class="text-zinc-600 mb-3" style="font-size: 13px; line-height: 1.65;">{{ \Illuminate\Support\Str::limit(strip_tags($instructor?->bio ?? 'Supports students with course-specific classroom practice, academic support, and feedback.'), 150) }}</p>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <span class="course-info-pill">Subject expertise: {{ $course->category ?: $course->name }}</span>
-                                        <span class="course-info-pill">Class support: Practical lessons, student questions, and progress feedback</span>
-                                        <span class="course-info-pill">Courses taught: {{ $instructorCourseList }}</span>
-                                        <span class="course-info-pill">Credibility note: {{ \Illuminate\Support\Str::limit(strip_tags($instructor?->bio ?? 'Course-specific academic support and classroom practice.'), 90) }}</span>
+                    @if($instructor)
+                        <div class="col-lg-6">
+                            <div class="h-100 p-4 p-lg-5 bg-white border border-zinc-100 rounded-xl shadow-sm">
+                                <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Instructor profile</span>
+                                <div class="d-flex align-items-start gap-4 mt-3">
+                                    <img src="{{ \App\Support\PublicAsset::url($instructor->photo, 'site/img/team-1.jpg') }}" alt="{{ $instructor->name }}" class="rounded-circle object-cover flex-shrink-0" loading="lazy" decoding="async" width="86" height="86" style="width: 86px; height: 86px;">
+                                    <div>
+                                        <h2 class="h5 fw-black text-brand-dark mb-1">{{ $instructor->name }}</h2>
+                                        <p class="text-brand-gold fw-black mb-2" style="font-size: 12px;">{{ $instructor->designation ?: 'Course Instructor' }}</p>
+                                        <p class="text-zinc-600 mb-3" style="font-size: 13px; line-height: 1.65;">{{ \Illuminate\Support\Str::limit(strip_tags($instructor->bio), 150) }}</p>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <span class="course-info-pill">Subject expertise: {{ $course->category ?: $course->name }}</span>
+                                            <span class="course-info-pill">Class support: Practical lessons, student questions, and progress feedback</span>
+                                            <span class="course-info-pill">Courses taught: {{ $instructorCourseList }}</span>
+                                            <span class="course-info-pill">Credibility note: {{ \Illuminate\Support\Str::limit(strip_tags($instructor->bio), 90) }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </section>
 

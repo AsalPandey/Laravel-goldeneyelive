@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Controllers\Admin\BrandingController;
 use App\Models\SiteSetting;
 use App\Support\PublicCtaContract;
 use Illuminate\Foundation\Http\FormRequest;
@@ -11,7 +12,7 @@ class BrandingRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->user()->hasRole('Admin');
+        return $this->user()?->hasAnyRole(['Admin', 'Staff']) ?? false;
     }
 
     protected function prepareForValidation(): void
@@ -41,7 +42,7 @@ class BrandingRequest extends FormRequest
     {
         $imageLimit = SiteSetting::getValue('image_size_limit', 2048);
 
-        return [
+        $rules = [
             'site_name' => ['nullable', 'string', 'max:255'],
             'site_name_suffix' => ['nullable', 'string', 'max:255'],
             'site_email' => ['nullable', 'email', 'max:255'],
@@ -73,6 +74,7 @@ class BrandingRequest extends FormRequest
             'hero_cta_2_text' => ['nullable', 'string', 'max:50'],
             'hero_cta_text' => ['nullable', 'string', 'max:50'],
             'popup_button_text' => ['nullable', 'string', 'max:50'],
+            'popup_status' => ['nullable', 'in:active,inactive'],
             'sticky_cta_text' => ['nullable', 'string', 'max:50'],
             'blog_cta_btn' => ['nullable', 'string', 'max:50'],
             'faq_btn_text' => ['nullable', 'string', 'max:50'],
@@ -103,5 +105,23 @@ class BrandingRequest extends FormRequest
             'popup_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"],
             'external_review_screenshot' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"],
         ];
+
+        $isAdmin = $this->user()?->hasRole('Admin') ?? false;
+
+        if (! $isAdmin) {
+            foreach (BrandingController::SENSITIVE_KEYS as $key) {
+                unset($rules[$key]);
+            }
+        }
+
+        foreach (BrandingController::TEXT_KEYS as $key) {
+            if (! $isAdmin && in_array($key, BrandingController::SENSITIVE_KEYS, true)) {
+                continue;
+            }
+
+            $rules[$key] ??= ['nullable', 'string'];
+        }
+
+        return $rules;
     }
 }

@@ -35,7 +35,7 @@ class MediaAuthorizationTest extends TestCase
         $this->student->assignRole('Student');
     }
 
-    public function test_admin_and_staff_can_list_media_without_opening_brand_settings(): void
+    public function test_admin_and_staff_can_list_media_and_open_safe_website_content_settings(): void
     {
         foreach ([$this->admin, $this->staff] as $user) {
             $this->actingAs($user)
@@ -50,7 +50,8 @@ class MediaAuthorizationTest extends TestCase
 
         $this->actingAs($this->staff)
             ->get(route('admin.branding.index'))
-            ->assertForbidden();
+            ->assertOk()
+            ->assertDontSee('Purge Unused');
     }
 
     public function test_staff_can_upload_a_new_media_asset(): void
@@ -102,7 +103,7 @@ class MediaAuthorizationTest extends TestCase
             ->get(route('admin.courses.create'))
             ->assertOk()
             ->assertSee(route('admin.media.index'))
-            ->assertDontSee(route('admin.branding.index'));
+            ->assertSee(route('admin.branding.index'));
 
         $this->actingAs($this->student)
             ->get(route('dashboard'))

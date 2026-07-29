@@ -58,8 +58,17 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Instructor</label>
-                        <input type="text" name="instructor" value="{{ old('instructor') }}" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Assigned Faculty</label>
+                        <select name="instructor" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                            <option value="">Select a faculty profile</option>
+                            @foreach($teachers as $teacher)
+                                <option value="{{ $teacher->name }}" {{ old('instructor') === $teacher->name ? 'selected' : '' }}>
+                                    {{ $teacher->name }}{{ $teacher->status !== 'active' ? ' (inactive)' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="mt-1 text-xs text-neutral-500">Only an active matching faculty profile is shown on the public course page.</p>
+                        @error('instructor') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div>

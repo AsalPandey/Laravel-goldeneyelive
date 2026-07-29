@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\CourseRequest;
 use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\JoinNowQuery;
+use App\Models\Teacher;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -44,8 +45,9 @@ class CourseController extends Controller
     public function create()
     {
         $categories = CourseCategory::orderBy('name')->get();
+        $teachers = Teacher::orderBy('name')->get(['name', 'status']);
 
-        return view('admin.courses.create', compact('categories'));
+        return view('admin.courses.create', compact('categories', 'teachers'));
     }
 
     public function store(CourseRequest $request)
@@ -82,8 +84,9 @@ class CourseController extends Controller
     {
         $course = Course::with('courseCategory')->findOrFail($id);
         $categories = CourseCategory::orderBy('name')->get();
+        $teachers = Teacher::orderBy('name')->get(['name', 'status']);
 
-        return view('admin.courses.edit', compact('course', 'categories'));
+        return view('admin.courses.edit', compact('course', 'categories', 'teachers'));
     }
 
     public function update(CourseRequest $request, $id)
