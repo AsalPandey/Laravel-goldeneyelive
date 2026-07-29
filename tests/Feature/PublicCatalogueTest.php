@@ -14,9 +14,9 @@ class PublicCatalogueTest extends TestCase
     {
         $this->seed(LiveSiteSeeder::class);
 
-        $this->assertSame(url('/catelogue'), route('catalogue'));
+        $this->assertSame(url('/catalogue'), route('catalogue'));
 
-        $this->get('/catelogue')
+        $this->get('/catalogue')
             ->assertOk()
             ->assertSee('Full Catalogue', false)
             ->assertSee('Service Catalogue', false)
@@ -29,7 +29,7 @@ class PublicCatalogueTest extends TestCase
             ->assertSee('View Course Details', false)
             ->assertDontSee('Ask What Fits Me', false);
 
-        $this->get('/catalogue')
+        $this->get('/catelogue')
             ->assertStatus(301)
             ->assertRedirect(route('catalogue'));
     }

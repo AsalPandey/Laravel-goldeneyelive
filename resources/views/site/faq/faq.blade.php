@@ -11,7 +11,6 @@
             'source_section' => 'faq-lead-block',
             'inquiry_intent' => 'course_guidance',
         ]);
-        $faqButtonText = \App\Support\PublicCtaContract::normalizeLabel($settings['faq_btn_text'] ?? null, 'help');
     @endphp
 
     {{-- Advanced FAQ Schema for AEO --}}
@@ -77,20 +76,24 @@
                 <div class="col-lg-10">
                     <div class="accordion" id="faqAccordion">
                         @foreach ($faqs as $index => $faq)
+                            @if($index === 10)
+                                <div id="additionalFaqs" hidden>
+                            @endif
                             @if(is_object($faq))
-                            <div class="faq-premium-item {{ $index >= 10 ? 'hidden-faq d-none' : '' }} mb-4" id="faq-{{ $faq->id }}">
-                                <h2 class="accordion-header">
+                            <div class="faq-premium-item mb-4" id="faq-{{ $faq->id }}">
+                                <h2 class="accordion-header" id="faqHeading{{ $index }}">
                                     <button class="faq-premium-btn {{ $index != 0 ? 'collapsed' : '' }} rounded-xl shadow-sm hover:shadow-md transition-all py-3 px-4" 
                                             type="button" 
                                             data-bs-toggle="collapse" 
                                             data-bs-target="#collapse{{ $index }}" 
                                             aria-expanded="{{ $index == 0 ? 'true' : 'false' }}"
+                                            aria-controls="collapse{{ $index }}"
                                             style="font-size: 14px;">
                                         <span class="font-black tracking-tight">{{ $faq->question }}</span>
-                                        <i class="fas fa-plus text-[9px] transition-transform duration-300"></i>
+                                        <i class="fas fa-plus text-[9px] transition-transform duration-300" aria-hidden="true"></i>
                                     </button>
                                 </h2>
-                                <div id="collapse{{ $index }}" class="accordion-collapse collapse {{ $index == 0 ? 'show' : '' }}" data-bs-parent="#faqAccordion">
+                                <div id="collapse{{ $index }}" class="accordion-collapse collapse {{ $index == 0 ? 'show' : '' }}" data-bs-parent="#faqAccordion" aria-labelledby="faqHeading{{ $index }}">
                                     <div class="faq-premium-body bg-zinc-50/50 p-4 rounded-b-xl border-x border-b border-zinc-100">
                                         @sanitize($faq->answer)
                                     </div>
@@ -98,13 +101,16 @@
                             </div>
                             @endif
                         @endforeach
+                        @if (is_countable($faqs) && count($faqs) > 10)
+                                </div>
+                        @endif
                     </div>
 
                     @if (is_countable($faqs) && count($faqs) > 10)
                         <div class="flex justify-center mt-10">
-                            <button id="readMoreBtn" onclick="toggleFAQs()" class="btn btn-primary px-5 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-all" style="font-size: 11px;">
-                                <i class="fa fa-chevron-down me-2"></i> 
-                                <span>{{ $faqButtonText }}</span>
+                            <button id="readMoreBtn" type="button" aria-expanded="false" aria-controls="additionalFaqs" class="btn btn-primary px-5 py-3 rounded-xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-all" style="font-size: 11px;">
+                                <i class="fa fa-chevron-down me-2" aria-hidden="true"></i>
+                                <span>Show More FAQs</span>
                             </button>
                         </div>
                     @endif
@@ -131,20 +137,37 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            const additionalFaqs = document.getElementById('additionalFaqs');
+            const readMoreButton = document.getElementById('readMoreBtn');
+
+            const setAdditionalFaqsExpanded = function (expanded, returnToList = false) {
+                if (!additionalFaqs || !readMoreButton) {
+                    return;
+                }
+
+                additionalFaqs.hidden = !expanded;
+                readMoreButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                readMoreButton.querySelector('span').textContent = expanded ? 'Show Fewer FAQs' : 'Show More FAQs';
+                readMoreButton.classList.toggle('active', expanded);
+
+                if (!expanded && returnToList) {
+                    document.getElementById('faqAccordion').scrollIntoView({ behavior: 'smooth' });
+                }
+            };
+
+            if (readMoreButton) {
+                readMoreButton.addEventListener('click', function () {
+                    setAdditionalFaqsExpanded(readMoreButton.getAttribute('aria-expanded') !== 'true', true);
+                });
+            }
+
             // Handle Direct Anchor Links (e.g. #faq-5)
             const hash = window.location.hash;
             if (hash && hash.startsWith('#faq-')) {
                 const targetFaq = document.querySelector(hash);
                 if (targetFaq) {
-                    // Show all hidden FAQs first
-                    const hiddenFaqs = document.querySelectorAll('.hidden-faq');
-                    hiddenFaqs.forEach(faq => faq.classList.remove('d-none'));
-                    
-                    // Update button state
-                    const btn = document.getElementById('readMoreBtn');
-                    if (btn) {
-                        btn.querySelector('span').textContent = "Show Less";
-                        btn.classList.add('active');
+                    if (additionalFaqs?.contains(targetFaq)) {
+                        setAdditionalFaqsExpanded(true);
                     }
 
                     // Open the specific accordion item
@@ -161,26 +184,5 @@
                 }
             }
         });
-
-        function toggleFAQs() {
-            const hiddenFaqs = document.querySelectorAll('.hidden-faq');
-            const btn = document.getElementById('readMoreBtn');
-            const btnSpan = btn.querySelector('span');
-            
-            if (hiddenFaqs.length > 0 && hiddenFaqs[0].classList.contains('d-none')) {
-                hiddenFaqs.forEach(faq => {
-                    faq.classList.remove('d-none');
-                });
-                btnSpan.textContent = "Show Less";
-                btn.classList.add('active');
-            } else {
-                hiddenFaqs.forEach(faq => {
-                    faq.classList.add('d-none');
-                });
-                btnSpan.textContent = "Explore More FAQs";
-                btn.classList.remove('active');
-                document.getElementById('faqAccordion').scrollIntoView({ behavior: 'smooth' });
-            }
-        }
     </script>
 @endsection

@@ -37,7 +37,7 @@
     <!-- Header End -->
 
     <!-- Contact Start -->
-    <div class="container-xxl py-4">
+    <div class="container-xxl py-4 contact-section">
         <div class="container">
             <div class="text-center wow fadeInUp mb-10" data-wow-delay="0.1s">
                 <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
@@ -50,7 +50,7 @@
 
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-5 col-md-12 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="premium-card p-5 p-lg-6 h-100 border border-zinc-100 shadow-lg rounded-xl relative overflow-hidden">
+                    <div class="premium-card p-5 p-lg-6 h-100 border border-zinc-100 shadow-lg rounded-xl relative overflow-hidden contact-info-card">
                         <div class="absolute -top-10 -right-10 opacity-5">
                             <i class="fa fa-map-marked-alt fa-10x"></i>
                         </div>
@@ -73,7 +73,7 @@
                                     <div class="w-12 h-12 rounded-xl bg-brand-dark text-brand-gold flex items-center justify-center flex-shrink-0 transition-all group-hover:scale-110 shadow-lg">
                                         <i class="fa fa-map-marker-alt fs-6"></i>
                                     </div>
-                                    <div>
+                                    <div class="contact-detail-copy">
                                         <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Academy Headquarters</h6>
                                         <p class="mb-0 font-black text-brand-dark">{{ $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal' }}</p>
                                     </div>
@@ -83,15 +83,16 @@
                                     <div class="w-14 h-14 rounded-2xl bg-brand-dark text-brand-gold flex items-center justify-center flex-shrink-0 transition-all group-hover:scale-110 shadow-lg">
                                         <i class="fa fa-phone-alt fs-5"></i>
                                     </div>
-                                    <div>
+                                    <div class="contact-detail-copy">
                                         <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Phone</h6>
                                         @php
-                                            $contactPhone = $settings['site_phone'] ?? '061-572599, 9856058599';
-                                            $contactPhoneHref = preg_replace('/[^0-9+]/', '', explode(',', $contactPhone)[0]);
+                                            $contactPhones = \App\Support\ContactPhones::parse($settings['site_phone'] ?? '061-572599, 9856058599');
                                         @endphp
-                                        <p class="mb-0 font-black text-brand-dark">
-                                            <a href="tel:{{ $contactPhoneHref }}" class="text-brand-dark text-decoration-none" data-source-page="contact" data-source-section="contact-phone" data-cta-label="Phone">{{ $contactPhone }}</a>
-                                        </p>
+                                        @foreach($contactPhones as $contactPhone)
+                                            <p class="mb-1 font-black text-brand-dark">
+                                                <a href="tel:{{ $contactPhone['href'] }}" class="text-brand-dark text-decoration-none" data-source-page="contact" data-source-section="contact-phone" data-cta-label="Phone">{{ $contactPhone['display'] }}</a>
+                                            </p>
+                                        @endforeach
                                     </div>
                                 </div>
 
@@ -99,7 +100,7 @@
                                     <div class="w-14 h-14 rounded-2xl bg-brand-dark text-brand-gold flex items-center justify-center flex-shrink-0 transition-all group-hover:scale-110 shadow-lg">
                                         <i class="fa fa-envelope fs-5"></i>
                                     </div>
-                                    <div>
+                                    <div class="contact-detail-copy">
                                         <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Email</h6>
                                         <p class="mb-0 font-black text-brand-dark">{{ $settings['site_email'] ?? 'info@goldeneye.edu.np' }}</p>
                                     </div>
@@ -110,7 +111,7 @@
                 </div>
 
                 <div class="col-lg-7 col-md-12 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="premium-card p-5 p-lg-6 shadow-lg rounded-xl bg-white border border-zinc-100">
+                    <div class="premium-card p-5 p-lg-6 shadow-lg rounded-xl bg-white border border-zinc-100 contact-form-card">
                         <h5 class="font-black uppercase tracking-tight mb-5 text-brand-dark">Send Your <span class="text-brand-gold">Course Question</span></h5>
                         <form action="{{ route('contact-submit') }}" method="POST" class="form-conversational">
                             @csrf
@@ -165,6 +166,8 @@
                                         @error('message') <div id="messageError" class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
+
+                                <x-recaptcha class="col-12" />
 
                                 <div class="col-12 pt-2">
                                     <button class="btn btn-primary w-100 py-3 rounded-xl shadow-lg animate-glow font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 11px;" type="submit">

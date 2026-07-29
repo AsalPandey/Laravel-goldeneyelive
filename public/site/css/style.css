@@ -13,6 +13,27 @@
     --premium-shadow: 0 15px 45px rgba(0,0,0,0.08);
 }
 
+.skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 1000000;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    color: #ffffff;
+    background: var(--brand-dark);
+    box-shadow: 0 10px 30px rgba(5, 12, 28, 0.25);
+    transform: translateY(-180%);
+    transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+    color: #ffffff;
+    outline: 3px solid var(--brand-gold);
+    outline-offset: 2px;
+    transform: translateY(0);
+}
+
 /* Institutional Brand Utilities */
 .bg-brand-dark { background-color: var(--brand-dark) !important; }
 .bg-brand-gold { background-color: var(--brand-gold) !important; }
@@ -269,6 +290,12 @@ h1, h2, h3, h4, h5, h6, .section-title {
     background: #188b47;
 }
 
+.site-mobile-primary {
+    color: var(--brand-dark) !important;
+    background: var(--brand-gold);
+    font-weight: 900 !important;
+}
+
 @media (max-width: 991.98px) {
     .site-navbar {
         background: rgba(5, 12, 28, 0.92) !important;
@@ -311,6 +338,14 @@ h1, h2, h3, h4, h5, h6, .section-title {
         padding-left: 0.75rem !important;
         padding-right: 0.75rem !important;
         border-radius: 8px;
+    }
+
+    .site-mobile-nav .site-mobile-course-link {
+        min-height: 40px;
+        margin-left: 0.75rem;
+        padding-left: 1.25rem !important;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 10px;
     }
 
     .navbar-light .navbar-nav {
@@ -381,7 +416,9 @@ h1, h2, h3, h4, h5, h6, .section-title {
     top: 6px;
 }
 
-.site-navbar .navbar-toggler:focus {
+.site-navbar .navbar-toggler:focus-visible {
+    outline: 3px solid rgba(197, 160, 89, 0.55);
+    outline-offset: 3px;
     box-shadow: 0 0 0 0.18rem rgba(197, 160, 89, 0.22);
 }
 
@@ -596,13 +633,6 @@ h1, h2, h3, h4, h5, h6, .section-title {
     z-index: 900;
     pointer-events: none;
     transition: opacity .2s ease, transform .2s ease;
-}
-
-.whatsapp-btn-container.is-hidden-over-hero {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(10px);
-    visibility: hidden;
 }
 
 .whatsapp-chat-cta {
@@ -1620,7 +1650,7 @@ h1, h2, h3, h4, h5, h6, .section-title {
     }
 
     .whatsapp-btn-container {
-        bottom: max(76px, env(safe-area-inset-bottom));
+        bottom: max(14px, env(safe-area-inset-bottom));
     }
 
     .whatsapp-chat-cta {
@@ -1729,9 +1759,36 @@ h1, h2, h3, h4, h5, h6, .section-title {
         padding: 1.25rem !important;
     }
 
+    .contact-section {
+        padding-right: 0.5rem !important;
+        padding-left: 0.5rem !important;
+    }
+
+    .contact-section > .container {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .contact-info-card,
+    .contact-form-card {
+        padding: 1.25rem !important;
+    }
+
+    .contact-detail-copy,
+    .contact-field,
+    .contact-field .form-control,
+    .contact-field .form-select {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .contact-detail-copy {
+        overflow-wrap: anywhere;
+    }
+
     .whatsapp-btn-container {
         left: 14px;
-        bottom: max(82px, env(safe-area-inset-bottom));
+        bottom: max(14px, env(safe-area-inset-bottom));
     }
 
     .whatsapp-chat-cta {
@@ -1748,5 +1805,19 @@ h1, h2, h3, h4, h5, h6, .section-title {
         width: 42px;
         height: 42px;
         flex-basis: 42px;
+    }
+}
+
+@media (max-width: 339.98px) {
+    .recaptcha-field {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .recaptcha-field .g-recaptcha {
+        width: 304px;
+        height: 64px;
+        transform: scale(0.8);
+        transform-origin: top left;
     }
 }

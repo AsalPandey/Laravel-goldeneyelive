@@ -197,12 +197,7 @@
                                     </div>
                                 </div>
 
-                                @if(isset($settings['recaptcha_site_key']) && !empty($settings['recaptcha_site_key']))
-                                    <div class="col-12">
-                                        <div class="g-recaptcha" data-sitekey="{{ $settings['recaptcha_site_key'] }}"></div>
-                                        @error('g-recaptcha-response') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-                                    </div>
-                                @endif
+                                <x-recaptcha class="col-12" />
 
                                 <div class="col-12">
                                     <button class="btn btn-primary w-100 py-3 rounded-pill shadow-xl animate-glow" type="submit" data-cta="join-now-form-submit" style="font-size: 1.1rem; font-weight: 800;">

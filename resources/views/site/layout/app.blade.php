@@ -11,6 +11,7 @@
     data-selected-course="{{ trim($__env->yieldContent('tracking_selected_course', request('selected_course', request('course', '')))) }}"
     data-audience-type="{{ trim($__env->yieldContent('tracking_audience_type', request('audience_type', ''))) }}"
     data-inquiry-intent="{{ trim($__env->yieldContent('tracking_inquiry_intent', request('inquiry_intent', ''))) }}">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <!-- Premium Loading Spinner -->
     <div id="spinner" class="bg-brand-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex flex-column align-items-center justify-content-center" style="z-index: 999999;">
         <div class="position-relative mb-3">
@@ -150,7 +151,9 @@
         </script>
     @endif
 
-    @yield('content')
+    <main id="main-content" tabindex="-1">
+        @yield('content')
+    </main>
 
     @include('site.layout.footer')
     @include('sweetalert::alert')
@@ -352,26 +355,6 @@
 	                </span>
 	            </a>
 	        </div>
-	        <script>
-	            (function () {
-	                const widget = document.querySelector('.whatsapp-btn-container');
-	                const hero = document.querySelector('.home-hero');
-
-	                if (!widget || !hero) {
-	                    return;
-	                }
-
-	                const mobileQuery = window.matchMedia('(max-width: 575.98px)');
-	                const syncWidgetVisibility = function () {
-	                    const shouldHide = mobileQuery.matches && hero.getBoundingClientRect().bottom > (window.innerHeight - 96);
-	                    widget.classList.toggle('is-hidden-over-hero', shouldHide);
-	                };
-
-	                syncWidgetVisibility();
-	                window.addEventListener('scroll', syncWidgetVisibility, { passive: true });
-	                window.addEventListener('resize', syncWidgetVisibility);
-	            })();
-	        </script>
 	    @endif
 
 </body>

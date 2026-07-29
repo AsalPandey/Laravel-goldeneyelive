@@ -203,26 +203,19 @@
                     <div class="team-item bg-white w-100 shadow-lg rounded-2xl overflow-hidden position-relative group border border-zinc-100 hover:border-brand-gold/30 transition-all duration-500">
                         <div class="overflow-hidden position-relative" style="height:300px;">
                             <img class="img-fluid w-100 h-100 object-cover transition-all duration-700 group-hover:scale-110" src="{{ \App\Support\PublicAsset::url($teacher->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $teacher->name }}">
-                            
-                            {{-- Bio Overlay --}}
-                            @if(!empty($teacher->bio))
-                            <div class="position-absolute inset-0 d-flex align-items-center justify-content-center p-5 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-md bg-brand-dark/90">
-                                <div class="text-white transform translate-y-10 group-hover:translate-y-0 transition-all duration-500">
-                                    <i class="fa fa-quote-left text-brand-gold mb-4 fa-2x"></i>
-                                    <p class="small italic mb-0 leading-relaxed font-medium">{{ Str::limit($teacher->bio, 200) }}</p>
-                                </div>
-                            </div>
-                            @endif
                         </div>
                         <div class="text-center p-4 bg-white relative">
-                            <h6 class="mt-2 mb-1 font-black text-brand-dark" style="font-size: 15px;">{{ $teacher->name }}</h6>
+                            <h3 class="h6 mt-2 mb-1 font-black text-brand-dark" style="font-size: 15px;">{{ $teacher->name }}</h3>
                             <small class="text-brand-gold font-black uppercase tracking-[0.2em]" style="font-size: 8px;">{{ $teacher->designation }}</small>
+                            @if(!empty($teacher->bio))
+                                <p class="small text-zinc-600 mt-3 mb-0 leading-relaxed">{{ Str::limit($teacher->bio, 200) }}</p>
+                            @endif
                             <div class="d-flex justify-content-center mt-4 gap-3">
                                 @if(!empty($teacher->facebook_url))
-                                    <a class="w-10 h-10 rounded-full border border-zinc-200 d-flex align-items-center justify-content-center text-zinc-400 hover:bg-brand-dark hover:text-brand-gold transition-all" href="{{ $teacher->facebook_url }}" target="_blank"><i class="fab fa-facebook-f text-xs"></i></a>
+                                    <a class="w-10 h-10 rounded-full border border-zinc-200 d-flex align-items-center justify-content-center text-zinc-400 hover:bg-brand-dark hover:text-brand-gold transition-all" href="{{ $teacher->facebook_url }}" target="_blank" rel="noopener" aria-label="{{ $teacher->name }} on Facebook"><i class="fab fa-facebook-f text-xs" aria-hidden="true"></i></a>
                                 @endif
                                 @if(!empty($teacher->linkedin_url))
-                                    <a class="w-10 h-10 rounded-full border border-zinc-200 d-flex align-items-center justify-content-center text-zinc-400 hover:bg-brand-dark hover:text-brand-gold transition-all" href="{{ $teacher->linkedin_url }}" target="_blank"><i class="fab fa-linkedin-in text-xs"></i></a>
+                                    <a class="w-10 h-10 rounded-full border border-zinc-200 d-flex align-items-center justify-content-center text-zinc-400 hover:bg-brand-dark hover:text-brand-gold transition-all" href="{{ $teacher->linkedin_url }}" target="_blank" rel="noopener" aria-label="{{ $teacher->name }} on LinkedIn"><i class="fab fa-linkedin-in text-xs" aria-hidden="true"></i></a>
                                 @endif
                             </div>
                         </div>

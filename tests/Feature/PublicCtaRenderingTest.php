@@ -32,13 +32,12 @@ class PublicCtaRenderingTest extends TestCase
             ->assertSee('data-cta="navbar-course-help"', false)
             ->assertSee('Ask for Course Help', false)
             ->assertSee('All Courses', false)
-            ->assertSee('IELTS / PTE', false)
-            ->assertSee('Japanese / Korean', false)
-            ->assertSee('Computer Skills', false)
-            ->assertSee('Web Development', false)
+            ->assertSee('IELTS, PTE and Language Preparation', false)
+            ->assertSee('Computer and Office Skills', false)
+            ->assertSee('Web Development and IT Career', false)
+            ->assertSee('Global Language Academy', false)
             ->assertSee('site-mobile-nav', false)
-            ->assertSee('IELTS / PTE', false)
-            ->assertSee('Languages', false)
+            ->assertSee('FAQ', false)
             ->assertSee('data-cta="mobile-menu-whatsapp"', false)
             ->assertSee('Message on WhatsApp', false)
             ->assertDontSee('All Career Paths', false)
@@ -191,7 +190,7 @@ class PublicCtaRenderingTest extends TestCase
         $this->assertStringContainsString('border: 1px solid #cbd5e1 !important', $css);
         $this->assertStringContainsString('.form-conversational .form-control.is-invalid', $css);
         $this->assertStringContainsString('.whatsapp-btn-container', $css);
-        $this->assertStringContainsString('bottom: max(82px, env(safe-area-inset-bottom))', $css);
+        $this->assertStringContainsString('bottom: max(14px, env(safe-area-inset-bottom))', $css);
     }
 
     public function test_undecided_course_help_request_can_capture_a_lead(): void

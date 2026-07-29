@@ -3,15 +3,27 @@
 namespace App\Support;
 
 use App\Models\SiteSetting;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 final class Recaptcha
 {
+    public const Disabled = 'disabled';
+
+    public const Enabled = 'enabled';
+
+    public const Misconfigured = 'misconfigured';
+
     public static function challengeRequired(): bool
     {
-        self::reportProductionMisconfiguration();
+        self::reportMisconfiguration();
 
-        return self::hasConfiguredKey();
+        return self::status() === self::Enabled;
+    }
+
+    public static function siteKey(): ?string
+    {
+        return self::filledSetting('recaptcha_site_key');
     }
 
     public static function secretKey(): ?string
@@ -19,32 +31,66 @@ final class Recaptcha
         return self::filledSetting('recaptcha_secret_key');
     }
 
-    public static function hasConfiguredKey(): bool
+    public static function status(): string
     {
-        return self::filledSetting('recaptcha_site_key') !== null
-            || self::secretKey() !== null;
+        $hasSiteKey = self::siteKey() !== null;
+        $hasSecretKey = self::secretKey() !== null;
+
+        if ($hasSiteKey && $hasSecretKey) {
+            return self::Enabled;
+        }
+
+        if (! $hasSiteKey && ! $hasSecretKey) {
+            return self::Disabled;
+        }
+
+        return self::Misconfigured;
     }
 
-    public static function reportProductionMisconfiguration(): void
+    public static function enabled(): bool
     {
-        if (! app()->isProduction()) {
+        return self::status() === self::Enabled;
+    }
+
+    public static function reportMisconfiguration(): void
+    {
+        if (self::status() !== self::Misconfigured) {
             return;
         }
 
-        $missingKeys = [];
+        Log::warning('reCAPTCHA configuration is incomplete; public challenges are disabled.', [
+            'missing_key' => self::siteKey() === null
+                ? 'recaptcha_site_key'
+                : 'recaptcha_secret_key',
+        ]);
+    }
 
-        if (self::filledSetting('recaptcha_site_key') === null) {
-            $missingKeys[] = 'recaptcha_site_key';
+    public static function verify(?string $response, ?string $remoteIp = null): bool
+    {
+        self::reportMisconfiguration();
+
+        if (! self::enabled() || blank($response)) {
+            return false;
         }
 
-        if (self::secretKey() === null) {
-            $missingKeys[] = 'recaptcha_secret_key';
-        }
+        try {
+            $verificationResponse = Http::asForm()
+                ->timeout(5)
+                ->connectTimeout(2)
+                ->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret' => self::secretKey(),
+                    'response' => $response,
+                    'remoteip' => $remoteIp,
+                ]);
 
-        if ($missingKeys !== []) {
-            Log::warning('Production reCAPTCHA is not fully configured.', [
-                'missing_keys' => $missingKeys,
+            return $verificationResponse->successful()
+                && (bool) data_get($verificationResponse->json(), 'success', false);
+        } catch (\Throwable $exception) {
+            Log::warning('reCAPTCHA verification request failed.', [
+                'exception' => $exception::class,
             ]);
+
+            return false;
         }
     }
 

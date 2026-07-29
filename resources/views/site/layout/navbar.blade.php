@@ -1,24 +1,44 @@
 @php
-    $navCourseRoutes = [
+    $navCourseRoutes = collect($categories ?? [])
+        ->filter(fn ($category) => filled(data_get($category, 'slug'))
+            && (int) data_get($category, 'courses_count', 1) > 0)
+        ->map(fn ($category) => [
+            'label' => data_get($category, 'name'),
+            'url' => route('courses-all', ['category' => data_get($category, 'slug')]),
+        ])
+        ->values();
+
+    $primaryNavItems = [
         [
-            'label' => 'All Courses',
+            'label' => 'Home',
+            'url' => route('home'),
+            'active_routes' => ['home'],
+        ],
+        [
+            'label' => 'Courses',
             'url' => route('courses-all'),
+            'active_routes' => ['courses', 'courses-all', 'course-category', 'course-catagory', 'courses-detail', 'join-now'],
+            'course_menu' => true,
         ],
         [
-            'label' => 'IELTS / PTE',
-            'url' => route('courses-all', ['search' => 'IELTS PTE']),
+            'label' => 'About',
+            'url' => route('about'),
+            'active_routes' => ['about', 'about-detail'],
         ],
         [
-            'label' => 'Japanese / Korean',
-            'url' => route('courses-all', ['search' => 'Japanese Korean']),
+            'label' => 'Blog',
+            'url' => route('blog'),
+            'active_routes' => ['blog', 'blog-detail'],
         ],
         [
-            'label' => 'Computer Skills',
-            'url' => route('courses-all', ['search' => 'Computer Office Skills']),
+            'label' => 'FAQ',
+            'url' => route('faq'),
+            'active_routes' => ['faq'],
         ],
         [
-            'label' => 'Web Development',
-            'url' => route('courses-all', ['search' => 'Web Development']),
+            'label' => 'Contact',
+            'url' => route('contact'),
+            'active_routes' => ['contact'],
         ],
     ];
 
@@ -43,7 +63,7 @@
 @endphp
 
 <!-- Navbar Start -->
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top p-0 site-navbar">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top p-0 site-navbar" aria-label="Primary navigation">
     <a href="{{ route('home') }}" class="navbar-brand site-navbar-brand d-flex align-items-center px-3 px-lg-4 text-decoration-none">
         <img class="img-logo me-2 object-contain" src="{{ \App\Support\PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png') }}" onerror="this.src='{{ asset('site/img/logo.png') }}'" alt="{{ $displaySiteName }}" decoding="async" width="55" height="55" style="height: 55px; width: auto;">
         <h4 class="m-0 text-brand-gold font-black tracking-tighter d-flex align-items-center site-brand-wordmark">
@@ -53,48 +73,109 @@
             @endif
         </h4>
     </a>
-    <button type="button" class="navbar-toggler me-4 d-flex align-items-center d-lg-none p-2 rounded-xl shadow-sm transition-all active:scale-95 border-brand-gold"
-            data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation menu">
-        <span class="navbar-toggler-icon"></span>
+    <button id="primaryNavigationToggle" type="button" class="navbar-toggler me-4 d-flex align-items-center d-lg-none p-2 rounded-xl shadow-sm transition-all active:scale-95 border-brand-gold"
+            data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Open navigation menu">
+        <span class="navbar-toggler-icon" aria-hidden="true"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav site-desktop-nav ms-auto p-4 p-lg-0 d-none d-lg-flex">
-            <a href="{{ route('home') }}" class="nav-item nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
-
-            <div class="nav-item dropdown dropdown-hover">
-                <a href="{{ route('courses-all') }}" class="nav-link dropdown-toggle {{ request()->routeIs('courses', 'courses-all', 'course-category', 'course-catagory', 'courses-detail', 'join-now') ? 'active' : '' }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">Courses</a>
-                <div class="dropdown-menu fade-down m-0 shadow-sm border-0">
-                    @foreach($navCourseRoutes as $courseRoute)
-                        <a href="{{ $courseRoute['url'] }}" class="dropdown-item">{{ $courseRoute['label'] }}</a>
-                    @endforeach
-                </div>
-            </div>
-
-            <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>
-            <a href="{{ route('blog') }}" class="nav-item nav-link {{ request()->routeIs('blog') ? 'active' : '' }}">Blog</a>
-            <a href="{{ route('contact') }}" class="nav-item nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a>
+            @foreach($primaryNavItems as $navItem)
+                @if($navItem['course_menu'] ?? false)
+                    <div class="nav-item dropdown dropdown-hover">
+                        <a href="{{ $navItem['url'] }}" class="nav-link dropdown-toggle {{ request()->routeIs(...$navItem['active_routes']) ? 'active' : '' }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ $navItem['label'] }}</a>
+                        <div class="dropdown-menu fade-down m-0 shadow-sm border-0">
+                            <a href="{{ route('courses-all') }}" class="dropdown-item">All Courses</a>
+                            @foreach($navCourseRoutes as $courseRoute)
+                                <a href="{{ $courseRoute['url'] }}" class="dropdown-item">{{ $courseRoute['label'] }}</a>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ $navItem['url'] }}" class="nav-item nav-link {{ request()->routeIs(...$navItem['active_routes']) ? 'active' : '' }}">{{ $navItem['label'] }}</a>
+                @endif
+            @endforeach
         </div>
 
-        <div class="navbar-nav site-mobile-nav p-4 d-lg-none">
-            <a href="{{ route('home') }}" class="nav-item nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
-            <a href="{{ route('courses-all') }}" class="nav-item nav-link {{ request()->routeIs('courses', 'courses-all', 'course-category', 'course-catagory', 'courses-detail') ? 'active' : '' }}">Courses</a>
-            <a href="{{ route('courses-all', ['search' => 'IELTS PTE Language']) }}" class="nav-item nav-link">IELTS / PTE</a>
-            <a href="{{ route('courses-all', ['search' => 'Computer Office Skills']) }}" class="nav-item nav-link">Computer Skills</a>
-            <a href="{{ route('courses-all', ['search' => 'Japanese Korean Language']) }}" class="nav-item nav-link">Languages</a>
-            <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>
-            <a href="{{ route('contact') }}" class="nav-item nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a>
+        <div class="navbar-nav site-mobile-nav p-4 d-lg-none" data-mobile-navigation>
+            @foreach($primaryNavItems as $navItem)
+                <a href="{{ $navItem['url'] }}" class="nav-item nav-link {{ request()->routeIs(...$navItem['active_routes']) ? 'active' : '' }}">{{ $navItem['label'] }}</a>
+                @if($navItem['course_menu'] ?? false)
+                    @foreach($navCourseRoutes as $courseRoute)
+                        <a href="{{ $courseRoute['url'] }}" class="nav-item nav-link site-mobile-course-link">{{ $courseRoute['label'] }}</a>
+                    @endforeach
+                @endif
+            @endforeach
+            <a href="{{ $headerHelpUrl }}" class="nav-item nav-link site-mobile-primary" data-cta="mobile-menu-course-help">
+                {{ $headerHelpLabel }}
+            </a>
             @if($navWhatsappNumber)
                 <a href="https://wa.me/{{ $navWhatsappCleanNumber }}?text={{ $navWhatsappMessage }}" target="_blank" rel="noopener" class="nav-item nav-link site-mobile-whatsapp" data-cta="mobile-menu-whatsapp">
-                    <i class="fab fa-whatsapp me-2"></i>{{ $navWhatsappLabel }}
+                    <i class="fab fa-whatsapp me-2" aria-hidden="true"></i>{{ $navWhatsappLabel }}
                 </a>
             @endif
         </div>
 
         <div class="site-navbar-actions p-3 p-lg-0 d-none d-lg-flex justify-content-center">
             <a href="{{ $headerHelpUrl }}" data-cta="navbar-course-help" data-cta-label="{{ $headerHelpLabel }}" class="btn btn-primary site-navbar-cta">
-                {{ $headerHelpLabel }} <i class="fa fa-arrow-right ms-2"></i>
+                {{ $headerHelpLabel }} <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
             </a>
         </div>
     </div>
 </nav>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const navigation = document.getElementById('navbarCollapse');
+        const toggle = document.getElementById('primaryNavigationToggle');
+
+        if (!navigation || !toggle) {
+            return;
+        }
+
+        const updateNavigationState = function (isOpen, shouldMoveFocus = true) {
+            toggle.setAttribute('aria-expanded', String(isOpen));
+            toggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+
+            if (isOpen && shouldMoveFocus) {
+                navigation.querySelector('[data-mobile-navigation] a')?.focus();
+            } else if (!isOpen && navigation.contains(document.activeElement)) {
+                toggle.focus();
+            }
+        };
+
+        navigation.addEventListener('shown.bs.collapse', function () {
+            updateNavigationState(true);
+        });
+
+        navigation.addEventListener('hidden.bs.collapse', function () {
+            updateNavigationState(false);
+        });
+
+        toggle.addEventListener('click', function (event) {
+            if (window.bootstrap) {
+                return;
+            }
+
+            event.preventDefault();
+            const isOpen = navigation.classList.toggle('show');
+            updateNavigationState(isOpen);
+        });
+
+        navigation.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') {
+                return;
+            }
+
+            event.preventDefault();
+
+            if (window.bootstrap) {
+                bootstrap.Collapse.getOrCreateInstance(navigation).hide();
+            } else {
+                navigation.classList.remove('show');
+                updateNavigationState(false);
+            }
+
+            toggle.focus();
+        });
+    });
+</script>
 <!-- Navbar End -->

@@ -182,8 +182,11 @@
             @else
                 <div class="text-center py-5 bg-zinc-50 rounded-2xl border border-zinc-100">
                     <h3 class="h5 fw-black text-brand-dark mb-2">No course matched that search.</h3>
-                    <p class="text-zinc-600 mb-4">Send us your goal and we will point you to the closest option.</p>
-                    <a href="{{ $guidanceUrl('courses-empty') }}" data-cta="courses-empty-course-guidance" class="btn btn-primary rounded-xl px-5 py-3 font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
+                    <p class="text-zinc-600 mb-4">Try one subject, language, exam, or category at a time, or ask the academy team to suggest the closest current option.</p>
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                        <a href="{{ route('courses-all') }}" class="btn btn-outline-brand-dark rounded-xl px-5 py-3 font-black uppercase tracking-widest" style="font-size: 10px;">Clear Search</a>
+                        <a href="{{ $guidanceUrl('courses-empty') }}" data-cta="courses-empty-course-guidance" class="btn btn-primary rounded-xl px-5 py-3 font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
+                    </div>
                 </div>
             @endif
         </div>

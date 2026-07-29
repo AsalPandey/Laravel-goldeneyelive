@@ -771,6 +771,20 @@
                         @if($isAdmin)
                         <div>
                             <h4 class="text-xs font-black uppercase text-orange-900 mb-6">Security (reCAPTCHA)</h4>
+                            @php($recaptchaStatus = \App\Support\Recaptcha::status())
+                            @if($recaptchaStatus === \App\Support\Recaptcha::Enabled)
+                                <p class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800">
+                                    Active: both reCAPTCHA keys are configured.
+                                </p>
+                            @elseif($recaptchaStatus === \App\Support\Recaptcha::Misconfigured)
+                                <p class="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-800" role="alert">
+                                    Configuration incomplete: add the missing reCAPTCHA key. Public challenges remain safely disabled until both keys are saved.
+                                </p>
+                            @else
+                                <p class="mb-4 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-bold text-neutral-700">
+                                    Disabled: add both reCAPTCHA keys to enable public challenges.
+                                </p>
+                            @endif
                             <div class="space-y-4">
                                 <input type="text" name="recaptcha_site_key" value="{{ $settings['recaptcha_site_key'] ?? '' }}" class="premium-input text-xs" placeholder="Site Key">
                                 <input type="password" name="recaptcha_secret_key" value="{{ $settings['recaptcha_secret_key'] ?? '' }}" class="premium-input text-xs" placeholder="Secret Key">

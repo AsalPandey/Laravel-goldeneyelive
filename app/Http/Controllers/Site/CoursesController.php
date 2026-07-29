@@ -10,6 +10,7 @@ use App\Models\Teacher;
 use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CoursesController extends Controller
 {
@@ -41,14 +42,30 @@ class CoursesController extends Controller
             ->limit(3)
             ->get();
 
+        $searchTokens = collect(preg_split('/[^\pL\pN+#]+/u', Str::lower($search)) ?: [])
+            ->filter(fn (string $token): bool => mb_strlen($token) >= 2)
+            ->unique()
+            ->take(8)
+            ->values();
+
         $courses = Course::publiclyVisible()
             ->with('courseCategory')
-            ->when($search !== '', function ($query) use ($search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%")
-                        ->orWhere('badge_text', 'like', "%{$search}%")
-                        ->orWhere('category', 'like', "%{$search}%");
+            ->when($searchTokens->isNotEmpty(), function ($query) use ($searchTokens) {
+                $query->where(function ($query) use ($searchTokens) {
+                    foreach ($searchTokens as $token) {
+                        $likeToken = '%'.$token.'%';
+
+                        $query->orWhere('name', 'like', $likeToken)
+                            ->orWhere('slug', 'like', $likeToken)
+                            ->orWhere('description', 'like', $likeToken)
+                            ->orWhere('badge_text', 'like', $likeToken)
+                            ->orWhere('category', 'like', $likeToken)
+                            ->orWhere('category_slug', 'like', $likeToken)
+                            ->orWhereHas('courseCategory', function ($categoryQuery) use ($likeToken) {
+                                $categoryQuery->where('name', 'like', $likeToken)
+                                    ->orWhere('slug', 'like', $likeToken);
+                            });
+                    }
                 });
             })
             ->when($categorySlug, function ($query) use ($categorySlug) {

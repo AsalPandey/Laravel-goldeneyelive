@@ -84,7 +84,7 @@
 
     <!-- Template Stylesheet -->
     <link href="{{ asset("site/css/style.css") }}" rel="stylesheet">
-    @if(isset($settings['recaptcha_site_key']) && !empty($settings['recaptcha_site_key']))
+    @if(\App\Support\Recaptcha::enabled())
     <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     @endif

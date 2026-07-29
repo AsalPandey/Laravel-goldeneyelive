@@ -15,7 +15,6 @@ use App\Models\NewsLetter;
 use App\Models\SiteSetting;
 use App\Support\Recaptcha;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -36,8 +35,10 @@ class ContactController extends Controller
 
         $recaptchaResponse = $validated['g-recaptcha-response'] ?? null;
 
-        if ($recaptchaResponse && ! $this->verifyRecaptcha($recaptchaResponse)) {
-            return back()->withErrors(['g-recaptcha-response' => 'Security verification failed. Please try again.'])->withInput();
+        if ($recaptchaResponse && ! Recaptcha::verify($recaptchaResponse, $request->ip())) {
+            return back()
+                ->withErrors(['g-recaptcha-response' => 'Security verification failed or expired. Please complete it again.'])
+                ->withInput();
         }
 
         $validated['lead_source'] = $validated['lead_source'] ?? 'website';
@@ -73,16 +74,15 @@ class ContactController extends Controller
     {
         $validated = $request->validated();
 
-        if ($request->filled('g-recaptcha-response')) {
-            $isHuman = $this->verifyRecaptcha($request->input('g-recaptcha-response'));
-            if (! $isHuman) {
-                return back()
-                    ->withErrors(['g-recaptcha-response' => 'Security verification failed. Please try again.'], 'newsletter')
-                    ->with('newsletter_validation_errors', [
-                        'g-recaptcha-response' => ['Security verification failed. Please try again.'],
-                    ])
-                    ->withInput();
-            }
+        $recaptchaResponse = $validated['g-recaptcha-response'] ?? null;
+
+        if ($recaptchaResponse && ! Recaptcha::verify($recaptchaResponse, $request->ip())) {
+            return back()
+                ->withErrors(['g-recaptcha-response' => 'Security verification failed or expired. Please complete it again.'], 'newsletter')
+                ->with('newsletter_validation_errors', [
+                    'g-recaptcha-response' => ['Security verification failed or expired. Please complete it again.'],
+                ])
+                ->withInput();
         }
 
         $subscriber = NewsLetter::query()->createOrFirst([
@@ -118,8 +118,10 @@ class ContactController extends Controller
     {
         $validated = $request->validated();
 
-        if (($validated['g-recaptcha-response'] ?? null) && ! $this->verifyRecaptcha($validated['g-recaptcha-response'])) {
-            return back()->withErrors(['g-recaptcha-response' => 'Security verification failed. Please try again.'])->withInput();
+        if (($validated['g-recaptcha-response'] ?? null) && ! Recaptcha::verify($validated['g-recaptcha-response'], $request->ip())) {
+            return back()
+                ->withErrors(['g-recaptcha-response' => 'Security verification failed or expired. Please complete it again.'])
+                ->withInput();
         }
 
         $selectedCourseContext = $validated['selected_course'] ?? $validated['course'] ?? 'undecided';
@@ -288,35 +290,5 @@ class ContactController extends Controller
             'Web development' => 'web_development',
             default => $validated['inquiry_intent'] ?? 'course_guidance',
         };
-    }
-
-    /**
-     * Verify reCAPTCHA with Google API
-     */
-    private function verifyRecaptcha(?string $response): bool
-    {
-        Recaptcha::reportProductionMisconfiguration();
-
-        $secret = Recaptcha::secretKey();
-        if (! $secret) {
-            return ! Recaptcha::hasConfiguredKey() && ! app()->isProduction();
-        }
-
-        try {
-            $verificationResponse = Http::asForm()
-                ->timeout(5)
-                ->connectTimeout(2)
-                ->post('https://www.google.com/recaptcha/api/siteverify', [
-                    'secret' => $secret,
-                    'response' => $response,
-                    'remoteip' => request()->ip(),
-                ]);
-
-            return (bool) data_get($verificationResponse->json(), 'success', false);
-        } catch (\Exception $e) {
-            logger()->error('reCAPTCHA Verification Error: '.$e->getMessage());
-
-            return false;
-        }
     }
 }

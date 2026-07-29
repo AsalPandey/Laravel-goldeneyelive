@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', RobotsController::class);
-Route::redirect('/catalogue', '/catelogue', 301)->name('catalogue.redirect');
+Route::redirect('/catelogue', '/catalogue', 301)->name('catalogue.legacy');
 Route::redirect('/all-courses', '/courses-all', 301)->name('all-courses.redirect');
 Route::post('/analytics/events', [AnalyticsEventController::class, 'store'])
     ->middleware('throttle:120,1')
@@ -41,7 +41,7 @@ Route::controller(SiteController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/about', 'about')->name('about');
     Route::get('/about-detail', 'aboutDetail')->name('about-detail');
-    Route::get('/catelogue', 'catalogue')->name('catalogue');
+    Route::get('/catalogue', 'catalogue')->name('catalogue');
     Route::get('/for-students', 'forStudents')->name('for-students');
     Route::get('/for-parents', 'forParents')->name('for-parents');
     Route::get('/study-abroad-guidance', 'studyAbroadGuidance')->name('study-abroad-guidance');

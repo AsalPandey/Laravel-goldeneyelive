@@ -263,9 +263,11 @@ class PublicSubmissionTest extends TestCase
         $this->assertDatabaseHas(NewsLetter::class, ['email' => 'news@example.com']);
     }
 
-    public function test_contact_form_fails_if_recaptcha_configured_but_missing(): void
+    public function test_contact_form_remains_usable_when_only_one_recaptcha_key_is_configured(): void
     {
-        // Mock site setting to require recaptcha
+        Mail::fake();
+        Log::spy();
+
         SiteSetting::create([
             'key' => 'recaptcha_secret_key',
             'value' => 'some_secret',
@@ -280,7 +282,19 @@ class PublicSubmissionTest extends TestCase
             'message' => 'I want to know more.',
         ]);
 
-        $response->assertSessionHasErrors('g-recaptcha-response');
+        $response
+            ->assertRedirect(route('contact'))
+            ->assertSessionDoesntHaveErrors('g-recaptcha-response');
+
+        $this->assertDatabaseHas(Contact::class, [
+            'email' => 'asha@example.com',
+        ]);
+
+        Log::shouldHaveReceived('warning')
+            ->with('reCAPTCHA configuration is incomplete; public challenges are disabled.', [
+                'missing_key' => 'recaptcha_site_key',
+            ])
+            ->once();
     }
 
     public function test_contact_form_passes_with_configured_recaptcha_token(): void
@@ -324,7 +338,7 @@ class PublicSubmissionTest extends TestCase
         Mail::assertQueued(ContactMail::class);
     }
 
-    public function test_production_missing_recaptcha_keys_logs_warning_without_crashing(): void
+    public function test_production_without_recaptcha_keys_keeps_form_usable_without_a_misconfiguration_warning(): void
     {
         Mail::fake();
         Log::spy();
@@ -345,11 +359,7 @@ class PublicSubmissionTest extends TestCase
             'subject' => 'Course question',
         ]);
 
-        Log::shouldHaveReceived('warning')
-            ->with('Production reCAPTCHA is not fully configured.', [
-                'missing_keys' => ['recaptcha_site_key', 'recaptcha_secret_key'],
-            ])
-            ->once();
+        Log::shouldNotHaveReceived('warning');
     }
 
     public function test_join_now_form_fails_with_invalid_course_slug(): void

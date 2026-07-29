@@ -15,26 +15,32 @@
                     <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_contact_title'] ?? 'Contact' }}</h6>
                     <p class="mb-2 extra-small"><i class="fa fa-map-marker-alt me-3 text-brand-gold"></i>{{ $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal' }}</p>
                     @php
-                        $footerPhone = $settings['site_phone'] ?? '061-572599, 9856058599';
-                        $footerPhoneHref = preg_replace('/[^0-9+]/', '', explode(',', $footerPhone)[0]);
+                        $footerPhones = \App\Support\ContactPhones::parse($settings['site_phone'] ?? '061-572599, 9856058599');
                     @endphp
-                    <p class="mb-2 extra-small"><i class="fa fa-phone-alt me-3 text-brand-gold"></i><a href="tel:{{ $footerPhoneHref }}" class="text-light text-decoration-none" data-source-page="footer" data-source-section="footer-phone" data-cta-label="Phone">{{ $footerPhone }}</a></p>
+                    <div class="mb-2 extra-small d-flex align-items-start">
+                        <i class="fa fa-phone-alt me-3 mt-1 text-brand-gold" aria-hidden="true"></i>
+                        <div>
+                            @foreach($footerPhones as $footerPhone)
+                                <a href="tel:{{ $footerPhone['href'] }}" class="d-block text-light text-decoration-none mb-1" data-source-page="footer" data-source-section="footer-phone" data-cta-label="Phone">{{ $footerPhone['display'] }}</a>
+                            @endforeach
+                        </div>
+                    </div>
                     <p class="mb-2 extra-small"><i class="fa fa-envelope me-3 text-brand-gold"></i>{{ $settings['site_email'] ?? 'contact@goldeneye.edu.np' }}</p>
                     <div class="d-flex pt-2">
                         @if(isset($settings['facebook_url']) && $settings['facebook_url'])
-                        <a class="btn btn-outline-light btn-social" href="{{ $settings['facebook_url'] }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="{{ $settings['facebook_url'] }}" target="_blank" rel="noopener" aria-label="Golden Eye Academy on Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
                         @endif
                         @if(isset($settings['instagram_url']) && $settings['instagram_url'])
-                        <a class="btn btn-outline-light btn-social" href="{{ $settings['instagram_url'] }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="{{ $settings['instagram_url'] }}" target="_blank" rel="noopener" aria-label="Golden Eye Academy on Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
                         @endif
                         @if(isset($settings['linkedin_url']) && $settings['linkedin_url'])
-                        <a class="btn btn-outline-light btn-social" href="{{ $settings['linkedin_url'] }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="{{ $settings['linkedin_url'] }}" target="_blank" rel="noopener" aria-label="Golden Eye Academy on LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
                         @endif
                         @if(isset($settings['youtube_url']) && $settings['youtube_url'])
-                        <a class="btn btn-outline-light btn-social" href="{{ $settings['youtube_url'] }}" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="{{ $settings['youtube_url'] }}" target="_blank" rel="noopener" aria-label="Golden Eye Academy on YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a>
                         @endif
                         @if(isset($settings['whatsapp_number']) && $settings['whatsapp_number'])
-                        <a class="btn btn-outline-light btn-social" href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $settings['whatsapp_number']) }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $settings['whatsapp_number']) }}" target="_blank" rel="noopener" aria-label="Message Golden Eye Academy on WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
                         @endif
                     </div>
                 </div>
@@ -58,7 +64,6 @@
                     @php
                         $newsletterValidationErrors = session('newsletter_validation_errors', []);
                         $newsletterEmailError = data_get($newsletterValidationErrors, 'email.0');
-                        $newsletterRecaptchaError = data_get($newsletterValidationErrors, 'g-recaptcha-response.0');
                     @endphp
                     <form action="{{ route('newsletter') }}" method="POST" id="newsletterForm">
                         @csrf
@@ -69,12 +74,7 @@
                         @if($newsletterEmailError)
                             <div id="newsletterEmailError" class="text-danger small mt-2">{{ $newsletterEmailError }}</div>
                         @endif
-                        @if(isset($settings['recaptcha_site_key']) && !empty($settings['recaptcha_site_key']))
-                        <div class="g-recaptcha" data-sitekey="{{ $settings['recaptcha_site_key'] }}" data-size="compact" data-theme="dark"></div>
-                        @if($newsletterRecaptchaError)
-                            <div class="text-danger small mt-2">{{ $newsletterRecaptchaError }}</div>
-                        @endif
-                        @endif
+                        <x-recaptcha error-bag="newsletter" size="compact" theme="dark" />
                     </form>
                 </div>
             </div>
