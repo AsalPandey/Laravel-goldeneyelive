@@ -3,7 +3,7 @@
         <div class="container py-3">
             <div class="row g-4">
                 <div class="col-lg-3 col-md-6">
-                    <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_quick_link_title'] ?? 'Quick Link' }}</h6>
+                    <h2 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_quick_link_title'] ?? 'Quick Link' }}</h2>
                     <p class="extra-small text-muted mb-3">{{ $settings['footer_about_text'] ?? 'Golden Eye Academy provides practical courses, classes, workshops and academic programs for students, professionals, schools and organizations.' }}</p>
                     <a class="btn btn-link extra-small" href="{{ route('about') }}">About Us</a>
                     <a class="btn btn-link extra-small" href="{{ route('courses-all') }}">Courses</a>
@@ -13,7 +13,7 @@
                     <a class="btn btn-link extra-small" href="{{ route('faq') }}">FAQs & Help</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_contact_title'] ?? 'Contact' }}</h6>
+                    <h2 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_contact_title'] ?? 'Contact' }}</h2>
                     <p class="mb-2 extra-small"><i class="fa fa-map-marker-alt me-3 text-brand-gold"></i>{{ $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal' }}</p>
                     @php
                         $footerPhones = \App\Support\ContactPhones::parse($settings['site_phone'] ?? '061-572599, 9856058599');
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_faq_title'] ?? 'Academic Guide' }}</h6>
+                    <h2 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_faq_title'] ?? 'Academic Guide' }}</h2>
                     <p class="extra-small text-muted mb-3">Quick answers about course fit, fees, timing, and next steps.</p>
                     @if(isset($footerFaqs) && is_iterable($footerFaqs) && count($footerFaqs) > 0)
                         @foreach($footerFaqs as $footerFaq)
@@ -60,7 +60,7 @@
                     @endif
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_social_title'] ?? 'Stay Connected' }}</h6>
+                    <h2 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_social_title'] ?? 'Stay Connected' }}</h2>
                     <p class="extra-small mb-3">{{ $settings['footer_newsletter_desc'] ?? 'Sign up for career insights & class updates.' }}</p>
                     @php
                         $newsletterValidationErrors = session('newsletter_validation_errors', []);
@@ -69,6 +69,7 @@
                     <form action="{{ route('newsletter') }}" method="POST" id="newsletterForm">
                         @csrf
                         <div class="d-flex flex-column flex-sm-row gap-2 mx-auto mb-3" style="max-width: 420px;">
+                            <label class="visually-hidden" for="newsletter_email">Email address for academy updates</label>
                             <input class="form-control border-0 flex-grow-1 py-3 px-3 bg-white text-brand-dark rounded-lg extra-small {{ $newsletterEmailError ? 'is-invalid' : '' }}" type="email" name="email" id="newsletter_email" placeholder="Your Email Address" value="{{ old('email') }}" required aria-invalid="{{ $newsletterEmailError ? 'true' : 'false' }}" @if($newsletterEmailError) aria-describedby="newsletterEmailError" @endif>
                             <button type="submit" class="btn btn-primary py-3 px-4 rounded-lg font-black uppercase tracking-widest shadow-lg flex-shrink-0" style="font-size: 9px;">Join</button>
                         </div>
@@ -101,7 +102,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top" aria-label="Back to top"><i class="bi bi-arrow-up" aria-hidden="true"></i></a>
 
 
     <!-- JavaScript Libraries -->

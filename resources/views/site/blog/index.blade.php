@@ -51,7 +51,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="premium-card p-0 h-100 d-flex flex-column group">
                         <div class="position-relative overflow-hidden" style="height: 180px;">
-                            <img class="img-fluid w-100 h-100 object-cover authentic-vibe" src="{{ \App\Support\PublicAsset::url($post->image ?? null, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $post->title }}">
+                            <img class="img-fluid w-100 h-100 object-cover authentic-vibe" src="{{ \App\Support\PublicAsset::url($post->image ?? null, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $post->title }}" loading="lazy" decoding="async" width="640" height="360">
                             <div class="position-absolute top-2 left-2 z-10">
                                 <span class="bg-brand-gold text-brand-dark text-[8px] font-black uppercase px-2 py-1 rounded-full shadow-lg tracking-widest">
                                     {{ $post->category ?? 'Insights' }}
@@ -63,9 +63,9 @@
                                 <span><i class="fa fa-calendar-alt text-brand-gold me-1"></i>{{ $post->created_at->format('M d, Y') }}</span>
                                 <span><i class="fa fa-user text-brand-gold me-1"></i>{{ $post->author ?? 'Admin' }}</span>
                             </div>
-                            <h6 class="mb-2 font-black text-brand-dark lh-base" style="font-size: 14px;">
+                            <h3 class="mb-2 font-black text-brand-dark lh-base" style="font-size: 14px;">
                                 <a href="{{ route('blog-detail', $post->slug) }}" class="text-dark hover:text-brand-gold transition-colors">{{ Str::limit($post->title, 60) }}</a>
-                            </h6>
+                            </h3>
                             <p class="text-zinc-500 extra-small leading-relaxed mb-0" style="font-size: 11px;">{{ Str::limit(strip_tags($post->content), 100) }}</p>
                         </div>
                         <div class="px-4 pb-4 mt-auto">

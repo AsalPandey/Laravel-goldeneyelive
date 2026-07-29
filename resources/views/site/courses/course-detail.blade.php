@@ -132,7 +132,7 @@
             </nav>
             <div class="row align-items-end g-4" style="min-height: 55vh;">
                 <div class="col-lg-8">
-                    <span class="badge rounded-pill bg-brand-gold text-brand-dark px-4 py-2 fw-black text-uppercase tracking-[0.3em] mb-4" style="font-size: 9px;">{{ $course->badge_text ?? 'Course Details' }}</span>
+                    <span class="badge responsive-cms-badge rounded-pill bg-brand-gold text-brand-dark px-4 py-2 fw-black text-uppercase tracking-[0.3em] mb-4" style="font-size: 9px;">{{ $course->badge_text ?? 'Course Details' }}</span>
                     <h1 class="font-black text-white mb-4" style="font-size: clamp(2rem, 5vw, 4.2rem); line-height: 1.04; letter-spacing: 0;">{{ $course->name }}</h1>
                     <p class="text-white/90 mb-4" style="font-size: 16px; line-height: 1.7; max-width: 760px;">{{ $outcome }}</p>
                     <div class="d-flex flex-wrap gap-2 mb-4">

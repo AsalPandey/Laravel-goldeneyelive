@@ -165,7 +165,7 @@
     @include('sweetalert::alert')
 
     @if($noticePopupData)
-        <div id="siteNoticePopup" class="modal fade site-notice-popup" tabindex="-1" aria-hidden="true" data-notice-id="{{ $noticePopupData->id }}">
+        <div id="siteNoticePopup" class="modal fade site-notice-popup" tabindex="-1" aria-hidden="true" aria-labelledby="siteNoticePopupTitle" @if($noticePopupData->subtitle) aria-describedby="siteNoticePopupDescription" @endif data-notice-id="{{ $noticePopupData->id }}">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 overflow-hidden">
                     <button type="button" class="site-notice-popup-close" data-bs-dismiss="modal" aria-label="Close" onclick="dismissSitePopup('{{ $noticePopupData->id }}')">
@@ -176,9 +176,9 @@
                     </div>
                     <div class="site-notice-popup-body">
 	                        <span class="site-notice-badge">{{ $noticePopupData->badge ?: 'Academy Support' }}</span>
-	                        <h2>{{ $noticePopupData->title }}</h2>
+	                        <h2 id="siteNoticePopupTitle">{{ $noticePopupData->title }}</h2>
 	                        @if($noticePopupData->subtitle)
-	                            <p>{{ $noticePopupData->subtitle }}</p>
+	                            <p id="siteNoticePopupDescription">{{ $noticePopupData->subtitle }}</p>
 	                        @endif
 	                        <div class="d-grid gap-2">
 	                            <a href="{{ $noticePopupData->button_link }}" id="siteNoticePopupCta" data-default-href="{{ $noticePopupData->button_link }}" data-cta="notice-popup-course-help" data-source-page="popup" data-source-section="course-help-popup" data-inquiry-intent="course_help" onclick="dismissSitePopup('{{ $noticePopupData->id }}')" class="btn btn-primary site-notice-popup-cta py-3 rounded-pill font-black uppercase tracking-widest">
@@ -200,6 +200,7 @@
 	                const autoDelayMs = 7000;
 	                let autoOpened = false;
 	                let scrollTriggered = false;
+	                let popupReturnFocus = null;
 
 	                function popupElement() {
 	                    return document.getElementById('siteNoticePopup');
@@ -285,12 +286,21 @@
 	                    }
 
 	                    syncPopupCtaFromLink(options.link || null);
+	                    popupReturnFocus = options.link instanceof HTMLElement ? options.link : null;
 
 	                    const noticeModal = bootstrap.Modal.getOrCreateInstance(popup);
 	                    noticeModal.show();
 
 	                    return true;
 	                };
+
+	                popupElement()?.addEventListener('hidden.bs.modal', function () {
+	                    if (popupReturnFocus?.isConnected) {
+	                        popupReturnFocus.focus();
+	                    }
+
+	                    popupReturnFocus = null;
+	                });
 
 	                document.addEventListener('click', function (event) {
 	                    const trigger = event.target.closest('a[href]');
@@ -361,6 +371,80 @@
 	                </span>
 	            </a>
 	        </div>
+	        <script>
+	            (function () {
+	                const container = document.querySelector('.whatsapp-btn-container');
+	                const mobileViewport = window.matchMedia('(max-width: 991px)');
+	                const actionSelector = 'main [data-cta], main button[type="submit"], main input[type="submit"]';
+	                let scheduledFrame = null;
+
+	                if (!container) {
+	                    return;
+	                }
+
+	                function intersects(first, second) {
+	                    return first.left < second.right
+	                        && first.right > second.left
+	                        && first.top < second.bottom
+	                        && first.bottom > second.top;
+	                }
+
+	                function updateWhatsappPosition() {
+	                    container.style.transform = '';
+
+	                    if (!mobileViewport.matches) {
+	                        return;
+	                    }
+
+	                    const baseRect = container.getBoundingClientRect();
+	                    const actionRects = Array.from(document.querySelectorAll(actionSelector))
+	                        .map((action) => action.getBoundingClientRect())
+	                        .filter((rect) => rect.width > 0
+	                            && rect.height > 0
+	                            && rect.bottom > 0
+	                            && rect.top < window.innerHeight);
+	                    let candidateTop = baseRect.top;
+	                    let candidateRect = baseRect;
+
+	                    for (let index = 0; index < actionRects.length; index += 1) {
+	                        const collision = actionRects.find((rect) => intersects(candidateRect, rect));
+
+	                        if (!collision) {
+	                            break;
+	                        }
+
+	                        candidateTop = Math.max(8, collision.top - baseRect.height - 8);
+	                        candidateRect = {
+	                            left: baseRect.left,
+	                            right: baseRect.right,
+	                            top: candidateTop,
+	                            bottom: candidateTop + baseRect.height,
+	                        };
+	                    }
+
+	                    if (candidateTop < baseRect.top) {
+	                        container.style.transform = `translateY(${Math.round(candidateTop - baseRect.top)}px)`;
+	                    }
+	                }
+
+	                function scheduleWhatsappPositionUpdate() {
+	                    if (scheduledFrame !== null) {
+	                        return;
+	                    }
+
+	                    scheduledFrame = window.requestAnimationFrame(function () {
+	                        scheduledFrame = null;
+	                        updateWhatsappPosition();
+	                    });
+	                }
+
+	                window.addEventListener('load', scheduleWhatsappPositionUpdate);
+	                window.addEventListener('resize', scheduleWhatsappPositionUpdate);
+	                window.addEventListener('scroll', scheduleWhatsappPositionUpdate, { passive: true });
+	                mobileViewport.addEventListener?.('change', scheduleWhatsappPositionUpdate);
+	                scheduleWhatsappPositionUpdate();
+	            })();
+	        </script>
 	    @endif
 
 </body>

@@ -88,7 +88,7 @@
                             <a href="{{ route('courses-all', ['category' => $category->slug]) }}" data-cta="catalogue-category-{{ $category->slug }}" class="text-decoration-none">
                                 <article class="premium-card h-100 overflow-hidden">
                                     <div class="aspect-[16/9] overflow-hidden">
-                                        <img class="w-100 h-100 object-cover" src="{{ \App\Support\PublicAsset::url($category->image ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $category->name }}">
+                                        <img class="w-100 h-100 object-cover" src="{{ \App\Support\PublicAsset::url($category->image ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $category->name }}" loading="lazy" decoding="async" width="640" height="360">
                                     </div>
                                     <div class="p-4">
                                         <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
@@ -128,7 +128,7 @@
                                     <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full text-[7.5px] font-black uppercase tracking-[0.3em] shadow-lg z-10">
                                         {{ $course->badge_text ?? 'Available' }}
                                     </span>
-                                    <img class="img-fluid w-100 h-100 object-cover" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $course->name }}">
+                                    <img class="img-fluid w-100 h-100 object-cover" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $course->name }}" loading="lazy" decoding="async" width="640" height="360">
                                 </div>
                                 <div class="p-4 flex-grow-1 d-flex flex-column">
                                     <small class="text-brand-gold font-black uppercase tracking-[0.25em] mb-2" style="font-size: 8px;">{{ $course->courseCategory?->name ?? $course->category }}</small>

@@ -6,6 +6,9 @@
 @section('tracking_audience_type', $landingPage['audience_type'])
 @section('tracking_inquiry_intent', $landingPage['inquiry_intent'])
 @section('tracking_selected_course', $landingPage['selected_course'])
+@section('preload_assets')
+    <link rel="preload" as="image" href="{{ \App\Support\PublicAsset::url($landingPage['image'], 'site/img/carousel-1.png') }}" fetchpriority="high">
+@endsection
 
 @section('content')
     @php
@@ -27,7 +30,7 @@
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-9 text-center">
-                    <span class="badge rounded-pill bg-brand-gold px-4 py-2 text-brand-dark fw-black text-uppercase tracking-[0.3em] mb-4" style="font-size: 9px;">{{ $landingPage['badge'] }}</span>
+                    <span class="badge responsive-cms-badge rounded-pill bg-brand-gold px-4 py-2 text-brand-dark fw-black text-uppercase tracking-[0.3em] mb-4" style="font-size: 9px;">{{ $landingPage['badge'] }}</span>
                     <h1 class="font-black text-white mb-4" style="font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.05;">{{ $landingPage['headline'] }}</h1>
                     <p class="text-white-50 mx-auto mb-4" style="max-width: 760px; font-size: 16px; line-height: 1.7;">{{ $landingPage['subheadline'] }}</p>
                     <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">

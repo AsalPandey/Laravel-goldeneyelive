@@ -68,7 +68,7 @@
 	        <div class="container py-5">
 	            <div class="row align-items-center g-4 home-hero-row">
 	                <div class="col-lg-8 py-5 home-hero-copy">
-	                    <span class="badge rounded-pill bg-brand-gold px-4 py-2 text-[8px] fw-black text-brand-dark text-uppercase tracking-[4px] mb-4">
+	                    <span class="badge responsive-cms-badge rounded-pill bg-brand-gold px-4 py-2 text-[8px] fw-black text-brand-dark text-uppercase tracking-[4px] mb-4">
 	                        {{ $heroBadge }}
 	                    </span>
 	                    <h1 class="hero-hook-title font-black mb-4 text-white" style="font-size: clamp(2.2rem, 5vw, 4.4rem); line-height: 1.02; letter-spacing: 0;">

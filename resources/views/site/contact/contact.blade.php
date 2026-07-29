@@ -59,7 +59,7 @@
                                 <div style="width: 30px; height: 2px; background: var(--brand-gold);"></div>
                                 <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 10px;">Visit or call</span>
                             </div>
-                            <h5 class="mb-4 font-black uppercase tracking-tight text-brand-dark">Visit Our Campus</h5>
+                            <h3 class="mb-4 font-black uppercase tracking-tight text-brand-dark">Visit Our Campus</h3>
                             <div class="mb-6 text-zinc-600 leading-relaxed italic border-start-4 border-brand-gold/20 ps-4 extra-small">
                                 @if(isset($settings['contact_page_content']) && !empty($settings['contact_page_content']))
                                     @sanitize($settings['contact_page_content'])
@@ -74,7 +74,7 @@
                                         <i class="fa fa-map-marker-alt fs-6"></i>
                                     </div>
                                     <div class="contact-detail-copy">
-                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Academy Headquarters</h6>
+                                        <p class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Academy Headquarters</p>
                                         <p class="mb-0 font-black text-brand-dark">{{ $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal' }}</p>
                                     </div>
                                 </div>
@@ -84,7 +84,7 @@
                                         <i class="fa fa-phone-alt fs-5"></i>
                                     </div>
                                     <div class="contact-detail-copy">
-                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Phone</h6>
+                                        <p class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Phone</p>
                                         @php
                                             $contactPhones = \App\Support\ContactPhones::parse($settings['site_phone'] ?? '061-572599, 9856058599');
                                         @endphp
@@ -101,7 +101,7 @@
                                         <i class="fa fa-envelope fs-5"></i>
                                     </div>
                                     <div class="contact-detail-copy">
-                                        <h6 class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Email</h6>
+                                        <p class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Email</p>
                                         <p class="mb-0 font-black text-brand-dark">{{ $settings['site_email'] ?? 'info@goldeneye.edu.np' }}</p>
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@
 
                 <div class="col-lg-7 col-md-12 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="premium-card p-5 p-lg-6 shadow-lg rounded-xl bg-white border border-zinc-100 contact-form-card">
-                        <h5 class="font-black uppercase tracking-tight mb-5 text-brand-dark">Send Your <span class="text-brand-gold">Course Question</span></h5>
+                        <h3 class="font-black uppercase tracking-tight mb-5 text-brand-dark">Send Your <span class="text-brand-gold">Course Question</span></h3>
                         <form action="{{ route('contact-submit') }}" method="POST" class="form-conversational">
                             @csrf
                             <input type="hidden" name="lead_source" value="contact_page">
@@ -138,16 +138,16 @@
                                     <div class="contact-field">
                                         <label for="subject">Interested Pathway</label>
                                         <select class="form-select bg-white border rounded-xl px-4 py-3 font-bold @error('subject') is-invalid @enderror" name="subject" id="subject" required aria-invalid="{{ $errors->has('subject') ? 'true' : 'false' }}" @error('subject') aria-describedby="subjectError" @enderror>
-                                            <option value="" disabled selected>Interested Pathway...</option>
+                                            <option value="" disabled @selected(! old('subject'))>Interested Pathway...</option>
                                             @forelse($categories as $cat)
-                                                <option value="{{ $cat->name }}">{{ $cat->name }}</option>
+                                                <option value="{{ $cat->name }}" @selected(old('subject') === $cat->name)>{{ $cat->name }}</option>
                                             @empty
-                                                <option value="IELTS / PTE / Language Preparation">IELTS / PTE / Language Preparation</option>
-                                                <option value="Computer Skills / Office Package">Computer Skills / Office Package</option>
-                                                <option value="Web Development / IT Career">Web Development / IT Career</option>
-                                                <option value="Language Classes">Language Classes</option>
+                                                <option value="IELTS / PTE / Language Preparation" @selected(old('subject') === 'IELTS / PTE / Language Preparation')>IELTS / PTE / Language Preparation</option>
+                                                <option value="Computer Skills / Office Package" @selected(old('subject') === 'Computer Skills / Office Package')>Computer Skills / Office Package</option>
+                                                <option value="Web Development / IT Career" @selected(old('subject') === 'Web Development / IT Career')>Web Development / IT Career</option>
+                                                <option value="Language Classes" @selected(old('subject') === 'Language Classes')>Language Classes</option>
                                             @endforelse
-                                            <option value="General Inquiry">General Inquiry</option>
+                                            <option value="General Inquiry" @selected(old('subject') === 'General Inquiry')>General Inquiry</option>
                                         </select>
                                         @error('subject') <div id="subjectError" class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
@@ -183,9 +183,9 @@
                 <div class="col-12 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="premium-card p-2 h-100 shadow-lg rounded-xl overflow-hidden" style="min-height: 300px;">
                         @if(isset($settings['google_maps_embed']) && !empty($settings['google_maps_embed']))
-                            <iframe class="w-100 h-100" src="{{ $settings['google_maps_embed'] }}" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+                            <iframe class="w-100 h-100" src="{{ $settings['google_maps_embed'] }}" title="Map showing Golden Eye Academy in Pokhara" loading="lazy" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
                         @else
-                            <iframe class="w-100 h-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1687.7949561082255!2d83.98105790540313!3d28.212102922025796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399595ac8d5df7a3%3A0x1971ef66310b97ae!2sGolden%20Eye%20Academy!5e0!3m2!1sen!2snp!4v1725470686886!5m2!1sen!2snp" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+                            <iframe class="w-100 h-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1687.7949561082255!2d83.98105790540313!3d28.212102922025796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399595ac8d5df7a3%3A0x1971ef66310b97ae!2sGolden%20Eye%20Academy!5e0!3m2!1sen!2snp!4v1725470686886!5m2!1sen!2snp" title="Map showing Golden Eye Academy in Pokhara" loading="lazy" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
                         @endif
                     </div>
                 </div>

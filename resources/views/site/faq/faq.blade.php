@@ -128,7 +128,7 @@
                             <i class="fas fa-question-circle fa-6x text-brand-gold"></i>
                         </div>
                         <div class="relative z-10">
-                            <h4 class="font-black mb-2 uppercase tracking-tighter text-brand-gold">{{ $settings['faq_lead_title'] ?? 'Need class information before enrollment?' }}</h4>
+                            <h2 class="font-black mb-2 uppercase tracking-tighter text-brand-gold">{{ $settings['faq_lead_title'] ?? 'Need class information before enrollment?' }}</h2>
                             <p class="mb-4 text-white/60 extra-small leading-relaxed">Send a quick question and our academy team will explain suitable courses, class timing, and enrollment support.</p>
                             <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
                                 <a href="{{ $faqGuidanceUrl }}" data-cta="faq-course-guidance" class="btn btn-primary py-2.5 px-5 rounded-lg shadow-lg font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 10px;">Ask for Course Help</a>

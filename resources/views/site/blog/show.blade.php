@@ -6,6 +6,11 @@
 @section('meta_keywords', $post->meta_keywords ?? '')
 @section('aeo_summary', $post->aeo_summary ?? '')
 @section('og_image', \App\Support\PublicAsset::canonicalUrl($post->image ?? null, 'site/img/carousel-1.png'))
+@if($post->image)
+    @section('preload_assets')
+        <link rel="preload" as="image" href="{{ \App\Support\PublicAsset::url($post->image, 'site/img/carousel-1.png') }}" fetchpriority="high">
+    @endsection
+@endif
 @if($isPreview ?? false)
     @section('robots', 'noindex, nofollow, noarchive')
     @section('canonical_url', route('blog-detail', $post->slug))
@@ -50,7 +55,7 @@
             <div class="row g-5">
                 <article class="col-lg-8">
                     @if($post->image)
-                    <img class="img-fluid w-100 rounded-xl shadow-lg mb-4" src="{{ \App\Support\PublicAsset::url($post->image ?? null, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $post->title }}" style="max-height: 350px; object-fit: cover;">
+                    <img class="img-fluid w-100 rounded-xl shadow-lg mb-4" src="{{ \App\Support\PublicAsset::url($post->image ?? null, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $post->title }}" loading="eager" decoding="async" fetchpriority="high" width="1200" height="675" style="max-height: 350px; object-fit: cover;">
                     @endif
 
                     <div class="d-flex mb-3 border-bottom pb-2 text-muted" style="font-size: 10px;">
@@ -68,12 +73,12 @@
                 <!-- Sidebar -->
                 <aside class="col-lg-4">
                     <div class="bg-zinc-50 p-4 rounded-xl mb-5 border border-zinc-100">
-                        <h6 class="mb-4 font-black uppercase tracking-tight text-brand-dark" style="font-size: 14px;">{{ $settings['recent_posts_title'] ?? 'Recent Posts' }}</h6>
+                        <h2 class="mb-4 font-black uppercase tracking-tight text-brand-dark" style="font-size: 14px;">{{ $settings['recent_posts_title'] ?? 'Recent Posts' }}</h2>
                         @foreach($recentPosts as $rPost)
                         <div class="d-flex mb-3 align-items-center">
                             <img src="{{ \App\Support\PublicAsset::url($rPost->image ?? null, 'site/img/carousel-1.png') }}" class="rounded-lg" width="50" height="50" alt="{{ $rPost->title }}" loading="lazy" decoding="async" style="width: 50px; height: 50px; object-fit: cover;">
                             <div class="ps-3">
-                                <h6 class="mb-1" style="font-size: 12px;"><a href="{{ route('blog-detail', $rPost->slug) }}" class="text-dark hover:text-brand-gold">{{ Str::limit($rPost->title, 40) }}</a></h6>
+                                <h3 class="mb-1" style="font-size: 12px;"><a href="{{ route('blog-detail', $rPost->slug) }}" class="text-dark hover:text-brand-gold">{{ Str::limit($rPost->title, 40) }}</a></h3>
                                 <small class="text-muted" style="font-size: 9px;">{{ $rPost->created_at->format('M d, Y') }}</small>
                             </div>
                         </div>
@@ -81,7 +86,7 @@
                     </div>
 
                     <div class="bg-brand-dark p-4 rounded-xl text-white text-center border border-brand-gold/20 shadow-lg">
-                        <h6 class="text-brand-gold mb-2 font-black uppercase tracking-tight" style="font-size: 14px;">{{ $settings['blog_cta_title'] ?? 'Ready to Join?' }}</h6>
+                        <h2 class="text-brand-gold mb-2 font-black uppercase tracking-tight" style="font-size: 14px;">{{ $settings['blog_cta_title'] ?? 'Ready to Join?' }}</h2>
                         <p class="mb-3 text-white/60 extra-small">{{ $settings['blog_cta_desc'] ?? 'Take the next step in your career with our specialized courses.' }}</p>
                         <a href="{{ $blogDetailGuidanceUrl }}" data-cta="blog-detail-course-guidance" class="btn btn-primary px-4 py-2 rounded-lg font-black uppercase tracking-widest shadow-md" style="font-size: 9px;">Ask for Course Help</a>
                     </div>

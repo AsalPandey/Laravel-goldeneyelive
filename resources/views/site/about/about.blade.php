@@ -57,7 +57,7 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-graduation-cap fs-6"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_1_title'] ?? 'Enrollment Support' }}</h6>
+                        <h2 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_1_title'] ?? 'Enrollment Support' }}</h2>
                         <p class="extra-small text-zinc-500 mb-0">{{ $settings['about_feat_1_desc'] ?? 'Ask about course fit, current timing, fees, and support before enrollment.' }}</p>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-globe fa-lg"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_2_title'] ?? 'Practical Learning' }}</h6>
+                        <h2 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_2_title'] ?? 'Practical Learning' }}</h2>
                         <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_2_desc'] ?? 'Review each course description and outline to understand its listed learning areas.' }}</p>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-laptop-code fa-lg"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_3_title'] ?? 'Parent-Friendly Decisions' }}</h6>
+                        <h2 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_3_title'] ?? 'Parent-Friendly Decisions' }}</h2>
                         <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_3_desc'] ?? 'Parents can ask about fees, timing, safety, and realistic next steps.' }}</p>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                         <div class="bg-brand-dark text-brand-gold w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                             <i class="fa fa-award fa-lg"></i>
                         </div>
-                        <h6 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_4_title'] ?? 'Current Information' }}</h6>
+                        <h2 class="mb-2 font-black text-brand-dark uppercase tracking-tight" style="font-size: 13px;">{{ $settings['about_feat_4_title'] ?? 'Current Information' }}</h2>
                         <p class="small text-zinc-500 mb-0">{{ $settings['about_feat_4_desc'] ?? 'Confirm current batches, availability, and instructor details before enrollment.' }}</p>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
             <div class="row g-5">
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 350px;">
                     <div class="position-relative h-100">
-                        <img class="img-fluid position-absolute w-100 h-100 rounded-xl shadow-xl object-cover" src="{{ \App\Support\PublicAsset::url($settings['about_image'] ?? null, 'site/img/about.jpg') }}" alt="Golden Eye Academy Building">
+                        <img class="img-fluid position-absolute w-100 h-100 rounded-xl shadow-xl object-cover" src="{{ \App\Support\PublicAsset::url($settings['about_image'] ?? null, 'site/img/about.jpg') }}" alt="Golden Eye Academy Building" loading="lazy" decoding="async" width="900" height="600">
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
@@ -200,7 +200,7 @@
                 <div class="col-xl-3 col-lg-4 col-md-6 wow zoomIn">
                     <div class="team-item bg-white w-100 shadow-lg rounded-2xl overflow-hidden position-relative group border border-zinc-100 hover:border-brand-gold/30 transition-all duration-500">
                         <div class="overflow-hidden position-relative" style="height:300px;">
-                            <img class="img-fluid w-100 h-100 object-cover transition-all duration-700 group-hover:scale-110" src="{{ \App\Support\PublicAsset::url($teacher->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $teacher->name }}">
+                            <img class="img-fluid w-100 h-100 object-cover transition-all duration-700 group-hover:scale-110" src="{{ \App\Support\PublicAsset::url($teacher->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $teacher->name }}" loading="lazy" decoding="async" width="600" height="600">
                         </div>
                         <div class="text-center p-4 bg-white relative">
                             <h3 class="h6 mt-2 mb-1 font-black text-brand-dark" style="font-size: 15px;">{{ $teacher->name }}</h3>

@@ -66,12 +66,12 @@
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top p-0 site-navbar" aria-label="Primary navigation">
     <a href="{{ route('home') }}" class="navbar-brand site-navbar-brand d-flex align-items-center px-3 px-lg-4 text-decoration-none">
         <img class="img-logo me-2 object-contain" src="{{ \App\Support\PublicAsset::url($settings['site_logo'] ?? null, 'site/img/logo.png') }}" onerror="this.src='{{ asset('site/img/logo.png') }}'" alt="{{ $displaySiteName }}" decoding="async" width="55" height="55" style="height: 55px; width: auto;">
-        <h4 class="m-0 text-brand-gold font-black tracking-tighter d-flex align-items-center site-brand-wordmark">
+        <span class="m-0 text-brand-gold font-black tracking-tighter d-flex align-items-center site-brand-wordmark">
             {{ $displaySitePrefix }}
             @if($displaySiteSuffix !== '')
                 <span class="site-brand-pill">{{ $displaySiteSuffix }}</span>
             @endif
-        </h4>
+        </span>
     </a>
     <button id="primaryNavigationToggle" type="button" class="navbar-toggler me-4 d-flex align-items-center d-lg-none p-2 rounded-xl shadow-sm transition-all active:scale-95 border-brand-gold"
             data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Open navigation menu">
