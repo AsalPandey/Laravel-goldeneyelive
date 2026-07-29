@@ -4,6 +4,7 @@
             <div class="row g-4">
                 <div class="col-lg-3 col-md-6">
                     <h6 class="text-white text-uppercase tracking-widest font-black mb-3" style="font-size: 11px;">{{ $settings['footer_quick_link_title'] ?? 'Quick Link' }}</h6>
+                    <p class="extra-small text-muted mb-3">{{ $settings['footer_about_text'] ?? 'Golden Eye Academy provides practical courses, classes, workshops and academic programs for students, professionals, schools and organizations.' }}</p>
                     <a class="btn btn-link extra-small" href="{{ route('about') }}">About Us</a>
                     <a class="btn btn-link extra-small" href="{{ route('courses-all') }}">Courses</a>
                     <a class="btn btn-link extra-small" href="{{ route('contact') }}">Contact</a>

@@ -1,8 +1,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+@php
+    $publicApplicationName = \App\Support\StructuredData::siteName($settings ?? []);
+@endphp
 <title>
-    {{ filled($title ?? null) ? $title.' - '.config('app.name', 'Laravel') : config('app.name', 'Laravel') }}
+    {{ filled($title ?? null) ? $title.' - '.$publicApplicationName : $publicApplicationName }}
 </title>
 
 <link rel="icon" href="/favicon.ico" sizes="any">

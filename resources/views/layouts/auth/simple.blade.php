@@ -24,7 +24,7 @@
                         <img src="{{ asset($settings['site_logo'] ?? 'site/img/logo.png') }}" class="h-14 w-auto relative z-10 object-contain" alt="Logo">
                     </div>
                     <div class="text-center">
-                        <h1 class="text-3xl font-heading font-black tracking-tighter text-white uppercase">{{ $settings['site_name'] ?? 'GOLDENEYE' }}</h1>
+                        <h1 class="text-3xl font-heading font-black tracking-tighter text-white uppercase">{{ \App\Support\StructuredData::siteName($settings ?? []) }}</h1>
                         <p class="text-[11px] tracking-[0.5em] font-black text-brand-gold uppercase -mt-1">{{ $settings['site_name_suffix'] ?? 'ACADEMY' }}</p>
                     </div>
                 </a>

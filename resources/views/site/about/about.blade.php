@@ -132,7 +132,7 @@
     </div>
     <!-- About End -->
 
-    <!-- Why GoldenEye Comparison Start -->
+    <!-- Why Golden Eye Comparison Start -->
     <div class="container-xxl py-5 bg-zinc-50">
         <div class="container">
             <div class="text-center wow fadeInUp mb-5" data-wow-delay="0.1s">
@@ -185,7 +185,7 @@
             </div>
         </div>
     </div>
-    <!-- Why GoldenEye Comparison End -->
+    <!-- Why Golden Eye Comparison End -->
 
     <!-- Team Start -->
     <div class="container-xxl py-5">

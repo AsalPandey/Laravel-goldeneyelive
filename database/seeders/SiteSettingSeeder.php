@@ -187,7 +187,7 @@ class SiteSettingSeeder extends Seeder
             'inquiry_subtitle' => ['Share your goal. We will explain suitable courses, class timing, and enrollment support.', 'text'],
             'navbar_menu_label' => ['Navigate', 'text'],
 
-            'footer_about_text' => ['Golden Eye Academy is an established academy in Pokhara offering practical classes in language, test preparation, computer, office, web development, and IT subjects since 2008.', 'text'],
+            'footer_about_text' => ['Golden Eye Academy provides practical courses, classes, workshops and academic programs for students, professionals, schools and organizations.', 'text'],
             'footer_faq_title' => ['Student Support', 'text'],
             'footer_quick_link_title' => 'Academy Links',
             'footer_contact_title' => ['Find Us', 'text'],
