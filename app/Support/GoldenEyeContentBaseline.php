@@ -21,10 +21,10 @@ final class GoldenEyeContentBaseline
             'aeo_summary' => 'Golden Eye Academy has provided practical courses, classes and academic support in Pokhara since 2008.',
 
             'hero_badge_text' => 'Established in Pokhara since 2008',
-            'hero_title' => 'Build practical skills for study, work and what comes next.',
-            'hero_hook_headline' => 'Build practical skills for study, work and what comes next.',
+            'hero_title' => 'Build skills you can use with confidence.',
+            'hero_hook_headline' => 'Build skills you can use with confidence.',
             'hero_hook_body' => 'Explore computer, language, test-preparation and academic-support classes, with clear guidance to help you choose a suitable course and current batch.',
-            'hero_subtitle' => 'Clear course information. Practical learning. Guidance before enrollment.',
+            'hero_subtitle' => 'Explore focused classes, compare the learning areas and choose a suitable current batch.',
             'hero_cta_text' => 'Ask for Course Help',
             'hero_cta_1_text' => 'Ask for Course Help',
             'hero_cta_2_text' => 'View Course Details',
@@ -48,7 +48,7 @@ final class GoldenEyeContentBaseline
             'home_courses_batch_note' => 'Ask about the current batch',
 
             'about_title' => 'Practical learning in Pokhara since 2008',
-            'about_text' => 'Golden Eye Academy provides courses, classes and academic support for students and other learners who want useful skills and a clear next step.',
+            'about_text' => 'Golden Eye Academy provides structured courses, classes and academic support for learners building useful skills in Pokhara.',
             'about_point_1' => 'Established in Pokhara since 2008',
             'about_point_2' => 'Computer, language and test-preparation classes',
             'about_point_3' => 'Academic support for students and families',
@@ -107,7 +107,7 @@ HTML,
             'catalogue_meta_description' => 'Explore Golden Eye Academy courses, classes and learning-support areas in Pokhara, then ask for help choosing a suitable current batch.',
             'catalogue_badge' => 'Golden Eye Academy learning options',
             'catalogue_title' => 'Explore courses, classes and academic support.',
-            'catalogue_description' => 'Start with your learning goal, compare active courses and ask the academy team to help you choose a suitable next step.',
+            'catalogue_description' => 'Browse the academyâ€™s active learning areas, then open individual course pages to compare their focus, duration and current fee.',
             'catalogue_services_tagline' => 'Ways we support learning',
             'catalogue_services_title' => 'Choose the support area that matches your goal.',
             'catalogue_categories_tagline' => 'Browse by subject',
@@ -119,7 +119,7 @@ HTML,
 
             'inquiry_tab_text' => 'Need Course Help?',
             'inquiry_title' => 'Ask about courses and current batches',
-            'inquiry_subtitle' => 'Share your goal and the subject you are considering. Our academy team will help you understand the next step.',
+            'inquiry_subtitle' => 'Share your goal, current level and preferred subject so our academy team can help you compare relevant classes.',
             'sticky_cta_text' => 'Ask for Course Help',
             'sticky_cta_desc' => 'Ask about courses, batches or visiting the academy.',
 
@@ -156,7 +156,7 @@ HTML,
             'home_categories_title' => 'Find classes by subject and skill.',
             'home_why_tagline' => 'Why Golden Eye Academy',
             'home_why_title' => 'Choose a course with a clear reason.',
-            'home_why_description' => 'Golden Eye Academy combines clear course information, practical learning and academic support so students can move forward with purpose.',
+            'home_why_description' => 'Golden Eye Academy combines structured teaching, published course information and support for students and families.',
             'home_why_items' => "Established in Pokhara since 2008\nActive courses organized by subject and learning goal\nPractical learning supported by published course outlines\nCourse Help for students and parents",
             'home_testimonials_tagline' => 'Student experiences',
             'home_testimonials_title' => 'Hear from learners who studied at Golden Eye Academy',
@@ -170,7 +170,7 @@ HTML,
             'home_parent_items' => "Understand what the course covers\nCompare the duration and current fee\nDiscuss batch timing and faculty information\nSet realistic expectations together",
             'home_faq_tagline' => 'Before you choose',
             'home_faq_title' => 'Questions students and parents ask most',
-            'home_final_tagline' => 'Your next step',
+            'home_final_tagline' => 'Choose with confidence',
             'home_final_title' => 'Ready to find a suitable course?',
             'home_final_description' => 'Tell us your goal, current level and preferred timing. We will help you compare relevant classes and current batches.',
             'home_final_primary_cta_text' => 'Ask for Course Help',
@@ -308,6 +308,21 @@ HTML,
         ];
     }
 
+    /** @return array<string, string> */
+    public static function previousSiteSettingSignatures(): array
+    {
+        return [
+            'hero_title' => 'd070f38a56c378676d2d4a82af1799efa382260847b55b611f621db9f8614ccf',
+            'hero_hook_headline' => 'd070f38a56c378676d2d4a82af1799efa382260847b55b611f621db9f8614ccf',
+            'hero_subtitle' => '48324edad9173939bd857a394052fb8f8122b8b43c8d1c1bfc610bcb20c841a1',
+            'about_text' => '47454625a40fee6d73f08aee3299cea25fb9a450cc0d82991625349e4d740118',
+            'catalogue_description' => '304b9860145087d10f7e52f119052c0aec49474260671eb3b6fd752deacb01b8',
+            'inquiry_subtitle' => '0f1f7ec372d66fdd7eb0803726e72b9ae3f25c05aa9edfc5d948e58ddda0bcdc',
+            'home_why_description' => '46bcd29d54caf0c127d7813c9fefe97feb92fba2f175ac1dbbf3cd3b642979a5',
+            'home_final_tagline' => 'd6c92918d662ca9fd4a1bfb10feb380a491fb563b97529d9d761a5cf8386476b',
+        ];
+    }
+
     /**
      * @return array<int, array{id: int, question: string, answer: string, order_priority: int}>
      */
@@ -319,11 +334,11 @@ HTML,
             ['id' => 3, 'question' => 'How should I choose a course after SEE or Plus Two?', 'answer' => 'Begin with the skill, subject or exam goal that matters most to you now. Compare the course focus, duration and starting point, then discuss the decision with your family or the academy team.', 'order_priority' => 30],
             ['id' => 4, 'question' => 'Can parents discuss course options with the academy?', 'answer' => 'Yes. Parents can ask about the learning focus, duration, current fee, batch timing, faculty information and the level of commitment expected from the student.', 'order_priority' => 40],
             ['id' => 5, 'question' => 'Can beginners join Golden Eye Academy courses?', 'answer' => 'Several listed courses begin with foundation-level learning. Read the course description and share your current experience so the academy team can help you identify a suitable starting point.', 'order_priority' => 50],
-            ['id' => 6, 'question' => 'What practical activities are included in classes?', 'answer' => 'Practical work depends on the subject. Published course outlines describe the main learning areas, while the academy team can explain how guided exercises, speaking practice, mock activities or technical work are used in the current class.', 'order_priority' => 60],
+            ['id' => 6, 'question' => 'What practical activities are included in classes?', 'answer' => 'Practical work depends on the subject. Classes may use guided exercises, speaking or mock activities, completed files, and practical projects in relevant computer and web-development courses. Published course outlines describe the main learning areas.', 'order_priority' => 60],
             ['id' => 7, 'question' => 'How do I find the current batch timing?', 'answer' => 'Send the course name and your preferred study time through Course Help, telephone or WhatsApp. The academy team will share the current batch options for that course.', 'order_priority' => 70],
             ['id' => 8, 'question' => 'What information should I provide during an inquiry?', 'answer' => 'Share the subject or course you are considering, your current level, your main goal and the time you prefer to study. This helps the academy team give you a more useful reply.', 'order_priority' => 80],
             ['id' => 9, 'question' => 'How do I choose a suitable batch?', 'answer' => 'Choose a batch that matches your current level, timetable and ability to practise consistently. Ask about the learning pace and faculty for the current batch before making your decision.', 'order_priority' => 90],
-            ['id' => 10, 'question' => 'Do Golden Eye Academy courses include certificates?', 'answer' => 'Certificate availability and completion requirements can differ by course. Ask for the certificate details for the specific course you are considering.', 'order_priority' => 100],
+            ['id' => 10, 'question' => 'Do Golden Eye Academy courses include certificates?', 'answer' => 'Golden Eye Academy provides a certificate after completion of each course.', 'order_priority' => 100],
             ['id' => 11, 'question' => 'What teaching approach does Golden Eye Academy use?', 'answer' => 'Golden Eye Academy connects clear instruction with practical learning and regular participation. The exact classroom approach depends on the subject and the learning areas listed for that course.', 'order_priority' => 110],
             ['id' => 12, 'question' => 'Who will teach my class?', 'answer' => 'Course pages show the faculty member or teaching team currently associated with each course. Ask the academy to identify the faculty for the batch you plan to join.', 'order_priority' => 120],
             ['id' => 13, 'question' => 'How is student progress reviewed?', 'answer' => 'Progress review varies by course and may include class participation, guided practice, feedback or subject-specific activities. Ask how progress is reviewed in the course you are considering.', 'order_priority' => 130],
@@ -331,7 +346,7 @@ HTML,
             ['id' => 15, 'question' => 'How much do courses cost and how long do they take?', 'answer' => 'Each active course page shows its listed fee and duration. Ask the academy team for the current payment and batch information for the course you want to join.', 'order_priority' => 150],
             ['id' => 16, 'question' => 'What happens after I submit Course Help?', 'answer' => 'The academy receives your contact details, learning goal and course interest. A team member can then respond with relevant course or current-batch information.', 'order_priority' => 160],
             ['id' => 17, 'question' => 'Can I visit Golden Eye Academy before enrolling?', 'answer' => 'Yes. Contact the academy before travelling so you can plan a suitable visit and use the time to discuss courses, current batches, fees and academic support.', 'order_priority' => 170],
-            ['id' => 18, 'question' => 'Where should I ask about study-abroad preparation?', 'answer' => 'Start with the study-abroad guidance page to understand the difference between Golden Eye Academy preparation classes and contextual education-consulting support. Ask the team to explain which type of support fits your goal.', 'order_priority' => 180],
+            ['id' => 18, 'question' => 'Where should I ask about study-abroad preparation?', 'answer' => 'Golden Eye Academy provides relevant language and test-preparation classes. Visit the study-abroad guidance page for the academyâ€™s class information and separate contextual guidance.', 'order_priority' => 180],
             ['id' => 19, 'question' => 'What results can I expect from a course?', 'answer' => 'A course can provide instruction, practice, feedback and academic support. Individual progress depends on the learner’s starting point, attendance, practice and continued effort.', 'order_priority' => 190],
             ['id' => 20, 'question' => 'Where is Golden Eye Academy located?', 'answer' => 'Golden Eye Academy is at Srijana Chowk, Pokhara. Use the contact page, telephone or WhatsApp if you would like help planning your visit.', 'order_priority' => 200],
         ];
@@ -363,6 +378,16 @@ HTML,
             ['id' => 18, 'question' => 'Do you run events and workshops?', 'answer' => 'Yes. Golden Eye Academy can run workshops, skill sessions, course-help events, and career-focused activities based on schedule and demand.', 'order_priority' => 180],
             ['id' => 19, 'question' => 'Can I switch course after getting guidance?', 'answer' => 'Course changes depend on batch status and availability. The team will help you avoid wrong enrollment before payment whenever possible.', 'order_priority' => 190],
             ['id' => 20, 'question' => 'Where is Golden Eye Academy located?', 'answer' => 'Golden Eye Academy is based around Srijana Chowk, Pokhara. Contact the team for exact visit timing and location support.', 'order_priority' => 200],
+        ];
+    }
+
+    /** @return array<int, string> */
+    public static function previousFaqSignatures(): array
+    {
+        return [
+            6 => '7cb9fe3a2923d2251e53a85d4c9d3ecefc7fddc92d119e4008efe0b60f5d85a3',
+            10 => 'ee3ac28533395c5cf526542714ea551c98f50e85ef8369f355dfc5e4360ffc47',
+            18 => '6c1c8bab83de03dced9677375b8dd499f90055c30f24b28f7ab791a1c47c61ba',
         ];
     }
 
@@ -399,7 +424,7 @@ HTML,
             'professional-korean-eps' => [
                 'name' => 'Professional Korean EPS-TOPIK',
                 'badge_text' => 'EPS-TOPIK',
-                'description' => 'This Korean course covers Hangul, vocabulary, listening, reading and EPS-TOPIK-oriented practice from the published outline. It may suit learners who already know they want an exam-focused Korean study routine. Language preparation is separate from official employment and application decisions, which should always be checked through the responsible official sources.',
+                'description' => 'This Korean course covers Hangul, vocabulary, listening, reading and EPS-TOPIK-oriented practice from the published outline. It is an exam-focused language course for learners who want a structured Korean study routine with regular review and practice.',
             ],
             'basic-korean-course' => [
                 'name' => 'Basic Korean Course',
@@ -419,12 +444,12 @@ HTML,
             'professional-web-development' => [
                 'name' => 'Professional Web Development',
                 'badge_text' => 'Web Development',
-                'description' => 'A web-development course covering the HTML, CSS, responsive interface, Laravel, database, API and deployment areas listed in the outline. It may suit learners who want to understand how websites are built and practise creating technical work they can explain. Ask about the expected starting computer skills and how the current batch approaches practical work.',
+                'description' => 'Build web-development foundations through practical project work covering HTML, CSS, responsive interfaces, Laravel, databases, API integration and deployment concepts. The course supports learners in creating and explaining their own technical work while developing a stronger understanding of how websites are built.',
             ],
             'advanced-computer-diploma' => [
                 'name' => 'Advanced Diploma in Computer Science',
                 'badge_text' => 'Computer Skills',
-                'description' => 'This computer course covers documents, spreadsheets, presentations, databases, email and everyday digital workflows from the published outline. It may suit learners who want greater confidence with common study and office-computer tasks. Ask the academy about the current starting level, class routine and any certificate details connected to this course.',
+                'description' => 'This computer course covers documents, spreadsheets, presentations, databases, email and everyday digital workflows through guided tasks and practical activities. It supports greater confidence with common study, office and workplace computer tasks.',
             ],
             'corporate-office-package' => [
                 'name' => 'Corporate Office and Admin Package',
@@ -468,6 +493,16 @@ HTML,
         ];
     }
 
+    /** @return array<string, string> */
+    public static function previousCourseSignatures(): array
+    {
+        return [
+            'professional-korean-eps' => 'ef29b2f1f8d49a95fb18849df0fd1021314e2d66bfadb7e90c6a24647360ab59',
+            'professional-web-development' => 'a0daa0ce000776f38b6ef37d133c2dae1ac6eb5de22411cd6764c1bcea7371cb',
+            'advanced-computer-diploma' => '29a2de46184569c760ff3d3e1e14fae7ca9e3311ec8cff19aec7c92f859a17c0',
+        ];
+    }
+
     /**
      * @return array<string, array{title: string, summary: string, bullets: array<int, string>}>
      */
@@ -491,8 +526,8 @@ HTML,
             ],
             'real-world-skills-become-un-ignorable' => [
                 'title' => 'Computer, Office and IT Skills',
-                'summary' => 'Explore practical computer, office and web-development learning for study and workplace tasks.',
-                'bullets' => ['Build everyday computer and office-software confidence.', 'Explore technical learning through the active web-development course.', 'Choose a starting point that matches your current experience.'],
+                'summary' => 'Explore practical computer, office and web-development learning for study, personal projects and workplace tasks.',
+                'bullets' => ['Build everyday computer and office-software confidence.', 'Use practical projects in relevant web-development learning.', 'Explore Laravel, APIs and deployment concepts in the web-development course.'],
             ],
             'global-launchpad-languages-and-test-prep' => [
                 'title' => 'Language and Test Preparation',
@@ -527,6 +562,14 @@ HTML,
             'global-launchpad-languages-and-test-prep' => '5b1643d867f0b9f65381651cafc46bc3a6ada8af723cbb1b7eff4b05f860ce9d',
             'academic-powerhouse-grades-8-to-masters' => 'd2878061947914ce20591ef8489ede3010dadd237e7697c38263021169c54f15',
             'events-learn-meet-move' => 'fa27d51c300655e7701113c5c14a06d19c597db56d5e7dea6e80304d18f3fea4',
+        ];
+    }
+
+    /** @return array<string, string> */
+    public static function previousServicePillarSignatures(): array
+    {
+        return [
+            'real-world-skills-become-un-ignorable' => 'fd73a89a0140f9568830908c39652a7cd856cddbb4736401ff618388949abbd0',
         ];
     }
 

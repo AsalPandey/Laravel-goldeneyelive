@@ -39,9 +39,6 @@
                         <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['catalogue_services_tagline'] ?? 'Ways we support learning' }}</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $settings['catalogue_services_title'] ?? 'Choose the support area that matches your goal.' }}</h2>
                     </div>
-                    <div class="col-lg-4 text-lg-end">
-                        <a href="{{ $guidanceUrl('catalogue-service') }}" data-cta="catalogue-service-guidance" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
-                    </div>
                 </div>
                 <div class="row g-4">
                     @foreach($servicePillars as $pillar)
@@ -65,7 +62,7 @@
                                     </div>
                                 @endif
                                 <a href="{{ $pillar->cta_url ?: $guidanceUrl('catalogue-service-'.$pillar->slug) }}" data-cta="catalogue-service-{{ $pillar->slug }}" class="catalogue-service-cta text-brand-dark font-black uppercase tracking-widest text-decoration-none hover:text-brand-gold transition-all" style="font-size: 9px;">
-                                    Ask for Course Help <i class="fa fa-arrow-right ms-1"></i>
+                                    {{ $pillar->cta_label }} <i class="fa fa-arrow-right ms-1"></i>
                                 </a>
                             </article>
                         </div>
@@ -138,9 +135,8 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->duration }}</span>
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->price }}</span>
                                     </div>
-                                    <div class="d-grid gap-2">
+                                    <div class="d-grid">
                                         <a href="{{ route('courses-detail', $course->slug) }}" data-cta="catalogue-course-details" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">View Course Details</a>
-                                        <a href="{{ $guidanceUrl('catalogue-course-card', $course->slug) }}" data-cta="catalogue-course-guidance" class="btn btn-outline-brand-dark py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">Ask for Course Help</a>
                                     </div>
                                 </div>
                             </article>

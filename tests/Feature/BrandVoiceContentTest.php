@@ -87,21 +87,21 @@ class BrandVoiceContentTest extends TestCase
         ]);
         CourseCategory::factory()->create([
             'name' => 'Study Abroad Test Prep',
-            'description' => 'IELTS, PTE, SAT, language, and destination-readiness programs for students planning global education or migration.',
+            'description' => 'GoldenEye language and exam-preparation classes with old brand wording.',
         ]);
         Course::factory()->create([
-            'description' => 'Best for students who want to understand their test path before paying for applications or documents.',
+            'description' => 'GoldenEye course information with old brand wording.',
             'instructor' => 'Course Help Team',
         ]);
         FAQ::factory()->create([
             'question' => 'What courses does GoldenEye Academy offer?',
-            'answer' => 'GoldenEye Academy offers course guidance before enrollment for study abroad applicants.',
+            'answer' => 'GoldenEye Academy offers course guidance before enrollment.',
         ]);
         ServicePillar::factory()->create([
             'title' => 'Languages and Test Preparation',
             'slug' => 'languages-and-test-preparation',
-            'summary' => 'Language, IELTS, PTE, Japanese, Korean, and study-abroad preparation for global education goals.',
-            'bullets' => ['Timeline Guidance: Match test prep with destination, application, and intake planning.'],
+            'summary' => 'GoldenEye language, IELTS, PTE, Japanese and Korean preparation classes.',
+            'bullets' => ['Compare the current language and test-preparation classes.'],
         ]);
         $contact = Contact::factory()->create(['subject' => 'Original contact subject']);
 

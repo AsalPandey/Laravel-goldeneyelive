@@ -73,7 +73,7 @@ class CheckpointSeederTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Build practical skills for study, work and what comes next.')
+            ->assertSee('Build skills you can use with confidence.')
             ->assertSee('Established in Pokhara since 2008')
             ->assertSee('Srijana Chowk, Pokhara, Nepal')
             ->assertSee('Matched courses:')

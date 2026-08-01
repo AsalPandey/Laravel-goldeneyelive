@@ -278,7 +278,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
         $this->assertSame(range(10, 200, 10), $faqs->pluck('order_priority')->all());
         $this->assertSame(['active'], $faqs->pluck('status')->unique()->values()->all());
         $this->assertSame(
-            'Certificate availability and completion requirements can differ by course. Ask for the certificate details for the specific course you are considering.',
+            'Golden Eye Academy provides a certificate after completion of each course.',
             $faqs->firstWhere('question', 'Do Golden Eye Academy courses include certificates?')?->answer,
         );
         $this->assertSame(

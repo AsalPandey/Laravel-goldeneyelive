@@ -117,7 +117,7 @@ class PublicCourseVisibilityTest extends TestCase
         $response->assertOk()
             ->assertSee('IELTS Masterclass for Band 7+', false)
             ->assertSee('Designed for learners preparing for IELTS', false)
-            ->assertSee('Best for:', false)
+            ->assertDontSee('Best for:', false)
             ->assertSee('Duration: 6 Weeks', false)
             ->assertSee('Fee: Rs. 7,000', false)
             ->assertSee('Next batch: Ask for current batch and availability', false)
@@ -158,7 +158,7 @@ class PublicCourseVisibilityTest extends TestCase
             ->assertDontSee('verified Google review proof', false)
             ->assertSee('FAQs', false)
             ->assertSee('Inquiry CTA', false)
-            ->assertSee('Not guaranteed', false)
+            ->assertSee('Learning progress', false)
             ->assertDontSee('4.9/5', false)
             ->assertDontSee('Placement 92%', false)
             ->assertDontSee('<small class="text-muted d-block text-uppercase fw-bold" style="font-size: 8px;">Placement</small>', false);

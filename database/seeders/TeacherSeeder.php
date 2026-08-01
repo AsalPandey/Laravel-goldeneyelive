@@ -26,7 +26,7 @@ class TeacherSeeder extends Seeder
                 'name' => 'Academic Support Team',
                 'designation' => 'Admissions and Academic Support',
                 'photo' => 'site/img/team-1.jpg',
-                'bio' => 'Helps students, parents, abroad applicants, and job seekers compare programs before enrollment.',
+                'bio' => 'Helps students and parents compare current courses and learning options before enrollment.',
                 'is_featured' => true,
             ],
             [

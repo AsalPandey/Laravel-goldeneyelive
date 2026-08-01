@@ -128,7 +128,9 @@ class PublishGoldenEyeContentBaseline extends Command
                 continue;
             }
 
-            if (! array_key_exists($key, $legacyValues) || $before['value'] !== $legacyValues[$key]) {
+            $matchesPreviousBaseline = isset(GoldenEyeContentBaseline::previousSiteSettingSignatures()[$key])
+                && hash('sha256', $before['value']) === GoldenEyeContentBaseline::previousSiteSettingSignatures()[$key];
+            if ((! array_key_exists($key, $legacyValues) || $before['value'] !== $legacyValues[$key]) && ! $matchesPreviousBaseline) {
                 $this->recordUnexpected('site_settings', $key, $before, $after, 'value differs from the diagnosed legacy baseline');
 
                 continue;
@@ -166,11 +168,14 @@ class PublishGoldenEyeContentBaseline extends Command
                 continue;
             }
 
-            if (! $legacyFaq || $beforeGuard !== [
+            $beforeSignature = $this->signature(array_values($beforeGuard));
+            $matchesPreviousBaseline = ($previousSignature = GoldenEyeContentBaseline::previousFaqSignatures()[$afterBaseline['id']] ?? null)
+                && hash_equals($previousSignature, $beforeSignature);
+            if ((! $legacyFaq || $beforeGuard !== [
                 'question' => $legacyFaq['question'],
                 'answer' => $legacyFaq['answer'],
                 'order_priority' => $legacyFaq['order_priority'],
-            ]) {
+            ]) && ! $matchesPreviousBaseline) {
                 $this->recordUnexpected('f_a_q_s', $identity, $beforeGuard, $afterGuard, 'FAQ content or order differs from the diagnosed legacy baseline');
 
                 continue;
@@ -216,7 +221,10 @@ class PublishGoldenEyeContentBaseline extends Command
                 continue;
             }
 
-            if (! isset($legacy[$identity]) || $beforeGuard !== $legacy[$identity]) {
+            $beforeSignature = $this->signature(array_values($beforeGuard));
+            $matchesPreviousBaseline = ($previousSignature = GoldenEyeArticleBaseline::previousArticleSignatures()[$identity] ?? null)
+                && hash_equals($previousSignature, $beforeSignature);
+            if ((! isset($legacy[$identity]) || $beforeGuard !== $legacy[$identity]) && ! $matchesPreviousBaseline) {
                 $this->recordUnexpected('blog_posts', $identity, $beforeGuard, $afterGuard, 'article content differs from the diagnosed legacy baseline');
 
                 continue;
@@ -257,7 +265,9 @@ class PublishGoldenEyeContentBaseline extends Command
                 continue;
             }
 
-            if ($signature !== GoldenEyeContentBaseline::legacyCourseSignatures()[$slug]) {
+            $matchesPreviousBaseline = ($previousSignature = GoldenEyeContentBaseline::previousCourseSignatures()[$slug] ?? null)
+                && hash_equals($previousSignature, $signature);
+            if ($signature !== GoldenEyeContentBaseline::legacyCourseSignatures()[$slug] && ! $matchesPreviousBaseline) {
                 $this->recordUnexpected('courses', $slug, ['signature' => $signature], ['signature' => GoldenEyeContentBaseline::legacyCourseSignatures()[$slug]], 'protected course copy differs from the diagnosed legacy baseline');
 
                 continue;
@@ -285,7 +295,9 @@ class PublishGoldenEyeContentBaseline extends Command
             }
 
             $signature = $this->signature([(string) $pillar->title, (string) ($pillar->summary ?? ''), $pillar->bullets]);
-            if ($signature !== GoldenEyeContentBaseline::legacyServicePillarSignatures()[$slug]) {
+            $matchesPreviousBaseline = ($previousSignature = GoldenEyeContentBaseline::previousServicePillarSignatures()[$slug] ?? null)
+                && hash_equals($previousSignature, $signature);
+            if ($signature !== GoldenEyeContentBaseline::legacyServicePillarSignatures()[$slug] && ! $matchesPreviousBaseline) {
                 $this->recordUnexpected('service_pillars', $slug, ['signature' => $signature], ['signature' => GoldenEyeContentBaseline::legacyServicePillarSignatures()[$slug]], 'service-pillar copy differs from the diagnosed legacy baseline');
 
                 continue;

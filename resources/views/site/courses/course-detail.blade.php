@@ -33,11 +33,12 @@
         $descriptionText = trim(strip_tags((string) $course->description));
         $courseConfirmationNote = trim((string) ($settings['course_confirmation_note'] ?? 'Confirm current batch timing, seat availability, and instructor details with the academy before enrollment.'))
             ?: 'Confirm current batch timing, seat availability, and instructor details with the academy before enrollment.';
-        $outcome = \Illuminate\Support\Str::limit(trim(\Illuminate\Support\Str::before($descriptionText, '.')) ?: $courseConfirmationNote, 120);
-        $descriptionBestFor = trim((string) \Illuminate\Support\Str::of($descriptionText)->after('Best for')->before('.')->trim(' :'));
-        $bestFor = $descriptionBestFor !== '' && $descriptionBestFor !== $descriptionText
-            ? ucfirst($descriptionBestFor)
+        $outcome = trim(\Illuminate\Support\Str::before($descriptionText, '.')) ?: $courseConfirmationNote;
+        $hasExplicitBestFor = \Illuminate\Support\Str::contains($descriptionText, 'Best for');
+        $descriptionBestFor = $hasExplicitBestFor
+            ? trim((string) \Illuminate\Support\Str::of($descriptionText)->after('Best for')->before('.')->trim(' :'))
             : '';
+        $bestFor = $descriptionBestFor !== '' ? ucfirst($descriptionBestFor) : '';
         $nextBatch = 'Ask for current batch and availability';
         $courseImage = $courseHeroImage;
         $breadcrumbCategoryName = $course->courseCategory?->name ?? $course->category;
@@ -96,7 +97,7 @@
             ['label' => 'Current details', 'value' => $courseConfirmationNote],
             ['label' => 'Academy location', 'value' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal'],
             ['label' => 'Listed instructor', 'value' => $course->instructor ?: 'Confirm with academy'],
-            ['label' => 'Not guaranteed', 'value' => 'Scores, visas, jobs, or placements are not guaranteed. Progress depends on attendance, practice, and student readiness.'],
+            ['label' => 'Learning progress', 'value' => 'Progress depends on the learnerâ€™s starting point, attendance, practice and continued effort.'],
         ];
 
         if ($instructor) {

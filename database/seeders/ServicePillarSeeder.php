@@ -51,10 +51,10 @@ class ServicePillarSeeder extends Seeder
             [
                 'title' => 'Career and College Support',
                 'icon' => 'fa fa-bullseye',
-                'summary' => 'Student support for post-SEE, Plus Two, scholarships, and college questions.',
+                'summary' => 'Academic support for post-SEE, Plus Two and current course questions.',
                 'bullets' => [
                     'Post-SEE and Plus Two Support: Help students compare streams, colleges, and future paths.',
-                    'Scholarship Information: Explain realistic funding and admission options.',
+                    'Course Information: Compare current subjects, levels and learning options.',
                     'Parent-Friendly Support: Explain choices clearly so families can decide with confidence.',
                 ],
                 'cta_label' => 'Ask for Course Help',
@@ -68,8 +68,8 @@ class ServicePillarSeeder extends Seeder
                 'summary' => 'Practical classes for computer skills, office work, IT basics, and communication.',
                 'bullets' => [
                     'Practical classes in IT, computer skills, office productivity, and communication.',
-                    'Practice for interviews, job tasks, and daily workplace confidence.',
-                    'Build outputs that students can explain during interviews or admissions conversations.',
+                    'Practice common digital tasks used in study and workplace settings.',
+                    'Build practical outputs that help learners review and explain their skills.',
                 ],
                 'cta_label' => 'View Course Details',
                 'cta_url' => '/courses-all',
@@ -107,11 +107,11 @@ class ServicePillarSeeder extends Seeder
             [
                 'title' => 'Events: Learn, Meet, Move',
                 'icon' => 'fa fa-calendar-check',
-                'summary' => 'Workshops, tech seminars, career summits, and community events that turn learning into real connections.',
+                'summary' => 'Workshops, short programs and community events that extend learning beyond regular classes.',
                 'bullets' => [
-                    'Career Summits: Meet colleges, mentors, and employers in one focused space.',
-                    'Skill Workshops: Join practical events that add proof to your profile.',
-                    'Community Meetups: Build a circle with ambitious students and professionals.',
+                    'Learning Sessions: Explore focused topics outside regular classes.',
+                    'Skill Workshops: Take part in practical activities when announced.',
+                    'Community Events: Learn alongside other students and participants.',
                 ],
                 'cta_label' => 'Ask for Course Help',
                 'cta_url' => '/contact',

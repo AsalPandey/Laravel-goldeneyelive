@@ -92,9 +92,6 @@
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Courses students ask about first.</h2>
                         <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Start here if you want to compare common classes before choosing a batch.</p>
                     </div>
-                    <div class="col-lg-4 text-lg-end">
-                        <a href="{{ $guidanceUrl('popular-courses') }}" data-cta="popular-course-guidance" class="btn btn-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
-                    </div>
                 </div>
                 <div class="row g-4">
                     @foreach($featuredCourses as $course)
@@ -111,9 +108,8 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->duration }}</span>
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->price }}</span>
                                     </div>
-                                    <div class="d-grid gap-2">
+                                    <div class="d-grid">
                                         <a href="{{ route('courses-detail', $course->slug) }}" data-cta="popular-course-details" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">View Course Details</a>
-                                        <a href="{{ $guidanceUrl('popular-course-card', $course->slug) }}" data-cta="popular-course-guidance" class="btn btn-outline-brand-dark py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">Ask for Course Help</a>
                                     </div>
                                 </div>
                             </article>
@@ -173,9 +169,8 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;"><i class="fa fa-clock text-brand-gold me-1"></i>{{ $course->duration }}</span>
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;"><i class="fa fa-tag text-brand-gold me-1"></i>{{ $course->price }}</span>
                                     </div>
-                                    <div class="d-grid gap-2">
+                                    <div class="d-grid">
                                         <a href="{{ route('courses-detail', $course->slug) }}" data-cta="course-card-details" class="btn btn-primary py-2 rounded-lg font-black uppercase tracking-widest shadow-lg" style="font-size: 9px;">View Course Details</a>
-                                        <a href="{{ $guidanceUrl('course-card', $course->slug) }}" data-cta="course-card-course-guidance" class="btn btn-outline-brand-dark py-2 rounded-lg font-black uppercase tracking-widest" style="font-size: 9px;">Ask for Course Help</a>
                                     </div>
                                 </div>
                             </article>
