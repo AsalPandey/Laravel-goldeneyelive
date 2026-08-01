@@ -122,7 +122,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Verified external reviews')
+            ->assertSee('Independent review information')
             ->assertSee('A note without linked evidence must stay hidden.')
             ->assertSee('https://example.com/verified-academy-profile', false);
 
@@ -133,27 +133,26 @@ class Phase6VerifiedContentTrustTest extends TestCase
             ->assertSee('https://example.com/verified-academy-profile', false);
     }
 
-    public function test_safe_brand_defaults_do_not_publish_unverified_experience_claims(): void
+    public function test_safe_brand_defaults_publish_the_owner_confirmed_established_year(): void
     {
         $this->seed(SiteSettingSeeder::class);
 
         $this->assertSame(
-            'Golden Eye Academy | Courses and Classes in Pokhara',
+            'Golden Eye Academy | Established in Pokhara Since 2008',
             SiteSetting::getValue('meta_title'),
         );
         $this->assertSame(
-            'Golden Eye Academy in Pokhara provides IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes.',
+            'Golden Eye Academy has provided practical courses, classes and academic support in Pokhara since 2008.',
             SiteSetting::getValue('aeo_summary'),
         );
-        $this->assertSame('Pokhara, Nepal', SiteSetting::getValue('logo_subtitle'));
+        $this->assertSame('Pokhara, Nepal - Since 2008', SiteSetting::getValue('logo_subtitle'));
+        $this->assertSame('2008', SiteSetting::getValue('founding_year'));
         $this->assertSame('', SiteSetting::getValue('youtube_url'));
 
         $response = $this->get(route('home'))
             ->assertOk()
-            ->assertDontSee('since 2008', false)
-            ->assertDontSee('Established in 2008', false)
-            ->assertDontSee('Est. 2008', false)
-            ->assertDontSee('foundingDate', false);
+            ->assertSee('Established in Pokhara since 2008', false)
+            ->assertSee('foundingDate', false);
 
         $this->assertStringContainsString(
             'Golden Eye Academy | Courses and Classes in Pokhara',
@@ -262,7 +261,8 @@ class Phase6VerifiedContentTrustTest extends TestCase
         $this->assertSame(['Golden Eye Academy'], $posts->pluck('author')->unique()->values()->all());
 
         foreach ($posts as $post) {
-            $this->assertGreaterThanOrEqual(3, substr_count(strtolower($post->content), '<h2>'));
+            $this->assertGreaterThanOrEqual(700, str_word_count(strip_tags($post->content)));
+            $this->assertGreaterThanOrEqual(5, substr_count(strtolower($post->content), '<h2>'));
             $this->assertStringContainsString('<ul>', $post->content);
             $this->assertStringNotContainsString('training center', strtolower($post->content));
         }
@@ -278,16 +278,16 @@ class Phase6VerifiedContentTrustTest extends TestCase
         $this->assertSame(range(10, 200, 10), $faqs->pluck('order_priority')->all());
         $this->assertSame(['active'], $faqs->pluck('status')->unique()->values()->all());
         $this->assertSame(
-            'Certificate availability and completion requirements can vary by course. Ask the academy to confirm the current certificate details before enrollment.',
-            $faqs->firstWhere('question', 'Do you provide certificates?')?->answer,
+            'Certificate availability and completion requirements can differ by course. Ask for the certificate details for the specific course you are considering.',
+            $faqs->firstWhere('question', 'Do Golden Eye Academy courses include certificates?')?->answer,
         );
         $this->assertSame(
-            'Class timing depends on the current course and batch. Contact the academy to confirm which schedules are currently available.',
-            $faqs->firstWhere('question', 'Are flexible class timings available?')?->answer,
+            'Send the course name and your preferred study time through Course Help, telephone or WhatsApp. The academy team will share the current batch options for that course.',
+            $faqs->firstWhere('question', 'How do I find the current batch timing?')?->answer,
         );
         $this->assertSame(
-            'Workshop and event availability changes over time. Check the current notices or contact the academy for verified event details.',
-            $faqs->firstWhere('question', 'Do you run events and workshops?')?->answer,
+            'A course can provide instruction, practice, feedback and academic support. Individual progress depends on the learner’s starting point, attendance, practice and continued effort.',
+            $faqs->firstWhere('question', 'What results can I expect from a course?')?->answer,
         );
     }
 

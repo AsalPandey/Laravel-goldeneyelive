@@ -117,7 +117,7 @@ class SeederContainmentTest extends TestCase
 
         $this->assertSame('test-environment-secret', SiteSetting::getValue('recaptcha_secret_key'));
         $this->assertSame('test-analytics-id', SiteSetting::getValue('google_analytics_id'));
-        $this->assertSame('Practical courses and classes in Pokhara.', SiteSetting::getValue('hero_title'));
+        $this->assertSame('Build practical skills for study, work and what comes next.', SiteSetting::getValue('hero_title'));
         $this->assertSame($passwordHash, $user->fresh()->password);
         $this->assertDatabaseCount(User::class, 1);
         $this->assertDatabaseCount('contacts', 1);

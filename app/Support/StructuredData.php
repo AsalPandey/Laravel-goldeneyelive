@@ -125,7 +125,7 @@ final class StructuredData
             'headline' => $post->title,
             'description' => Str::limit($description, 160, ''),
             'image' => PublicAsset::canonicalUrl($post->image ?? null, 'site/img/carousel-1.png'),
-            'author' => filled($post->author) ? [
+            'author' => filled($post->author) && $post->author !== 'Golden Eye Academy' ? [
                 '@type' => 'Person',
                 'name' => $post->author,
             ] : [
@@ -200,6 +200,7 @@ final class StructuredData
             '@type' => 'EducationalOrganization',
             '@id' => self::organizationId(),
             'name' => $siteName,
+            'foundingDate' => $settings['founding_year'] ?? null,
             'url' => CanonicalUrl::to('/'),
             'logo' => PublicAsset::canonicalUrl($settings['site_logo'] ?? null, 'site/img/logo.png'),
             'description' => $settings['meta_description'] ?? 'Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.',

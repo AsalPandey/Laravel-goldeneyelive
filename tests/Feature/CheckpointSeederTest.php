@@ -56,7 +56,7 @@ class CheckpointSeederTest extends TestCase
 
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'course_confirmation_note',
-            'value' => 'Confirm current batch timing, seat availability, and instructor details with the academy before enrollment.',
+            'value' => 'Ask the academy team for the current batch timing, seats and faculty information.',
         ]);
 
         $this->assertDatabaseHas(Course::class, [
@@ -73,24 +73,27 @@ class CheckpointSeederTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Practical courses and classes in Pokhara.')
-            ->assertSee('Golden Eye Academy, Pokhara')
+            ->assertSee('Build practical skills for study, work and what comes next.')
+            ->assertSee('Established in Pokhara since 2008')
             ->assertSee('Srijana Chowk, Pokhara, Nepal')
-            ->assertSee('Feedback summary:')
             ->assertSee('Matched courses:')
             ->assertDontSee('External social proof')
             ->assertSee('I am a Parent')
-            ->assertSee('Courses students ask about most')
-            ->assertSee('Browse by learning goal')
-            ->assertSee('Feedback linked to listed courses')
-            ->assertSee('Need course and batch information?')
+            ->assertSee('Explore courses students ask about most')
+            ->assertSee('Find classes by subject and skill.')
+            ->assertSee('Ready to find a suitable course?')
             ->assertSee('Message on WhatsApp')
             ->assertSee('Ask for Course Help');
 
+        $this->assertDatabaseHas(SiteSetting::class, [
+            'key' => 'home_testimonials_title',
+            'value' => 'Hear from learners who studied at Golden Eye Academy',
+        ]);
+
         $this->get(route('courses-all'))
             ->assertOk()
-            ->assertSee('IELTS Preparation for Band 7 Goal')
-            ->assertSee('Office and Admin Skills Package')
+            ->assertSee('IELTS Masterclass for Band 7+')
+            ->assertSee('Corporate Office and Admin Package')
             ->assertSee('Ask for Course Help');
 
         $this->get(route('courses'))
@@ -98,7 +101,7 @@ class CheckpointSeederTest extends TestCase
 
         $this->get(route('blog'))
             ->assertOk()
-            ->assertSee('Which Course Should I Choose After SEE or Plus Two?');
+            ->assertSee('How to Choose a Course After SEE or Plus Two');
 
         $this->get(route('about'))
             ->assertOk()

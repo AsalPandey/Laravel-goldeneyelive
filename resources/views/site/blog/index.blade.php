@@ -1,5 +1,5 @@
 @extends('site.layout.app')
-@section('page_title', 'Academy Blog - Golden Eye Academy Pokhara')
+@section('page_title', $settings['blog_header_title'] ?? 'Golden Eye Academy Learning Guides')
 @section('meta_description', filled($settings['blog_subtitle'] ?? null) ? $settings['blog_subtitle'] : 'Read Golden Eye Academy guides about courses, language learning, computer skills, academic support, and study decisions in Pokhara.')
 @section('content')
     @php
