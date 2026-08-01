@@ -11,6 +11,10 @@ class BlogRequest extends CMSRequest
         $imageLimit = SiteSetting::getValue('image_size_limit', 2048);
 
         return array_merge(parent::rules(), [
+            'meta_title' => ['nullable', 'string', 'max:70'],
+            'meta_description' => ['nullable', 'string', 'max:160'],
+            'meta_keywords' => ['nullable', 'string', 'max:500'],
+            'aeo_summary' => ['nullable', 'string', 'max:300'],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255'],
             'author' => ['nullable', 'string', 'max:255'],

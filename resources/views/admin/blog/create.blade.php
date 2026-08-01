@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                <x-seo-aeo-fields />
+                <x-seo-aeo-fields :meta-title-max="70" :meta-description-max="160" :meta-keywords-max="500" :aeo-summary-max="300" />
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-white rounded-2xl border-4 border-neutral-50 shadow-inner">
                     <div>
