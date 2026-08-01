@@ -56,6 +56,9 @@ class PublicJourneyFixTest extends TestCase
             ->assertSee('aria-label="Primary navigation"', false)
             ->assertSee('aria-label="Open navigation menu"', false)
             ->assertSee('data-bs-target="#navbarCollapse"', false)
+            ->assertSee('<details class="site-mobile-course-menu"', false)
+            ->assertSee('<summary class="nav-item nav-link', false)
+            ->assertSee('site-mobile-course-options', false)
             ->assertSee(route('courses-all'), false)
             ->assertSee(route('about'), false)
             ->assertSee(route('blog'), false)
@@ -70,6 +73,15 @@ class PublicJourneyFixTest extends TestCase
         $categoryUrl = e(route('courses-all', ['category' => $category->slug]));
 
         $this->assertGreaterThanOrEqual(2, substr_count($response->getContent(), $categoryUrl));
+    }
+
+    public function test_mobile_course_categories_are_grouped_in_a_dropdown(): void
+    {
+        $css = file_get_contents(public_path('site/css/style.css'));
+
+        $this->assertStringContainsString('.site-mobile-course-menu summary', $css);
+        $this->assertStringContainsString('.site-mobile-course-menu[open] summary .fa-chevron-down', $css);
+        $this->assertStringContainsString('.site-mobile-course-options', $css);
     }
 
     public function test_multiple_cms_phone_numbers_render_as_separate_correct_actions(): void
@@ -171,6 +183,28 @@ class PublicJourneyFixTest extends TestCase
         $this->assertSame('Show More FAQs', $button->attributes->getNamedItem('data-collapsed-label')?->nodeValue);
         $this->assertSame('Show Fewer FAQs', $button->attributes->getNamedItem('data-expanded-label')?->nodeValue);
         $this->assertSame('Show More FAQs', trim($xpath->query('./span', $button)->item(0)?->textContent ?? ''));
+    }
+
+    public function test_public_accordions_and_faq_icons_have_visible_expanded_states(): void
+    {
+        $css = file_get_contents(public_path('site/css/style.css'));
+
+        $this->assertMatchesRegularExpression(
+            '/\.accordion\s+\.accordion-collapse\s*\{[^}]*visibility:\s*visible;/s',
+            $css,
+        );
+        $this->assertStringContainsString('.faq-premium-btn:not(.collapsed) .fa-plus::before', $css);
+        $this->assertStringContainsString('#readMoreBtn.active .fa-chevron-down', $css);
+    }
+
+    public function test_policy_fallback_accordions_have_valid_second_heading_references(): void
+    {
+        foreach (['privacyPolicy.blade.php', 'termsAndConditions.blade.php'] as $view) {
+            $contents = file_get_contents(resource_path("views/site/others/{$view}"));
+
+            $this->assertStringContainsString('<h2 class="accordion-header" id="heading2">', $contents);
+            $this->assertStringContainsString('aria-labelledby="heading2"', $contents);
+        }
     }
 
     public function test_faq_reveal_labels_do_not_change_public_status_or_priority_ordering(): void

@@ -1,6 +1,6 @@
 @extends('site.layout.app')
-@section('page_title', 'Golden Eye Academy Catalogue - Courses, Classes & Learning Paths')
-@section('meta_description', 'Explore Golden Eye Academy courses, services, and learning paths. Compare class options, then message the academy team before enrolling.')
+@section('page_title', $settings['catalogue_meta_title'] ?? 'Golden Eye Academy Courses and Learning Support in Pokhara')
+@section('meta_description', $settings['catalogue_meta_description'] ?? 'Explore Golden Eye Academy courses, classes and learning-support areas in Pokhara, then ask for help choosing a suitable current batch.')
 
 @section('content')
     @php
@@ -19,9 +19,9 @@
         <div class="container py-5">
             <div class="row align-items-center g-4">
                 <div class="col-lg-8">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Full Catalogue</span>
-                    <h1 class="display-5 fw-black mt-3 mb-3 text-white" style="letter-spacing: 0;">Courses, services, and next-step paths in one place.</h1>
-                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8; max-width: 760px;">Browse the full Golden Eye Academy offer, compare classes that fit your goal, then send a quick message before you enroll.</p>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['catalogue_badge'] ?? 'Golden Eye Academy learning options' }}</span>
+                    <h1 class="display-5 fw-black mt-3 mb-3 text-white" style="letter-spacing: 0;">{{ $settings['catalogue_title'] ?? 'Explore courses, classes and academic support.' }}</h1>
+                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8; max-width: 760px;">{{ $settings['catalogue_description'] ?? 'Start with your learning goal, compare active courses and ask the academy team to help you choose a suitable next step.' }}</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
                     <a href="{{ $guidanceUrl('catalogue-hero') }}" data-cta="catalogue-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask for Course Help</a>
@@ -36,8 +36,8 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-8">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Service Catalogue</span>
-                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Choose by support area.</h2>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['catalogue_services_tagline'] ?? 'Ways we support learning' }}</span>
+                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $settings['catalogue_services_title'] ?? 'Choose the support area that matches your goal.' }}</h2>
                     </div>
                     <div class="col-lg-4 text-lg-end">
                         <a href="{{ $guidanceUrl('catalogue-service') }}" data-cta="catalogue-service-guidance" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
@@ -79,8 +79,8 @@
         <section class="py-5 bg-zinc-50/50">
             <div class="container">
                 <div class="mb-4">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Course Catalogue</span>
-                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Browse by category.</h2>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['catalogue_categories_tagline'] ?? 'Browse by subject' }}</span>
+                    <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $settings['catalogue_categories_title'] ?? 'Explore active course categories.' }}</h2>
                 </div>
                 <div class="row g-4">
                     @foreach($catalogueCategories as $category)
@@ -113,8 +113,8 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-8">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Course Information</span>
-                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Open a course, or ask us to compare options.</h2>
+                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['catalogue_courses_tagline'] ?? 'Current course options' }}</span>
+                        <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $settings['catalogue_courses_title'] ?? 'Open a course to understand what it covers.' }}</h2>
                     </div>
                     <div class="col-lg-4 text-lg-end">
                         <a href="{{ route('courses-all') }}" data-cta="catalogue-all-courses" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">View Course Details</a>
@@ -156,8 +156,8 @@
             <div class="row align-items-center justify-content-between g-4">
                 <div class="col-lg-8">
                     <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Still comparing?</span>
-                    <h2 class="h3 fw-black text-white mt-3 mb-3">Send your goal. We will point you to the right catalogue item.</h2>
-                    <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">A short question is enough. Tell us your class level, goal, and preferred timing.</p>
+                    <h2 class="h3 fw-black text-white mt-3 mb-3">{{ $settings['catalogue_final_title'] ?? 'Need help choosing between courses?' }}</h2>
+                    <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $settings['catalogue_final_description'] ?? 'Share your current level, goal and preferred timing. Our academy team will help you compare the relevant options.' }}</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
                     <a href="{{ $guidanceUrl('catalogue-final') }}" data-cta="catalogue-final-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask for Course Help</a>

@@ -46,7 +46,7 @@
                         </div>
 
                         <div class="accordion-item border border-zinc-100 mb-3 rounded-xl overflow-hidden">
-                            <h2 class="accordion-header">
+                            <h2 class="accordion-header" id="heading2">
                                 <button class="accordion-button text-brand-dark font-black uppercase tracking-tight collapsed" style="border: none; box-shadow: none; padding: 12px 20px; background-color: var(--zinc-50); font-size: 13px;" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
                                     2. How We Use Your Information
                                 </button>

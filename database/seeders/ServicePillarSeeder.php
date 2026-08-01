@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\ServicePillar;
+use App\Support\GoldenEyeContentBaseline;
 use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -119,8 +120,14 @@ class ServicePillarSeeder extends Seeder
             ],
         ];
 
-        foreach ($pillars as $pillar) {
-            $slug = Str::slug($pillar['title']);
+        $protectedSlugs = array_keys(GoldenEyeContentBaseline::servicePillarUpdates());
+
+        foreach ($pillars as $index => $pillar) {
+            $slug = $protectedSlugs[$index] ?? Str::slug($pillar['title']);
+            $pillar = [
+                ...$pillar,
+                ...GoldenEyeContentBaseline::servicePillarUpdates()[$slug],
+            ];
 
             ServicePillar::updateOrCreate(
                 ['slug' => $slug],
@@ -130,7 +137,7 @@ class ServicePillarSeeder extends Seeder
                     'status' => 'active',
                     'meta_title' => $pillar['title'].' | Golden Eye Academy',
                     'meta_description' => $pillar['summary'],
-                    'meta_keywords' => 'Golden Eye Academy, '.$pillar['title'],
+                    'meta_keywords' => 'Golden Eye Academy, courses and classes in Pokhara',
                     'aeo_summary' => $pillar['summary'],
                     'schema_markup' => json_encode([
                         '@context' => 'https://schema.org',
@@ -141,7 +148,7 @@ class ServicePillarSeeder extends Seeder
                             '@type' => 'EducationalOrganization',
                             'name' => 'Golden Eye Academy',
                         ],
-                    ]),
+                    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
                 ],
             );
         }

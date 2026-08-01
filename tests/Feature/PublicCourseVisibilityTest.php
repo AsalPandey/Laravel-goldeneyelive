@@ -107,7 +107,7 @@ class PublicCourseVisibilityTest extends TestCase
         SiteSetting::where('key', 'whatsapp_number')->update(['value' => '+977 980-000-0000']);
         Testimonial::factory()->create([
             'student_name' => 'Exact IELTS Student',
-            'course_name' => 'IELTS Preparation for Band 7 Goal',
+            'course_name' => 'IELTS Masterclass for Band 7+',
             'content' => 'The IELTS practice and feedback gave me a clear improvement plan.',
             'status' => 'active',
         ]);
@@ -115,8 +115,8 @@ class PublicCourseVisibilityTest extends TestCase
         $response = $this->get(route('courses-detail', 'ielts-masterclass'));
 
         $response->assertOk()
-            ->assertSee('IELTS Preparation for Band 7 Goal', false)
-            ->assertSee('Preparing for IELTS?', false)
+            ->assertSee('IELTS Masterclass for Band 7+', false)
+            ->assertSee('Designed for learners preparing for IELTS', false)
             ->assertSee('Best for:', false)
             ->assertSee('Duration: 6 Weeks', false)
             ->assertSee('Fee: Rs. 7,000', false)
@@ -135,7 +135,7 @@ class PublicCourseVisibilityTest extends TestCase
             ->assertSee('Srijana Chowk, Pokhara, Nepal', false)
             ->assertSee('Phone', false)
             ->assertSee('061-572599', false)
-            ->assertSee('Confirm current batch timing, seat availability, and instructor details with the academy before enrollment.', false)
+            ->assertSee('Ask the academy team for the current batch timing, seats and faculty information.', false)
             ->assertSee('Student View', false)
             ->assertSee('Parent View', false)
             ->assertSee('data-bs-toggle="pill"', false)

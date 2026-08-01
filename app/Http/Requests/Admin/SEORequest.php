@@ -97,6 +97,7 @@ class SEORequest extends FormRequest
             'geo_longitude' => ['nullable', 'string', 'max:50'],
             'site_name' => ['nullable', 'string', 'max:255'],
             'site_name_suffix' => ['nullable', 'string', 'max:255'],
+            'founding_year' => ['nullable', 'digits:4', 'integer', 'min:1900', 'max:'.now()->year],
             'schema_markup' => ['nullable', 'string'],
             'robots_txt_deindex_confirm' => ['sometimes', 'accepted'],
         ];

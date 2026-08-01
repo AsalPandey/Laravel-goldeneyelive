@@ -532,6 +532,37 @@
                                 <input type="text" name="career_highlight_4" value="{{ $settings['career_highlight_4'] ?? '' }}" class="premium-input h-10" placeholder="Highlight 4">
                             </div>
                         </div>
+                        <div class="brand-card lg:col-span-2">
+                            <div class="section-icon bg-zinc-900"><i class="fa fa-list text-white"></i></div>
+                            <h3 class="text-xl font-black uppercase text-zinc-800 mb-2">Full Catalogue Page</h3>
+                            <p class="text-sm text-zinc-500 mb-6">Controls the distinct learning-options page at <code>/catalogue</code>.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @foreach([
+                                    'catalogue_meta_title' => 'Search Title',
+                                    'catalogue_meta_description' => 'Search Description',
+                                    'catalogue_badge' => 'Hero Badge',
+                                    'catalogue_title' => 'Hero Title',
+                                    'catalogue_description' => 'Hero Description',
+                                    'catalogue_services_tagline' => 'Support Areas Tagline',
+                                    'catalogue_services_title' => 'Support Areas Title',
+                                    'catalogue_categories_tagline' => 'Categories Tagline',
+                                    'catalogue_categories_title' => 'Categories Title',
+                                    'catalogue_courses_tagline' => 'Courses Tagline',
+                                    'catalogue_courses_title' => 'Courses Title',
+                                    'catalogue_final_title' => 'Final CTA Title',
+                                    'catalogue_final_description' => 'Final CTA Description',
+                                ] as $catalogueKey => $catalogueLabel)
+                                    <div @class(['md:col-span-2' => str_contains($catalogueKey, 'description')])>
+                                        <label class="premium-label">{{ $catalogueLabel }}</label>
+                                        @if(str_contains($catalogueKey, 'description'))
+                                            <textarea name="{{ $catalogueKey }}" rows="3" class="premium-input h-auto py-3">{{ old($catalogueKey, $settings[$catalogueKey] ?? '') }}</textarea>
+                                        @else
+                                            <input type="text" name="{{ $catalogueKey }}" value="{{ old($catalogueKey, $settings[$catalogueKey] ?? '') }}" class="premium-input">
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -577,6 +608,24 @@
                 <div id="page-contact" class="page-editor-section" style="display: none;">
                     <div class="brand-card">
                         <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">Contact Page Introductory Text</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="premium-label">Page Title</label>
+                                <input type="text" name="contact_header_title" value="{{ old('contact_header_title', $settings['contact_header_title'] ?? '') }}" class="premium-input">
+                            </div>
+                            <div>
+                                <label class="premium-label">Page Subtitle</label>
+                                <input type="text" name="contact_header_subtitle" value="{{ old('contact_header_subtitle', $settings['contact_header_subtitle'] ?? '') }}" class="premium-input">
+                            </div>
+                            <div>
+                                <label class="premium-label">Intro Title</label>
+                                <input type="text" name="contact_intro_title" value="{{ old('contact_intro_title', $settings['contact_intro_title'] ?? '') }}" class="premium-input">
+                            </div>
+                            <div>
+                                <label class="premium-label">Form Title</label>
+                                <input type="text" name="contact_form_title" value="{{ old('contact_form_title', $settings['contact_form_title'] ?? '') }}" class="premium-input">
+                            </div>
+                        </div>
                         <div class="border rounded-2xl overflow-hidden">
                             <textarea name="contact_page_content" id="editor_contact" class="w-full min-h-[300px]">{{ $settings['contact_page_content'] ?? '' }}</textarea>
                         </div>

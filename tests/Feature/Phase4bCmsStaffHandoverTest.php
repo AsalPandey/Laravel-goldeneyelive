@@ -61,8 +61,8 @@ class Phase4bCmsStaffHandoverTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Which class are you interested in?')
-            ->assertSee('Course information before enrollment');
+            ->assertSee('Which learning path are you looking for?')
+            ->assertSee('Choose a course with a clear reason.');
 
         $this->actingAs($this->staff)
             ->post(route('admin.branding.update'), [

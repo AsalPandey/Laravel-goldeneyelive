@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\SiteSetting;
+use App\Support\GoldenEyeContentBaseline;
 use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 
@@ -204,6 +205,10 @@ class SiteSettingSeeder extends Seeder
             'newsletter_success_message' => ['You are subscribed. We will send relevant course and class updates.', 'text'],
             'enroll_success_message' => ['Thank you! We received your inquiry. Our team will contact you soon.', 'text'],
         ];
+
+        foreach (GoldenEyeContentBaseline::siteSettings() as $key => $setting) {
+            $settings[$key] = [$setting['value'], $setting['type']];
+        }
 
         foreach ($settings as $key => $setting) {
             [$value, $type] = is_array($setting) ? $setting : [$setting, 'text'];

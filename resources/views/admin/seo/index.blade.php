@@ -160,7 +160,7 @@
                         <p class="guide-text">Defining your exact location helps you appear in "near me" searches in Pokhara. These coordinates are used for LocalBusiness schema.</p>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         <div>
                             <label class="premium-label">Institution Name</label>
                             <input type="text" name="site_name" value="{{ $settings['site_name'] ?? 'Golden Eye' }}" class="premium-input">
@@ -168,6 +168,11 @@
                         <div>
                             <label class="premium-label">Brand Suffix</label>
                             <input type="text" name="site_name_suffix" value="{{ $settings['site_name_suffix'] ?? 'Academy' }}" class="premium-input">
+                        </div>
+                        <div>
+                            <label class="premium-label">Established Year</label>
+                            <input type="number" name="founding_year" value="{{ old('founding_year', $settings['founding_year'] ?? '') }}" min="1900" max="{{ now()->year }}" class="premium-input @error('founding_year') border-rose-500 @enderror" placeholder="2008">
+                            @error('founding_year') <p class="text-rose-500 text-[10px] mt-1 font-bold uppercase">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="premium-label">Geo Latitude</label>

@@ -19,7 +19,7 @@ class SEOController extends Controller
         'meta_title', 'meta_keywords', 'meta_description',
         'google_analytics_id', 'google_search_console_id', 'bing_webmaster_id',
         'robots_txt', 'aeo_summary', 'speakable_selectors', 'schema_markup',
-        'geo_latitude', 'geo_longitude', 'site_name', 'site_name_suffix',
+        'geo_latitude', 'geo_longitude', 'site_name', 'site_name_suffix', 'founding_year',
     ];
 
     /**

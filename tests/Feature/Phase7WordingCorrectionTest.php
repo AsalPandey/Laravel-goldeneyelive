@@ -19,7 +19,7 @@ class Phase7WordingCorrectionTest extends TestCase
             ->where('slug', 'parents-guide-how-to-evaluate-a-training-institute')
             ->firstOrFail();
 
-        $this->assertSame('Parents Guide: How to Evaluate an Academy', $post->title);
+        $this->assertSame('A Parent’s Checklist for Choosing an Academy', $post->title);
         $this->assertSame('published', $post->status);
         $this->assertStringContainsString('academy', strtolower($post->content));
         $this->assertStringNotContainsString('training institute', strtolower($post->title));
@@ -27,7 +27,7 @@ class Phase7WordingCorrectionTest extends TestCase
 
         $this->get(route('blog-detail', $post->slug))
             ->assertOk()
-            ->assertSeeText('Parents Guide: How to Evaluate an Academy')
+            ->assertSeeText('A Parent’s Checklist for Choosing an Academy')
             ->assertDontSeeText('Training Institute')
             ->assertSee('href="'.route('blog-detail', $post->slug).'"', false);
     }

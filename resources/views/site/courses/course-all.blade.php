@@ -48,9 +48,9 @@
         <div class="container py-4">
             <div class="row align-items-center g-4">
                 <div class="col-lg-7">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Courses and batches</span>
-                    <h1 class="display-5 fw-black mt-3 mb-3 text-white" style="letter-spacing: 0;">Explore practical classes by subject.</h1>
-                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8;">Search by course, skill, language, exam, or job goal. Compare the details first, then ask about class timing before you enroll.</p>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['courses_all_tagline'] ?? 'Courses and current batches' }}</span>
+                    <h1 class="display-5 fw-black mt-3 mb-3 text-white" style="letter-spacing: 0;">{{ $settings['courses_all_title'] ?? 'Explore practical classes by subject.' }}</h1>
+                    <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8;">{{ $settings['courses_subtitle'] ?? 'Explore active courses by subject, compare the learning focus and ask about the current batch that fits your goal.' }}</p>
                 </div>
                 <div class="col-lg-5">
                     <form action="{{ route('courses-all') }}" method="GET" class="bg-white/10 border border-white/10 rounded-2xl p-3 shadow-2xl" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="courses-filter" data-cta-label="View Course Details">

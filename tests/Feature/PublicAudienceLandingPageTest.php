@@ -15,28 +15,28 @@ class PublicAudienceLandingPageTest extends TestCase
         $pages = [
             [
                 'route' => 'for-students',
-                'headline' => 'Not sure which course to choose after school or college?',
+                'headline' => 'Choose a course around your goal.',
                 'source_page' => 'for_students',
                 'audience_type' => 'student',
                 'inquiry_intent' => 'course_selection_help',
             ],
             [
                 'route' => 'for-parents',
-                'headline' => 'Need clear course information for your child?',
+                'headline' => 'Make the course decision with confidence.',
                 'source_page' => 'for_parents',
                 'audience_type' => 'parent',
                 'inquiry_intent' => 'parent_course_guidance',
             ],
             [
                 'route' => 'study-abroad-guidance',
-                'headline' => 'Preparing for international study goals?',
+                'headline' => 'Prepare for your next education step with the right support.',
                 'source_page' => 'study_abroad_guidance',
                 'audience_type' => 'study_abroad_applicant',
                 'inquiry_intent' => 'study_abroad_course_guidance',
             ],
             [
                 'route' => 'job-computer-skills',
-                'headline' => 'Want practical computer or workplace skills?',
+                'headline' => 'Build practical skills you can use and explain.',
                 'source_page' => 'job_computer_skills',
                 'audience_type' => 'job_skill_learner',
                 'inquiry_intent' => 'computer_skill_guidance',

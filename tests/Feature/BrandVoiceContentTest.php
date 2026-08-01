@@ -26,23 +26,22 @@ class BrandVoiceContentTest extends TestCase
         $html = $this->get(route('home'))
             ->assertOk()
             ->assertSee('Golden Eye Academy', false)
-            ->assertSee('Practical courses and classes in Pokhara.', false)
+            ->assertSee('Build practical skills for study, work and what comes next.', false)
             ->assertDontSee('Study Abroad, Language &amp; Computer Courses in Pokhara', false)
             ->assertDontSee('GoldenEye Academy', false)
             ->getContent();
 
-        $this->assertStringContainsString('practical classes', $html);
+        $this->assertStringContainsString('practical skills', $html);
     }
 
-    public function test_international_preparation_page_avoids_consultancy_positioning(): void
+    public function test_international_preparation_page_keeps_consulting_context_secondary(): void
     {
         $this->get(route('study-abroad-guidance'))
             ->assertOk()
-            ->assertSee('IELTS, PTE and Language Preparation', false)
-            ->assertSee('Preparing for international study goals?', false)
-            ->assertSee('academic preparation', false)
-            ->assertDontSee('Study Abroad Guidance', false)
-            ->assertDontSee('documentation preparation', false)
+            ->assertSee('Prepare for your next education step with the right support.', false)
+            ->assertSee('Preparation classes are provided by Golden Eye Academy.', false)
+            ->assertSee('Brilliant Education Pokhara', false)
+            ->assertDontSee('legal and billing operator', false)
             ->assertDontSee('migration', false);
     }
 

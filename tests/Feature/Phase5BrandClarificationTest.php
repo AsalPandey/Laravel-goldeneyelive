@@ -58,11 +58,10 @@ class Phase5BrandClarificationTest extends TestCase
     {
         $this->get(route('study-abroad-guidance'))
             ->assertOk()
-            ->assertSeeText('Language and test-preparation classes are provided by Golden Eye Academy.')
-            ->assertSeeText('Education, career and study-abroad consulting services are presented separately through Brilliant Education Pokhara.')
-            ->assertSeeText('German-language classes are provided by Golden Eye Academy.')
-            ->assertSeeText('Germany education and study-abroad consulting is handled through Brilliant Education Pokhara.')
-            ->assertSeeText('Golden Eye Academy Pvt. Ltd. remains the local legal and billing operator.')
+            ->assertSeeText('Preparation classes are provided by Golden Eye Academy.')
+            ->assertSeeText('Golden Eye Academy provides courses, classes and academic support. For education-consulting guidance, Golden Eye Academy works with its partner, Brilliant Education Pokhara.')
+            ->assertDontSeeText('German-language classes')
+            ->assertDontSeeText('legal and billing operator')
             ->assertSee('href="'.route('courses-all').'"', false);
     }
 

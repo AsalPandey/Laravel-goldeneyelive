@@ -479,6 +479,10 @@ final class CmsPublicContent
     {
         $value = trim((string) ($settings[$key] ?? ''));
 
+        if ($value === '') {
+            $default = GoldenEyeContentBaseline::settingValue($key, $default);
+        }
+
         return $value !== '' ? $value : $default;
     }
 
@@ -490,6 +494,10 @@ final class CmsPublicContent
     private static function lines(array $settings, string $key, array $defaults): array
     {
         $value = trim((string) ($settings[$key] ?? ''));
+        if ($value === '') {
+            $value = GoldenEyeContentBaseline::settingValue($key);
+        }
+
         if ($value === '') {
             return $defaults;
         }

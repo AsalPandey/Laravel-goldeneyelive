@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Course;
 use App\Models\CourseCategory;
+use App\Support\GoldenEyeContentBaseline;
 use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class CourseSeeder extends Seeder
 {
@@ -245,6 +247,10 @@ class CourseSeeder extends Seeder
         ];
 
         foreach ($courses as $index => $courseData) {
+            $courseData = [
+                ...$courseData,
+                ...GoldenEyeContentBaseline::courseOverrides()[$courseData['slug']],
+            ];
             $category = $categories->get($courseData['category_slug']);
 
             $courseData['category_id'] = $category?->id;
@@ -253,18 +259,18 @@ class CourseSeeder extends Seeder
             $courseData['status'] = 'active';
             $courseData['meta_title'] = $courseData['name'].' | Golden Eye Academy';
             $courseData['display_order'] = ($index + 1) * 10;
-            $courseData['meta_description'] = $courseData['description'];
-            $courseData['aeo_summary'] = $courseData['name'].' helps learners understand class fit, practice core skills, and review enrollment support before joining.';
+            $courseData['meta_description'] = Str::limit($courseData['description'], 500, '');
+            $courseData['aeo_summary'] = $courseData['description'];
             $courseData['schema_markup'] = json_encode([
                 '@context' => 'https://schema.org',
                 '@type' => 'Course',
                 'name' => $courseData['name'],
                 'description' => $courseData['description'],
                 'provider' => [
-                    '@type' => 'Organization',
+                    '@type' => 'EducationalOrganization',
                     'name' => 'Golden Eye Academy',
                 ],
-            ]);
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
             Course::updateOrCreate(
                 ['slug' => $courseData['slug']],

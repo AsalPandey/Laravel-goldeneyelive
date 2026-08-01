@@ -12,9 +12,10 @@
 	@section('content')
 	    @php
 	        $heroImage = $homeHeroImage;
-	        $heroBadge = trim((string) ($settings['hero_badge_text'] ?? 'Golden Eye Academy, Pokhara')) ?: 'Golden Eye Academy, Pokhara';
-	        $heroTitle = trim((string) ($settings['hero_hook_headline'] ?? $settings['hero_title'] ?? 'Practical courses and classes in Pokhara.')) ?: 'Practical courses and classes in Pokhara.';
-	        $heroBody = trim(strip_tags((string) ($settings['hero_hook_body'] ?? $settings['hero_subtitle'] ?? 'Golden Eye Academy offers practical classes and skill-based batches for IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT learners in Pokhara.'))) ?: 'Golden Eye Academy offers practical classes and skill-based batches for IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT learners in Pokhara.';
+	        $heroBadge = trim((string) ($settings['hero_badge_text'] ?? 'Established in Pokhara since 2008')) ?: 'Established in Pokhara since 2008';
+	        $heroTitle = trim((string) ($settings['hero_hook_headline'] ?? $settings['hero_title'] ?? 'Build practical skills for study, work and what comes next.')) ?: 'Build practical skills for study, work and what comes next.';
+	        $heroBody = trim(strip_tags((string) ($settings['hero_hook_body'] ?? $settings['hero_subtitle'] ?? 'Explore computer, language, test-preparation and academic-support classes, with clear guidance to help you choose a suitable course and current batch.'))) ?: 'Explore computer, language, test-preparation and academic-support classes, with clear guidance to help you choose a suitable course and current batch.';
+	        $heroTrust = trim(strip_tags((string) ($settings['hero_subtitle'] ?? 'Clear course information. Practical learning. Guidance before enrollment.'))) ?: 'Clear course information. Practical learning. Guidance before enrollment.';
 	        $heroPrimaryCta = trim((string) ($settings['hero_cta_1_text'] ?? $settings['hero_cta_text'] ?? 'Ask for Course Help')) ?: 'Ask for Course Help';
 	        $heroPrimaryCta = strtolower($heroPrimaryCta) === 'ask for course guidance' ? 'Ask for Course Help' : $heroPrimaryCta;
 	        $heroSecondaryCta = trim((string) ($settings['hero_cta_2_text'] ?? 'View Course Details')) ?: 'View Course Details';
@@ -76,6 +77,9 @@
 	                    </h1>
 	                    <p class="hero-hook-body mb-5 text-white/90" style="font-weight: 500; max-width: 760px; line-height: 1.7; font-size: 16px;">
 	                        {{ $heroBody }}
+	                    </p>
+	                    <p class="mb-4 text-brand-gold fw-bold" style="max-width: 760px; font-size: 13px; letter-spacing: .03em;">
+	                        {{ $heroTrust }}
 	                    </p>
 	                    <div class="d-flex flex-column flex-sm-row gap-3 home-hero-actions">
 	                        <a href="{{ $guidanceUrl('hero') }}" data-cta="hero-course-help" data-cta-label="{{ $heroPrimaryCta }}" class="btn btn-primary py-3 px-5 rounded-pill shadow-xl font-black uppercase tracking-widest" style="font-size: 10px;">

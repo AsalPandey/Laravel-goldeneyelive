@@ -98,11 +98,21 @@
 
         <div class="navbar-nav site-mobile-nav p-4 d-lg-none" data-mobile-navigation>
             @foreach($primaryNavItems as $navItem)
-                <a href="{{ $navItem['url'] }}" class="nav-item nav-link {{ request()->routeIs(...$navItem['active_routes']) ? 'active' : '' }}">{{ $navItem['label'] }}</a>
                 @if($navItem['course_menu'] ?? false)
-                    @foreach($navCourseRoutes as $courseRoute)
-                        <a href="{{ $courseRoute['url'] }}" class="nav-item nav-link site-mobile-course-link">{{ $courseRoute['label'] }}</a>
-                    @endforeach
+                    <details class="site-mobile-course-menu" {{ request()->routeIs(...$navItem['active_routes']) ? 'open' : '' }}>
+                        <summary class="nav-item nav-link {{ request()->routeIs(...$navItem['active_routes']) ? 'active' : '' }}">
+                            <span>{{ $navItem['label'] }}</span>
+                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                        </summary>
+                        <div class="site-mobile-course-options">
+                            <a href="{{ $navItem['url'] }}" class="nav-item nav-link site-mobile-course-link">All Courses</a>
+                            @foreach($navCourseRoutes as $courseRoute)
+                                <a href="{{ $courseRoute['url'] }}" class="nav-item nav-link site-mobile-course-link">{{ $courseRoute['label'] }}</a>
+                            @endforeach
+                        </div>
+                    </details>
+                @else
+                    <a href="{{ $navItem['url'] }}" class="nav-item nav-link {{ request()->routeIs(...$navItem['active_routes']) ? 'active' : '' }}">{{ $navItem['label'] }}</a>
                 @endif
             @endforeach
             <a href="{{ $headerHelpUrl }}" class="nav-item nav-link site-mobile-primary" data-cta="mobile-menu-course-help">

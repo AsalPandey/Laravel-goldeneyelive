@@ -25,7 +25,7 @@
     <div class="container-fluid page-header py-4 mb-4 wow fadeIn" data-wow-delay="0.1s" style="background: linear-gradient(rgba(5, 12, 28, 0.85), rgba(5, 12, 28, 0.85)), url('{{ \App\Support\PublicAsset::url($settings['hero_image'] ?? null, 'site/img/carousel-1.png') }}'); background-size: cover; background-position: center;">
         <div class="container py-4 text-center">
             <h1 class="font-black text-white animated slideInDown uppercase tracking-tighter" style="font-size: clamp(1.6rem, 3.5vw, 2.5rem); line-height: 1;">{{ $settings['contact_header_title'] ?? 'Message Golden Eye Academy' }}</h1>
-            <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 10px;">Course, fee, and timing questions</p>
+            <p class="text-brand-gold fw-black uppercase tracking-[0.3em] mb-4 animated fadeIn" style="font-size: 10px;">{{ $settings['contact_header_subtitle'] ?? 'Courses, current batches and academy visits' }}</p>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center mb-0">
                     <li class="breadcrumb-item"><a class="text-white opacity-50" href="{{ route('home') }}">Home</a></li>
@@ -45,7 +45,7 @@
                     <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Course questions</span>
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
                 </div>
-                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Ask a Quick <span class="text-brand-gold">Course Question</span></h2>
+                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">{{ $settings['contact_intro_title'] ?? 'Talk with our academy team' }}</h2>
             </div>
 
             <div class="row g-4 justify-content-center">
@@ -112,7 +112,7 @@
 
                 <div class="col-lg-7 col-md-12 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="premium-card p-5 p-lg-6 shadow-lg rounded-xl bg-white border border-zinc-100 contact-form-card">
-                        <h3 class="font-black uppercase tracking-tight mb-5 text-brand-dark">Send Your <span class="text-brand-gold">Course Question</span></h3>
+                        <h3 class="font-black uppercase tracking-tight mb-5 text-brand-dark">{{ $settings['contact_form_title'] ?? 'Send Your Course Question' }}</h3>
                         <form action="{{ route('contact-submit') }}" method="POST" class="form-conversational">
                             @csrf
                             <input type="hidden" name="lead_source" value="contact_page">

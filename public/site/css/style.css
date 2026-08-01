@@ -340,6 +340,32 @@ h1, h2, h3, h4, h5, h6, .section-title {
         border-radius: 8px;
     }
 
+    .site-mobile-course-menu summary {
+        justify-content: space-between;
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .site-mobile-course-menu summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .site-mobile-course-menu summary .fa-chevron-down {
+        color: var(--brand-gold);
+        font-size: 0.65rem;
+        transition: transform 0.2s ease;
+    }
+
+    .site-mobile-course-menu[open] summary .fa-chevron-down {
+        transform: rotate(180deg);
+    }
+
+    .site-mobile-course-options {
+        display: grid;
+        gap: 0.125rem;
+        padding: 0.25rem 0 0.5rem;
+    }
+
     .site-mobile-nav .site-mobile-course-link {
         min-height: 40px;
         margin-left: 0.75rem;
@@ -1729,6 +1755,22 @@ h1, h2, h3, h4, h5, h6, .section-title {
 .faq-premium-btn:not(.collapsed) {
     color: var(--brand-gold);
     background: var(--brand-dark);
+}
+
+.accordion .accordion-collapse {
+    visibility: visible;
+}
+
+.faq-premium-btn:not(.collapsed) .fa-plus::before {
+    content: "\f068";
+}
+
+#readMoreBtn .fa-chevron-down {
+    transition: transform 0.3s ease;
+}
+
+#readMoreBtn.active .fa-chevron-down {
+    transform: rotate(180deg);
 }
 
 .faq-premium-body {
