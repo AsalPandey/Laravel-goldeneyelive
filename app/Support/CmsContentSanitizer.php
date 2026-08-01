@@ -5,6 +5,7 @@ namespace App\Support;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
+use DOMXPath;
 use Illuminate\Support\Str;
 use JsonException;
 
@@ -40,6 +41,15 @@ class CmsContentSanitizer
         'table', 'thead', 'tbody', 'tr', 'th', 'td', 'blockquote',
     ];
 
+    /**
+     * Elements whose contents must not be retained when the element is removed.
+     *
+     * @var array<int, string>
+     */
+    private const BLOCKED_TAGS = [
+        'script', 'style', 'iframe', 'object', 'embed', 'template', 'svg', 'math',
+    ];
+
     public static function html(?string $html): string
     {
         if (blank($html)) {
@@ -49,24 +59,35 @@ class CmsContentSanitizer
         $document = new DOMDocument;
 
         $previous = libxml_use_internal_errors(true);
-        $document->loadHTML(
-            '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><div id="cms-root">'.$html.'</div>',
+        $loaded = $document->loadHTML(
+            '<?xml encoding="utf-8" ?><div id="cms-root">'.$html.'</div>',
             LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
         );
         libxml_clear_errors();
         libxml_use_internal_errors($previous);
 
-        $root = $document->getElementById('cms-root');
+        if (! $loaded) {
+            return e(strip_tags($html));
+        }
+
+        $rootNodes = (new DOMXPath($document))->query('//*[@id="cms-root"]');
+        $root = $rootNodes !== false ? $rootNodes->item(0) : null;
 
         if (! $root instanceof DOMElement) {
             return e(strip_tags($html));
         }
 
-        self::sanitizeNode($root);
+        self::sanitizeNode($root, $root);
 
         $clean = '';
         foreach ($root->childNodes as $child) {
-            $clean .= $document->saveHTML($child);
+            $serialized = $document->saveHTML($child);
+
+            if ($serialized === false) {
+                return e(strip_tags($html));
+            }
+
+            $clean .= $serialized;
         }
 
         return $clean;
@@ -98,22 +119,41 @@ class CmsContentSanitizer
         }
     }
 
-    private static function sanitizeNode(DOMNode $node): void
+    private static function sanitizeNode(DOMNode $node, DOMElement $root): void
     {
+        if ($node->nodeType === XML_COMMENT_NODE) {
+            $node->parentNode?->removeChild($node);
+
+            return;
+        }
+
         if ($node instanceof DOMElement) {
             $tag = strtolower($node->tagName);
 
-            if ($node->getAttribute('id') !== 'cms-root' && ! in_array($tag, self::ALLOWED_TAGS, true)) {
-                self::unwrapNode($node);
+            if ($node !== $root && in_array($tag, self::BLOCKED_TAGS, true)) {
+                $node->parentNode?->removeChild($node);
 
                 return;
             }
 
-            self::sanitizeAttributes($node);
+            if ($node !== $root && ! in_array($tag, self::ALLOWED_TAGS, true)) {
+                $children = iterator_to_array($node->childNodes);
+                self::unwrapNode($node);
+
+                foreach ($children as $child) {
+                    self::sanitizeNode($child, $root);
+                }
+
+                return;
+            }
+
+            if ($node !== $root) {
+                self::sanitizeAttributes($node);
+            }
         }
 
         foreach (iterator_to_array($node->childNodes) as $child) {
-            self::sanitizeNode($child);
+            self::sanitizeNode($child, $root);
         }
     }
 
@@ -132,12 +172,16 @@ class CmsContentSanitizer
                 continue;
             }
 
-            if (in_array($name, ['href', 'src'], true) && self::hasUnsafeUrl($value)) {
+            if (in_array($name, ['href', 'src'], true) && self::hasUnsafeUrl($value, $name)) {
                 $element->removeAttribute($attribute->name);
             }
         }
 
         if ($tag === 'a') {
+            if ($element->hasAttribute('target') && ! in_array(strtolower($element->getAttribute('target')), ['_blank', '_self', '_parent', '_top'], true)) {
+                $element->removeAttribute('target');
+            }
+
             $element->setAttribute('rel', 'noopener noreferrer');
         }
 
@@ -146,11 +190,30 @@ class CmsContentSanitizer
         }
     }
 
-    private static function hasUnsafeUrl(string $value): bool
+    private static function hasUnsafeUrl(string $value, string $attribute): bool
     {
-        $normalized = strtolower(preg_replace('/\s+/', '', html_entity_decode($value)) ?? '');
+        $decoded = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $normalized = preg_replace('/[\x00-\x20\x7F]+/u', '', $decoded);
 
-        return Str::startsWith($normalized, ['javascript:', 'vbscript:', 'data:text/html']);
+        if ($normalized === null) {
+            return true;
+        }
+
+        if ($normalized === '' || Str::startsWith($normalized, ['#', '?', '/', './', '../'])) {
+            return Str::startsWith($normalized, '//');
+        }
+
+        $scheme = parse_url($normalized, PHP_URL_SCHEME);
+
+        if ($scheme === false || $scheme === null) {
+            return false;
+        }
+
+        $allowedSchemes = $attribute === 'href'
+            ? ['https', 'mailto', 'tel']
+            : ['https'];
+
+        return ! in_array(strtolower($scheme), $allowedSchemes, true);
     }
 
     private static function unwrapNode(DOMNode $node): void
