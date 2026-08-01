@@ -1,5 +1,7 @@
 # Phase 6 Content and Trust Handover
 
+> Historical note: Phase 5R–6R supersedes this manual-only baseline. The owner has since confirmed that Golden Eye Academy was established in Pokhara in 2008. Use `PHASE_5R_6R_CONTENT_BASELINE.md` for the current guarded rollout and ownership instructions.
+
 This document is a manual production-CMS checklist. The code defaults in Phase 6 do not overwrite live CMS records. Do not run baseline seeders against production.
 
 ## Content inventory
@@ -96,7 +98,7 @@ The seventh slug is intentionally retained as a legacy public URL even though it
 | Opening hours | The local CMS contains a schedule that has not been owner-confirmed | Ask visitors to confirm before travelling |
 | Response-time commitment | The local CMS contains a `2 hr` metric that is not verified | Keep response-time metrics empty until the owner approves one |
 | Experience and learner-count metrics | Local CMS values include `15+` and `5,000+` without supplied evidence | Keep metric fields empty until documentation is available |
-| Founding date and establishment-year wording | No supporting registration record was supplied for the public `2008` claim | Phase 6 removes it from defaults and structured data; add it back only after owner verification |
+| Founding date and establishment-year wording | The owner confirmed the academy was established in Pokhara in 2008 during Phase 5R–6R | Use `Established in Pokhara since 2008` selectively and retain `foundingDate: "2008"` in Golden Eye organization data |
 | Main popup, popup notice, and announcement bar | Local content may represent different campaigns | Staff must choose the current campaign and update it through its existing CMS control |
 
 ## Final production check

@@ -100,3 +100,11 @@ Before a release, major content import, destructive Admin action, or dependency 
 - Periodically restore a backup into a disposable environment and verify public pages, CMS login, content, and media.
 
 Seeders are baseline and recovery checkpoints for known project content. They are **not** a backup of current live CMS records, inquiries, uploaded media, or production configuration.
+
+## Phase 5R–6R baseline ownership
+
+The approved content baseline establishes Golden Eye Academy as the website's sole primary identity and uses the owner-confirmed wording **Established in Pokhara since 2008** selectively. Brilliant Education Pokhara is mentioned only on the study-abroad guidance page as Golden Eye Academy's education-consulting partner.
+
+The baseline seeders are for fresh non-production installations. They are deterministic checkpoints for the development-finished website; they do not update themselves when Staff edit live content and must not be run during routine production deployment. Current database and media backups remain necessary to recover recent Staff work.
+
+The one-time `goldeneye:publish-content-baseline` command is dry-run by default and refuses unexpected CMS values. A future production apply requires a verified backup, explicit `--apply` and `--backup-confirmed` flags, and an applied-change manifest. See `PHASE_5R_6R_CONTENT_BASELINE.md` for the controlled rollout and recovery checklist.
