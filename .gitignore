@@ -27,3 +27,5 @@ yarn-error.log
 /seed.php
 /test_results.txt
 /storage/tinker_test.php
+/database/*.sqlite
+
