@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Course extends Model
 {
@@ -17,6 +18,11 @@ class Course extends Model
         'instructor', 'capacity', 'description', 'course_outline', 'photo',
         'rating_star', 'rating_count', 'meta_title', 'meta_description', 'meta_keywords', 'aeo_summary', 'schema_markup', 'status', 'is_featured', 'display_order',
     ];
+
+    public function faqs(): BelongsToMany
+    {
+        return $this->belongsToMany(FAQ::class, 'course_faq', 'course_id', 'faq_id');
+    }
 
     public function courseCategory(): BelongsTo
     {
