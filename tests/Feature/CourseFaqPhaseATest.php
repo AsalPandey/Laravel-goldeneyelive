@@ -345,20 +345,20 @@ class CourseFaqPhaseATest extends TestCase
                 'question' => "Unique Phase A Course Question {$i}?",
                 'answer' => 'Answer text for Web Development course',
                 'status' => 'active',
-                'order_priority' => $i * 10,
+                'order_priority' => $i,
             ]);
         }
 
         $response = $this->get(route('courses-detail', $course->slug));
         $response->assertStatus(200);
 
-        // Asserts exactly 4 FAQs displayed (due to limit(4)) in latest() sequence
-        $response->assertSee('Unique Phase A Course Question 6?');
-        $response->assertSee('Unique Phase A Course Question 5?');
-        $response->assertSee('Unique Phase A Course Question 4?');
+        // Asserts exactly 4 FAQs displayed (due to limit(4)) in order_priority sequence
+        $response->assertSee('Unique Phase A Course Question 1?');
+        $response->assertSee('Unique Phase A Course Question 2?');
         $response->assertSee('Unique Phase A Course Question 3?');
-        $response->assertDontSee('Unique Phase A Course Question 2?');
-        $response->assertDontSee('Unique Phase A Course Question 1?');
+        $response->assertSee('Unique Phase A Course Question 4?');
+        $response->assertDontSee('Unique Phase A Course Question 5?');
+        $response->assertDontSee('Unique Phase A Course Question 6?');
     }
 
     /** 14. Transaction rollback when pivot synchronization fails */
