@@ -48,6 +48,21 @@ class CourseRequest extends CMSRequest
             'status' => ['required', 'in:active,inactive'],
             'is_featured' => ['nullable', 'boolean'],
             'display_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
+            'faqs' => ['nullable', 'array'],
+            'faqs.*' => [
+                'integer',
+                'distinct',
+                Rule::exists('f_a_q_s', 'id')->where(function ($query) use ($courseId) {
+                    $query->where(function ($subQuery) use ($courseId) {
+                        $subQuery->where('status', 'active');
+                        if ($courseId) {
+                            $subQuery->orWhereIn('id', function ($pivotQuery) use ($courseId) {
+                                $pivotQuery->select('faq_id')->from('course_faq')->where('course_id', $courseId);
+                            });
+                        }
+                    });
+                }),
+            ],
         ]);
     }
 

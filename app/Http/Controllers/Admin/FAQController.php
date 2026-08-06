@@ -4,15 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\FAQRequest;
+use App\Models\Course;
 use App\Models\FAQ;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class FAQController extends Controller
 {
     public function index(Request $request)
     {
-        $query = FAQ::query();
+        $query = FAQ::withCount('courses');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -39,15 +41,23 @@ class FAQController extends Controller
 
     public function create()
     {
-        return view('admin.faq.create');
+        $courses = Course::where('status', 'active')->orderBy('name')->get();
+
+        return view('admin.faq.create', compact('courses'));
     }
 
     public function store(FAQRequest $request)
     {
         $validated = $request->validated();
+        $courseIds = $validated['courses'] ?? [];
+        unset($validated['courses']);
 
-        FAQ::create($validated);
-        $this->clearSiteCache();
+        DB::transaction(function () use ($validated, $courseIds) {
+            $faq = FAQ::create($validated);
+            $faq->courses()->sync($courseIds);
+
+            DB::afterCommit(fn () => $this->clearSiteCache());
+        });
 
         Alert::success('Success', 'FAQ created successfully.');
 
@@ -61,18 +71,29 @@ class FAQController extends Controller
 
     public function edit($id)
     {
-        $faq = FAQ::findOrFail($id);
+        $faq = FAQ::with('courses')->findOrFail($id);
+        $assignedCourseIds = $faq->courses->pluck('id')->toArray();
+        $courses = Course::where('status', 'active')
+            ->orWhereIn('id', $assignedCourseIds)
+            ->orderBy('name')
+            ->get();
 
-        return view('admin.faq.edit', compact('faq'));
+        return view('admin.faq.edit', compact('faq', 'courses'));
     }
 
     public function update(FAQRequest $request, $id)
     {
         $faq = FAQ::findOrFail($id);
         $validated = $request->validated();
+        $courseIds = $validated['courses'] ?? [];
+        unset($validated['courses']);
 
-        $faq->update($validated);
-        $this->clearSiteCache();
+        DB::transaction(function () use ($faq, $validated, $courseIds) {
+            $faq->update($validated);
+            $faq->courses()->sync($courseIds);
+
+            DB::afterCommit(fn () => $this->clearSiteCache());
+        });
 
         Alert::success('Success', 'FAQ updated successfully.');
 

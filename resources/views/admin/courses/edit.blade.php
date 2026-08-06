@@ -139,6 +139,36 @@
                     <p class="text-[10px] text-neutral-500 italic">Featured courses appear first. Display Order controls the exact order across homepage and courses page.</p>
                 </div>
 
+                <div class="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-100 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-sm font-bold">Assign FAQs to Course (Optional)</label>
+                        <span class="text-[10px] text-neutral-500">Checkbox UI (Searchable controls may be added for larger FAQ sets)</span>
+                    </div>
+                    @if(isset($faqs) && $faqs->count() > 0)
+                        @php
+                            $assignedFaqIds = old('faqs', $course->faqs->pluck('id')->toArray());
+                        @endphp
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto p-2 border rounded-lg bg-white dark:bg-neutral-800">
+                            @foreach($faqs as $faq)
+                                <label class="flex items-start gap-2 p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer">
+                                    <input type="checkbox" name="faqs[]" value="{{ $faq->id }}" {{ in_array($faq->id, $assignedFaqIds) ? 'checked' : '' }} class="mt-1 rounded border-neutral-300 text-brand-gold focus:ring-brand-gold">
+                                    <div class="text-xs">
+                                        <span class="font-medium text-neutral-900 dark:text-neutral-100">{{ $faq->question }}</span>
+                                        @if($faq->status === 'inactive')
+                                            <span class="ml-1 text-[9px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 font-bold">(Inactive)</span>
+                                        @endif
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-xs text-neutral-500 italic">No active or assigned FAQs available.</p>
+                    @endif
+                    @error('faqs')
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="flex justify-end pt-4">
                     <button type="submit" class="inline-flex justify-center rounded-xl bg-brand-gold py-3 px-10 text-sm font-black uppercase text-brand-dark shadow-lg hover:bg-brand-dark hover:text-brand-gold transition-all">
                         Update Course Details

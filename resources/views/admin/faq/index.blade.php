@@ -33,6 +33,7 @@
                 <thead class="bg-neutral-50/50">
                     <tr>
                         <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Question / Inquiry</th>
+                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Courses</th>
                         <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Priority</th>
                         <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Live Status</th>
                         <th scope="col" class="relative px-6 py-4"><span class="sr-only">Actions</span></th>
@@ -51,6 +52,11 @@
                                     <div class="text-[10px] text-neutral-400 font-medium italic">{{ Str::limit(strip_tags($faq->answer), 80) }}</div>
                                 </div>
                             </div>
+                        </td>
+                        <td class="px-6 py-5">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider {{ ($faq->courses_count ?? 0) > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-neutral-50 text-neutral-500' }}">
+                                {{ $faq->courses_count ?? 0 }} Assigned
+                            </span>
                         </td>
                         <td class="px-6 py-5">
                             <div class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider {{ $faq->order_priority > 0 ? 'bg-blue-50 text-blue-700' : 'bg-neutral-50 text-neutral-500' }}">

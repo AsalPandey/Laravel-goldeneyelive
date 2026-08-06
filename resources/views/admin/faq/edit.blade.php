@@ -37,6 +37,36 @@
 
                 <x-seo-aeo-fields :model="$faq" />
 
+                <div class="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-100 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-sm font-bold">Assign to Specific Courses (Optional)</label>
+                        <span class="text-[10px] text-neutral-500">Checkbox UI (Searchable controls may be added for larger course sets)</span>
+                    </div>
+                    @if(isset($courses) && $courses->count() > 0)
+                        @php
+                            $assignedCourseIds = old('courses', $faq->courses->pluck('id')->toArray());
+                        @endphp
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto p-2 border rounded-lg bg-white dark:bg-neutral-800">
+                            @foreach($courses as $course)
+                                <label class="flex items-start gap-2 p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer">
+                                    <input type="checkbox" name="courses[]" value="{{ $course->id }}" {{ in_array($course->id, $assignedCourseIds) ? 'checked' : '' }} class="mt-1 rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
+                                    <div class="text-xs">
+                                        <span class="font-medium text-neutral-900 dark:text-neutral-100">{{ $course->name }}</span>
+                                        @if($course->status === 'inactive')
+                                            <span class="ml-1 text-[9px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 font-bold">(Inactive)</span>
+                                        @endif
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-xs text-neutral-500 italic">No active or assigned courses available.</p>
+                    @endif
+                    @error('courses')
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="flex justify-end pt-6 border-t border-neutral-50">
                     <button type="submit" class="inline-flex justify-center rounded-xl bg-[#050C1C] py-3.5 px-12 text-xs font-black uppercase tracking-widest text-[#C5A059] shadow-2xl hover:bg-orange-600 hover:text-white transform hover:-translate-y-1 transition-all active:scale-95">
                         <i class="fa fa-sync-alt mr-2"></i> Update FAQ Entry
