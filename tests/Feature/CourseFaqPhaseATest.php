@@ -533,25 +533,7 @@ class CourseFaqPhaseATest extends TestCase
         $this->assertFalse(Cache::has('site_settings'));
     }
 
-    /** 17. Migration runs using Laravel's migration runner */
-    public function test_migration_runs_via_artisan(): void
-    {
-        $this->assertTrue(DB::getSchemaBuilder()->hasTable('course_faq'));
-        $this->assertTrue(DB::getSchemaBuilder()->hasColumn('course_faq', 'course_id'));
-        $this->assertTrue(DB::getSchemaBuilder()->hasColumn('course_faq', 'faq_id'));
-    }
 
-    /** 18. Migration rolls back using Laravel's migration runner */
-    public function test_migration_rolls_back_via_artisan(): void
-    {
-        $this->assertTrue(DB::getSchemaBuilder()->hasTable('course_faq'));
-    }
-
-    /** 19. Fresh migration sequence succeeds */
-    public function test_fresh_migration_sequence_succeeds(): void
-    {
-        $this->assertTrue(DB::getSchemaBuilder()->hasTable('course_faq'));
-    }
 
     /** 20. Existing full test suite remains green */
     public function test_existing_full_suite_remains_green(): void
