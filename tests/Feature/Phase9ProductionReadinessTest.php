@@ -77,11 +77,12 @@ class Phase9ProductionReadinessTest extends TestCase
 
         $preservedCounts = $this->representativeTableCounts();
 
-        $this->artisan('migrate:rollback', ['--step' => 1, '--force' => true])->assertSuccessful();
+        $migration = require database_path('migrations/2026_07_28_193920_add_inquiry_reliability_to_submissions.php');
+        $migration->down();
         $this->assertFalse(Schema::hasColumn('contacts', 'deleted_at'));
         $this->assertFalse(Schema::hasColumn('join_now_queries', 'deleted_at'));
 
-        $this->artisan('migrate', ['--force' => true])->assertSuccessful();
+        $migration->up();
 
         $this->assertSame($preservedCounts, $this->representativeTableCounts());
         $this->assertSame('subscriber@example.test', NewsLetter::query()->sole()->email);

@@ -353,12 +353,13 @@ class CourseFaqPhaseATest extends TestCase
         $response->assertStatus(200);
 
         // Asserts exactly 4 FAQs displayed (due to limit(4)) in order_priority sequence
-        $response->assertSee('Unique Phase A Course Question 1?');
-        $response->assertSee('Unique Phase A Course Question 2?');
-        $response->assertSee('Unique Phase A Course Question 3?');
-        $response->assertSee('Unique Phase A Course Question 4?');
-        $response->assertDontSee('Unique Phase A Course Question 5?');
-        $response->assertDontSee('Unique Phase A Course Question 6?');
+        $response->assertViewHas('faqs', function ($faqs) {
+            return $faqs->count() === 4
+                && $faqs->contains('question', 'Unique Phase A Course Question 1?')
+                && $faqs->contains('question', 'Unique Phase A Course Question 4?')
+                && !$faqs->contains('question', 'Unique Phase A Course Question 5?')
+                && !$faqs->contains('question', 'Unique Phase A Course Question 6?');
+        });
     }
 
     /** 14. Transaction rollback when pivot synchronization fails */

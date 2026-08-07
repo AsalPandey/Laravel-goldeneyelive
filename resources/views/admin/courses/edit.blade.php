@@ -60,7 +60,9 @@
                     </div>
 
                     <div>
-                        @php($selectedInstructor = old('instructor', $course->instructor))
+                        @php
+                            $selectedInstructor = old('instructor', $course->instructor);
+                        @endphp
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Assigned Faculty</label>
                         <select name="instructor" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
                             <option value="">Select a faculty profile</option>

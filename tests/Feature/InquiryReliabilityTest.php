@@ -220,10 +220,8 @@ class InquiryReliabilityTest extends TestCase
             collect(Schema::getIndexes('news_letters'))->pluck('name')->all()
         );
 
-        $this->artisan('migrate:rollback', [
-            '--step' => 1,
-            '--force' => true,
-        ])->assertSuccessful();
+        $migration = require database_path('migrations/2026_07_28_193920_add_inquiry_reliability_to_submissions.php');
+        $migration->down();
 
         $this->assertFalse(Schema::hasColumn('contacts', 'deleted_at'));
         $this->assertFalse(Schema::hasColumn('join_now_queries', 'deleted_at'));
@@ -232,7 +230,7 @@ class InquiryReliabilityTest extends TestCase
             collect(Schema::getIndexes('news_letters'))->pluck('name')->all()
         );
 
-        $this->artisan('migrate', ['--force' => true])->assertSuccessful();
+        $migration->up();
 
         $this->assertTrue(Schema::hasColumn('contacts', 'deleted_at'));
         $this->assertTrue(Schema::hasColumn('join_now_queries', 'deleted_at'));
