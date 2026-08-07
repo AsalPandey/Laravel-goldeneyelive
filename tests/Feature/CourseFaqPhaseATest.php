@@ -328,8 +328,8 @@ class CourseFaqPhaseATest extends TestCase
         $response->assertSee('Global Q2');
     }
 
-    /** 13. Public course FAQ output unchanged in Phase A */
-    public function test_public_course_faq_output_unchanged_in_phase_a(): void
+    /** 13. Only explicitly assigned FAQs render (Phase B) */
+    public function test_only_explicitly_assigned_faqs_render(): void
     {
         FAQ::query()->delete();
 
@@ -339,26 +339,124 @@ class CourseFaqPhaseATest extends TestCase
             'status' => 'active',
         ]);
 
-        // Create 6 active FAQs matching keyword criteria with distinct order_priority
-        for ($i = 1; $i <= 6; $i++) {
-            FAQ::create([
-                'question' => "Unique Phase A Course Question {$i}?",
-                'answer' => 'Answer text for Web Development course',
-                'status' => 'active',
-                'order_priority' => $i,
-            ]);
-        }
+        $faqA = FAQ::create(['question' => 'A?', 'answer' => 'A Ans', 'status' => 'active', 'order_priority' => 1]);
+        $faqB = FAQ::create(['question' => 'B?', 'answer' => 'B Ans', 'status' => 'active', 'order_priority' => 2]);
+        $faqC = FAQ::create(['question' => 'C?', 'answer' => 'C Ans', 'status' => 'active', 'order_priority' => 3]);
+
+        $course->faqs()->sync([$faqA->id, $faqB->id]);
 
         $response = $this->get(route('courses-detail', $course->slug));
         $response->assertStatus(200);
 
-        // Asserts exactly 4 FAQs displayed (due to limit(4)) in order_priority sequence
+        $response->assertViewHas('faqs', function ($faqs) use ($faqA, $faqB, $faqC) {
+            return $faqs->count() === 2
+                && $faqs->contains('id', $faqA->id)
+                && $faqs->contains('id', $faqB->id)
+                && ! $faqs->contains('id', $faqC->id);
+        });
+    }
+
+    /** 14. Different courses can have different FAQs */
+    public function test_different_courses_have_isolated_faqs(): void
+    {
+        FAQ::query()->delete();
+
+        $course1 = Course::factory()->create(['name' => 'C1', 'slug' => 'c1', 'status' => 'active']);
+        $course2 = Course::factory()->create(['name' => 'C2', 'slug' => 'c2', 'status' => 'active']);
+
+        $faq1 = FAQ::create(['question' => 'F1', 'answer' => 'A1', 'status' => 'active', 'order_priority' => 1]);
+        $faq2 = FAQ::create(['question' => 'F2', 'answer' => 'A2', 'status' => 'active', 'order_priority' => 2]);
+
+        $course1->faqs()->sync([$faq1->id]);
+        $course2->faqs()->sync([$faq2->id]);
+
+        $response1 = $this->get(route('courses-detail', $course1->slug));
+        $response1->assertViewHas('faqs', function ($faqs) use ($faq1, $faq2) {
+            return $faqs->count() === 1 && $faqs->contains('id', $faq1->id) && ! $faqs->contains('id', $faq2->id);
+        });
+
+        $response2 = $this->get(route('courses-detail', $course2->slug));
+        $response2->assertViewHas('faqs', function ($faqs) use ($faq1, $faq2) {
+            return $faqs->count() === 1 && $faqs->contains('id', $faq2->id) && ! $faqs->contains('id', $faq1->id);
+        });
+    }
+
+    /** 15. Inactive assigned FAQ is hidden */
+    public function test_inactive_assigned_faq_is_hidden(): void
+    {
+        FAQ::query()->delete();
+
+        $course = Course::factory()->create(['name' => 'C', 'slug' => 'c', 'status' => 'active']);
+        $faq = FAQ::create(['question' => 'F', 'answer' => 'A', 'status' => 'inactive']);
+
+        $course->faqs()->sync([$faq->id]);
+
+        $response = $this->get(route('courses-detail', $course->slug));
         $response->assertViewHas('faqs', function ($faqs) {
-            return $faqs->count() === 4
-                && $faqs->contains('question', 'Unique Phase A Course Question 1?')
-                && $faqs->contains('question', 'Unique Phase A Course Question 4?')
-                && !$faqs->contains('question', 'Unique Phase A Course Question 5?')
-                && !$faqs->contains('question', 'Unique Phase A Course Question 6?');
+            return $faqs->isEmpty();
+        });
+
+        // Prove the pivot still exists despite the FAQ being inactive
+        $this->assertDatabaseHas('course_faq', [
+            'course_id' => $course->id,
+            'faq_id' => $faq->id,
+        ]);
+    }
+
+    /** 16. Unassigned keyword-matching FAQ does not render */
+    public function test_unassigned_keyword_matching_faq_does_not_render(): void
+    {
+        FAQ::query()->delete();
+
+        $course = Course::factory()->create([
+            'name' => 'Test Course', 'slug' => 'test-course',
+            'category_id' => $this->category->id, 'category' => $this->category->name, 'category_slug' => $this->category->slug,
+            'status' => 'active',
+        ]);
+
+        // Creating FAQ with legacy keywords in question and answer
+        $faq = FAQ::create([
+            'question' => 'Is this a course with a fee and duration?',
+            'answer' => 'Yes, Test Course in Web Development',
+            'status' => 'active',
+        ]);
+
+        $response = $this->get(route('courses-detail', $course->slug));
+        $response->assertViewHas('faqs', function ($faqs) {
+            return $faqs->isEmpty();
+        });
+    }
+
+    /** 17. Ordering by priority then id */
+    public function test_assigned_faqs_ordered_by_priority(): void
+    {
+        FAQ::query()->delete();
+
+        $course = Course::factory()->create(['name' => 'C', 'slug' => 'c', 'status' => 'active']);
+        $faq1 = FAQ::create(['question' => 'F1', 'answer' => 'A', 'status' => 'active', 'order_priority' => 10]);
+        $faq2 = FAQ::create(['question' => 'F2', 'answer' => 'A', 'status' => 'active', 'order_priority' => 5]);
+        $faq3 = FAQ::create(['question' => 'F3', 'answer' => 'A', 'status' => 'active', 'order_priority' => 5]);
+
+        $course->faqs()->sync([$faq1->id, $faq2->id, $faq3->id]);
+
+        $response = $this->get(route('courses-detail', $course->slug));
+        $response->assertViewHas('faqs', function ($faqs) use ($faq1, $faq2, $faq3) {
+            // Should be 5, 5, 10
+            return $faqs->pluck('id')->toArray() === [$faq2->id, $faq3->id, $faq1->id];
+        });
+    }
+
+    /** 18. Zero assignment gives empty collection */
+    public function test_zero_assignment_gives_empty_collection(): void
+    {
+        FAQ::query()->delete();
+
+        $course = Course::factory()->create(['name' => 'C', 'slug' => 'c', 'status' => 'active']);
+        FAQ::create(['question' => 'F1', 'answer' => 'A', 'status' => 'active']);
+
+        $response = $this->get(route('courses-detail', $course->slug));
+        $response->assertViewHas('faqs', function ($faqs) {
+            return $faqs->isEmpty();
         });
     }
 

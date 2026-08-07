@@ -6,7 +6,6 @@ use App\Models\Course;
 use App\Models\FAQ;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class AuditCourseFaqReadiness extends Command
 {
@@ -22,7 +21,7 @@ class AuditCourseFaqReadiness extends Command
      *
      * @var string
      */
-    protected $description = 'Audit active courses for Course-FAQ relationship readiness and generate candidate keyword suggestions.';
+    protected $description = 'Audit active courses for Course-FAQ explicit CMS assignments.';
 
     /**
      * Execute the console command.
@@ -53,68 +52,60 @@ class AuditCourseFaqReadiness extends Command
 
         $courses = Course::publiclyVisible()->orderBy('id')->get();
         $totalCourses = $courses->count();
+        $totalFaqs = FAQ::count();
 
         $this->info('================================================================');
-        $this->info('COURSE-FAQ CONTENT-READINESS AUDIT REPORT');
+        $this->info('COURSE-FAQ CMS ASSIGNMENT AUDIT REPORT');
         $this->info('================================================================');
-        $this->info("Total Active Courses Audited: {$totalCourses}\n");
-
-        $readyCount = 0;
-        $unreadyCount = 0;
-        $candidateMappings = [];
 
         $tableRows = [];
+        $coursesWithAssignments = 0;
+        $coursesWithZeroAssignments = 0;
+
+        $totalPivotCount = 0;
+        $totalInactiveAttached = 0;
+        $duplicatePivotCount = 0;
 
         foreach ($courses as $course) {
             $explicitFaqs = $course->faqs;
-            $activeAssignedFaqs = $explicitFaqs->where('status', 'active');
-            $isReady = $activeAssignedFaqs->count() > 0;
+            $totalAssigned = $explicitFaqs->count();
+            $activeAssigned = $explicitFaqs->where('status', 'active')->count();
+            $inactiveAssigned = $explicitFaqs->where('status', 'inactive')->count();
 
-            if ($isReady) {
-                $readyCount++;
+            $totalPivotCount += $totalAssigned;
+            $totalInactiveAttached += $inactiveAssigned;
+
+            if ($totalAssigned > 0) {
+                $coursesWithAssignments++;
             } else {
-                $unreadyCount++;
+                $coursesWithZeroAssignments++;
+            }
+
+            // Check for duplicates
+            // Since course->faqs is a belongsToMany, duplicates can happen if pivot has duplicates
+            $faqIds = $explicitFaqs->pluck('id')->toArray();
+            $uniqueFaqIds = array_unique($faqIds);
+            if (count($faqIds) !== count($uniqueFaqIds)) {
+                $duplicatePivotCount += (count($faqIds) - count($uniqueFaqIds));
             }
 
             $explicitIds = $explicitFaqs->pluck('id')->implode(', ') ?: 'None';
 
+            $statusText = $totalAssigned === 0 ? 'NO PUBLIC FAQs' : 'ASSIGNED';
+
             $tableRows[] = [
                 $course->id,
-                $course->name,
                 $course->slug,
-                $explicitFaqs->count(),
-                $activeAssignedFaqs->count(),
+                $totalAssigned,
+                $activeAssigned,
+                $inactiveAssigned,
                 $explicitIds,
-                $isReady ? 'READY' : 'NOT READY',
+                $statusText,
             ];
-
-            // Candidate keyword suggestions (old query algorithm)
-            $suggestedFaqs = FAQ::where('status', 'active')
-                ->where(function ($query) use ($course) {
-                    $query->where('question', 'like', '%course%')
-                        ->orWhere('question', 'like', '%fee%')
-                        ->orWhere('question', 'like', '%duration%')
-                        ->orWhere('answer', 'like', '%'.$course->category.'%')
-                        ->orWhere('answer', 'like', '%'.$course->name.'%');
-                })
-                ->orderBy('order_priority')
-                ->latest()
-                ->limit(4)
-                ->get();
-
-            foreach ($suggestedFaqs as $faq) {
-                $candidateMappings[] = [
-                    'course_id' => $course->id,
-                    'course_slug' => $course->slug,
-                    'faq_id' => $faq->id,
-                    'faq_question' => $faq->question,
-                    'note' => 'Requires human verification',
-                ];
-            }
         }
 
         $this->table(
-            ['ID', 'Name', 'Slug', 'Total Explicit', 'Active Assigned', 'Explicit FAQ IDs', 'Strict Cutover Readiness'],
+            ['ID', 'Slug', 'Total Assigned', 'Active Assigned', 'Inactive Assigned', 'Assigned FAQ IDs', 'Public Status'],
             $tableRows
         );
 
@@ -122,28 +113,27 @@ class AuditCourseFaqReadiness extends Command
         $this->info('AUDIT SUMMARY');
         $this->info('----------------------------------------------------------------');
         $this->info("Total Active Courses: {$totalCourses}");
-        $this->info("Courses Ready for Strict Relationship Cutover: {$readyCount}");
-        $this->info("Courses Still Missing Assignments: {$unreadyCount}");
+        $this->info("Total FAQ Records: {$totalFaqs}");
+        $this->info("Total Pivot Assignments: {$totalPivotCount}");
+        $this->info("Courses with Assignments: {$coursesWithAssignments}");
 
-        $this->info("\n----------------------------------------------------------------");
-        $this->info('CANDIDATE FAQ-TO-COURSE SUGGESTIONS (UNCOMMITTED)');
-        $this->info('----------------------------------------------------------------');
-        $this->warn('NOTE: Every suggested relationship below is marked [Requires human verification] and HAS NOT been inserted into course_faq.');
+        if ($coursesWithZeroAssignments > 0) {
+            $this->warn("Courses with Zero Assignments: {$coursesWithZeroAssignments}");
+        } else {
+            $this->info("Courses with Zero Assignments: {$coursesWithZeroAssignments}");
+        }
 
-        $suggestionRows = array_map(function ($mapping) {
-            return [
-                $mapping['course_id'],
-                $mapping['course_slug'],
-                $mapping['faq_id'],
-                Str::limit($mapping['faq_question'], 50),
-                $mapping['note'],
-            ];
-        }, $candidateMappings);
+        if ($totalInactiveAttached > 0) {
+            $this->warn("Inactive but Attached FAQs: {$totalInactiveAttached}");
+        } else {
+            $this->info("Inactive but Attached FAQs: {$totalInactiveAttached}");
+        }
 
-        $this->table(
-            ['Course ID', 'Course Slug', 'Suggested FAQ ID', 'Suggested Question', 'Verification Policy'],
-            $suggestionRows
-        );
+        if ($duplicatePivotCount > 0) {
+            $this->error("Duplicate Pivot Assignments: {$duplicatePivotCount}");
+        } else {
+            $this->info("Duplicate Pivot Assignments: {$duplicatePivotCount}");
+        }
 
         return self::SUCCESS;
     }

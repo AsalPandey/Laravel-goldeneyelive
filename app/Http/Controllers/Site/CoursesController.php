@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseCategory;
-use App\Models\FAQ;
 use App\Models\Teacher;
 use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
@@ -130,17 +129,10 @@ class CoursesController extends Controller
             ->latest()
             ->first();
 
-        $faqs = FAQ::where('status', 'active')
-            ->where(function ($query) use ($course) {
-                $query->where('question', 'like', '%course%')
-                    ->orWhere('question', 'like', '%fee%')
-                    ->orWhere('question', 'like', '%duration%')
-                    ->orWhere('answer', 'like', '%'.$course->category.'%')
-                    ->orWhere('answer', 'like', '%'.$course->name.'%');
-            })
-            ->orderBy('order_priority')
-            ->latest()
-            ->limit(4)
+        $faqs = $course->faqs()
+            ->where('f_a_q_s.status', 'active')
+            ->orderBy('f_a_q_s.order_priority')
+            ->orderBy('f_a_q_s.id')
             ->get();
 
         return compact('course', 'instructor', 'instructorCourses', 'testimonial', 'faqs');
