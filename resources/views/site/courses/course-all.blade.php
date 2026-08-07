@@ -53,7 +53,7 @@
                     <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8;">{{ $settings['courses_subtitle'] ?? 'Explore active courses by subject, compare the learning focus and ask about the current batch that fits your goal.' }}</p>
                 </div>
                 <div class="col-lg-5">
-                    <form action="{{ route('courses-all') }}" method="GET" class="bg-white/10 border border-white/10 rounded-2xl p-3 shadow-2xl" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="courses-filter" data-cta-label="View Course Details">
+                    <form action="{{ route('courses-all') }}" method="GET" class="bg-white/10 border border-white/10 rounded-2xl p-3 shadow-2xl" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="courses-filter" data-cta-label="Apply Filters">
                         <div class="row g-2">
                             <div class="col-12">
                                 <label for="course-search" class="visually-hidden">Search courses</label>
@@ -69,7 +69,7 @@
                                 </select>
                             </div>
                             <div class="col-md-5 d-grid">
-                                <button type="submit" data-cta="courses-filter-submit" class="btn btn-primary rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">View Course Details</button>
+                                <button type="submit" data-cta="courses-filter-submit" class="btn btn-primary rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Apply Filters</button>
                             </div>
                         </div>
                     </form>
@@ -124,7 +124,7 @@
         </section>
     @endif
 
-    <section class="py-4 bg-zinc-50/50 border-bottom border-zinc-100">
+    <section class="course-category-shortcuts py-4 bg-zinc-50/50 border-bottom border-zinc-100" aria-label="Course category shortcuts">
         <div class="container">
             <div class="d-flex flex-wrap gap-2 align-items-center justify-content-center">
                 <a href="{{ route('courses-all') }}" class="btn {{ blank($categorySlug) ? 'btn-brand-dark' : 'btn-outline-brand-dark' }} rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 9px;" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="category-filter" data-cta-label="All">All</a>

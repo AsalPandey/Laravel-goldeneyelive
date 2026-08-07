@@ -50,7 +50,7 @@ class TestimonialSeeder extends Seeder
             [
                 'student_name' => 'Rojina Gurung',
                 'course_name' => 'PTE Academic Preparation',
-                'photo' => 'site/img/user.png',
+                'photo' => null,
                 'content' => 'The PTE templates and computer-based practice made the exam feel less confusing. I knew what to focus on each week.',
                 'rating' => 5,
                 'is_featured' => false,
@@ -58,7 +58,7 @@ class TestimonialSeeder extends Seeder
             [
                 'student_name' => 'Suman Pariyar',
                 'course_name' => 'Course Information Before Enrollment',
-                'photo' => 'site/img/user.png',
+                'photo' => null,
                 'content' => 'I was unsure between language and computer courses. The quick class-information session gave me a clear order of what to learn first.',
                 'rating' => 5,
                 'is_featured' => false,
@@ -66,7 +66,7 @@ class TestimonialSeeder extends Seeder
             [
                 'student_name' => 'Pratiksha Sharma',
                 'course_name' => 'Practical English Communication',
-                'photo' => 'site/img/user.png',
+                'photo' => null,
                 'content' => 'My speaking confidence improved through regular practice, correction, and interview-style activities.',
                 'rating' => 5,
                 'is_featured' => false,

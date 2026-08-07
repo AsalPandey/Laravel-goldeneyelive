@@ -140,9 +140,9 @@ class Phase8PublicPerformanceAccessibilityTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee("const actionSelector = 'main [data-cta], main button[type=\"submit\"], main input[type=\"submit\"]'", false)
-            ->assertSee('scheduleWhatsappPositionUpdate', false)
-            ->assertSee('container.style.transform = `translateY(', false)
+            ->assertDontSee('scheduleWhatsappPositionUpdate', false)
+            ->assertDontSee('container.style.transform = `translateY(', false)
+            ->assertDontSee('is-collision-hidden', false)
             ->assertDontSee('is-hidden-over-hero', false);
     }
 

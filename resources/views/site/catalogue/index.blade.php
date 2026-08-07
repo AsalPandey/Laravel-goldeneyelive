@@ -64,7 +64,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <a href="{{ $pillar->cta_url ?: $guidanceUrl('catalogue-service-'.$pillar->slug) }}" data-cta="catalogue-service-{{ $pillar->slug }}" class="text-brand-dark font-black uppercase tracking-widest text-decoration-none hover:text-brand-gold transition-all" style="font-size: 9px;">
+                                <a href="{{ $pillar->cta_url ?: $guidanceUrl('catalogue-service-'.$pillar->slug) }}" data-cta="catalogue-service-{{ $pillar->slug }}" class="catalogue-service-cta text-brand-dark font-black uppercase tracking-widest text-decoration-none hover:text-brand-gold transition-all" style="font-size: 9px;">
                                     Ask for Course Help <i class="fa fa-arrow-right ms-1"></i>
                                 </a>
                             </article>

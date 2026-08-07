@@ -366,7 +366,7 @@
                             </div>
                             <div class="col-lg-8">
                                 <div class="d-flex flex-column flex-md-row gap-4 align-items-md-center bg-white border border-zinc-100 rounded-xl p-4">
-                                    <img src="{{ \App\Support\PublicAsset::url($testimonial->photo ?? null, 'site/img/user.png') }}" alt="{{ $testimonial->student_name }}" class="rounded-circle object-cover flex-shrink-0" loading="lazy" decoding="async" width="82" height="82" style="width: 82px; height: 82px;">
+                                    <x-testimonial-avatar :name="$testimonial->student_name" :photo="$testimonial->photo" :size="82" />
                                     <div>
                                         <h3 class="h6 fw-black text-brand-dark mb-1">{{ $testimonial->student_name }}</h3>
                                         <p class="text-brand-gold fw-black mb-2" style="font-size: 11px;">Course listed: {{ $testimonial->course_name }}</p>

@@ -39,11 +39,11 @@ class Phase9ProductionReadinessTest extends TestCase
         $assetPath = public_path('build/'.$manifest['resources/css/app.css']['file']);
 
         $this->assertSame(188, filesize($manifestPath));
-        $this->assertSame('fbb22841ffbdb2e17a102a7507ad5baa03167929495a57069f15059d3be091ab', hash_file('sha256', $manifestPath));
-        $this->assertSame('assets/app-CeZRrHlQ.css', $manifest['resources/css/app.css']['file']);
+        $this->assertSame('6d9d926f296c387d3dc39583689d7cba56f484f7bcd6505fbb11d997dbadf12a', hash_file('sha256', $manifestPath));
+        $this->assertSame('assets/app-4krHC8Lc.css', $manifest['resources/css/app.css']['file']);
         $this->assertFileExists($assetPath);
-        $this->assertSame(296313, filesize($assetPath));
-        $this->assertSame('52f0c49a8c9d27523361f5574fcea8d2e5f2e180bad60f010e38cba2f5b92e3b', hash_file('sha256', $assetPath));
+        $this->assertSame(297153, filesize($assetPath));
+        $this->assertSame('72cb05938b18f3ec2178f3a670a3b7eabd823417e4079b5b1dc1ebddbb99a6f3', hash_file('sha256', $assetPath));
         $this->assertFileDoesNotExist(public_path('build/assets/app-7ZVPn1kE.css'));
     }
 

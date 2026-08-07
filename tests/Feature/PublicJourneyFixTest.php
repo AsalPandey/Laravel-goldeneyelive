@@ -7,10 +7,12 @@ use App\Models\CourseCategory;
 use App\Models\FAQ;
 use App\Models\SiteSetting;
 use App\Models\Teacher;
+use App\Models\Testimonial;
 use App\Support\ContactPhones;
 use DOMDocument;
 use DOMXPath;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Blade;
 use Tests\TestCase;
 
 class PublicJourneyFixTest extends TestCase
@@ -82,6 +84,125 @@ class PublicJourneyFixTest extends TestCase
         $this->assertStringContainsString('.site-mobile-course-menu summary', $css);
         $this->assertStringContainsString('.site-mobile-course-menu[open] summary .fa-chevron-down', $css);
         $this->assertStringContainsString('.site-mobile-course-options', $css);
+    }
+
+    public function test_mobile_public_ui_keeps_compact_controls_and_safe_touch_targets(): void
+    {
+        $coursesHtml = $this->get(route('courses-all'))
+            ->assertOk()
+            ->assertSee('data-cta-label="Apply Filters"', false)
+            ->assertSee('>Apply Filters</button>', false)
+            ->assertSee('class="course-category-shortcuts', false)
+            ->getContent();
+
+        $this->get(route('catalogue'))->assertOk();
+        $catalogueTemplate = file_get_contents(resource_path('views/site/catalogue/index.blade.php'));
+        $layoutHtml = $this->get(route('home'))
+            ->assertOk()
+            ->assertDontSee('is-obscured', false)
+            ->getContent();
+        $css = file_get_contents(public_path('site/css/style.css'));
+
+        $this->assertStringNotContainsString('data-cta-label="View Course Details"', $coursesHtml);
+        $this->assertStringContainsString('catalogue-service-cta', $catalogueTemplate);
+        $this->assertStringNotContainsString('updateWhatsappPosition', $layoutHtml);
+        $this->assertStringNotContainsString('scheduleWhatsappPositionUpdate', $layoutHtml);
+        $this->assertStringNotContainsString('container.style.transform', $layoutHtml);
+        $this->assertStringNotContainsString('.whatsapp-btn-container.is-obscured', $css);
+        $this->assertStringNotContainsString('.whatsapp-btn-container.is-collision-hidden', $css);
+        $this->assertMatchesRegularExpression('/\.whatsapp-btn-container\s*\{[^}]*position:\s*fixed;/s', $css);
+        $this->assertMatchesRegularExpression('/\.whatsapp-chat-cta\s*\{[^}]*backdrop-filter:\s*blur\(18px\)\s+saturate\(170%\);/s', $css);
+        $this->assertStringContainsString('.whatsapp-chat-cta::before', $css);
+        $this->assertStringContainsString('.whatsapp-chat-cta::after', $css);
+        $this->assertStringContainsString('background: linear-gradient(145deg, rgba(236, 253, 245, 0.36), rgba(110, 231, 183, 0.16));', $css);
+        $this->assertStringContainsString('backdrop-filter: blur(10px) saturate(155%);', $css);
+        $this->assertMatchesRegularExpression('/\.footer\s+\.btn\.btn-social\s*\{[^}]*width:\s*44px;[^}]*height:\s*44px;/s', $css);
+        $this->assertMatchesRegularExpression('/\.site-notice-close\s*\{[^}]*min-width:\s*44px;[^}]*min-height:\s*44px;/s', $css);
+        $this->assertStringContainsString('.breadcrumb-item a', $css);
+        $this->assertStringContainsString('.catalogue-service-cta', $css);
+        $this->assertStringContainsString('.course-category-shortcuts', $css);
+        $this->assertStringContainsString('.site-notice-strip .site-notice-subtitle', $css);
+    }
+
+    public function test_public_testimonials_use_initials_for_placeholder_photos_and_keep_real_portraits(): void
+    {
+        $placeholderCourse = Course::factory()->create([
+            'name' => 'PTE Academic Preparation',
+            'slug' => 'pte-academic-preparation',
+        ]);
+        $portraitCourse = Course::factory()->create([
+            'name' => 'IELTS Preparation',
+            'slug' => 'ielts-preparation',
+        ]);
+        $missingPhotoCourse = Course::factory()->create([
+            'name' => 'Free Course Roadmap Help',
+            'slug' => 'free-course-roadmap-help',
+        ]);
+
+        Testimonial::factory()->create([
+            'student_name' => 'Rojina Gurung',
+            'course_name' => $placeholderCourse->name,
+            'photo' => 'site/img/user.png',
+            'is_featured' => true,
+        ]);
+        Testimonial::factory()->create([
+            'student_name' => 'Nirmala Thapa',
+            'course_name' => $portraitCourse->name,
+            'photo' => 'site/img/testimonial-4.jpg',
+            'is_featured' => true,
+        ]);
+        Testimonial::factory()->create([
+            'student_name' => 'Suman Pariyar',
+            'course_name' => $missingPhotoCourse->name,
+            'photo' => null,
+            'is_featured' => true,
+        ]);
+
+        foreach ([route('home'), route('courses-detail', $placeholderCourse->slug)] as $url) {
+            $xpath = $this->xpath($this->get($url)->assertOk()->getContent());
+            $placeholderAvatar = $xpath->query('//*[@data-testimonial-avatar="RG"]')->item(0);
+
+            $this->assertNotNull($placeholderAvatar);
+            $this->assertSame(0, $xpath->query('./img', $placeholderAvatar)->length);
+        }
+
+        $homeXpath = $this->xpath($this->get(route('home'))->assertOk()->getContent());
+        $missingPhotoAvatar = $homeXpath->query('//*[@data-testimonial-avatar="SP"]')->item(0);
+        $portraitAvatar = $homeXpath->query('//*[@data-testimonial-avatar="NT"]')->item(0);
+
+        $this->assertNotNull($missingPhotoAvatar);
+        $this->assertSame(0, $homeXpath->query('./img', $missingPhotoAvatar)->length);
+        $this->assertNotNull($portraitAvatar);
+        $this->assertStringEndsWith(
+            '/site/img/testimonial-4.jpg',
+            $homeXpath->query('./img', $portraitAvatar)->item(0)?->attributes->getNamedItem('src')?->nodeValue ?? '',
+        );
+    }
+
+    public function test_testimonial_avatar_handles_missing_photos_and_names_safely(): void
+    {
+        $cases = [
+            ['name' => 'Pratiksha', 'photo' => '', 'initials' => 'P', 'accessible_name' => 'Pratiksha'],
+            ['name' => 'Missing Photo', 'photo' => 'site/img/testimonials/not-present.jpg', 'initials' => 'MP', 'accessible_name' => 'Missing Photo'],
+            ['name' => '  Aakash   Subedi  ', 'photo' => null, 'initials' => 'AS', 'accessible_name' => 'Aakash Subedi'],
+            ['name' => 'Rojina Maya Gurung', 'photo' => null, 'initials' => 'RM', 'accessible_name' => 'Rojina Maya Gurung'],
+            ['name' => '<script>alert(1)</script> Learner', 'photo' => null, 'initials' => 'AL', 'accessible_name' => 'alert(1) Learner'],
+        ];
+
+        foreach ($cases as $case) {
+            $html = Blade::render(
+                '<x-testimonial-avatar :name="$name" :photo="$photo" />',
+                ['name' => $case['name'], 'photo' => $case['photo']],
+            );
+            $xpath = $this->xpath($html);
+            $avatar = $xpath->query('//*[@data-testimonial-avatar="'.$case['initials'].'"]')->item(0);
+
+            $this->assertNotNull($avatar);
+            $this->assertSame($case['accessible_name'], $avatar->attributes->getNamedItem('aria-label')?->nodeValue);
+            $this->assertSame(0, $xpath->query('./img', $avatar)->length);
+            $this->assertStringNotContainsString('<script>', $html);
+            $this->assertLessThanOrEqual(2, mb_strlen($case['initials']));
+        }
     }
 
     public function test_multiple_cms_phone_numbers_render_as_separate_correct_actions(): void

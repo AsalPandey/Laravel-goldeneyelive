@@ -251,7 +251,7 @@
                         <div class="col-lg-4 col-md-6">
                             <article class="premium-card p-4 h-100 border border-zinc-100 shadow-sm rounded-xl bg-zinc-50">
                                 <div class="d-flex align-items-center gap-3 mb-3">
-                                    <img src="{{ \App\Support\PublicAsset::url($testimonial->photo ?? null, 'site/img/testimonial-1.jpg') }}" onerror="this.src='{{ asset('site/img/testimonial-1.jpg') }}'" alt="{{ $testimonial->student_name ?? 'Golden Eye student' }}" class="rounded-circle object-cover border border-white shadow-sm" loading="lazy" decoding="async" width="54" height="54" style="width: 54px; height: 54px;">
+                                    <x-testimonial-avatar :name="$testimonial->student_name ?? 'Golden Eye student'" :photo="$testimonial->photo" :size="54" />
                                     <div>
                                         <h3 class="mb-1 fw-black text-brand-dark" style="font-size: 13px;">{{ $testimonial->student_name ?? 'Student' }}</h3>
                                         <small class="text-zinc-500 fw-bold d-block" style="font-size: 10px;">Course listed: {{ $testimonial->course_name }}</small>
