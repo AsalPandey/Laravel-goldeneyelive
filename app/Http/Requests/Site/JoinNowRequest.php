@@ -4,6 +4,7 @@ namespace App\Http\Requests\Site;
 
 use App\Models\AnalyticsEvent;
 use App\Models\Course;
+use App\Support\NepalPhone;
 use App\Support\Recaptcha;
 use Closure;
 use Illuminate\Contracts\Validation\Validator;
@@ -12,8 +13,6 @@ use Illuminate\Validation\Rule;
 
 class JoinNowRequest extends FormRequest
 {
-    public const PHONE_REGEX = '/^(?:\+977(?:97|98)\d{8}|(?:97|98)\d{8}|0\d{9})$/';
-
     /**
      * @return array<int, string>
      */
@@ -49,14 +48,16 @@ class JoinNowRequest extends FormRequest
             ]);
         }
 
-        $course = $this->input('preferred_course')
-            ?: $this->input('course')
+        $course = $this->input('course')
+            ?: $this->input('preferred_course')
             ?: $this->input('selected_course')
             ?: 'undecided';
 
         $this->merge([
             'course' => $course,
+            'selected_course' => $course,
             'email' => trim((string) $this->input('email')),
+            'phone' => NepalPhone::normalize($this->input('phone')),
             'help_topic' => $this->input('help_topic') ?: 'Choosing a course',
         ]);
     }
@@ -71,13 +72,10 @@ class JoinNowRequest extends FormRequest
             'phone' => [
                 'required',
                 'string',
-                'max:20',
-                'regex:'.self::PHONE_REGEX,
+                'max:10',
+                'regex:'.NepalPhone::CANONICAL_REGEX,
                 function (string $attribute, mixed $value, Closure $fail): void {
-                    $digits = preg_replace('/\D+/', '', (string) $value);
-                    $localDigits = str_starts_with($digits, '977') ? substr($digits, 3) : $digits;
-
-                    if (preg_match('/^(\d)\1+$/', $localDigits) || in_array($localDigits, ['9800000000', '9812345678', '1234567890', '0123456789'], true)) {
+                    if (! NepalPhone::isPlausible((string) $value)) {
                         $fail('Please enter a real phone or WhatsApp number so our team can contact you.');
                     }
                 },
@@ -98,7 +96,7 @@ class JoinNowRequest extends FormRequest
             'help_topic' => ['required', 'string', Rule::in(self::helpTopics())],
             'preferred_course' => ['nullable', 'string', 'max:255'],
             'contactMethod' => ['nullable', 'string', 'max:255'],
-            'address' => ['nullable', 'string', 'max:500'],
+            'address' => ['nullable', 'string', 'max:255'],
             'queries' => ['nullable', 'string', 'max:5000'],
             'current_education_level' => ['nullable', 'string', 'max:255'],
             'preferred_batch_time' => ['nullable', 'string', 'max:255'],
@@ -127,7 +125,7 @@ class JoinNowRequest extends FormRequest
             'help_topic.required' => 'Please choose what you need help with.',
             'help_topic.in' => 'Please choose one of the available help topics.',
             'course.required' => 'Please select a career path to proceed.',
-            'phone.regex' => 'Please enter a valid Nepal phone number, such as 98XXXXXXXX, 97XXXXXXXX, +97798XXXXXXXX, or 0XXXXXXXXX.',
+            'phone.regex' => 'Please enter a valid Nepal mobile or landline, such as 98XXXXXXXX, +977 98XXXXXXXX, or 061-572599.',
             'g-recaptcha-response.required' => 'Please complete the security verification.',
         ];
     }

@@ -3,24 +3,30 @@
 namespace App\Http\Requests\Site;
 
 use App\Models\AnalyticsEvent;
+use App\Support\NepalPhone;
 use App\Support\Recaptcha;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ContactRequest extends FormRequest
 {
-    public const PHONE_REGEX = '/^(?:\+977(?:97|98)\d{8}|(?:97|98)\d{8}|0\d{9})$/';
-
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'phone' => NepalPhone::normalize($this->input('phone')),
+        ]);
     }
 
     public function rules(): array
     {
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:20', 'regex:'.self::PHONE_REGEX],
+            'phone' => ['required', 'string', 'max:10', 'regex:'.NepalPhone::CANONICAL_REGEX],
             'email' => ['required', 'email', 'max:255'],
             'subject' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string', 'max:5000'],
@@ -39,7 +45,7 @@ class ContactRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone.regex' => 'Please enter a valid Nepal phone number, such as 98XXXXXXXX, 97XXXXXXXX, +97798XXXXXXXX, or 0XXXXXXXXX.',
+            'phone.regex' => 'Please enter a valid Nepal mobile or landline, such as 98XXXXXXXX, +977 98XXXXXXXX, or 061-572599.',
             'g-recaptcha-response.required' => 'Please complete the security verification.',
         ];
     }

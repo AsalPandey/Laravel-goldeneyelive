@@ -35,12 +35,12 @@ class CategoryRequest extends CMSRequest
                 'alpha_dash:ascii',
                 Rule::unique('course_categories', 'slug')->ignore($categoryId),
             ],
-            'description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string', 'max:10000'],
             'icon' => ['nullable', 'string', 'max:255'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
             'image_path' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'in:active,inactive'],
-            'order_priority' => ['nullable', 'integer'],
+            'order_priority' => ['nullable', 'integer', 'min:0', 'max:9999'],
         ]);
     }
 

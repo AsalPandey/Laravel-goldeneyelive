@@ -23,10 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('blog_posts', function (Blueprint $table) {
-            if (Schema::hasColumn('blog_posts', 'category')) {
-                $table->dropColumn('category');
-            }
-        });
+        // The conditional up() did not record whether the category column already existed.
+        // Preserve potentially pre-existing production data during rollback.
     }
 };

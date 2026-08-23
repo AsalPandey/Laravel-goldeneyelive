@@ -16,10 +16,10 @@ class FAQRequest extends CMSRequest
 
         return array_merge(parent::rules(), [
             'question' => ['required', 'string', 'max:500'],
-            'answer' => ['required', 'string'],
+            'answer' => ['required', 'string', 'max:10000'],
             'category' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'in:active,inactive'],
-            'order_priority' => ['nullable', 'integer', 'min:0'],
+            'order_priority' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'courses' => ['nullable', 'array'],
             'courses.*' => [
                 'integer',

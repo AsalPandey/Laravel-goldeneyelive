@@ -129,8 +129,8 @@
                                 <div class="col-md-6">
                                     <div class="contact-field">
                                         <label for="phone">Phone Number</label>
-                                        <input type="tel" class="form-control bg-white border rounded-xl px-4 py-3 @error('phone') is-invalid @enderror" name="phone" id="phone" placeholder="98XXXXXXXX" value="{{ old('phone') }}" required inputmode="tel" autocomplete="tel" pattern="(?:\+977(?:97|98)[0-9]{8}|(?:97|98)[0-9]{8}|0[0-9]{9})" title="Use a valid Nepal phone number, such as 98XXXXXXXX, 97XXXXXXXX, +97798XXXXXXXX, or 0XXXXXXXXX." aria-describedby="phoneHelp{{ $errors->has('phone') ? ' phoneError' : '' }}" aria-invalid="{{ $errors->has('phone') ? 'true' : 'false' }}">
-                                        <div id="phoneHelp" class="form-text small">Use 98XXXXXXXX, 97XXXXXXXX, or +97798XXXXXXXX.</div>
+                                        <input type="tel" class="form-control bg-white border rounded-xl px-4 py-3 @error('phone') is-invalid @enderror" name="phone" id="phone" placeholder="98XXXXXXXX" value="{{ old('phone') }}" required inputmode="tel" autocomplete="tel" pattern="{{ \App\Support\NepalPhone::BROWSER_PATTERN }}" title="Use a Nepal mobile or landline, such as 98XXXXXXXX, +977 98XXXXXXXX, or 061-572599." aria-describedby="phoneHelp{{ $errors->has('phone') ? ' phoneError' : '' }}" aria-invalid="{{ $errors->has('phone') ? 'true' : 'false' }}">
+                                        <div id="phoneHelp" class="form-text small">Use a Nepal mobile or landline; spaces and hyphens are accepted.</div>
                                         @error('phone') <div id="phoneError" class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
                                 </div>

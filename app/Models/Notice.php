@@ -12,6 +12,7 @@ class Notice extends Model
     protected $fillable = [
         'title', 'subtitle', 'image', 'badge', 'link', 'button_text', 'status',
         'is_urgent', 'display_type', 'starts_at', 'expires_at',
+        'meta_title', 'meta_description', 'meta_keywords', 'aeo_summary', 'schema_markup',
     ];
 
     protected $casts = [

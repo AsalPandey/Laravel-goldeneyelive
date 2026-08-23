@@ -209,7 +209,17 @@ class PublicSubmissionTest extends TestCase
     {
         Mail::fake();
 
-        foreach (['9823456789', '9723456789', '+9779823456789', '+9779723456789', '0615725999'] as $index => $phone) {
+        $phoneFormats = [
+            '9823456789' => '9823456789',
+            '9723456789' => '9723456789',
+            '+9779823456789' => '9823456789',
+            '+977 97-2345-6789' => '9723456789',
+            '061-572599' => '061572599',
+            '0615725999' => '0615725999',
+        ];
+
+        foreach ($phoneFormats as $phone => $canonicalPhone) {
+            $index = array_search($phone, array_keys($phoneFormats), true);
             $response = $this->from(route('join-now'))->post(route('join-now-submit'), [
                 'firstName' => 'Asha'.$index,
                 'lastName' => 'Sharma',
@@ -222,7 +232,7 @@ class PublicSubmissionTest extends TestCase
 
             $this->assertDatabaseHas(JoinNowQuery::class, [
                 'email' => "asha{$index}@example.com",
-                'phone' => $phone,
+                'phone' => $canonicalPhone,
                 'course' => 'Need help choosing a program',
             ]);
         }

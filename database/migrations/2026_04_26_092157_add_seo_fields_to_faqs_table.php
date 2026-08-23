@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('f_a_q_s', function (Blueprint $table) {
-            //
+            $table->dropColumn(['meta_title', 'meta_description', 'order_priority']);
         });
     }
 };

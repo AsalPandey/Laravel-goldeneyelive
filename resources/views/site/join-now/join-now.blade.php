@@ -84,9 +84,9 @@
 
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="tel" class="form-control border-0 bg-light @error('phone') is-invalid @enderror" id="phone" name="phone" placeholder="Phone / WhatsApp" value="{{ old('phone') }}" required inputmode="tel" autocomplete="tel" pattern="(?:\+977(?:97|98)[0-9]{8}|(?:97|98)[0-9]{8}|0[0-9]{9})" title="Use a valid Nepal phone number, such as 98XXXXXXXX, 97XXXXXXXX, +97798XXXXXXXX, or 0XXXXXXXXX." aria-describedby="phoneHelp phoneClientError{{ $errors->has('phone') ? ' phoneServerError' : '' }}" aria-invalid="{{ $errors->has('phone') ? 'true' : 'false' }}">
+                                        <input type="tel" class="form-control border-0 bg-light @error('phone') is-invalid @enderror" id="phone" name="phone" placeholder="Phone / WhatsApp" value="{{ old('phone') }}" required inputmode="tel" autocomplete="tel" pattern="{{ \App\Support\NepalPhone::BROWSER_PATTERN }}" title="Use a Nepal mobile or landline, such as 98XXXXXXXX, +977 98XXXXXXXX, or 061-572599." aria-describedby="phoneHelp phoneClientError{{ $errors->has('phone') ? ' phoneServerError' : '' }}" aria-invalid="{{ $errors->has('phone') ? 'true' : 'false' }}">
                                         <label for="phone">Phone / WhatsApp</label>
-                                        <div id="phoneHelp" class="form-text small">Use 98XXXXXXXX, 97XXXXXXXX, or +97798XXXXXXXX.</div>
+                                        <div id="phoneHelp" class="form-text small">Use a Nepal mobile or landline; spaces and hyphens are accepted.</div>
                                         <div id="phoneClientError" class="text-danger small mt-1" aria-live="polite"></div>
                                         @error('phone') <div id="phoneServerError" class="text-danger small mt-1">{{ $message }}</div> @enderror
                                     </div>
@@ -247,18 +247,23 @@
 
             const phone = document.getElementById('phone');
             const phoneError = document.getElementById('phoneClientError');
-            const phoneRegex = /^(?:\+977(?:97|98)\d{8}|(?:97|98)\d{8}|0\d{9})$/;
+            const phoneRegex = /^(?:(?:97|98)\d{8}|0(?:1\d{7}|[2-9]\d{7,8}))$/;
             const fakeNumbers = ['9800000000', '9812345678', '1234567890', '0123456789'];
 
             if (phone) {
                 const validatePhone = () => {
                     const value = phone.value.trim();
-                    const digits = value.replace(/\D+/g, '');
-                    const localDigits = digits.startsWith('977') ? digits.slice(3) : digits;
+                    let localDigits = value.replace(/\D+/g, '');
+                    if (localDigits.startsWith('977')) {
+                        localDigits = localDigits.slice(3);
+                        if (!localDigits.startsWith('97') && !localDigits.startsWith('98')) {
+                            localDigits = `0${localDigits}`;
+                        }
+                    }
                     let message = '';
 
-                    if (value !== '' && !phoneRegex.test(value)) {
-                        message = 'Enter a valid Nepal number, such as 98XXXXXXXX or +97798XXXXXXXX.';
+                    if (value !== '' && !phoneRegex.test(localDigits)) {
+                        message = 'Enter a valid Nepal mobile or landline.';
                     } else if (value !== '' && (/^(\d)\1+$/.test(localDigits) || fakeNumbers.includes(localDigits))) {
                         message = 'Enter a real phone or WhatsApp number.';
                     }

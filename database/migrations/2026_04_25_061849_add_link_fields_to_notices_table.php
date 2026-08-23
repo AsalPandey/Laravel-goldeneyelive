@@ -26,8 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('notices', function (Blueprint $table) {
-            $table->dropColumn(['link', 'button_text']);
-        });
+        // The conditional up() did not record whether either column already existed.
+        // Preserve potentially pre-existing production columns during rollback.
     }
 };

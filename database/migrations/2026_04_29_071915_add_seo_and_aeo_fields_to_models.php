@@ -101,29 +101,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // For down, we just drop if exists
-        Schema::table('courses', function (Blueprint $table) {
-            $table->dropColumn(array_filter(['meta_keywords', 'aeo_summary', 'schema_markup'], fn ($col) => Schema::hasColumn('courses', $col)));
-        });
-
-        Schema::table('notices', function (Blueprint $table) {
-            $table->dropColumn(array_filter(['meta_title', 'meta_description', 'meta_keywords', 'aeo_summary', 'schema_markup'], fn ($col) => Schema::hasColumn('notices', $col)));
-        });
-
-        Schema::table('teachers', function (Blueprint $table) {
-            $table->dropColumn(array_filter(['meta_title', 'meta_description', 'meta_keywords', 'aeo_summary', 'schema_markup'], fn ($col) => Schema::hasColumn('teachers', $col)));
-        });
-
-        Schema::table('course_categories', function (Blueprint $table) {
-            $table->dropColumn(array_filter(['aeo_summary', 'schema_markup'], fn ($col) => Schema::hasColumn('course_categories', $col)));
-        });
-
-        Schema::table('blog_posts', function (Blueprint $table) {
-            $table->dropColumn(array_filter(['meta_keywords', 'aeo_summary'], fn ($col) => Schema::hasColumn('blog_posts', $col)));
-        });
-
-        Schema::table('f_a_q_s', function (Blueprint $table) {
-            $table->dropColumn(array_filter(['meta_keywords', 'aeo_summary', 'schema_markup'], fn ($col) => Schema::hasColumn('f_a_q_s', $col)));
-        });
+        // The conditional up() did not record which columns it introduced.
+        // A rollback cannot safely distinguish those columns from pre-existing production data.
     }
 };

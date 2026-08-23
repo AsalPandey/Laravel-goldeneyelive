@@ -17,6 +17,7 @@ use App\Support\Recaptcha;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ContactController extends Controller
@@ -42,7 +43,7 @@ class ContactController extends Controller
         }
 
         $validated['lead_source'] = $validated['lead_source'] ?? 'website';
-        $validated['landing_page'] = $validated['landing_page'] ?? url()->previous();
+        $validated['landing_page'] = $validated['landing_page'] ?? Str::limit(url()->previous(), 500, '');
 
         $contact = Contact::create($validated);
 
@@ -124,7 +125,7 @@ class ContactController extends Controller
                 ->withInput();
         }
 
-        $selectedCourseContext = $validated['selected_course'] ?? $validated['course'] ?? 'undecided';
+        $selectedCourseContext = $validated['course'];
         $needsCourseGuidance = $validated['course'] === 'undecided';
         $course = $needsCourseGuidance ? null : Course::publiclyVisible()->where('slug', $validated['course'])->first();
 
@@ -138,7 +139,7 @@ class ContactController extends Controller
 
         $trackingContext = [
             'lead_source' => $validated['lead_source'] ?? $validated['source_section'] ?? 'website',
-            'landing_page' => $validated['landing_page'] ?? $validated['source_page'] ?? url()->previous(),
+            'landing_page' => $validated['landing_page'] ?? $validated['source_page'] ?? Str::limit(url()->previous(), 500, ''),
             'cta_id' => $validated['cta_id'] ?? $validated['inquiry_intent'] ?? null,
             'selected_course' => $selectedCourseContext,
             'source_page' => $validated['source_page'] ?? null,

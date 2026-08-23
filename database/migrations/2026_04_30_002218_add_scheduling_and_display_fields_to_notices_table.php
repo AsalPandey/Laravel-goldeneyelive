@@ -32,8 +32,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('notices', function (Blueprint $table) {
-            $table->dropColumn(['display_type', 'is_urgent', 'starts_at', 'expires_at']);
-        });
+        // The conditional up() did not record which columns it introduced.
+        // Preserve potentially pre-existing production columns during rollback.
     }
 };

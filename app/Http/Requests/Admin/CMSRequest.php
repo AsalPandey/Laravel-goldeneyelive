@@ -22,10 +22,10 @@ class CMSRequest extends FormRequest
     {
         return [
             'meta_title' => ['nullable', 'string', 'max:255'],
-            'meta_description' => ['nullable', 'string'],
-            'meta_keywords' => ['nullable', 'string'],
-            'aeo_summary' => ['nullable', 'string'],
-            'schema_markup' => [Rule::prohibitedIf(fn (): bool => ! $this->user()?->hasRole('Admin')), 'nullable', 'string', function ($attribute, $value, $fail) {
+            'meta_description' => ['nullable', 'string', 'max:10000'],
+            'meta_keywords' => ['nullable', 'string', 'max:10000'],
+            'aeo_summary' => ['nullable', 'string', 'max:10000'],
+            'schema_markup' => [Rule::prohibitedIf(fn (): bool => ! $this->user()?->hasRole('Admin')), 'nullable', 'string', 'max:10000', function ($attribute, $value, $fail) {
                 if ($value && ! $this->isValidJson($value)) {
                     $fail('The '.$attribute.' must be a valid JSON-LD string.');
                 }

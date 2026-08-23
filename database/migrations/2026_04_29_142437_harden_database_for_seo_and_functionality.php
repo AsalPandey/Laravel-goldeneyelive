@@ -56,16 +56,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('testimonials', function (Blueprint $table) {
-            $table->dropColumn(['meta_title', 'meta_description', 'meta_keywords', 'aeo_summary', 'schema_markup']);
-        });
-
-        Schema::table('notices', function (Blueprint $table) {
-            $table->dropColumn(['status', 'link', 'button_text']);
-        });
-
-        Schema::table('blog_posts', function (Blueprint $table) {
-            $table->dropColumn(['schema_markup']);
-        });
+        // The conditional up() did not record which columns it introduced.
+        // A rollback cannot safely distinguish those columns from pre-existing production data.
     }
 };

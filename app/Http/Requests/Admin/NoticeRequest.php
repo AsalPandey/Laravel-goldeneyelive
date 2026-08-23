@@ -28,8 +28,8 @@ class NoticeRequest extends CMSRequest
             'status' => ['required', 'in:active,inactive'],
             'display_type' => ['nullable', 'in:popup,bar,standard'],
             'is_urgent' => ['nullable', 'boolean'],
-            'starts_at' => ['nullable', 'date'],
-            'expires_at' => ['nullable', 'date', 'after_or_equal:starts_at'],
+            'starts_at' => ['nullable', 'date', 'after_or_equal:1970-01-01', 'before_or_equal:2038-01-18 23:59:59'],
+            'expires_at' => ['nullable', 'date', 'after_or_equal:starts_at', 'before_or_equal:2038-01-18 23:59:59'],
         ]);
     }
 }

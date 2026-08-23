@@ -149,7 +149,7 @@ class PublicCtaRenderingTest extends TestCase
             ->assertSee('id="phoneHelp"', false)
             ->assertSee('id="phoneClientError"', false)
             ->assertSee('Add more details', false)
-            ->assertSee('pattern="(?:\\+977(?:97|98)[0-9]{8}|(?:97|98)[0-9]{8}|0[0-9]{9})"', false)
+            ->assertSee('pattern="[+0-9() .-]{9,20}"', false)
             ->assertSee('data-cta="join-now-form-submit"', false);
     }
 
@@ -167,7 +167,7 @@ class PublicCtaRenderingTest extends TestCase
             ->assertSee('aria-describedby="phoneHelp', false)
             ->assertSee('id="phoneHelp"', false)
             ->assertSee('aria-invalid="false"', false)
-            ->assertSee('pattern="(?:\\+977(?:97|98)[0-9]{8}|(?:97|98)[0-9]{8}|0[0-9]{9})"', false)
+            ->assertSee('pattern="[+0-9() .-]{9,20}"', false)
             ->assertSee('Ask for Course Help', false);
     }
 

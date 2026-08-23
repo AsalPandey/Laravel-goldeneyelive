@@ -63,26 +63,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('join_now_queries', function (Blueprint $table) {
-            $columns = [
-                'help_topic',
-                'current_education_level',
-                'preferred_batch_time',
-                'goal',
-                'selected_course',
-                'source_page',
-                'source_section',
-                'audience_type',
-                'inquiry_intent',
-                'lead_score',
-                'lead_status',
-            ];
-
-            $existingColumns = array_filter($columns, fn (string $column): bool => Schema::hasColumn('join_now_queries', $column));
-
-            if ($existingColumns !== []) {
-                $table->dropColumn($existingColumns);
-            }
-        });
+        // The conditional up() did not record which columns it introduced.
+        // Preserve potentially pre-existing production columns during rollback.
     }
 };

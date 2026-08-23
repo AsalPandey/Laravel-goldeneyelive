@@ -23,7 +23,7 @@ class BlogRequest extends CMSRequest
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
             'image_path' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'in:draft,published'],
-            'published_at' => ['nullable', 'date'],
+            'published_at' => ['nullable', 'date', 'after_or_equal:1970-01-01', 'before_or_equal:2038-01-18 23:59:59'],
         ]);
     }
 }
