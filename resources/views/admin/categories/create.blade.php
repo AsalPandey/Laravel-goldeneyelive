@@ -74,7 +74,7 @@
                                     <div class="space-y-1">
                                         <span class="text-[9px] font-black uppercase text-neutral-400">Option B: Media Vault</span>
                                         <div class="flex gap-2">
-                                            <input type="text" name="image_path" id="cat_image_path" class="flex-1 px-3 py-2 rounded-lg border-neutral-100 bg-white text-[10px] font-mono" placeholder="site/img/cat-1.jpg">
+                                            <input type="text" name="image_path" id="cat_image_path" value="{{ old('image_path') }}" class="flex-1 px-3 py-2 rounded-lg border-neutral-100 bg-white text-[10px] font-mono" placeholder="site/img/cat-1.jpg">
                                             <button type="button" onclick="openMediaVault('image_path', 'cat_preview')" class="px-3 py-2 bg-neutral-900 text-white text-[9px] font-black uppercase rounded-lg hover:bg-orange-600 transition-all">Pick</button>
                                         </div>
                                     </div>
@@ -92,7 +92,7 @@
                                 <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">Description</label>
                                 <textarea name="description" rows="5"
                                           class="w-full px-5 py-4 rounded-xl border-neutral-100 bg-white text-sm focus:border-orange-500 focus:ring-0 transition-all resize-none font-medium"
-                                          placeholder="Define what this department covers..."></textarea>
+                                          placeholder="Define what this department covers...">{{ old('description') }}</textarea>
                                 @error('description') <p class="text-rose-500 text-[10px] font-bold mt-1 uppercase">{{ $message }}</p> @enderror
                             </div>
                         </div>

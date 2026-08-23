@@ -23,7 +23,7 @@
                     <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Active: {{ \App\Models\FAQ::where('status', 'active')->count() }}
                 </div>
                 <div class="flex items-center gap-2 border-l border-neutral-100 pl-4">
-                    <span class="h-2 w-2 rounded-full bg-slate-400"></span> Archived: {{ \App\Models\FAQ::where('status', 'inactive')->count() }}
+                    <span class="h-2 w-2 rounded-full bg-slate-400"></span> Inactive: {{ \App\Models\FAQ::where('status', 'inactive')->count() }}
                 </div>
             </div>
         </div>
@@ -74,7 +74,7 @@
                                         </span>
                                     @else
                                         <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-50 text-slate-500 px-3 py-1 text-[10px] font-black uppercase border border-slate-100 group-hover:bg-slate-100">
-                                            Archived
+                                            Inactive
                                         </span>
                                     @endif
                                 </button>
@@ -86,7 +86,7 @@
                                     <i class="fa fa-pen-nib"></i>
                                 </a>
                                 @role('Admin')
-                                <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST" onsubmit="return confirm('Archive this FAQ permanently?')">
+                                <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST" onsubmit="return confirm('Permanently delete this FAQ? This cannot be undone.')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all">
                                         <i class="fa fa-eraser"></i>

@@ -20,7 +20,6 @@ class NoticeRequest extends CMSRequest
             'title' => ['required', 'string', 'max:255'],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'badge' => ['nullable', 'string', 'max:50'],
-            'content' => ['nullable', 'string'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
             'image_path' => ['nullable', 'string', 'max:255'],
             'link' => ['nullable', 'string', 'max:500', PublicCtaContract::publicUrlRule()],

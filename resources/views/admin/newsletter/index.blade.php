@@ -26,7 +26,9 @@
                 <thead class="bg-neutral-50/50">
                     <tr>
                         <th scope="col" class="px-6 py-4 text-left">
+                            @role('Admin')
                             <input type="checkbox" id="selectAll" class="rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
+                            @endrole
                         </th>
                         <th scope="col" class="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-400">Subscriber Email</th>
                         <th scope="col" class="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-400">Join Date</th>
@@ -37,7 +39,9 @@
                     @forelse($subscribers as $sub)
                     <tr class="hover:bg-neutral-50/30 transition-all select-row">
                         <td class="px-6 py-5">
+                            @role('Admin')
                             <input type="checkbox" name="ids[]" value="{{ $sub->id }}" class="row-checkbox rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
+                            @endrole
                         </td>
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-3">
@@ -53,12 +57,14 @@
                         </td>
                         <td class="px-6 py-5 text-right">
                             <div class="flex justify-end gap-2 pr-4">
+                                @role('Admin')
                                 <form action="{{ route('admin.submissions.newsletter.destroy', $sub->id) }}" method="POST" onsubmit="return confirm('Remove this subscriber permanently?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-400 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all">
                                         <i class="fa fa-user-minus text-xs"></i>
                                     </button>
                                 </form>
+                                @endrole
                             </div>
                         </td>
                     </tr>
@@ -72,6 +78,7 @@
             {{ $subscribers->links() }}
         </div>
 
+        @role('Admin')
         <!-- Bulk Actions Bar -->
         <div id="bulkActionsBar" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-6 z-[1000] transition-all transform translate-y-24 opacity-0">
             <span class="text-sm font-bold"><span id="selectedCount">0</span> subscribers selected</span>
@@ -87,6 +94,7 @@
             </form>
             <button onclick="unselectAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
         </div>
+        @endrole
     </div>
 
     <script>

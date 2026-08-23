@@ -132,7 +132,7 @@ class BlogController extends Controller
         $this->secureAssetDeletion($path);
         $this->clearSiteCache();
 
-        Alert::success('Success', 'Article removed successfully.');
+        Alert::success('Success', 'Article permanently deleted.');
 
         return back();
     }

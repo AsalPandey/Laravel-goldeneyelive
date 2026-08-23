@@ -95,7 +95,7 @@
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
                                 @role('Admin')
-                                <form action="{{ route('admin.teachers.destroy', $teacher->id) }}" method="POST" onsubmit="return confirm('Remove this faculty member from the directory?')">
+                                <form action="{{ route('admin.teachers.destroy', $teacher->id) }}" method="POST" onsubmit="return confirm('Permanently delete this faculty member? This cannot be undone.')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all">
                                         <i class="fa fa-user-minus text-xs"></i>

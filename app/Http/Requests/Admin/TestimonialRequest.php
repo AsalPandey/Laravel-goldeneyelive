@@ -9,8 +9,16 @@ class TestimonialRequest extends CMSRequest
     public function rules(): array
     {
         $imageLimit = SiteSetting::getValue('image_size_limit', 2048);
+        $rules = parent::rules();
+        unset(
+            $rules['meta_title'],
+            $rules['meta_description'],
+            $rules['meta_keywords'],
+            $rules['aeo_summary'],
+            $rules['schema_markup'],
+        );
 
-        return array_merge(parent::rules(), [
+        return array_merge($rules, [
             'student_name' => ['required', 'string', 'max:255'],
             'course_name' => ['nullable', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:10000'],

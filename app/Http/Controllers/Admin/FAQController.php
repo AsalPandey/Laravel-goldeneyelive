@@ -49,6 +49,7 @@ class FAQController extends Controller
     public function store(FAQRequest $request)
     {
         $validated = $request->validated();
+        $validated['status'] ??= 'inactive';
         $courseIds = $validated['courses'] ?? [];
         unset($validated['courses']);
 
@@ -106,7 +107,7 @@ class FAQController extends Controller
         $faq->delete();
         $this->clearSiteCache();
 
-        Alert::success('Success', 'FAQ deleted successfully.');
+        Alert::success('Success', 'FAQ permanently deleted.');
 
         return back();
     }

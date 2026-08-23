@@ -118,7 +118,7 @@
                                 <input type="file" name="photo" class="block w-full text-xs">
                                 <span class="text-[9px] font-bold text-neutral-400 uppercase mt-1">Option B: Use Library Path</span>
                                 <div class="flex gap-2">
-                                    <input type="text" name="photo_path" value="{{ $course->photo }}" placeholder="e.g. site/img/cat-1.jpg" class="flex-1 text-xs rounded border-neutral-300 dark:bg-neutral-800 h-8 px-2">
+                                <input type="text" name="photo_path" value="{{ old('photo_path', $course->photo) }}" placeholder="e.g. site/img/cat-1.jpg" class="flex-1 text-xs rounded border-neutral-300 dark:bg-neutral-800 h-8 px-2">
                                     <button type="button" onclick="openMediaVault('photo_path', 'course_photo_preview')" class="bg-brand-dark text-brand-gold text-[8px] font-black uppercase px-3 rounded-md hover:bg-brand-gold hover:text-brand-dark transition-all">Pick</button>
                                 </div>
                             </div>
@@ -135,6 +135,7 @@
 
                 <div class="flex items-center gap-6 p-4 bg-orange-50 rounded-xl border border-orange-100">
                     <div class="flex items-center gap-2">
+                        <input type="hidden" name="is_featured" value="0">
                         <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured', $course->is_featured) ? 'checked' : '' }} class="w-4 h-4 text-brand-gold rounded border-gray-300 focus:ring-brand-gold">
                         <label for="is_featured" class="text-sm font-bold text-neutral-900">Feature this course on homepage?</label>
                     </div>
@@ -142,13 +143,14 @@
                 </div>
 
                 <div class="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-100 space-y-3">
+                    <input type="hidden" name="faqs_present" value="1">
                     <div class="flex items-center justify-between">
                         <label class="block text-sm font-bold">Assign FAQs to Course (Optional)</label>
                         <span class="text-[10px] text-neutral-500">Checkbox UI (Searchable controls may be added for larger FAQ sets)</span>
                     </div>
                     @if(isset($faqs) && $faqs->count() > 0)
                         @php
-                            $assignedFaqIds = old('faqs', $course->faqs->pluck('id')->toArray());
+                            $assignedFaqIds = old('faqs', old('faqs_present') ? [] : $course->faqs->pluck('id')->toArray());
                         @endphp
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto p-2 border rounded-lg bg-white dark:bg-neutral-800">
                             @foreach($faqs as $faq)

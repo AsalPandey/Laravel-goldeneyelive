@@ -130,6 +130,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::delete('teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
                 Route::delete('testimonials/{testimonial}', [TestimonialController::class, 'destroy'])->name('testimonials.destroy');
                 Route::delete('notices/{notice}', [NoticeController::class, 'destroy'])->name('notices.destroy');
+                Route::delete('submissions/newsletter/{id}', [SubmissionController::class, 'destroyNewsletter'])->name('submissions.newsletter.destroy');
 
                 // Destructive asset operations
                 Route::delete('branding/asset', [BrandingController::class, 'destroyAsset'])->name('branding.asset.destroy');
@@ -153,8 +154,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::patch('enrollments/{id}/restore', [SubmissionController::class, 'restoreJoin'])->name('join_now.restore');
 
                 Route::get('newsletter', [SubmissionController::class, 'newsletter_display'])->name('newsletter-display');
-                Route::delete('newsletter/{id}', [SubmissionController::class, 'destroyNewsletter'])->name('newsletter.destroy');
-
                 Route::post('bulk-delete', [SubmissionController::class, 'bulkDestroy'])->name('bulk-delete');
             });
         });

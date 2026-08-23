@@ -127,7 +127,7 @@ class CourseCategoryController extends Controller
 
         $this->clearSiteCache();
 
-        Alert::success('Success', 'Category removed successfully.');
+        Alert::success('Success', 'Category permanently deleted.');
 
         return back();
     }

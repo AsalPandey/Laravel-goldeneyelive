@@ -22,8 +22,8 @@
                     <div>
                         <label class="premium-label">Publication Status</label>
                         <select name="status" required class="premium-input cursor-pointer">
-                            <option value="active" {{ old('status', $faq->status) === 'active' ? 'selected' : '' }}>PUBLISHED (Live on Website)</option>
-                            <option value="inactive" {{ old('status', $faq->status) === 'inactive' ? 'selected' : '' }}>ARCHIVED (Internal Only)</option>
+                            <option value="active" {{ old('status', $faq->status) === 'active' ? 'selected' : '' }}>PUBLIC (Live on Website)</option>
+                            <option value="inactive" {{ old('status', $faq->status) === 'inactive' ? 'selected' : '' }}>INACTIVE (Not Public)</option>
                         </select>
                         @error('status') <p class="mt-1 text-xs text-red-600 font-bold italic">{{ $message }}</p> @enderror
                     </div>
@@ -38,13 +38,14 @@
                 <x-seo-aeo-fields :model="$faq" />
 
                 <div class="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-100 space-y-3">
+                    <input type="hidden" name="courses_present" value="1">
                     <div class="flex items-center justify-between">
                         <label class="block text-sm font-bold">Assign to Specific Courses (Optional)</label>
                         <span class="text-[10px] text-neutral-500">Checkbox UI (Searchable controls may be added for larger course sets)</span>
                     </div>
                     @if(isset($courses) && $courses->count() > 0)
                         @php
-                            $assignedCourseIds = old('courses', $faq->courses->pluck('id')->toArray());
+                            $assignedCourseIds = old('courses', old('courses_present') ? [] : $faq->courses->pluck('id')->toArray());
                         @endphp
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto p-2 border rounded-lg bg-white dark:bg-neutral-800">
                             @foreach($courses as $course)

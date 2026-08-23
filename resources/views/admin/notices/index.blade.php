@@ -78,7 +78,7 @@
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
                                 @role('Admin')
-                                <form action="{{ route('admin.notices.destroy', $notice->id) }}" method="POST" onsubmit="return confirm('Permanently delete this notice?')">
+                                <form action="{{ route('admin.notices.destroy', $notice->id) }}" method="POST" onsubmit="return confirm('Permanently delete this notice? This cannot be undone.')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-zinc-100 text-neutral-600 hover:bg-rose-500 hover:text-white hover:shadow-lg transition-all border border-zinc-200 hover:border-rose-500">
                                         <i class="fa fa-trash-alt text-xs"></i>

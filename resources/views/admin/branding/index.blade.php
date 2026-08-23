@@ -1,5 +1,19 @@
 <x-layouts::app :title="__('Website Brand Authority')">
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    @if($errors->any())
+        @php
+            foreach (old() as $oldKey => $oldValue) {
+                if (! is_scalar($oldValue) && $oldValue !== null) {
+                    continue;
+                }
+
+                $settings[$oldKey] = $oldValue;
+                if (str_ends_with($oldKey, '_path')) {
+                    $settings[str($oldKey)->beforeLast('_path')->toString()] = $oldValue;
+                }
+            }
+        @endphp
+    @endif
     <style>
         .brand-hub-tabs button.active {
             border-bottom: 4px solid var(--color-brand-gold);
@@ -905,20 +919,14 @@
                     </div>
                     <div class="flex items-center gap-4">
                         @if($isAdmin)
-                            <form action="{{ route('admin.branding.asset.purge') }}" method="POST" onsubmit="return confirm('Purge all unused assets?')">
-                                @csrf
-                                <button type="submit" class="px-6 py-4 rounded-2xl bg-red-50 text-red-600 border border-red-100 font-black uppercase text-[10px] hover:bg-red-600 hover:text-white transition-all">
-                                    <i class="fa fa-broom mr-2"></i> Purge Unused
-                                </button>
-                            </form>
+                            <button form="brandingPurgeForm" type="submit" class="px-6 py-4 rounded-2xl bg-red-50 text-red-600 border border-red-100 font-black uppercase text-[10px] hover:bg-red-600 hover:text-white transition-all">
+                                <i class="fa fa-broom mr-2"></i> Permanently Delete Unused
+                            </button>
                         @endif
-                        <form action="{{ route('admin.branding.asset.store') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <label class="cursor-pointer bg-[#C5A059] text-[#050C1C] px-10 py-4 rounded-2xl font-black uppercase text-xs hover:bg-white transition-all flex items-center gap-3 shadow-xl">
-                                <i class="fa fa-cloud-upload-alt text-lg"></i> Upload
-                                <input type="file" name="image" class="hidden" onchange="this.form.submit()">
-                            </label>
-                        </form>
+                        <label class="cursor-pointer bg-[#C5A059] text-[#050C1C] px-10 py-4 rounded-2xl font-black uppercase text-xs hover:bg-white transition-all flex items-center gap-3 shadow-xl">
+                            <i class="fa fa-cloud-upload-alt text-lg"></i> Upload
+                            <input form="brandingAssetUploadForm" type="file" name="image" class="hidden" onchange="document.getElementById('brandingAssetUploadForm').requestSubmit()">
+                        </label>
                     </div>
                 </div>
 
@@ -947,10 +955,19 @@
             </div>
 
             {{-- Floating Save Button --}}
-            <button type="submit" id="brandingSubmitBtn" class="fixed bottom-10 right-10 z-50 bg-brand-dark text-brand-gold px-10 py-5 rounded-[24px] text-xs font-black uppercase tracking-[3px] shadow-2xl hover:scale-105 transition-all flex items-center gap-3 border-2 border-brand-gold/20 group">
+            <button form="brandingForm" type="submit" id="brandingSubmitBtn" class="fixed bottom-10 right-10 z-50 bg-brand-dark text-brand-gold px-10 py-5 rounded-[24px] text-xs font-black uppercase tracking-[3px] shadow-2xl hover:scale-105 transition-all flex items-center gap-3 border-2 border-brand-gold/20 group">
                 <i class="fa fa-save text-lg group-hover:rotate-12 transition-transform"></i>
                 <span>Save Content</span>
             </button>
+        </form>
+
+        @if($isAdmin)
+            <form id="brandingPurgeForm" action="{{ route('admin.branding.asset.purge') }}" method="POST" onsubmit="return confirm('Permanently delete every unused media asset? This cannot be undone.')">
+                @csrf
+            </form>
+        @endif
+        <form id="brandingAssetUploadForm" action="{{ route('admin.branding.asset.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
         </form>
     </div>
 
@@ -1092,6 +1109,25 @@
         };
 
         window.initBrandingHub = function () {
+            const firstErrorField = @json($errors->keys()[0] ?? null);
+            if (firstErrorField) {
+                const field = document.querySelector(`[name="${CSS.escape(firstErrorField)}"]`);
+                const tab = field?.closest('.branding-tab-content');
+                if (tab) {
+                    switchTab(tab.id.replace('tab-', ''));
+                    const page = field.closest('.page-editor-section');
+                    if (page) {
+                        const selector = document.getElementById('pageEditorSelector');
+                        if (selector) selector.value = page.id;
+                        switchPageEditor(page.id);
+                    }
+                    field.id ||= `branding-error-${firstErrorField.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
+                    field.focus({ preventScroll: true });
+                    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            }
+
             const lastTab = localStorage.getItem('activeBrandingTab') || 'visuals';
             switchTab(lastTab);
             const lastPage = localStorage.getItem('activePageEditor') || 'page-home-about';

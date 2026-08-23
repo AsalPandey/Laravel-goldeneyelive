@@ -80,9 +80,10 @@
                         <div class="flex-1">
                             <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Status</label>
                             <select name="status" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
-                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active (Public)</option>
-                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive (Draft)</option>
+                                <option value="inactive" {{ old('status', 'inactive') == 'inactive' ? 'selected' : '' }}>Inactive (Not Public)</option>
+                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Public (Active)</option>
                             </select>
+                            <p class="mt-1 text-xs text-neutral-500">New courses stay inactive until you explicitly make them public.</p>
                         </div>
                     </div>
                 </div>
@@ -108,7 +109,7 @@
                                 <input type="file" name="photo" class="block w-full text-xs">
                                 <span class="text-[9px] font-bold text-neutral-400 uppercase mt-1">Option B: Use Library Path</span>
                                 <div class="flex gap-2">
-                                    <input type="text" name="photo_path" placeholder="e.g. site/img/cat-1.jpg" class="flex-1 text-xs rounded border-neutral-300 dark:bg-neutral-800 h-8 px-2">
+                                <input type="text" name="photo_path" value="{{ old('photo_path') }}" placeholder="e.g. site/img/cat-1.jpg" class="flex-1 text-xs rounded border-neutral-300 dark:bg-neutral-800 h-8 px-2">
                                     <button type="button" onclick="openMediaVault('photo_path')" class="bg-neutral-900 text-white text-[8px] font-black uppercase px-3 rounded-md hover:bg-orange-600 transition-all">Pick</button>
                                 </div>
                             </div>
@@ -125,6 +126,7 @@
 
                 <div class="flex items-center gap-6 p-4 bg-orange-50 rounded-xl border border-orange-100">
                     <div class="flex items-center gap-2">
+                        <input type="hidden" name="is_featured" value="0">
                         <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }} class="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500">
                         <label for="is_featured" class="text-sm font-bold text-neutral-900">Feature this course on homepage?</label>
                     </div>

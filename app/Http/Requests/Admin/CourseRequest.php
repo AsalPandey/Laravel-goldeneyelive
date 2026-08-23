@@ -10,6 +10,10 @@ class CourseRequest extends CMSRequest
 {
     protected function prepareForValidation(): void
     {
+        if ($this->routeIs('admin.courses.store')) {
+            $this->mergeIfMissing(['status' => 'inactive']);
+        }
+
         if ($this->has('slug')) {
             $this->merge([
                 'slug' => Str::slug((string) $this->input('slug')),

@@ -227,6 +227,10 @@ class SubmissionController extends Controller
         $ids = $request->input('ids');
         $type = $request->input('type');
 
+        if ($type === 'newsletter') {
+            abort_unless($request->user()->hasRole('Admin'), 403);
+        }
+
         $action = 'removed';
 
         switch ($type) {

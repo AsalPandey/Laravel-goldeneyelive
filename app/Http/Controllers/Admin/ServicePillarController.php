@@ -71,7 +71,7 @@ class ServicePillarController extends Controller
         $servicePillar->delete();
         $this->clearSiteCache(['service_pillars']);
 
-        Alert::success('Success', 'Service pillar removed successfully.');
+        Alert::success('Success', 'Service pillar permanently deleted.');
 
         return back();
     }

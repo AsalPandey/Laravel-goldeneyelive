@@ -24,9 +24,10 @@
                     <div>
                         <label class="premium-label">Publication Status</label>
                         <select name="status" required class="premium-input cursor-pointer">
-                            <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>PUBLISHED (Live on Website)</option>
-                            <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>ARCHIVED (Internal Only)</option>
+                            <option value="inactive" {{ old('status', 'inactive') === 'inactive' ? 'selected' : '' }}>INACTIVE (Not Public)</option>
+                            <option value="active" {{ old('status') === 'active' ? 'selected' : '' }}>PUBLIC (Live on Website)</option>
                         </select>
+                        <p class="mt-1 text-xs text-neutral-500">New FAQs stay inactive unless you explicitly make them public.</p>
                         @error('status') <p class="mt-1 text-xs text-red-600 font-bold italic">{{ $message }}</p> @enderror
                     </div>
                     <div>
@@ -68,7 +69,7 @@
 
                 <div class="flex justify-end pt-6 border-t border-neutral-50">
                     <button type="submit" class="inline-flex justify-center rounded-xl bg-neutral-900 py-3.5 px-10 text-xs font-black uppercase tracking-widest text-[#C5A059] shadow-2xl hover:bg-orange-600 hover:text-white transform hover:-translate-y-1 transition-all active:scale-95">
-                        <i class="fa fa-save mr-2"></i> Deploy FAQ Entry
+                        <i class="fa fa-save mr-2"></i> Create FAQ
                     </button>
                 </div>
             </form>

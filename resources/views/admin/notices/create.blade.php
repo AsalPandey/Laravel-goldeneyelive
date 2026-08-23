@@ -85,6 +85,7 @@
                     </div>
                     <div class="flex items-center gap-3 pt-4">
                         <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="hidden" name="is_urgent" value="0">
                             <input type="checkbox" name="is_urgent" value="1" {{ old('is_urgent') ? 'checked' : '' }} class="sr-only peer">
                             <div class="w-11 h-6 bg-zinc-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-gold"></div>
                             <span class="ms-3 text-[10px] font-black uppercase text-neutral-600">High Urgency</span>
@@ -105,7 +106,7 @@
                     </div>
                     <div class="flex flex-col sm:flex-row items-center gap-4 bg-zinc-50 p-6 rounded-2xl border border-zinc-100">
                         <span class="text-[10px] font-black uppercase text-neutral-400 shrink-0">OR Library Path</span>
-                        <input type="text" name="image_path" id="image_path" placeholder="site/img/carousel-1.png" class="w-full bg-white border-zinc-200 rounded-xl p-3 text-xs font-mono text-neutral-600 focus:border-brand-gold focus:ring-0">
+                        <input type="text" name="image_path" id="image_path" value="{{ old('image_path') }}" placeholder="site/img/carousel-1.png" class="w-full bg-white border-zinc-200 rounded-xl p-3 text-xs font-mono text-neutral-600 focus:border-brand-gold focus:ring-0">
                         <button type="button" onclick="openMediaVault('image_path', 'preview')" class="w-full sm:w-auto text-[10px] font-black text-white bg-brand-dark px-6 py-3 rounded-xl uppercase hover:bg-brand-gold hover:text-brand-dark shadow-lg transition-all whitespace-nowrap">
                             Vault Picker
                         </button>
@@ -113,7 +114,6 @@
                 </div>
             </div>
 
-            <x-seo-aeo-fields />
             <div class="flex justify-end pt-4">
                 <button type="submit" class="bg-brand-dark text-white px-12 py-5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-brand-gold hover:text-brand-dark shadow-2xl transition-all animate-glow">
                     Deploy Notice <i class="fas fa-paper-plane ms-2"></i>

@@ -56,6 +56,7 @@ class CourseController extends Controller
     public function store(CourseRequest $request)
     {
         $validated = $request->validated();
+        $validated['status'] ??= 'inactive';
         $faqIds = $validated['faqs'] ?? [];
         unset($validated['faqs']);
 
@@ -67,7 +68,7 @@ class CourseController extends Controller
 
         $validated['rating_star'] = '0';
         $validated['rating_count'] = '0';
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_featured'] = $request->boolean('is_featured');
         $validated['display_order'] = $validated['display_order'] ?? 100;
 
         $uploadedPhoto = null;
@@ -129,7 +130,7 @@ class CourseController extends Controller
         $validated['category_slug'] = $category->slug;
 
         $validated['slug'] = Str::slug($validated['slug']);
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_featured'] = $request->boolean('is_featured');
         $validated['display_order'] = $validated['display_order'] ?? 100;
 
         $oldPhoto = $course->photo;
@@ -208,7 +209,7 @@ class CourseController extends Controller
         $this->secureAssetDeletion($path);
         $this->clearSiteCache();
 
-        Alert::success('Success', 'Course retracted from curriculum.');
+        Alert::success('Success', 'Course permanently deleted.');
 
         return back();
     }

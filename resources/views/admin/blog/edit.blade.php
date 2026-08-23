@@ -31,6 +31,11 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Category</label>
+                    <input type="text" name="category" value="{{ old('category', $post->category) }}" maxlength="255" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3" placeholder="e.g. Study Guides">
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Content</label>
                     <textarea name="content" rows="10" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('content', $post->content) }}</textarea>
                 </div>
@@ -74,7 +79,7 @@
                             <div class="p-4 bg-neutral-50 rounded-xl border border-dashed border-neutral-200">
                                 <span class="text-[9px] font-black text-neutral-400 uppercase tracking-widest block mb-2">Replace: Library Path</span>
                                 <div class="flex gap-2">
-                                    <input type="text" name="image_path" id="image_path" value="{{ $post->image }}" placeholder="e.g. site/img/carousel-1.png" class="flex-1 rounded-xl border-neutral-200 text-xs h-10 px-4 focus:border-orange-600 focus:ring-0">
+                                    <input type="text" name="image_path" id="image_path" value="{{ old('image_path', $post->image) }}" placeholder="e.g. site/img/carousel-1.png" class="flex-1 rounded-xl border-neutral-200 text-xs h-10 px-4 focus:border-orange-600 focus:ring-0">
                                     <button type="button" onclick="openMediaVault('image_path', 'blog_image_preview')" class="bg-neutral-900 text-[#C5A059] text-[9px] font-black uppercase px-4 flex items-center justify-center rounded-xl hover:bg-orange-600 hover:text-white transition-all">
                                          Vault
                                      </button>

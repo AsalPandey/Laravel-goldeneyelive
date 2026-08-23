@@ -39,7 +39,7 @@ class TeacherController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_featured'] = $request->boolean('is_featured');
         $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/teachers', 'site/img/team-1.jpg');
 
         Teacher::create($validated);
@@ -67,7 +67,7 @@ class TeacherController extends Controller
         $teacher = Teacher::findOrFail($id);
         $validated = $request->validated();
 
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_featured'] = $request->boolean('is_featured');
         $oldPhoto = $teacher->photo;
         $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/teachers', $teacher->photo);
 
@@ -119,7 +119,7 @@ class TeacherController extends Controller
         $this->secureAssetDeletion($path);
         $this->clearSiteCache();
 
-        Alert::success('Success', 'Teacher deleted successfully.');
+        Alert::success('Success', 'Teacher permanently deleted.');
 
         return back();
     }

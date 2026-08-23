@@ -55,7 +55,7 @@
                             <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Update Photo (Optional)</label>
                             <input type="file" name="photo" class="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
                             <div class="flex items-center gap-2">
-                                <input type="text" name="photo_path" value="{{ $testimonial->photo }}" placeholder="OR Library Path: site/img/..." class="flex-1 rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-8 px-3 text-xs">
+                                <input type="text" name="photo_path" value="{{ old('photo_path', $testimonial->photo) }}" placeholder="OR Library Path: site/img/..." class="flex-1 rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-8 px-3 text-xs">
                                 <button type="button" onclick="openMediaVault('photo_path', 'testimonial_photo_preview')" class="text-[10px] font-black text-white bg-neutral-900 px-3 py-1 rounded-md uppercase hover:bg-orange-600 transition-all">
                                      Pick
                                  </button>
@@ -74,6 +74,7 @@
                     </div>
                     <div class="flex items-center gap-6 p-4 bg-orange-50 rounded-xl border border-orange-100">
                         <div class="flex items-center gap-2">
+                            <input type="hidden" name="is_featured" value="0">
                             <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured', $testimonial->is_featured) ? 'checked' : '' }} class="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500">
                             <label for="is_featured" class="text-sm font-bold text-neutral-900">Feature on homepage?</label>
                         </div>

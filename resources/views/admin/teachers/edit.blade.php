@@ -58,7 +58,7 @@
                                 <input type="file" name="photo" class="block w-full text-xs">
                                 <span class="text-[9px] font-bold text-neutral-400 uppercase mt-1">Option B: Use Library Path</span>
                                 <div class="flex gap-2">
-                                    <input type="text" name="photo_path" value="{{ $teacher->photo }}" placeholder="e.g. site/img/team-1.jpg" class="flex-1 text-xs rounded border-neutral-300 dark:bg-neutral-800 h-8 px-2">
+                                    <input type="text" name="photo_path" value="{{ old('photo_path', $teacher->photo) }}" placeholder="e.g. site/img/team-1.jpg" class="flex-1 text-xs rounded border-neutral-300 dark:bg-neutral-800 h-8 px-2">
                                     <button type="button" onclick="openMediaVault('photo_path', 'teacher_photo_preview')" class="bg-neutral-900 text-white text-[8px] font-black uppercase px-3 rounded-md hover:bg-orange-600 transition-all">Pick</button>
                                 </div>
                             </div>
@@ -75,6 +75,7 @@
 
                 <x-seo-aeo-fields :model="$teacher" />
                 <div class="flex items-center gap-2">
+                    <input type="hidden" name="is_featured" value="0">
                     <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured', $teacher->is_featured) ? 'checked' : '' }} class="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500">
                     <label for="is_featured" class="text-sm font-bold text-neutral-900">Feature this teacher on homepage?</label>
                 </div>

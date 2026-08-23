@@ -8,6 +8,7 @@ use App\Models\Notice;
 use App\Support\CmsDateTime;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class NoticeController extends Controller
@@ -42,16 +43,23 @@ class NoticeController extends Controller
         $validated['starts_at'] = CmsDateTime::fromStaffInput($validated['starts_at'] ?? null);
         $validated['expires_at'] = CmsDateTime::fromStaffInput($validated['expires_at'] ?? null);
 
-        if ($validated['status'] === 'active') {
-            Notice::where('status', 'active')
-                ->where('display_type', $validated['display_type'] ?? 'popup')
-                ->update(['status' => 'inactive']);
-        }
-
         $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/notices');
+        $uploadedImage = $request->hasFile('image') ? $validated['image'] : null;
 
-        Notice::create($validated);
-        $this->clearSiteCache();
+        try {
+            DB::transaction(function () use ($validated): void {
+                $this->deactivateCurrentNoticeFor($validated);
+                Notice::create($validated);
+
+                DB::afterCommit(fn () => $this->clearSiteCache());
+            });
+        } catch (\Throwable $exception) {
+            if ($uploadedImage) {
+                $this->secureAssetDeletion($uploadedImage);
+            }
+
+            throw $exception;
+        }
 
         Alert::success('Success', 'Notice posted successfully.');
 
@@ -86,17 +94,28 @@ class NoticeController extends Controller
             $notice->expires_at,
         );
 
-        if (isset($validated['status']) && $validated['status'] === 'active' && $notice->status !== 'active') {
-            Notice::where('status', 'active')
-                ->where('display_type', $validated['display_type'] ?? $notice->display_type)
-                ->update(['status' => 'inactive']);
+        $validated['image'] = $request->hasFile('image')
+            ? $this->handleAssetUpload($request, 'image', 'site/img/notices')
+            : $this->handleAssetUpload($request, 'image', 'site/img/notices', $notice->image);
+        $uploadedImage = $request->hasFile('image') ? $validated['image'] : null;
+
+        try {
+            DB::transaction(function () use ($notice, $validated, $oldImage): void {
+                $this->deactivateCurrentNoticeFor($validated, $notice->getKey());
+                $notice->update($validated);
+
+                DB::afterCommit(function () use ($oldImage, $notice): void {
+                    $this->deleteReplacedAsset($oldImage, $notice->image);
+                    $this->clearSiteCache();
+                });
+            });
+        } catch (\Throwable $exception) {
+            if ($uploadedImage && $uploadedImage !== $oldImage) {
+                $this->secureAssetDeletion($uploadedImage);
+            }
+
+            throw $exception;
         }
-
-        $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/notices', $notice->image);
-
-        $notice->update($validated);
-        $this->deleteReplacedAsset($oldImage, $notice->image);
-        $this->clearSiteCache();
 
         Alert::success('Success', 'Notice updated successfully.');
 
@@ -111,14 +130,19 @@ class NoticeController extends Controller
         $notice = Notice::findOrFail($id);
         $newStatus = $notice->status === 'active' ? 'inactive' : 'active';
 
-        if ($newStatus === 'active') {
-            Notice::where('status', 'active')
-                ->where('display_type', $notice->display_type)
-                ->update(['status' => 'inactive']);
-        }
+        DB::transaction(function () use ($notice, $newStatus): void {
+            $activation = [
+                'status' => $newStatus,
+                'display_type' => $notice->display_type,
+                'starts_at' => $notice->starts_at,
+                'expires_at' => $notice->expires_at,
+            ];
 
-        $notice->update(['status' => $newStatus]);
-        $this->clearSiteCache();
+            $this->deactivateCurrentNoticeFor($activation, $notice->getKey());
+            $notice->update(['status' => $newStatus]);
+
+            DB::afterCommit(fn () => $this->clearSiteCache());
+        });
 
         Alert::success('Success', "Notice marked as {$newStatus}.");
 
@@ -138,8 +162,43 @@ class NoticeController extends Controller
 
         $this->clearSiteCache();
 
-        Alert::success('Success', 'Notice removed successfully.');
+        Alert::success('Success', 'Notice permanently deleted.');
 
         return back();
+    }
+
+    /**
+     * Deactivate only notices competing on the same surface right now.
+     * Future scheduled notices must not displace the current live notice.
+     *
+     * @param  array{status?: string, display_type?: string, starts_at?: mixed, expires_at?: mixed}  $activation
+     */
+    private function deactivateCurrentNoticeFor(array $activation, int|string|null $exceptId = null): void
+    {
+        if (($activation['status'] ?? null) !== 'active') {
+            return;
+        }
+
+        $startsAt = $activation['starts_at'] ?? null;
+        $expiresAt = $activation['expires_at'] ?? null;
+
+        if (($startsAt && $startsAt->isFuture()) || ($expiresAt && $expiresAt->isPast())) {
+            return;
+        }
+
+        $displayType = $activation['display_type'] ?? 'popup';
+        $competingDisplayTypes = $displayType === 'bar' ? ['bar'] : ['popup', 'standard'];
+
+        Notice::query()
+            ->where('status', 'active')
+            ->whereIn('display_type', $competingDisplayTypes)
+            ->when($exceptId !== null, fn ($query) => $query->whereKeyNot($exceptId))
+            ->where(function ($query): void {
+                $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($query): void {
+                $query->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->update(['status' => 'inactive']);
     }
 }

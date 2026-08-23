@@ -15,8 +15,6 @@ class TeacherRequest extends CMSRequest
             'designation' => ['required', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:10000'],
             'facebook_url' => ['nullable', 'url', 'max:255'],
-            'twitter_url' => ['nullable', 'url', 'max:255'],
-            'instagram_url' => ['nullable', 'url', 'max:255'],
             'linkedin_url' => ['nullable', 'url', 'max:255'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
             'photo_path' => ['nullable', 'string', 'max:255'],

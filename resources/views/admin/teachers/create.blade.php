@@ -50,7 +50,7 @@
                         <input type="file" name="photo" class="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-neutral-500">OR Use Library Path:</span>
-                            <input type="text" name="photo_path" placeholder="site/img/team-1.jpg" class="flex-1 rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-8 px-3 text-xs">
+                            <input type="text" name="photo_path" value="{{ old('photo_path') }}" placeholder="site/img/team-1.jpg" class="flex-1 rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-8 px-3 text-xs">
                             <button type="button" onclick="openMediaVault('photo_path')" class="bg-neutral-900 text-white text-[9px] font-black uppercase px-4 py-2 rounded-lg hover:bg-orange-600 transition-all">Pick</button>
                         </div>
                     </div>
@@ -58,6 +58,7 @@
 
                 <x-seo-aeo-fields />
                 <div class="flex items-center gap-2">
+                    <input type="hidden" name="is_featured" value="0">
                     <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }} class="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500">
                     <label for="is_featured" class="text-sm font-bold text-neutral-900">Feature this teacher on homepage?</label>
                 </div>

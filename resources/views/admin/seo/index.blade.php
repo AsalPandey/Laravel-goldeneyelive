@@ -1,4 +1,13 @@
 <x-layouts::app :title="__('SEO & AI Authority Center')">
+    @if($errors->any())
+        @php
+            foreach (old() as $oldKey => $oldValue) {
+                if (is_scalar($oldValue) || $oldValue === null) {
+                    $settings[$oldKey] = $oldValue;
+                }
+            }
+        @endphp
+    @endif
     <style>
         .seo-card {
             background: #fff;

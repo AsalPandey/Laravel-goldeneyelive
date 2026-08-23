@@ -45,8 +45,8 @@
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Status</label>
                         <select name="status" class="w-full bg-neutral-50 border-none rounded-xl p-4 text-sm font-bold text-neutral-900 focus:ring-2 focus:ring-orange-500 transition-all">
-                            <option value="active" {{ $notice->status === 'active' ? 'selected' : '' }}>Active (Visible)</option>
-                            <option value="inactive" {{ $notice->status === 'inactive' ? 'selected' : '' }}>Inactive (Hidden)</option>
+                            <option value="active" {{ old('status', $notice->status) === 'active' ? 'selected' : '' }}>Active (Visible)</option>
+                            <option value="inactive" {{ old('status', $notice->status) === 'inactive' ? 'selected' : '' }}>Inactive (Hidden)</option>
                         </select>
                     </div>
                     <div>
@@ -89,6 +89,7 @@
                         </select>
                     </div>
                     <div class="flex items-center gap-3 pt-4">
+                        <input type="hidden" name="is_urgent" value="0">
                         <input type="checkbox" name="is_urgent" value="1" {{ old('is_urgent', $notice->is_urgent) ? 'checked' : '' }} id="urgentCheck"
                                class="w-5 h-5 rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
                         <label for="urgentCheck" class="text-xs font-black uppercase text-neutral-600 cursor-pointer">Mark as High-Urgency</label>
@@ -109,7 +110,7 @@
                     </div>
                     <div class="flex items-center gap-3 bg-neutral-50 p-4 rounded-xl">
                         <span class="text-[10px] font-black uppercase text-neutral-400 shrink-0">OR Library Path</span>
-                        <input type="text" name="image_path" value="{{ $notice->image }}" placeholder="site/img/carousel-1.png" class="flex-1 bg-white border-none rounded-lg p-2 text-xs font-mono text-neutral-600 focus:ring-1 focus:ring-orange-500">
+                        <input type="text" name="image_path" value="{{ old('image_path', $notice->image) }}" placeholder="site/img/carousel-1.png" class="flex-1 bg-white border-none rounded-lg p-2 text-xs font-mono text-neutral-600 focus:ring-1 focus:ring-orange-500">
                         <button type="button" onclick="openMediaVault('image_path', 'preview')" class="text-[10px] font-black text-white bg-neutral-900 px-4 py-2 rounded-lg uppercase hover:bg-orange-600 transition-all">
                             Pick from Library
                         </button>
@@ -118,7 +119,6 @@
                 </div>
             </div>
 
-            <x-seo-aeo-fields :model="$notice" />
                 <button type="submit" class="bg-neutral-900 text-white px-10 py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-orange-600 shadow-xl transition-all">
                     Update Notice
                 </button>

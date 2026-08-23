@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\BlogPost;
 use App\Models\Course;
 use App\Models\CourseCategory;
+use App\Models\FAQ;
 use App\Models\Notice;
 use App\Models\SiteSetting;
 use App\Models\Teacher;
@@ -167,6 +168,7 @@ trait InteractsWithAssets
         $richTextFields = [
             Course::class => ['description', 'course_outline'],
             BlogPost::class => ['content'],
+            FAQ::class => ['answer'],
             Notice::class => ['subtitle'],
             Teacher::class => ['bio'],
             CourseCategory::class => ['description'],

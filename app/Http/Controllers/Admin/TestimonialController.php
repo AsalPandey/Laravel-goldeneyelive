@@ -42,7 +42,7 @@ class TestimonialController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_featured'] = $request->boolean('is_featured');
         $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/testimonials', null);
 
         Testimonial::create($validated);
@@ -72,7 +72,7 @@ class TestimonialController extends Controller
         $oldPhoto = $testimonial->photo;
         $validated = $request->validated();
 
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_featured'] = $request->boolean('is_featured');
         $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/testimonials', $testimonial->photo);
 
         $testimonial->update($validated);
@@ -123,7 +123,7 @@ class TestimonialController extends Controller
         $this->secureAssetDeletion($path);
         $this->clearSiteCache();
 
-        Alert::success('Success', 'Testimonial deleted successfully.');
+        Alert::success('Success', 'Testimonial permanently deleted.');
 
         return back();
     }

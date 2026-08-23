@@ -101,7 +101,7 @@
                                     <i class="fa fa-highlighter"></i>
                                 </a>
                                 @role('Admin')
-                                <form action="{{ route('admin.blog.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Retract this article and delete permanently?')">
+                                <form action="{{ route('admin.blog.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Permanently delete this article? This cannot be undone.')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-rose-500 hover:border-rose-200 hover:shadow-lg transition-all">
                                         <i class="fa fa-eraser"></i>
