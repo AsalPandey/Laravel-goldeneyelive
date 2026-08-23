@@ -2,7 +2,6 @@
 
 namespace App\Support;
 
-use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -18,17 +17,21 @@ final class Recaptcha
     {
         self::reportMisconfiguration();
 
-        return self::status() === self::Enabled;
+        if (self::bypassed()) {
+            return false;
+        }
+
+        return self::enabled() || app()->isProduction();
     }
 
     public static function siteKey(): ?string
     {
-        return self::filledSetting('recaptcha_site_key');
+        return self::filledConfig('services.recaptcha.site_key');
     }
 
     public static function secretKey(): ?string
     {
-        return self::filledSetting('recaptcha_secret_key');
+        return self::filledConfig('services.recaptcha.secret_key');
     }
 
     public static function status(): string
@@ -52,16 +55,23 @@ final class Recaptcha
         return self::status() === self::Enabled;
     }
 
+    public static function bypassed(): bool
+    {
+        return (bool) config('services.recaptcha.bypass', false)
+            && app()->environment(['local', 'testing']);
+    }
+
     public static function reportMisconfiguration(): void
     {
-        if (self::status() !== self::Misconfigured) {
+        if (self::enabled() || self::bypassed()) {
             return;
         }
 
-        Log::warning('reCAPTCHA configuration is incomplete; public challenges are disabled.', [
-            'missing_key' => self::siteKey() === null
-                ? 'recaptcha_site_key'
-                : 'recaptcha_secret_key',
+        Log::log(app()->isProduction() ? 'critical' : 'warning', 'reCAPTCHA is not fully configured.', [
+            'environment' => app()->environment(),
+            'verification_mode' => app()->isProduction() ? 'fail_closed' : 'disabled',
+            'site_key_present' => self::siteKey() !== null,
+            'secret_key_present' => self::secretKey() !== null,
         ]);
     }
 
@@ -94,9 +104,9 @@ final class Recaptcha
         }
     }
 
-    private static function filledSetting(string $key): ?string
+    private static function filledConfig(string $key): ?string
     {
-        $value = SiteSetting::getValue($key);
+        $value = config($key);
 
         if (! is_string($value) || trim($value) === '') {
             return null;

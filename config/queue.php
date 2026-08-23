@@ -15,6 +15,8 @@ return [
 
     'default' => env('QUEUE_CONNECTION', 'database'),
 
+    'worker_strategy' => env('QUEUE_WORKER_STRATEGY'),
+
     /*
     |--------------------------------------------------------------------------
     | Queue Connections

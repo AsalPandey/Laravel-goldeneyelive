@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Mail\ContactMail;
 use App\Models\Contact;
-use App\Models\SiteSetting;
 use App\Models\User;
 use App\Support\Recaptcha;
 use Database\Seeders\RoleSeeder;
@@ -58,7 +57,10 @@ class RecaptchaConfigurationTest extends TestCase
         Mail::fake();
         Log::spy();
 
-        SiteSetting::create($configuredKey + ['type' => 'text']);
+        config([
+            'services.recaptcha.bypass' => false,
+            'services.recaptcha.'.($configuredKey['key'] === 'recaptcha_site_key' ? 'site_key' : 'secret_key') => $configuredKey['value'],
+        ]);
 
         $this->assertSame(Recaptcha::Misconfigured, Recaptcha::status());
         $this->assertFalse(Recaptcha::challengeRequired());
@@ -74,9 +76,12 @@ class RecaptchaConfigurationTest extends TestCase
 
         $this->assertDatabaseHas(Contact::class, ['email' => 'asha@example.com']);
 
-        Log::shouldHaveReceived('warning')
-            ->with('reCAPTCHA configuration is incomplete; public challenges are disabled.', [
-                'missing_key' => $missingKey,
+        Log::shouldHaveReceived('log')
+            ->with('warning', 'reCAPTCHA is not fully configured.', [
+                'environment' => 'testing',
+                'verification_mode' => 'disabled',
+                'site_key_present' => $missingKey !== 'recaptcha_site_key',
+                'secret_key_present' => $missingKey !== 'recaptcha_secret_key',
             ])
             ->atLeast()
             ->once();
@@ -198,34 +203,26 @@ class RecaptchaConfigurationTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('Admin');
 
-        SiteSetting::create([
-            'key' => 'recaptcha_site_key',
-            'value' => 'site-key',
-            'type' => 'text',
+        config([
+            'services.recaptcha.bypass' => false,
+            'services.recaptcha.site_key' => 'site-key',
+            'services.recaptcha.secret_key' => null,
         ]);
 
         $this->actingAs($admin)
             ->get(route('admin.branding.index'))
             ->assertOk()
-            ->assertSee('Configuration incomplete: add the missing reCAPTCHA key.', false)
-            ->assertSee('Public challenges remain safely disabled until both keys are saved.', false);
+            ->assertSee('Configuration incomplete: the deployment readiness check will fail and production submissions fail closed.', false)
+            ->assertSee('Credentials are environment-managed', false);
     }
 
     private function configureBothKeys(): void
     {
-        SiteSetting::create([
-            'key' => 'recaptcha_site_key',
-            'value' => 'site-key',
-            'type' => 'text',
+        config([
+            'services.recaptcha.bypass' => false,
+            'services.recaptcha.site_key' => 'site-key',
+            'services.recaptcha.secret_key' => 'secret-key',
         ]);
-        SiteSetting::create([
-            'key' => 'recaptcha_secret_key',
-            'value' => 'secret-key',
-            'type' => 'text',
-        ]);
-
-        cache()->forget('setting_recaptcha_site_key');
-        cache()->forget('setting_recaptcha_secret_key');
     }
 
     /**

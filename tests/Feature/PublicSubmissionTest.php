@@ -8,7 +8,6 @@ use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\JoinNowQuery;
 use App\Models\NewsLetter;
-use App\Models\SiteSetting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -278,10 +277,9 @@ class PublicSubmissionTest extends TestCase
         Mail::fake();
         Log::spy();
 
-        SiteSetting::create([
-            'key' => 'recaptcha_secret_key',
-            'value' => 'some_secret',
-            'type' => 'text',
+        config([
+            'services.recaptcha.bypass' => false,
+            'services.recaptcha.secret_key' => 'some_secret',
         ]);
 
         $response = $this->from(route('contact'))->post(route('contact-submit'), [
@@ -300,9 +298,12 @@ class PublicSubmissionTest extends TestCase
             'email' => 'asha@example.com',
         ]);
 
-        Log::shouldHaveReceived('warning')
-            ->with('reCAPTCHA configuration is incomplete; public challenges are disabled.', [
-                'missing_key' => 'recaptcha_site_key',
+        Log::shouldHaveReceived('log')
+            ->with('warning', 'reCAPTCHA is not fully configured.', [
+                'environment' => 'testing',
+                'verification_mode' => 'disabled',
+                'site_key_present' => false,
+                'secret_key_present' => true,
             ])
             ->once();
     }
@@ -314,16 +315,10 @@ class PublicSubmissionTest extends TestCase
             'https://www.google.com/recaptcha/api/siteverify' => Http::response(['success' => true]),
         ]);
 
-        SiteSetting::create([
-            'key' => 'recaptcha_site_key',
-            'value' => 'site-key',
-            'type' => 'text',
-        ]);
-
-        SiteSetting::create([
-            'key' => 'recaptcha_secret_key',
-            'value' => 'secret-key',
-            'type' => 'text',
+        config([
+            'services.recaptcha.bypass' => false,
+            'services.recaptcha.site_key' => 'site-key',
+            'services.recaptcha.secret_key' => 'secret-key',
         ]);
 
         $response = $this->from(route('contact'))->post(route('contact-submit'), [
@@ -348,7 +343,7 @@ class PublicSubmissionTest extends TestCase
         Mail::assertQueued(ContactMail::class);
     }
 
-    public function test_production_without_recaptcha_keys_keeps_form_usable_without_a_misconfiguration_warning(): void
+    public function test_production_without_recaptcha_keys_fails_closed_and_logs_a_critical_error(): void
     {
         Mail::fake();
         Log::spy();
@@ -362,14 +357,24 @@ class PublicSubmissionTest extends TestCase
             'message' => 'I want to know more about IELTS classes.',
         ]);
 
-        $response->assertRedirect(route('contact'));
+        $response
+            ->assertRedirect(route('contact'))
+            ->assertSessionHasErrors('g-recaptcha-response');
 
-        $this->assertDatabaseHas(Contact::class, [
+        $this->assertDatabaseMissing(Contact::class, [
             'email' => 'asha@example.com',
             'subject' => 'Course question',
         ]);
 
-        Log::shouldNotHaveReceived('warning');
+        Log::shouldHaveReceived('log')
+            ->with('critical', 'reCAPTCHA is not fully configured.', [
+                'environment' => 'production',
+                'verification_mode' => 'fail_closed',
+                'site_key_present' => false,
+                'secret_key_present' => false,
+            ])
+            ->atLeast()
+            ->once();
     }
 
     public function test_join_now_form_fails_with_invalid_course_slug(): void

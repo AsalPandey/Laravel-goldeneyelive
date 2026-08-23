@@ -182,7 +182,7 @@
                 <!-- Map Section -->
                 <div class="col-12 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="premium-card p-2 h-100 shadow-lg rounded-xl overflow-hidden" style="min-height: 300px;">
-                        @if(isset($settings['google_maps_embed']) && !empty($settings['google_maps_embed']))
+                        @if(\App\Rules\ApprovedMapEmbedUrl::isValid($settings['google_maps_embed'] ?? null))
                             <iframe class="w-100 h-100" src="{{ $settings['google_maps_embed'] }}" title="Map showing Golden Eye Academy in Pokhara" loading="lazy" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
                         @else
                             <iframe class="w-100 h-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1687.7949561082255!2d83.98105790540313!3d28.212102922025796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399595ac8d5df7a3%3A0x1971ef66310b97ae!2sGolden%20Eye%20Academy!5e0!3m2!1sen!2snp!4v1725470686886!5m2!1sen!2snp" title="Map showing Golden Eye Academy in Pokhara" loading="lazy" frameborder="0" style="border:0;" allowfullscreen=""></iframe>

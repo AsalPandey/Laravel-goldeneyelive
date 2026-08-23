@@ -169,8 +169,6 @@ class BrandingController extends Controller
         'popup_title',
         'privacy_header_title',
         'privacy_policy_content',
-        'recaptcha_secret_key',
-        'recaptcha_site_key',
         'recent_posts_title',
         'robots_txt',
         'schema_markup',
@@ -210,7 +208,7 @@ class BrandingController extends Controller
      */
     const SENSITIVE_KEYS = [
         'bing_webmaster_id', 'google_analytics_id', 'google_maps_embed', 'google_search_console_id',
-        'recaptcha_site_key', 'recaptcha_secret_key', 'robots_txt',
+        'robots_txt',
         'image_size_limit', 'geo_latitude', 'geo_longitude',
         'schema_markup', 'aeo_summary', 'site_name', 'site_name_suffix', 'speakable_selectors',
     ];
@@ -313,12 +311,8 @@ class BrandingController extends Controller
                     continue;
                 }
 
-                // Sanitize Google Maps: Extract src if user pastes full iframe
+                // BrandingRequest safely extracts and validates Google Maps iframe URLs.
                 $value = $validated[$key] ?? '';
-                if ($key === 'google_maps_embed' && str_contains($value, '<iframe')) {
-                    preg_match('/src=["\']([^"\']+)["\']/', $value, $match);
-                    $value = $match[1] ?? $value;
-                }
 
                 // JSON-LD Validation for Schema Markup
                 if ($key === 'schema_markup' && $value) {

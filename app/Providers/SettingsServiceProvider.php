@@ -6,6 +6,7 @@ use App\Models\CourseCategory;
 use App\Models\FAQ;
 use App\Models\Notice;
 use App\Models\SiteSetting;
+use App\Support\PublicSiteCache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -28,7 +29,7 @@ class SettingsServiceProvider extends ServiceProvider
     {
         // Share settings and FAQs with relevant views with efficient caching
         View::composer(['site.*', 'errors.*', 'admin.dashboard'], function ($view) {
-            $viewData = cache()->remember('site_shared_data', 3600, function () {
+            $viewData = cache()->remember('site_shared_data', PublicSiteCache::secondsUntilNoticeTransition(), function () {
                 $settings = [];
                 $footerFaqs = [];
                 $activeNotice = null;

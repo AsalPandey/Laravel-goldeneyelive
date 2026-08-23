@@ -13,6 +13,7 @@ use App\Models\SiteSetting;
 use App\Models\Teacher;
 use App\Models\Testimonial;
 use App\Support\CmsPublicContent;
+use App\Support\PublicSiteCache;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 
@@ -23,14 +24,20 @@ class SiteController extends Controller
      */
     public function index()
     {
-        $viewData = cache()->remember('homepage_data', 3600, function () {
-            return $this->getHomepageData();
+        $cachedData = cache()->remember('homepage_data', PublicSiteCache::secondsUntilNoticeTransition(), function (): array {
+            return $this->homepageDataForCache();
         });
 
-        // Defensive check against cache corruption
-        if (! isset($viewData['courses']) || ! ($viewData['courses'] instanceof Collection)) {
-            $viewData = $this->getHomepageData();
+        if (! $this->isPortableHomepageCache($cachedData)) {
+            cache()->forget('homepage_data');
+            $cachedData = $this->homepageDataForCache();
+            cache()->put('homepage_data', $cachedData, PublicSiteCache::secondsUntilNoticeTransition());
         }
+
+        $viewData = collect($cachedData)
+            ->map(fn (array $items): Collection => collect($items)
+                ->map(fn (array $item): object => json_decode(json_encode($item), false, 512, JSON_THROW_ON_ERROR)))
+            ->all();
 
         return view('site.index', $viewData);
     }
@@ -77,16 +84,44 @@ class SiteController extends Controller
         ];
     }
 
+    /**
+     * Cache only portable arrays, never serialized Eloquent model instances.
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    protected function homepageDataForCache(): array
+    {
+        return collect($this->getHomepageData())
+            ->map(fn (Collection $items): array => $items->toArray())
+            ->all();
+    }
+
+    private function isPortableHomepageCache(mixed $cachedData): bool
+    {
+        $expectedKeys = ['courses', 'teachers', 'testimonials', 'posts', 'servicePillars', 'faqs', 'notices', 'categories'];
+
+        if (! is_array($cachedData) || array_diff($expectedKeys, array_keys($cachedData)) !== []) {
+            return false;
+        }
+
+        return collect($expectedKeys)->every(function (string $key) use ($cachedData): bool {
+            return is_array($cachedData[$key])
+                && collect($cachedData[$key])->every(fn (mixed $item): bool => is_array($item));
+        });
+    }
+
     public function about()
     {
-        $teachers = cache()->remember('about_teachers', 3600, function () {
-            return Teacher::where('status', 'active')->orderByDesc('is_featured')->latest()->get();
+        $teacherRows = cache()->remember('about_teachers', 3600, function (): array {
+            return Teacher::where('status', 'active')->orderByDesc('is_featured')->latest()->get()->toArray();
         });
 
-        // Defensive check against cache corruption or incomplete classes
-        if (! ($teachers instanceof Collection)) {
-            $teachers = Teacher::where('status', 'active')->orderByDesc('is_featured')->latest()->get();
+        if (! is_array($teacherRows)) {
+            cache()->forget('about_teachers');
+            $teacherRows = Teacher::where('status', 'active')->orderByDesc('is_featured')->latest()->get()->toArray();
         }
+
+        $teachers = collect($teacherRows)->map(fn (array $teacher): object => (object) $teacher);
 
         return view('site.about.about', [
             'teachers' => $teachers,
@@ -147,13 +182,16 @@ class SiteController extends Controller
      */
     public function faq()
     {
-        $faqs = cache()->remember('site_faqs', 3600, function () {
-            return FAQ::where('status', 'active')->orderBy('order_priority', 'asc')->latest()->get();
+        $faqRows = cache()->remember('site_faqs', 3600, function (): array {
+            return FAQ::where('status', 'active')->orderBy('order_priority', 'asc')->latest()->get()->toArray();
         });
 
-        if (! ($faqs instanceof Collection)) {
-            $faqs = FAQ::where('status', 'active')->orderBy('order_priority', 'asc')->latest()->get();
+        if (! is_array($faqRows)) {
+            cache()->forget('site_faqs');
+            $faqRows = FAQ::where('status', 'active')->orderBy('order_priority', 'asc')->latest()->get()->toArray();
         }
+
+        $faqs = collect($faqRows)->map(fn (array $faq): object => (object) $faq);
 
         return view('site.faq.faq', [
             'faqs' => $faqs,

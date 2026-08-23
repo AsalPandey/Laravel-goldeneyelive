@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Http\Controllers\Admin\BrandingController;
 use App\Models\SiteSetting;
+use App\Rules\ApprovedMapEmbedUrl;
 use App\Support\CmsPublicContent;
 use App\Support\PublicCtaContract;
 use Illuminate\Foundation\Http\FormRequest;
@@ -18,7 +19,15 @@ class BrandingRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $this->merge(PublicCtaContract::normalizeBrandingPayload($this->all()));
+        $payload = PublicCtaContract::normalizeBrandingPayload($this->all());
+        $mapEmbed = $payload['google_maps_embed'] ?? null;
+
+        if (is_string($mapEmbed) && str_contains(strtolower($mapEmbed), '<iframe')) {
+            preg_match('/src=["\']([^"\']+)["\']/i', $mapEmbed, $match);
+            $payload['google_maps_embed'] = $match[1] ?? $mapEmbed;
+        }
+
+        $this->merge($payload);
     }
 
     public function withValidator(Validator $validator): void
@@ -80,12 +89,10 @@ class BrandingRequest extends FormRequest
             'google_business_profile_url' => ['nullable', 'url', 'max:255'],
             'external_review_proof_note' => ['nullable', 'string', 'max:500'],
             'google_analytics_id' => ['nullable', 'string', 'regex:/^G-[a-zA-Z0-9-]+$/'],
-            'recaptcha_site_key' => ['nullable', 'string', 'max:255'],
-            'recaptcha_secret_key' => ['nullable', 'string', 'max:255'],
             'opening_hours' => ['nullable', 'string', 'max:255'],
             'geo_latitude' => ['nullable', 'string', 'max:255'],
             'geo_longitude' => ['nullable', 'string', 'max:255'],
-            'google_maps_embed' => ['nullable', 'string'],
+            'google_maps_embed' => ['nullable', 'string', 'max:2048', new ApprovedMapEmbedUrl],
             'schema_markup' => ['nullable', 'string'],
             'meta_keywords' => ['nullable', 'string'],
             'image_size_limit' => ['nullable', 'integer', 'min:512', 'max:10240'],
