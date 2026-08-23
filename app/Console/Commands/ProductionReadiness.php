@@ -75,7 +75,13 @@ class ProductionReadiness extends Command
     private function databaseChecks(): void
     {
         $connection = (string) config('database.default');
-        $this->record('PASS', 'Database connection', $connection);
+        $productionConnectionReady = ! app()->isProduction()
+            || in_array($connection, ['mysql', 'mariadb'], true);
+        $this->record(
+            $productionConnectionReady ? 'PASS' : 'FAIL',
+            'Database connection',
+            $productionConnectionReady ? $connection : "{$connection}; production requires MySQL/MariaDB",
+        );
 
         try {
             DB::connection()->getPdo();
@@ -150,7 +156,14 @@ class ProductionReadiness extends Command
 
     private function filesystemAndBuildChecks(): void
     {
-        foreach ([storage_path(), storage_path('framework'), base_path('bootstrap/cache')] as $path) {
+        foreach ([
+            storage_path(),
+            storage_path('app'),
+            storage_path('framework'),
+            storage_path('logs'),
+            base_path('bootstrap/cache'),
+            public_path('site/img'),
+        ] as $path) {
             $this->record(is_dir($path) && is_writable($path) ? 'PASS' : 'FAIL', 'Writable path', $path);
         }
 

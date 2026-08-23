@@ -150,6 +150,31 @@ class Phase4SecurityInfrastructureTest extends TestCase
         $this->assertSame(0, $exitCode, $output);
         $this->assertStringContainsString('CAPTCHA protection', $output);
         $this->assertStringContainsString('Course-FAQ schema', $output);
+        $this->assertStringContainsString(storage_path('logs'), $output);
+        $this->assertStringContainsString(public_path('site/img'), $output);
+    }
+
+    public function test_production_readiness_rejects_a_non_mysql_database_connection(): void
+    {
+        $this->app->detectEnvironment(fn (): string => 'production');
+        config([
+            'app.url' => 'https://goldeneye.example',
+            'app.debug' => false,
+            'services.recaptcha.site_key' => 'present',
+            'services.recaptcha.secret_key' => 'present',
+            'security.csp_report_only' => false,
+            'queue.default' => 'sync',
+            'mail.default' => 'smtp',
+            'mail.mailers.smtp.host' => 'smtp.goldeneye.example',
+            'mail.from.address' => 'no-reply@goldeneye.example',
+            'database.default' => 'sqlite',
+        ]);
+
+        $exitCode = Artisan::call('app:production-readiness', ['--skip-dependency-audits' => true]);
+        $output = Artisan::output();
+
+        $this->assertSame(1, $exitCode, $output);
+        $this->assertStringContainsString('production requires MySQL/MariaDB', $output);
     }
 
     public function test_production_readiness_fails_when_captcha_is_missing(): void

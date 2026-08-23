@@ -2,7 +2,7 @@
 
 ## Purpose and release boundary
 
-This is the single deployment checklist for the release based on commit `2b29130e857827c93745cc3e94cc5eb1d53c567f` and the Phase 9 documentation commit that follows it. It covers release verification, backups, migration rehearsal, security, production CMS review, deployment, smoke testing, and rollback.
+This is the single deployment checklist for the authoritative `release/goldeneye-recovery` candidate based on `0e2a2af85362ae0339a0542fa4bb57b6e469e8e5` plus the Phase 6 rehearsal documentation commit. Record and approve the final immutable release commit before deployment. This guide covers release verification, backups, MySQL/MariaDB migration rehearsal, security, production CMS review, deployment, smoke testing, and rollback.
 
 This document does not authorize a deployment. The owner must approve a deployment window after every stop/go item below is complete. Do not push, merge, deploy, access production, import an old database dump, or run production seeders as part of local release preparation.
 
@@ -43,8 +43,8 @@ Record the result, reviewer, and time for every item. A failed item is a stop co
 | Node build | Vite 8.0.16 and PostCSS 8.5.24 | The verified `public/build` is committed; Node is not required on production unless the owner authorizes an off-host rebuild |
 | Web root | Laravel `public/` directory | Do not expose `.env`, `vendor`, `storage`, or application source through the web root |
 | Writable paths | `storage/`, `bootstrap/cache/`, and CMS upload folders below `public/site/img/` | Grant the web user only the required write access |
-| Queue | Database queue is the documented default | Configure a persistent worker or an approved scheduled worker before relying on queued mail |
-| Scheduler | No scheduled tasks are currently registered | No scheduler is required for this release; reassess when scheduled tasks are added |
+| Queue | Database queue with `QUEUE_WORKER_STRATEGY=cron` is the shared-hosting default | Laravel schedules a bounded queue drain every minute; do not rely on queued mail until the host cron is verified |
+| Scheduler | Queue drain every minute; failed-job pruning daily | Configure Hostinger cron to run Laravel `schedule:run` every minute using the account's verified PHP 8.4 binary/path |
 
 Laravel's required extensions must be available under the same PHP 8.4 runtime used by the site: cURL, DOM/XML/libxml, fileinfo, filter, hash, mbstring, OpenSSL, PCRE, PDO with the production database driver, session, and tokenizer. Confirm with the Hostinger PHP extensions interface and `composer check-platform-reqs --no-dev` after installation.
 
@@ -93,7 +93,7 @@ ORDER BY duplicate_count DESC, normalized_email;
 - No rows: record the result and continue.
 - Any row: stop the deployment. The owner must decide which subscription record to retain after reviewing consent and provenance. Back up the table, resolve duplicates deliberately, rerun the query, and obtain approval. Do not delete or merge subscribers automatically.
 
-The isolated rehearsal verified that the migration preserves representative users, roles, courses, categories, blogs, FAQs, faculty, testimonials, inquiries, and subscribers; normalizes newsletter email casing/whitespace; adds the unique index; and archives inquiry records through soft-delete fields. A deliberate duplicate caused the migration to stop before making those schema changes. This rehearsal used SQLite and does not replace the production backup or live MySQL/MariaDB preflight.
+The Phase 6 rehearsal verified the complete migration chain on MariaDB 10.4.32 with strict SQL mode and `utf8mb4_unicode_ci`. It also reproduced the legacy `course_faq` schema from repository migration history, loaded representative operational rows from a checksum-verified read-only source, and applied the four remaining release migrations without truncation, duplicate-key, foreign-key, or strict-mode failure. Fresh and legacy rehearsals do not replace the production backup, restore test, newsletter duplicate preflight, or live MySQL/MariaDB version check.
 
 Before deployment, review pending migrations under the PHP 8.4 production configuration:
 
@@ -107,7 +107,7 @@ Apply only after the backup and duplicate gates pass:
 php artisan migrate --force
 ```
 
-Do not run `db:seed`, `migrate:fresh`, `migrate:refresh`, or any content-normalization command in production.
+Do not run `db:seed`, `migrate:fresh`, `migrate:refresh`, `db:wipe`, or an unapproved content-normalization command in production. The only approved release-data command is `course-faq:apply-deployment-data`, and it must follow the dry-run/apply/second-dry-run sequence in section 10.
 
 ## 6. Production configuration checklist
 
@@ -117,11 +117,13 @@ Set secrets directly in the production environment. Never paste values into tick
 - [ ] `APP_DEBUG=false`
 - [ ] `APP_URL` is the exact canonical HTTPS production origin, with no staging hostname.
 - [ ] `APP_KEY` is the existing production key; do not regenerate it on an existing encrypted application.
-- [ ] Database host, port, name, user, password, charset, and collation are production-only and tested.
+- [ ] `DB_CONNECTION=mysql`; `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` are production-only and tested. Do not commit or print their values.
 - [ ] `SESSION_SECURE_COOKIE=true`; session domain/path match the canonical host; HTTPS is enforced at the server/proxy.
-- [ ] Cache, session, and queue drivers match available infrastructure and required database tables.
-- [ ] SMTP host, port, encryption, username, password, sender name, and sender address are verified without exposing credentials.
-- [ ] CAPTCHA public/secret keys belong to the exact production domain. A missing or partial key pair is a stop condition for protected forms.
+- [ ] Cache and session drivers match available infrastructure and required tables.
+- [ ] `QUEUE_CONNECTION=database` and `QUEUE_WORKER_STRATEGY=cron` are set for the documented shared-hosting strategy.
+- [ ] `MAIL_MAILER=smtp`; `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_ENCRYPTION`/TLS choice, `MAIL_FROM_ADDRESS`, and `MAIL_FROM_NAME` are owner-verified without exposing credentials.
+- [ ] `RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY` belong to the exact production domain. A missing or partial key pair is a stop condition for protected forms. Local/testing bypass is never enabled in production.
+- [ ] `CSP_REPORT_ONLY=true` for first-live acceptance. Review violation reports, fix legitimate sources, then change to enforcement only in a separately approved change.
 - [ ] `LOG_LEVEL` and log rotation are suitable for production; logs are outside public access.
 - [ ] Staging remains globally protected from indexing. Production robots and canonicals must not inherit staging settings.
 - [ ] `APP_URL` alone supplies the production origin used by canonical and sitemap URLs; verify after configuration caching.
@@ -143,17 +145,31 @@ Verify:
 - `php artisan storage:link` resolves `public/storage` to `storage/app/public` where symlinks are supported;
 - CMS-managed image directories are writable by the web user without making the whole application writable.
 
-### Mail and queue
+### Mail, queue, and scheduler
 
 Contact and course-interest records are saved before queued notification mail is attempted, but staff still need a reliable handover channel.
 
 - [ ] Send a controlled SMTP test to an owner-approved address.
 - [ ] Confirm password-reset mail and inquiry notifications arrive and are not marked as spam.
-- [ ] Choose and document a persistent queue worker, Hostinger-supported worker/cron pattern, or the explicit `sync` fallback.
-- [ ] If using a worker, start/restart it after deployment and monitor failed jobs.
-- [ ] If using `sync`, acknowledge that mail runs during the visitor request even though inquiry persistence is protected.
+- [ ] Set `QUEUE_CONNECTION=database` and `QUEUE_WORKER_STRATEGY=cron` for shared hosting.
+- [ ] Confirm `php artisan schedule:list` includes `queue:work --stop-when-empty --tries=3 --timeout=60` every minute with overlap protection and `queue:prune-failed --hours=720` daily.
+- [ ] Configure the Hostinger cron to invoke `php artisan schedule:run` every minute. Confirm the account-specific PHP 8.4 binary and absolute application path in Phase 7; do not guess them.
+- [ ] Submit one controlled inquiry, confirm its database row exists before notification processing, run the queue drain, and inspect `jobs`, `failed_jobs`, and application logs.
+- [ ] Monitor failed jobs after deployment. A mail failure must not remove the already-persisted inquiry.
 
-No scheduled tasks are registered in this release. Do not add an unnecessary scheduler cron. Revisit this when `php artisan schedule:list` shows application tasks.
+The Phase 6 disposable MariaDB rehearsal inserted and processed database jobs, demonstrated the three-attempt failure path, recorded the failed job, and retained the inquiry. This is evidence for application behavior, not evidence that the live SMTP account or Hostinger cron is configured.
+
+### Database backup and restore command pattern
+
+Use the Hostinger/account-approved MySQL tools and credential mechanism. Never put a password directly in shell history or this guide. Substitute verified deployment-time variables for every angle-bracket value:
+
+```bash
+mysqldump --host=<DB_HOST> --port=<DB_PORT> --user=<DB_USERNAME> --single-transaction --routines --triggers --default-character-set=utf8mb4 <DB_DATABASE> > <EXTERNAL_BACKUP_PATH>/goldeneye-predeploy-<TIMESTAMP>.sql
+sha256sum <EXTERNAL_BACKUP_PATH>/goldeneye-predeploy-<TIMESTAMP>.sql
+mysql --host=<RESTORE_HOST> --port=<RESTORE_PORT> --user=<RESTORE_USERNAME> <DISPOSABLE_RESTORE_DATABASE> < <EXTERNAL_BACKUP_PATH>/goldeneye-predeploy-<TIMESTAMP>.sql
+```
+
+Before approval, restore into a separately named disposable database, compare critical row counts, run table/foreign-key consistency checks, and require exactly 68 approved Course–FAQ assignments after the approved data command. Never test a restore over the live database.
 
 ## 8. Security and access checklist
 
@@ -197,44 +213,37 @@ For each CMS change, record the editor, approver, old value, new value, preview 
 
 ## 10. Deployment sequence
 
-Run commands from the application directory under PHP 8.4. Adjust only the executable name/path required by Hostinger; do not alter command intent.
+Run commands from the application directory under the account's verified PHP 8.4 CLI. Replace only deployment-time paths and credentials; do not alter command intent.
 
-1. Reconfirm backups, duplicate preflight, CMS decision log, exact release commit, and rollback owner.
-2. In hPanel, select PHP 8.4 for Golden Eye Academy. Confirm both the web runtime and SSH/Composer runtime report PHP 8.4.
-3. Put the current site in maintenance mode during the approved window:
+1. Obtain owner approval for the exact release commit, deployment window, smoke-test owner, and rollback decision-maker.
+2. Record current release/commit, database server/version, migration status, critical table counts, and media fingerprints.
+3. Create the complete live database backup outside the web root. Hash it and verify restore into a disposable database.
+4. Back up `public/site/img/`, `storage/app/`, the public-storage target if used, and the production `.env` to protected storage.
+5. Require the newsletter duplicate preflight to return no rows and confirm the protected-source/reference fingerprints have no discrepancy.
+6. Put the site into the approved maintenance/deployment state: `php artisan down`.
+7. Upload or switch to only the tracked files from the approved release. Preserve the production `.env`, uploads, and persistent storage.
+8. Confirm both web and CLI runtimes use PHP 8.4; run `composer check-platform-reqs --no-dev`.
+9. Install exactly the lockfile state: `composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction`.
+10. Confirm `public/build/manifest.json`, every referenced asset, and the approved hashes. Do not run dependency updates or an unreviewed host build.
+11. Configure the environment contract in section 6 without printing secrets, then run `php artisan optimize:clear`.
+12. Run `php artisan app:production-readiness --skip-dependency-audits` before migration. Database/data warnings expected only because release migrations or approved mappings are pending must be reviewed; every other critical check must pass.
+13. Review `php artisan migrate:status`, reconcile it with the approved release, then run `php artisan migrate --force` once.
+14. Run `php artisan course-faq:apply-deployment-data` in default dry-run mode.
+15. Review resolved courses/FAQs, metadata differences, additions, exclusions, and unexpected assignments. Stop on ambiguity, German A1 creation, Free Course metadata change, or unrelated content change.
+16. Run `php artisan course-faq:apply-deployment-data --apply` only after the dry-run is approved.
+17. Run `php artisan course-faq:apply-deployment-data` again and require the exact message `NO CHANGES REQUIRED`, 68 approved assignments, no German A1 creation, and untouched Free Course metadata.
+18. Apply least-privilege write permissions to `storage/app`, `storage/framework`, `storage/logs`, `bootstrap/cache`, and the existing CMS upload folders under `public/site/img/`.
+19. Run `php artisan storage:link` if `storage/app/public` is used; verify `public/storage` resolves to it. Do not overwrite an unrelated path.
+20. Configure the verified Hostinger cron to run Laravel `schedule:run` every minute; require the two expected entries in `php artisan schedule:list`.
+21. Confirm `QUEUE_CONNECTION=database`, `QUEUE_WORKER_STRATEGY=cron`, queue tables, overlap protection, and failed-job monitoring.
+22. Confirm owner-approved SMTP settings with a controlled recipient and production-domain reCAPTCHA keys without printing their values.
+23. Build production caches with `php artisan config:cache`, `php artisan route:cache`, and `php artisan view:cache` (or the equivalent `php artisan optimize`).
+24. Run final `php artisan app:production-readiness` and require zero critical failures. Separately require `composer audit --locked` and `npm audit` to report zero advisories.
+25. While still in maintenance mode, smoke-test authenticated CMS access through the approved maintenance bypass and verify logs, migrations, queue, storage, and critical database counts.
+26. Bring the site online with `php artisan up`, then run the public HTTPS, form, CAPTCHA, CMS, media, and mobile smoke tests in section 11.
+27. Verify logs, queue/failed jobs, inquiry counts/context, canonical/robots/sitemap output, and owner acceptance. Keep rollback backups until the retention owner approves disposal.
 
-   ```bash
-   php artisan down
-   ```
-
-4. Deploy only tracked application files from the approved commit. Preserve the production `.env`, persistent media, and storage.
-5. Install exactly the locked production dependencies:
-
-   ```bash
-   composer install --no-dev --optimize-autoloader --no-interaction
-   composer check-platform-reqs --no-dev
-   composer audit --locked --no-dev
-   ```
-
-6. Confirm `public/build/manifest.json` and its referenced asset are present. Do not run `npm update`, `composer update`, or an unreviewed production build.
-7. Clear stale caches, run approved migrations, create/verify the storage link, then cache production configuration:
-
-   ```bash
-   php artisan optimize:clear
-   php artisan migrate --force
-   php artisan storage:link
-   php artisan optimize
-   ```
-
-8. Apply least-privilege write permissions to `storage/`, `bootstrap/cache/`, and the existing CMS upload folders.
-9. Start/restart the approved queue mechanism and verify no immediate failed jobs.
-10. Bring the site online:
-
-   ```bash
-   php artisan up
-   ```
-
-11. Execute every smoke test in section 11. Do not make broad CMS edits during smoke testing.
+Never use `migrate:fresh`, `migrate:refresh`, `db:wipe`, seeders, manual bulk SQL, `composer update`, or `npm update` in this sequence.
 
 ## 11. Post-deployment smoke tests
 
@@ -281,7 +290,9 @@ Rollback is owner-approved incident handling, not an improvised code change.
 8. Bring the previous release online and repeat the critical smoke tests: homepage, catalogue/course, contact/join inquiry persistence, login/reset, CMS read access, call/WhatsApp, robots/sitemap, logs, and queue.
 9. Reconcile any inquiries or uploads received during the window. Record the incident, rollback point, restored backup hashes, and owner approval.
 
-Do not use `git reset --hard`, `migrate:fresh`, database seeders, or destructive bulk deletion as a production rollback method.
+Code rollback and database rollback are separate decisions. Code rollback restores the prior release files, lockfile, vendor set, and assets. Database rollback restores the verified pre-deployment MySQL backup whenever a migration or approved data command changed schema/data and forward recovery is not explicitly approved. The conservative `2026_08_06_230629_rebuild_course_faq_table`, `2026_08_23_173930_align_production_data_contracts`, `2026_08_23_211802_add_stable_public_trust_relationships`, and `2026_08_23_220350_create_blog_course_table` release migrations must not be treated as proof that `php artisan migrate:rollback` alone can restore the previous production state.
+
+Do not use `git reset --hard`, `migrate:fresh`, migration rollback by assumption, database seeders, or destructive bulk deletion as a production rollback method.
 
 ## 13. Staff handover and ongoing ownership
 
@@ -300,7 +311,38 @@ The owner should assign named people for:
 
 Staff must use draft/preview states where available, keep a change log, and escalate protected-product, slug, permission, database, validation, or production-error questions. Developer assistance is still required for deployments, migrations, dependency changes, schema changes, new CMS fields, recovery from failed releases, or defects that cannot be reversed through existing CMS controls.
 
-## 14. Release decision record
+## 14. STOP / DO NOT DEPLOY conditions
+
+Stop and retain maintenance state if any of these is true:
+
+- No complete pre-deployment database/media backup, missing checksum, or unverified disposable restore.
+- Wrong web or CLI PHP version, wrong/unknown database server or connection, or protected-source/hash discrepancy.
+- Failed fresh/legacy migration rehearsal, unexpected pending/unknown migration, duplicate newsletter preflight result, truncation, duplicate-key, strict-mode, or foreign-key error.
+- Ambiguous Phase 3 dry-run, missing target course/FAQ, unexpected assignment, anything other than exactly 68 approved assignments, German A1 creation, or Free Course metadata change.
+- Any critical `app:production-readiness` failure, invalid/missing `APP_KEY`, `APP_ENV` not production, `APP_DEBUG=true`, or incorrect non-HTTPS `APP_URL`.
+- Missing production-domain reCAPTCHA keys, evidence that testing bypass works in production, or a protected form that does not fail closed.
+- Missing/unwritable storage/cache/log/media path, wrong public document root, broken required storage link, or unrecoverable media.
+- Invalid queue strategy, absent scheduler cron, missing database queue tables, uncontrolled failed jobs, or required SMTP notification transport misconfiguration.
+- Missing/invalid build manifest, missing manifest asset, non-reproducible approved build, or Composer/npm advisory.
+- Critical CMS create/edit/relationship/media failure, inquiry/contact persistence/context failure, or double submission creating duplicate inquiries.
+- HTTPS/header/cookie configuration conflict, exposed `.env`/backup/source path, unexplained exception, or an unavailable rollback owner.
+
+Do not override a STOP condition by disabling a safety control. Correct it, repeat the affected rehearsal, and obtain a new owner decision.
+
+## 15. Owner actions still required for live deployment
+
+Code readiness does not supply or prove account-owned production configuration. The owner/deployer must provide and verify:
+
+- Hostinger MySQL/MariaDB host, port, database name, username, password, server version, backup access, and restore permissions.
+- Canonical domain, HTTPS certificate/proxy behavior, document root pointing to Laravel `public/`, and public-storage/symlink capability.
+- The existing production `APP_KEY`, production `.env` custody, secure-cookie/domain settings, and log retention/access.
+- Production-domain `RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY`; do not create or expose them in this runbook.
+- SMTP host, port, encryption/TLS mode, username, password, from identity, owner-approved controlled recipient, and delivery monitoring.
+- The exact Hostinger PHP 8.4 CLI binary, absolute application path, and cron command that invokes `schedule:run` every minute.
+- Verified Google Business Profile URL and official name/address/phone facts if they are to be published.
+- Named deployer, content approver, smoke-test owner, queue/log monitor, backup/restore owner, rollback decision-maker, deployment window, and prior release recovery point.
+
+## 16. Release decision record
 
 Complete this immediately before deployment:
 
@@ -320,4 +362,4 @@ Complete this immediately before deployment:
 | Rollback owner and previous release | |
 | Final owner go/no-go approval | |
 
-Local Phase 9 verification proves the repository, isolated migrations, production dependency installation, committed frontend build, route rendering, and test suite at the recorded commit. It does not prove Hostinger account configuration, live PHP/database versions, live SMTP/DNS, production secrets, production data quality, or third-party account ownership; those remain explicit owner deployment gates above.
+Phase 6 verification proves the recorded repository state, fresh and legacy strict-MariaDB migrations, approved data reconciliation, disposable backup/restore, relationship and CMS persistence, queue failure isolation, production cache compilation, locked dependency installation, reproducible frontend build, route rendering, and automated suite. It does not prove Hostinger account configuration, the live database/data quality, live SMTP/DNS/cron, production secrets, HTTPS proxy behavior, or third-party account ownership; those remain explicit owner deployment gates above.
