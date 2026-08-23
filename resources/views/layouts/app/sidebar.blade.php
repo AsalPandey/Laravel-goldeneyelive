@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @include('partials.head')
+        @vite(['resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
@@ -182,11 +183,13 @@
             window.GoldenEyeMediaVault = window.GoldenEyeMediaVault || {
                 currentPickerTarget: null,
                 currentPreviewTarget: null,
+                richTextSelectionCallback: null,
             };
 
             window.openMediaVault = function (targetId, previewId = null) {
                 window.GoldenEyeMediaVault.currentPickerTarget = document.querySelector(`input[name="${targetId}"]`);
                 window.GoldenEyeMediaVault.currentPreviewTarget = previewId ? document.getElementById(previewId) : null;
+                window.GoldenEyeMediaVault.richTextSelectionCallback = null;
                 
                 const modal = document.getElementById('mediaVaultModal');
                 modal.classList.remove('hidden');
@@ -194,8 +197,18 @@
                 fetchVaultAssets();
             };
 
+            window.openMediaVaultForRichText = function (selectionCallback) {
+                window.GoldenEyeMediaVault.currentPickerTarget = null;
+                window.GoldenEyeMediaVault.currentPreviewTarget = null;
+                window.GoldenEyeMediaVault.richTextSelectionCallback = selectionCallback;
+
+                document.getElementById('mediaVaultModal').classList.remove('hidden');
+                fetchVaultAssets();
+            };
+
             window.closeMediaVault = function () {
                 document.getElementById('mediaVaultModal').classList.add('hidden');
+                window.GoldenEyeMediaVault.richTextSelectionCallback = null;
             };
 
             window.copyPathToClipboard = function (path, btn) {
@@ -255,12 +268,18 @@
             };
 
             window.selectVaultAsset = function (path) {
+                const richTextSelectionCallback = window.GoldenEyeMediaVault.richTextSelectionCallback;
+                window.GoldenEyeMediaVault.richTextSelectionCallback = null;
+
                 if (window.GoldenEyeMediaVault.currentPickerTarget) {
                     window.GoldenEyeMediaVault.currentPickerTarget.value = path;
                 }
                 if (window.GoldenEyeMediaVault.currentPreviewTarget) {
                     const baseUrl = "{{ asset('') }}".replace(/\/$/, '');
                     window.GoldenEyeMediaVault.currentPreviewTarget.src = baseUrl + '/' + path.replace(/^\//, '');
+                }
+                if (richTextSelectionCallback) {
+                    richTextSelectionCallback(path);
                 }
                 closeMediaVault();
             };

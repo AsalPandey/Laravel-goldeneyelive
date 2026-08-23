@@ -37,7 +37,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Content</label>
-                    <textarea name="content" rows="10" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('content', $post->content) }}</textarea>
+                    <textarea name="content" rows="10" required data-cms-rich-text class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('content', $post->content) }}</textarea>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -104,18 +104,4 @@
             </form>
         </div>
     </div>
-    <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
-    <script>
-        function initBlogEditor() {
-            if (typeof CKEDITOR !== 'undefined' && document.querySelector('textarea[name="content"]')) {
-                CKEDITOR.replace('content', {
-                    height: 450,
-                    removeButtons: 'About',
-                    versionCheck: false 
-                });
-            }
-        }
-        document.addEventListener('DOMContentLoaded', initBlogEditor);
-        document.addEventListener('livewire:navigated', initBlogEditor);
-    </script>
 </x-layouts::app>

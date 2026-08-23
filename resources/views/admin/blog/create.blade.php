@@ -35,7 +35,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Content</label>
-                    <textarea name="content" rows="10" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('content') }}</textarea>
+                    <textarea name="content" rows="10" required data-cms-rich-text class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('content') }}</textarea>
                     @error('content') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
@@ -98,20 +98,7 @@
             </form>
         </div>
     </div>
-    <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
     <script>
-        function initBlogCreateEditor() {
-            if (typeof CKEDITOR !== 'undefined' && document.querySelector('textarea[name="content"]')) {
-                CKEDITOR.replace('content', {
-                    height: 400,
-                    removeButtons: 'About',
-                    versionCheck: false 
-                });
-            }
-        }
-        document.addEventListener('DOMContentLoaded', initBlogCreateEditor);
-        document.addEventListener('livewire:navigated', initBlogCreateEditor);
-
         document.addEventListener('livewire:navigated', () => {
             const blogTitle = document.getElementById('blog_title');
             if (blogTitle) {

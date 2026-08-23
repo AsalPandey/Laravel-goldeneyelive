@@ -15,7 +15,7 @@
 
                 <div>
                     <label class="premium-label">Detailed Response (Supports Rich Text)</label>
-                    <textarea name="answer" id="answer" rows="5" required class="premium-input h-auto p-3">{{ old('answer', $faq->answer) }}</textarea>
+                    <textarea name="answer" id="answer" rows="5" required data-cms-rich-text class="premium-input h-auto p-3">{{ old('answer', $faq->answer) }}</textarea>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -76,13 +76,5 @@
             </form>
         </div>
     </div>
-    <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace('answer', {
-            height: 300,
-            removeButtons: 'About',
-            versionCheck: false 
-        });
-    </script>
     </div>
 </x-layouts::app>

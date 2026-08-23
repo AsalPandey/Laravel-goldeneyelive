@@ -22,7 +22,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Bio</label>
-                    <textarea name="bio" rows="4" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('bio') }}</textarea>
+                    <textarea name="bio" rows="4" data-cms-rich-text class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('bio') }}</textarea>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -70,14 +70,4 @@
             </form>
         </div>
     </div>
-    <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
-    <script>
-        function initTeacherCreateEditor() {
-            if (typeof CKEDITOR !== 'undefined' && document.querySelector('textarea[name="bio"]')) {
-                CKEDITOR.replace('bio', { versionCheck: false });
-            }
-        }
-        document.addEventListener('DOMContentLoaded', initTeacherCreateEditor);
-        document.addEventListener('livewire:navigated', initTeacherCreateEditor);
-    </script>
 </x-layouts::app>

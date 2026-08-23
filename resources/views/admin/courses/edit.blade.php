@@ -95,12 +95,12 @@
 
                 <div>
                     <label class="premium-label">Full Curriculum Description</label>
-                    <textarea name="description" id="description" rows="3" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('description', $course->description) }}</textarea>
+                    <textarea name="description" id="description" rows="3" required data-cms-rich-text class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('description', $course->description) }}</textarea>
                 </div>
 
                 <div>
                     <label class="premium-label">Target Outcomes / Course Outline</label>
-                    <textarea name="course_outline" id="course_outline" rows="5" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('course_outline', $course->course_outline) }}</textarea>
+                    <textarea name="course_outline" id="course_outline" rows="5" required data-cms-rich-text class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('course_outline', $course->course_outline) }}</textarea>
                 </div>
 
                 <x-seo-aeo-fields :model="$course" :showTitle="false" />
@@ -181,21 +181,4 @@
             </form>
         </div>
     </div>
-    <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
-    <script>
-        function initEditors() {
-            if (typeof CKEDITOR !== 'undefined') {
-                if (document.querySelector('textarea[name="course_outline"]')) {
-                    CKEDITOR.replace('course_outline', { versionCheck: false });
-                }
-                if (document.querySelector('textarea[name="description"]')) {
-                    CKEDITOR.replace('description', { versionCheck: false });
-                }
-            }
-        }
-
-        // Support standard load and Livewire navigation
-        document.addEventListener('DOMContentLoaded', initEditors);
-        document.addEventListener('livewire:navigated', initEditors);
-    </script>
 </x-layouts::app>

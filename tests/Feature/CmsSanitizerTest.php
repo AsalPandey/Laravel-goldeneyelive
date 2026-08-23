@@ -53,6 +53,9 @@ HTML;
 <style>body { display: none; }</style>
 <iframe src="https://example.com">frame fallback</iframe>
 <object data="https://example.com">object fallback</object>
+<embed src="https://example.com/malicious">
+<svg><script>window.svgInjected = true;</script><foreignObject><img src="/site/img/safe.png" onload="alert(1)"></foreignObject></svg>
+<math><mtext><table><mglyph><style><img src=x onload="window.mathInjected = true"></style></mglyph></table></mtext></math>
 <a href="java&#x0A;script:alert(1)" onmouseover="alert(1)">Bad link</a>
 <a href="data:text/html,&lt;script&gt;alert(1)&lt;/script&gt;">Data link</a>
 <a href="http://example.com">Insecure external link</a>
@@ -72,6 +75,12 @@ HTML;
         $this->assertStringNotContainsString('frame fallback', $sanitized);
         $this->assertStringNotContainsString('<object', $sanitized);
         $this->assertStringNotContainsString('object fallback', $sanitized);
+        $this->assertStringNotContainsString('<embed', $sanitized);
+        $this->assertStringNotContainsString('<svg', $sanitized);
+        $this->assertStringNotContainsString('svgInjected', $sanitized);
+        $this->assertStringNotContainsString('<math', $sanitized);
+        $this->assertStringNotContainsString('mathInjected', $sanitized);
+        $this->assertStringNotContainsString('onload=', $sanitized);
         $this->assertStringNotContainsString('onclick=', $sanitized);
         $this->assertStringNotContainsString('onmouseover=', $sanitized);
         $this->assertStringNotContainsString('onerror=', $sanitized);

@@ -1,5 +1,4 @@
 <x-layouts::app :title="__('Website Brand Authority')">
-    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     @if($errors->any())
         @php
             foreach (old() as $oldKey => $oldValue) {
@@ -332,7 +331,7 @@
                             </div>
                             <div class="md:col-span-2">
                                 <label class="premium-label">Hero Sub-Heading (Rich Text)</label>
-                                <textarea name="hero_subtitle" id="editor_hero_subtitle" rows="3" class="premium-input h-auto py-3">{{ $settings['hero_subtitle'] ?? '' }}</textarea>
+                                <textarea name="hero_subtitle" id="editor_hero_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ $settings['hero_subtitle'] ?? '' }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -351,7 +350,7 @@
                         <p class="text-sm text-zinc-500">Edit content for existing public pages.</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-4">
-                        <button type="button" onclick="initVisibleEditor()" class="text-[10px] font-black uppercase text-zinc-400 hover:text-[#C5A059] transition-all flex items-center gap-1">
+                        <button type="button" onclick="window.GoldenEyeRichTextEditor?.initialize(document)" class="text-[10px] font-black uppercase text-zinc-400 hover:text-[#C5A059] transition-all flex items-center gap-1">
                             <i class="fa fa-sync-alt"></i> Visual Refresh
                         </button>
                         <select id="pageEditorSelector" onchange="switchPageEditor(this.value)" class="premium-input w-72 h-12 text-[10px] font-black uppercase border-zinc-100 shadow-sm focus:ring-4 focus:ring-[#C5A059]/10">
@@ -415,7 +414,7 @@
                                 </div>
                                 <div>
                                     <label class="premium-label">Section Summary Text (Rich Text)</label>
-                                    <textarea name="about_content" id="editor_about_summary" rows="4" class="premium-input h-auto py-3 leading-relaxed">{{ $settings['about_content'] ?? $settings['about_text'] ?? '' }}</textarea>
+                                    <textarea name="about_content" id="editor_about_summary" rows="4" data-cms-rich-text class="premium-input h-auto py-3 leading-relaxed">{{ $settings['about_content'] ?? $settings['about_text'] ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -453,7 +452,7 @@
                                     </div>
                                     <div>
                                         <label class="premium-label">The Message (Rich Text)</label>
-                                        <textarea name="founder_message" id="editor_founder_message" rows="5" class="premium-input h-auto py-4 leading-relaxed">{{ $settings['founder_message'] ?? '' }}</textarea>
+                                        <textarea name="founder_message" id="editor_founder_message" rows="5" data-cms-rich-text class="premium-input h-auto py-4 leading-relaxed">{{ $settings['founder_message'] ?? '' }}</textarea>
                                     </div>
                                 </div>
                                 <div class="space-y-6">
@@ -513,7 +512,7 @@
                         <div class="brand-card lg:col-span-2">
                             <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">MAIN ABOUT PAGE CONTENT</h3>
                             <div class="border rounded-2xl overflow-hidden shadow-sm">
-                                <textarea name="about_page_content" id="editor_about" class="w-full min-h-[400px]">{{ $settings['about_page_content'] ?? '' }}</textarea>
+                                <textarea name="about_page_content" id="editor_about" data-cms-rich-text class="w-full min-h-[400px]">{{ $settings['about_page_content'] ?? '' }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -532,7 +531,7 @@
                                 </div>
                                 <div>
                                     <label class="premium-label">Sub-heading (Rich Text)</label>
-                                    <textarea name="courses_subtitle" id="editor_courses_subtitle" rows="3" class="premium-input h-auto py-3">{{ $settings['courses_subtitle'] ?? '' }}</textarea>
+                                    <textarea name="courses_subtitle" id="editor_courses_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ $settings['courses_subtitle'] ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -592,7 +591,7 @@
                             </div>
                             <div>
                                 <label class="premium-label">Sub-heading (Rich Text)</label>
-                                <textarea name="blog_subtitle" id="editor_blog_subtitle" rows="3" class="premium-input h-auto py-3">{{ $settings['blog_subtitle'] ?? '' }}</textarea>
+                                <textarea name="blog_subtitle" id="editor_blog_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ $settings['blog_subtitle'] ?? '' }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -603,7 +602,7 @@
                     <div class="brand-card">
                         <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">FAQ Page Header Content</h3>
                         <div class="border rounded-2xl overflow-hidden">
-                            <textarea name="faq_page_content" id="editor_faq" class="w-full min-h-[300px]">{{ $settings['faq_page_content'] ?? '' }}</textarea>
+                            <textarea name="faq_page_content" id="editor_faq" data-cms-rich-text class="w-full min-h-[300px]">{{ $settings['faq_page_content'] ?? '' }}</textarea>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                             <div>
@@ -641,7 +640,7 @@
                             </div>
                         </div>
                         <div class="border rounded-2xl overflow-hidden">
-                            <textarea name="contact_page_content" id="editor_contact" class="w-full min-h-[300px]">{{ $settings['contact_page_content'] ?? '' }}</textarea>
+                            <textarea name="contact_page_content" id="editor_contact" data-cms-rich-text class="w-full min-h-[300px]">{{ $settings['contact_page_content'] ?? '' }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -651,7 +650,7 @@
                     <div class="brand-card">
                         <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">Privacy Policy</h3>
                         <div class="border rounded-2xl overflow-hidden">
-                            <textarea name="privacy_policy_content" id="editor_privacy" class="w-full min-h-[400px]">{{ $settings['privacy_policy_content'] ?? '' }}</textarea>
+                            <textarea name="privacy_policy_content" id="editor_privacy" data-cms-rich-text class="w-full min-h-[400px]">{{ $settings['privacy_policy_content'] ?? '' }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -661,7 +660,7 @@
                     <div class="brand-card">
                         <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">Terms & Conditions</h3>
                         <div class="border rounded-2xl overflow-hidden">
-                            <textarea name="terms_and_conditions_content" id="editor_terms" class="w-full min-h-[400px]">{{ $settings['terms_and_conditions_content'] ?? '' }}</textarea>
+                            <textarea name="terms_and_conditions_content" id="editor_terms" data-cms-rich-text class="w-full min-h-[400px]">{{ $settings['terms_and_conditions_content'] ?? '' }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -748,7 +747,7 @@
                             </div>
                             <div>
                                 <label class="premium-label">Footer Bio / Summary (Rich Text)</label>
-                                <textarea name="footer_about_text" id="editor_footer_bio" rows="3" class="premium-input h-auto py-3">{{ $settings['footer_about_text'] ?? '' }}</textarea>
+                                <textarea name="footer_about_text" id="editor_footer_bio" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ $settings['footer_about_text'] ?? '' }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -1038,36 +1037,10 @@
             if (tabId === 'content') {
                 const activePage = localStorage.getItem('activePageEditor') || 'page-home-about';
                 switchPageEditor(activePage, false); 
-                setTimeout(() => initVisibleEditor(activePage), 200);
+                setTimeout(() => window.GoldenEyeRichTextEditor?.initialize(document.getElementById(activePage)), 200);
             } else {
-                setTimeout(() => initVisibleEditor('tab-' + tabId), 200);
+                setTimeout(() => window.GoldenEyeRichTextEditor?.initialize(target), 200);
             }
-        };
-
-        window.initVisibleEditor = function (containerId = null) {
-            if (typeof CKEDITOR === 'undefined') {
-                if (typeof window.ckRetryCount === 'undefined') window.ckRetryCount = 0;
-                if (window.ckRetryCount < 10) {
-                    window.ckRetryCount++;
-                    setTimeout(() => initVisibleEditor(containerId), 500);
-                } else {
-                    console.error("CKEditor failed to load from CDN.");
-                }
-                return;
-            }
-            window.ckRetryCount = 0;
-            
-            const config = { height: 300, removeButtons: 'About,Maximize', versionCheck: false, allowedContent: true, extraAllowedContent: '*(*);*{*}' };
-            
-            let container = containerId ? document.getElementById(containerId) : document.querySelector('.branding-tab-content.active');
-            if (!container) return;
-
-            container.querySelectorAll('textarea').forEach(txt => {
-                if (txt.id && txt.id.startsWith('editor_')) {
-                    if (CKEDITOR.instances[txt.id]) CKEDITOR.instances[txt.id].destroy(true);
-                    CKEDITOR.replace(txt.id, config);
-                }
-            });
         };
 
         window.switchPageEditor = function (pageId, shouldInit = true) {
@@ -1076,7 +1049,7 @@
             if (target) target.style.display = 'block';
             
             localStorage.setItem('activePageEditor', pageId);
-            if (shouldInit) setTimeout(() => initVisibleEditor(pageId), 150);
+            if (shouldInit) setTimeout(() => window.GoldenEyeRichTextEditor?.initialize(target), 150);
 
             const previewBtn = document.getElementById('pagePreviewBtn');
             const routes = {
@@ -1100,12 +1073,6 @@
                 btn.innerText = 'Copied!';
                 setTimeout(() => btn.innerText = old, 2000);
             });
-        };
-
-        document.getElementById('brandingForm').onsubmit = function() {
-            if (typeof CKEDITOR !== 'undefined') {
-                for (let instance in CKEDITOR.instances) CKEDITOR.instances[instance].updateElement();
-            }
         };
 
         window.initBrandingHub = function () {

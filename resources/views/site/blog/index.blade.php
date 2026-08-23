@@ -1,6 +1,6 @@
 @extends('site.layout.app')
 @section('page_title', $settings['blog_header_title'] ?? 'Golden Eye Academy Learning Guides')
-@section('meta_description', filled($settings['blog_subtitle'] ?? null) ? $settings['blog_subtitle'] : 'Read Golden Eye Academy guides about courses, language learning, computer skills, academic support, and study decisions in Pokhara.')
+@section('meta_description', filled($settings['blog_subtitle'] ?? null) ? trim(strip_tags($settings['blog_subtitle'])) : 'Read Golden Eye Academy guides about courses, language learning, computer skills, academic support, and study decisions in Pokhara.')
 @section('content')
     @php
         $blogGuidanceUrl = route('join-now', [
@@ -18,7 +18,9 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
                     <h1 class="h2 text-white animated slideInDown font-black uppercase tracking-tighter">{{ $settings['blog_title'] ?? 'Academy Blog' }}</h1>
-                    <p class="text-white-50 mb-3 small font-bold">{{ $settings['blog_subtitle'] ?? 'Guides, updates, and decisions that help you move faster.' }}</p>
+                    <div class="text-white-50 mb-3 small font-bold">
+                        @sanitize($settings['blog_subtitle'] ?? 'Guides, updates, and decisions that help you move faster.')
+                    </div>
                     <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2 mb-4">
                         <a href="{{ $blogGuidanceUrl }}" data-cta="blog-header-course-guidance" class="btn btn-primary rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 10px;">
                             Ask for Course Help
