@@ -14,20 +14,18 @@
                         <input type="text" name="student_name" value="{{ old('student_name', $testimonial->student_name) }}" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
                     </div>
                     <div>
-                        @php($selectedCourse = old('course_name', $testimonial->course_name))
+                        @php($selectedCourseId = old('course_id', $testimonial->course_id))
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Related Course</label>
-                        <select name="course_name" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
-                            <option value="">General academy testimonial</option>
-                            @if(filled($selectedCourse) && ! $courses->contains('name', $selectedCourse))
-                                <option value="{{ $selectedCourse }}" selected>{{ $selectedCourse }} (legacy assignment)</option>
-                            @endif
+                        <select name="course_id" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                            <option value="">No verified course link{{ filled($testimonial->course_name) ? ' — preserve legacy label: '.$testimonial->course_name : ' (general academy testimonial)' }}</option>
                             @foreach($courses as $course)
-                                <option value="{{ $course->name }}" {{ $selectedCourse === $course->name ? 'selected' : '' }}>
+                                <option value="{{ $course->id }}" {{ (string) $selectedCourseId === (string) $course->id ? 'selected' : '' }}>
                                     {{ $course->name }}{{ $course->status !== 'active' ? ' (inactive)' : '' }}
                                 </option>
                             @endforeach
                         </select>
-                        <p class="mt-1 text-xs text-neutral-500">Course pages show only testimonials linked to that exact course.</p>
+                        <p class="mt-1 text-xs text-neutral-500">Choose a course only when the testimonial's course provenance is verified.</p>
+                        @error('course_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
 

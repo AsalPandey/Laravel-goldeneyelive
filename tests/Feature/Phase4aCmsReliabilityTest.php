@@ -63,7 +63,7 @@ class Phase4aCmsReliabilityTest extends TestCase
             ->assertStatus(301);
     }
 
-    public function test_course_page_uses_only_exact_active_faculty_and_testimonial_matches(): void
+    public function test_course_page_uses_only_explicit_active_faculty_and_testimonial_relationships(): void
     {
         $teacher = Teacher::factory()->create([
             'name' => 'Verified Course Faculty',
@@ -82,11 +82,13 @@ class Phase4aCmsReliabilityTest extends TestCase
             'name' => 'Exact Relationship Course',
             'slug' => 'exact-relationship-course',
             'instructor' => $teacher->name,
+            'teacher_id' => $teacher->id,
             'status' => 'active',
         ]);
         Testimonial::factory()->create([
             'student_name' => 'Exact Course Student',
             'course_name' => $course->name,
+            'course_id' => $course->id,
             'content' => 'Exact course testimonial proof.',
             'status' => 'active',
         ]);
@@ -145,14 +147,14 @@ class Phase4aCmsReliabilityTest extends TestCase
         $this->actingAs($this->staff)
             ->get(route('admin.courses.create'))
             ->assertOk()
-            ->assertSee('Assigned Faculty')
-            ->assertSee('value="'.$teacher->name.'"', false);
+            ->assertSee('Linked Faculty Profile')
+            ->assertSee('value="'.$teacher->id.'"', false);
 
         $this->actingAs($this->staff)
             ->get(route('admin.testimonials.create'))
             ->assertOk()
             ->assertSee('Related Course')
-            ->assertSee('value="'.$course->name.'"', false);
+            ->assertSee('value="'.$course->id.'"', false);
     }
 
     public function test_public_blog_queries_obey_draft_immediate_scheduled_and_unpublished_states(): void

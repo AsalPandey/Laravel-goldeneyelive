@@ -23,6 +23,10 @@ class PublicRouteCompatibilityTest extends TestCase
         $this->get(route('course-catagory', $category->slug))
             ->assertStatus(301)
             ->assertRedirect(route('courses-all', ['category' => $category->slug]));
+
+        $this->get(route('course-category-legacy', $category->slug))
+            ->assertStatus(301)
+            ->assertRedirect(route('courses-all', ['category' => $category->slug]));
     }
 
     public function test_common_course_listing_aliases_redirect_to_canonical_course_finder(): void

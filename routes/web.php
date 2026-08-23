@@ -68,7 +68,8 @@ Route::controller(CoursesController::class)->group(function () {
     Route::get('/courses', 'courses')->name('courses');
     Route::get('/courses-all', 'coursesAll')->name('courses-all');
     Route::get('/courses-category/{slug}', 'courseCategory')->name('course-category');
-    Route::get('/courses-category-legacy/{slug}', 'courseCatagory')->name('course-catagory');
+    Route::get('/courses-catagory/{slug}', 'courseCatagory')->name('course-catagory');
+    Route::get('/courses-category-legacy/{slug}', 'courseCatagory')->name('course-category-legacy');
     Route::get('/courses/{slug}', 'coursesDetail')->name('courses-detail');
 });
 

@@ -90,7 +90,7 @@
                                         @endphp
                                         @foreach($contactPhones as $contactPhone)
                                             <p class="mb-1 font-black text-brand-dark">
-                                                <a href="tel:{{ $contactPhone['href'] }}" class="text-brand-dark text-decoration-none" data-source-page="contact" data-source-section="contact-phone" data-cta-label="Phone">{{ $contactPhone['display'] }}</a>
+                                                <a href="tel:{{ $contactPhone['href'] }}" class="text-brand-dark text-decoration-none contact-intent-link" data-source-page="contact" data-source-section="contact-phone" data-cta-label="Phone">{{ $contactPhone['display'] }}</a>
                                             </p>
                                         @endforeach
                                     </div>
@@ -102,7 +102,9 @@
                                     </div>
                                     <div class="contact-detail-copy">
                                         <p class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Email</p>
-                                        <p class="mb-0 font-black text-brand-dark">{{ $settings['site_email'] ?? 'info@goldeneye.edu.np' }}</p>
+                                        <p class="mb-0 font-black text-brand-dark">
+                                            <a href="mailto:{{ $settings['site_email'] ?? 'info@goldeneye.edu.np' }}" class="text-brand-dark text-decoration-none contact-intent-link">{{ $settings['site_email'] ?? 'info@goldeneye.edu.np' }}</a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

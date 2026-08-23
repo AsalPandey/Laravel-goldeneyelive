@@ -58,7 +58,7 @@ class SiteController extends Controller
                 ->get(),
             'teachers' => Teacher::where('status', 'active')->orderByDesc('is_featured')->latest()->limit(4)->get(),
             'testimonials' => Testimonial::where('status', 'active')
-                ->whereIn('course_name', Course::publiclyVisible()->select('name'))
+                ->with('course:id,name')
                 ->orderByDesc('is_featured')
                 ->latest()
                 ->limit(6)

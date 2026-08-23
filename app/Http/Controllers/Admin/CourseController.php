@@ -47,7 +47,7 @@ class CourseController extends Controller
     public function create()
     {
         $categories = CourseCategory::orderBy('name')->get();
-        $teachers = Teacher::orderBy('name')->get(['name', 'status']);
+        $teachers = Teacher::orderBy('name')->get(['id', 'name', 'status']);
         $faqs = FAQ::where('status', 'active')->orderBy('order_priority')->get();
 
         return view('admin.courses.create', compact('categories', 'teachers', 'faqs'));
@@ -107,7 +107,7 @@ class CourseController extends Controller
     {
         $course = Course::with(['courseCategory', 'faqs'])->findOrFail($id);
         $categories = CourseCategory::orderBy('name')->get();
-        $teachers = Teacher::orderBy('name')->get(['name', 'status']);
+        $teachers = Teacher::orderBy('name')->get(['id', 'name', 'status']);
 
         $assignedFaqIds = $course->faqs->pluck('id')->toArray();
         $faqs = FAQ::where('status', 'active')

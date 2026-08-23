@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseCategory;
-use App\Models\Teacher;
 use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -111,20 +110,20 @@ class CoursesController extends Controller
      */
     private function courseDetailViewData(Course $course): array
     {
-        $instructor = Teacher::where('status', 'active')
-            ->where('name', $course->instructor)
+        $instructor = $course->teacher()
+            ->where('status', 'active')
             ->first();
 
         $instructorCourses = $instructor
             ? Course::publiclyVisible()
-                ->where('instructor', $instructor->name)
+                ->where('teacher_id', $instructor->id)
                 ->orderBy('name')
                 ->limit(4)
                 ->pluck('name')
             : collect();
 
         $testimonial = Testimonial::where('status', 'active')
-            ->where('course_name', $course->name)
+            ->where('course_id', $course->id)
             ->orderByDesc('is_featured')
             ->latest()
             ->first();

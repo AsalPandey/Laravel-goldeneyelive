@@ -162,6 +162,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
         Teacher::factory()->create(['status' => 'active']);
         Testimonial::factory()->create([
             'course_name' => $course->name,
+            'course_id' => $course->id,
             'status' => 'active',
         ]);
         FAQ::factory()->create(['status' => 'active']);

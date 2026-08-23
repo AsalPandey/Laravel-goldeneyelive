@@ -204,7 +204,7 @@
 
                                 <div class="col-12">
                                     <button class="btn btn-primary w-100 py-3 rounded-pill shadow-xl animate-glow" type="submit" data-cta="join-now-form-submit" style="font-size: 1.1rem; font-weight: 800;">
-                                        Ask for Course Help <i class="fa fa-check-circle ms-2"></i>
+                                        <span data-submit-label>Ask for Course Help</span> <i class="fa fa-check-circle ms-2" data-submit-icon aria-hidden="true"></i>
                                     </button>
                                     <p class="text-center mt-3 text-muted small" style="font-size: 0.75rem;">
                                         <i class="fa fa-lock me-1"></i> No spam. Our team will reply as soon as possible.
@@ -280,6 +280,76 @@
                 phone.addEventListener('blur', validatePhone);
                 phone.form?.addEventListener('submit', validatePhone);
             }
+
+            const form = document.getElementById('joinNow');
+            const course = document.getElementById('course');
+            const selectedCourse = form?.querySelector('input[name="selected_course"]');
+            const submitButton = form?.querySelector('button[type="submit"]');
+            const submitLabel = submitButton?.querySelector('[data-submit-label]');
+            const submitIcon = submitButton?.querySelector('[data-submit-icon]');
+            let isSubmitting = false;
+
+            const syncCourseContext = () => {
+                if (! course || ! form) {
+                    return;
+                }
+
+                if (selectedCourse) {
+                    selectedCourse.value = course.value;
+                }
+
+                form.dataset.selectedCourse = course.value;
+            };
+
+            const resetSubmitButton = () => {
+                isSubmitting = false;
+
+                if (! submitButton) {
+                    return;
+                }
+
+                submitButton.disabled = false;
+                submitButton.removeAttribute('aria-disabled');
+
+                if (submitLabel) {
+                    submitLabel.textContent = 'Ask for Course Help';
+                }
+
+                if (submitIcon) {
+                    submitIcon.className = 'fa fa-check-circle ms-2';
+                }
+            };
+
+            course?.addEventListener('change', syncCourseContext);
+
+            form?.addEventListener('submit', function (event) {
+                if (! form.checkValidity()) {
+                    return;
+                }
+
+                if (isSubmitting) {
+                    event.preventDefault();
+
+                    return;
+                }
+
+                isSubmitting = true;
+
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.setAttribute('aria-disabled', 'true');
+                }
+
+                if (submitLabel) {
+                    submitLabel.textContent = 'Sending request…';
+                }
+
+                if (submitIcon) {
+                    submitIcon.className = 'fa fa-spinner fa-spin ms-2';
+                }
+            });
+
+            window.addEventListener('pageshow', resetSubmitButton);
         });
     </script>
 @endsection

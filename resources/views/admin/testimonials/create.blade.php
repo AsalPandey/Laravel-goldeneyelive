@@ -16,15 +16,16 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Related Course</label>
-                        <select name="course_name" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        <select name="course_id" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
                             <option value="">General academy testimonial</option>
                             @foreach($courses as $course)
-                                <option value="{{ $course->name }}" {{ old('course_name') === $course->name ? 'selected' : '' }}>
+                                <option value="{{ $course->id }}" {{ (string) old('course_id') === (string) $course->id ? 'selected' : '' }}>
                                     {{ $course->name }}{{ $course->status !== 'active' ? ' (inactive)' : '' }}
                                 </option>
                             @endforeach
                         </select>
-                        <p class="mt-1 text-xs text-neutral-500">Course pages show only testimonials linked to that exact course.</p>
+                        <p class="mt-1 text-xs text-neutral-500">Choose a course only when the testimonial's course provenance is verified.</p>
+                        @error('course_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
 

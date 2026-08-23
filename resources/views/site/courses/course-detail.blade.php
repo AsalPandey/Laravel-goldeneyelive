@@ -166,9 +166,9 @@
                     @foreach($quickFacts as $fact)
                         <div class="col-md-6 col-xl-4">
                             <div class="h-100 p-4 bg-white border border-zinc-100 rounded-xl shadow-sm">
-                                <div class="d-flex align-items-start gap-3">
+                                <div class="d-flex align-items-start gap-3 course-contact-row">
                                     <span class="course-fact-icon"><i class="{{ $fact['icon'] }}"></i></span>
-                                    <div>
+                                    <div class="course-contact-copy">
                                         <p class="mb-1 text-zinc-500 fw-black text-uppercase tracking-widest" style="font-size: 9px;">{{ $fact['label'] }}</p>
                                         <p class="mb-0 text-brand-dark fw-bold" style="font-size: 13px; line-height: 1.55;">{{ $fact['value'] }}</p>
                                     </div>
@@ -214,9 +214,9 @@
                                 @foreach($localTrustMarkers as $marker)
                                     <div class="col-md-6">
                                         <div class="h-100 p-3 bg-white/10 border border-white/10 rounded-xl">
-                                            <div class="d-flex align-items-start gap-3">
+                                            <div class="d-flex align-items-start gap-3 course-contact-row">
                                                 <i class="{{ $marker['icon'] }} text-brand-gold mt-1" aria-hidden="true"></i>
-                                                <div>
+                                                <div class="course-contact-copy">
                                                     <p class="mb-1 text-white/50 fw-black text-uppercase tracking-widest" style="font-size: 8px;">{{ $marker['label'] }}</p>
                                                     <p class="mb-0 fw-bold" style="font-size: 13px; line-height: 1.55;">{{ $marker['value'] }}</p>
                                                 </div>
@@ -333,7 +333,7 @@
                                 <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Instructor profile</span>
                                 <div class="d-flex align-items-start gap-4 mt-3">
                                     <img src="{{ \App\Support\PublicAsset::url($instructor->photo, 'site/img/team-1.jpg') }}" alt="{{ $instructor->name }}" class="rounded-circle object-cover flex-shrink-0" loading="lazy" decoding="async" width="86" height="86" style="width: 86px; height: 86px;">
-                                    <div>
+                                    <div class="course-contact-copy">
                                         <h2 class="h5 fw-black text-brand-dark mb-1">{{ $instructor->name }}</h2>
                                         @if(filled($instructor->designation))
                                             <p class="text-brand-gold fw-black mb-2" style="font-size: 12px;">{{ $instructor->designation }}</p>

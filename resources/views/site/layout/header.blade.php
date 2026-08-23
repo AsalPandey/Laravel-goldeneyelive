@@ -115,7 +115,7 @@
             font-family: 'Inter', sans-serif; 
             background-color: #fff; 
             color: #050C1C;
-            overflow-x: hidden;
+            overflow-x: clip;
         }
 
         h1, h2, h3, .font-heading { 

@@ -160,7 +160,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
         );
     }
 
-    public function test_only_active_testimonials_with_exact_public_course_names_are_rendered(): void
+    public function test_active_testimonials_use_explicit_course_links_or_honest_academy_level_labels(): void
     {
         $course = Course::factory()->create([
             'name' => 'Exact Published Course',
@@ -171,6 +171,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
         Testimonial::factory()->create([
             'student_name' => 'Exact Linked Learner',
             'course_name' => $course->name,
+            'course_id' => $course->id,
             'content' => 'Exact linked feedback content.',
             'status' => 'active',
         ]);
@@ -192,7 +193,8 @@ class Phase6VerifiedContentTrustTest extends TestCase
         $this->get(route('home'))
             ->assertOk()
             ->assertSee('Exact Linked Learner')
-            ->assertDontSee('Unmatched Learner')
+            ->assertSee('Unmatched Learner')
+            ->assertSee('Academy experience')
             ->assertDontSee('Inactive Learner');
 
         $this->get(route('courses-detail', $course->slug))

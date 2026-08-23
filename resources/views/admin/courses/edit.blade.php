@@ -60,23 +60,24 @@
                     </div>
 
                     <div>
-                        @php
-                            $selectedInstructor = old('instructor', $course->instructor);
-                        @endphp
-                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Assigned Faculty</label>
-                        <select name="instructor" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
-                            <option value="">Select a faculty profile</option>
-                            @if(filled($selectedInstructor) && ! $teachers->contains('name', $selectedInstructor))
-                                <option value="{{ $selectedInstructor }}" selected>{{ $selectedInstructor }} (legacy assignment)</option>
-                            @endif
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Listed Instructor or Teaching Team</label>
+                        <input type="text" name="instructor" value="{{ old('instructor', $course->instructor) }}" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        <p class="mt-1 text-xs text-neutral-500">This verified name is shown publicly even when no faculty biography is available.</p>
+                        @error('instructor') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Linked Faculty Profile (optional)</label>
+                        <select name="teacher_id" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                            <option value="">No verified faculty profile link</option>
                             @foreach($teachers as $teacher)
-                                <option value="{{ $teacher->name }}" {{ $selectedInstructor === $teacher->name ? 'selected' : '' }}>
+                                <option value="{{ $teacher->id }}" {{ (string) old('teacher_id', $course->teacher_id) === (string) $teacher->id ? 'selected' : '' }}>
                                     {{ $teacher->name }}{{ $teacher->status !== 'active' ? ' (inactive)' : '' }}
                                 </option>
                             @endforeach
                         </select>
-                        <p class="mt-1 text-xs text-neutral-500">Only an active matching faculty profile is shown on the public course page.</p>
-                        @error('instructor') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                        <p class="mt-1 text-xs text-neutral-500">Link only when staff have verified that this profile belongs to the listed instructor.</p>
+                        @error('teacher_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div>

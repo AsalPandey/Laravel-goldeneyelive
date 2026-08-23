@@ -44,6 +44,7 @@ class CourseRequest extends CMSRequest
             'price' => ['required', 'string', 'max:255'],
             'duration' => ['required', 'string', 'max:255'],
             'instructor' => ['required', 'string', 'max:255'],
+            'teacher_id' => ['nullable', 'integer', 'exists:teachers,id'],
             'capacity' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'course_outline' => ['required', 'string'],

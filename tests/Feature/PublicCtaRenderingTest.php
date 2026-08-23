@@ -60,7 +60,9 @@ class PublicCtaRenderingTest extends TestCase
             ->assertSee('siteNoticePopup', false)
             ->assertSee('openSiteNoticePopup', false)
             ->assertSee('course_help_popup_closed_', false)
-            ->assertSee('window.setTimeout(maybeAutoOpen, autoDelayMs)', false)
+            ->assertSee('const autoDelayMs = 12000', false)
+            ->assertSee('! delayElapsed || ! scrollTriggered', false)
+            ->assertSee('(window.scrollY / scrollable) >= 0.25', false)
             ->assertSee('Ask for Course Help', false);
     }
 

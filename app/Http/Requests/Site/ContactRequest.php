@@ -5,6 +5,7 @@ namespace App\Http\Requests\Site;
 use App\Models\AnalyticsEvent;
 use App\Support\NepalPhone;
 use App\Support\Recaptcha;
+use Closure;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -26,7 +27,17 @@ class ContactRequest extends FormRequest
     {
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:10', 'regex:'.NepalPhone::CANONICAL_REGEX],
+            'phone' => [
+                'required',
+                'string',
+                'max:10',
+                'regex:'.NepalPhone::CANONICAL_REGEX,
+                function (string $attribute, mixed $value, Closure $fail): void {
+                    if (! NepalPhone::isPlausible((string) $value)) {
+                        $fail('Please enter a real phone or WhatsApp number so our team can contact you.');
+                    }
+                },
+            ],
             'email' => ['required', 'email', 'max:255'],
             'subject' => ['required', 'string', 'max:255'],
             'message' => ['required', 'string', 'max:5000'],

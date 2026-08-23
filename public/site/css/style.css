@@ -485,7 +485,7 @@ h1, h2, h3, h4, h5, h6, .section-title {
     html,
     body {
         max-width: 100%;
-        overflow-x: hidden;
+        overflow-x: clip;
     }
 
     .hero-hook-title {
@@ -537,35 +537,6 @@ h1, h2, h3, h4, h5, h6, .section-title {
         overflow-wrap: anywhere;
         line-height: 1.5;
         letter-spacing: 0.2em !important;
-    }
-
-    .site-notice-popup .modal-dialog {
-        max-width: calc(100vw - 16px);
-        margin-left: 8px;
-        margin-right: 8px;
-    }
-
-    .site-notice-popup .modal-content {
-        width: 100%;
-    }
-
-    .site-notice-popup-media {
-        height: 190px;
-    }
-
-    .site-notice-popup-body {
-        padding: 1.25rem;
-    }
-
-    .site-notice-popup-body h2 {
-        font-size: 1.35rem;
-        overflow-wrap: anywhere;
-    }
-
-    .site-notice-popup-body .btn-primary {
-        white-space: normal;
-        font-size: 11px !important;
-        letter-spacing: 0.08em !important;
     }
 
     .whatsapp-btn-container {
@@ -911,10 +882,14 @@ h1, h2, h3, h4, h5, h6, .section-title {
 }
 
 .site-notice-popup-later {
+    align-items: center;
     color: #737373;
+    display: inline-flex;
     font-size: 0.68rem;
     font-weight: 900;
+    justify-content: center;
     letter-spacing: 0.14em;
+    min-height: 44px;
     text-transform: uppercase;
     text-decoration: none;
 }
@@ -1121,6 +1096,16 @@ h1, h2, h3, h4, h5, h6, .section-title {
     font-size: 13px;
     line-height: 1.55;
     text-align: right;
+}
+
+.course-contact-row,
+.course-contact-copy {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.course-contact-copy {
+    overflow-wrap: anywhere;
 }
 
 .course-help-step {
@@ -1926,6 +1911,44 @@ h1, h2, h3, h4, h5, h6, .section-title {
 }
 
 @media (max-width: 575.98px) {
+    .site-notice-popup .modal-dialog {
+        width: calc(100vw - 16px);
+        max-width: calc(100vw - 16px);
+        margin: 16px 8px;
+    }
+
+    .site-notice-popup .modal-content {
+        width: 100%;
+        max-height: calc(100dvh - 32px);
+        overflow-y: auto;
+    }
+
+    .site-notice-popup-media {
+        height: 120px;
+    }
+
+    .site-notice-popup-body {
+        padding: 1rem;
+    }
+
+    .site-notice-popup-body h2 {
+        margin-top: 0.65rem;
+        font-size: 1.2rem;
+        overflow-wrap: anywhere;
+    }
+
+    .site-notice-popup-body p {
+        margin-bottom: 0.9rem;
+        font-size: 0.86rem;
+        line-height: 1.5;
+    }
+
+    .site-notice-popup-body .btn-primary {
+        white-space: normal;
+        font-size: 11px !important;
+        letter-spacing: 0.08em !important;
+    }
+
     .btn {
         width: 100%;
         white-space: normal;
@@ -1971,6 +1994,14 @@ h1, h2, h3, h4, h5, h6, .section-title {
     }
 
     .contact-detail-copy {
+        overflow-wrap: anywhere;
+    }
+
+    .contact-intent-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        max-width: 100%;
         overflow-wrap: anywhere;
     }
 

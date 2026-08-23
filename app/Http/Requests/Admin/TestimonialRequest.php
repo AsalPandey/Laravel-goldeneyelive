@@ -21,6 +21,7 @@ class TestimonialRequest extends CMSRequest
         return array_merge($rules, [
             'student_name' => ['required', 'string', 'max:255'],
             'course_name' => ['nullable', 'string', 'max:255'],
+            'course_id' => ['nullable', 'integer', 'exists:courses,id'],
             'content' => ['required', 'string', 'max:10000'],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],

@@ -142,18 +142,21 @@ class PublicJourneyFixTest extends TestCase
         Testimonial::factory()->create([
             'student_name' => 'Rojina Gurung',
             'course_name' => $placeholderCourse->name,
+            'course_id' => $placeholderCourse->id,
             'photo' => 'site/img/user.png',
             'is_featured' => true,
         ]);
         Testimonial::factory()->create([
             'student_name' => 'Nirmala Thapa',
             'course_name' => $portraitCourse->name,
+            'course_id' => $portraitCourse->id,
             'photo' => 'site/img/testimonial-4.jpg',
             'is_featured' => true,
         ]);
         Testimonial::factory()->create([
             'student_name' => 'Suman Pariyar',
             'course_name' => $missingPhotoCourse->name,
+            'course_id' => $missingPhotoCourse->id,
             'photo' => null,
             'is_featured' => true,
         ]);

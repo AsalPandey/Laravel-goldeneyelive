@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
@@ -15,7 +16,7 @@ class Course extends Model
 
     protected $fillable = [
         'name', 'badge_text', 'slug', 'category', 'category_slug', 'category_id', 'price', 'duration',
-        'instructor', 'capacity', 'description', 'course_outline', 'photo',
+        'instructor', 'teacher_id', 'capacity', 'description', 'course_outline', 'photo',
         'rating_star', 'rating_count', 'meta_title', 'meta_description', 'meta_keywords', 'aeo_summary', 'schema_markup', 'status', 'is_featured', 'display_order',
     ];
 
@@ -27,6 +28,16 @@ class Course extends Model
     public function courseCategory(): BelongsTo
     {
         return $this->belongsTo(CourseCategory::class, 'category_id');
+    }
+
+    public function teacher(): BelongsTo
+    {
+        return $this->belongsTo(Teacher::class);
+    }
+
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class);
     }
 
     public function scopePubliclyVisible(Builder $query): Builder

@@ -33,7 +33,7 @@ class TestimonialController extends Controller
 
     public function create()
     {
-        $courses = Course::orderBy('name')->get(['name', 'status']);
+        $courses = Course::orderBy('name')->get(['id', 'name', 'status']);
 
         return view('admin.testimonials.create', compact('courses'));
     }
@@ -41,6 +41,10 @@ class TestimonialController extends Controller
     public function store(TestimonialRequest $request)
     {
         $validated = $request->validated();
+
+        $validated['course_name'] = isset($validated['course_id'])
+            ? Course::findOrFail($validated['course_id'])->name
+            : null;
 
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/testimonials', null);
@@ -61,7 +65,7 @@ class TestimonialController extends Controller
     public function edit(string $id)
     {
         $testimonial = Testimonial::findOrFail($id);
-        $courses = Course::orderBy('name')->get(['name', 'status']);
+        $courses = Course::orderBy('name')->get(['id', 'name', 'status']);
 
         return view('admin.testimonials.edit', compact('testimonial', 'courses'));
     }
@@ -71,6 +75,12 @@ class TestimonialController extends Controller
         $testimonial = Testimonial::findOrFail($id);
         $oldPhoto = $testimonial->photo;
         $validated = $request->validated();
+
+        if (isset($validated['course_id'])) {
+            $validated['course_name'] = Course::findOrFail($validated['course_id'])->name;
+        } else {
+            unset($validated['course_name']);
+        }
 
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/testimonials', $testimonial->photo);

@@ -40,7 +40,7 @@
     }
     
     body {
-        @apply font-sans bg-white text-brand-dark leading-relaxed overflow-x-hidden;
+        @apply font-sans bg-white text-brand-dark leading-relaxed overflow-x-clip;
     }
     
     h1, h2, h3, h4, h5, h6 {

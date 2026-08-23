@@ -254,7 +254,9 @@
                                     <x-testimonial-avatar :name="$testimonial->student_name ?? 'Golden Eye student'" :photo="$testimonial->photo" :size="54" />
                                     <div>
                                         <h3 class="mb-1 fw-black text-brand-dark" style="font-size: 13px;">{{ $testimonial->student_name ?? 'Student' }}</h3>
-                                        <small class="text-zinc-500 fw-bold d-block" style="font-size: 10px;">Course listed: {{ $testimonial->course_name }}</small>
+                                        <small class="text-zinc-500 fw-bold d-block" style="font-size: 10px;">
+                                            {{ filled($testimonial->course_id ?? null) && isset($testimonial->course) ? 'Verified course: '.$testimonial->course->name : 'Academy experience' }}
+                                        </small>
                                     </div>
                                 </div>
                                 <p class="text-brand-dark fw-black mb-2" style="font-size: 12px; line-height: 1.55;">Feedback summary: {{ $testimonialProgress($testimonial) }}</p>

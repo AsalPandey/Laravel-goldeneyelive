@@ -15,7 +15,7 @@ class ConversionSubmissionTest extends TestCase
         $response = $this->post(route('contact-submit'), [
             'name' => 'Asha Sharma',
             'email' => 'asha@example.com',
-            'phone' => '9800000000',
+            'phone' => '9841234567',
             'subject' => 'Course Help',
             'message' => 'I want help choosing a course.',
             'lead_source' => 'homepage_quick_inquiry',

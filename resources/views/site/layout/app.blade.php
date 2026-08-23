@@ -197,8 +197,9 @@
 	                const popupId = '{{ $noticePopupData->id }}';
 	                const autoClosedKey = 'course_help_popup_closed_' + popupId;
 	                const dismissedKey = 'popup_dismissed_' + popupId;
-	                const autoDelayMs = 7000;
+	                const autoDelayMs = 12000;
 	                let autoOpened = false;
+	                let delayElapsed = false;
 	                let scrollTriggered = false;
 	                let popupReturnFocus = null;
 
@@ -259,6 +260,11 @@
 	                    return (Date.now() - Number(lastDismiss)) < (12 * 60 * 60 * 1000);
 	                }
 
+	                function rememberDismissal(id) {
+	                    sessionStorage.setItem(autoClosedKey, '1');
+	                    localStorage.setItem('popup_dismissed_' + id, String(Date.now()));
+	                }
+
 	                window.dismissSitePopup = function (id) {
 	                    const popup = popupElement();
 	                    if (popup) {
@@ -268,8 +274,7 @@
 	                        }
 	                    }
 
-	                    sessionStorage.setItem(autoClosedKey, '1');
-	                    localStorage.setItem('popup_dismissed_' + id, String(Date.now()));
+	                    rememberDismissal(id);
 	                };
 
 	                window.openSiteNoticePopup = function (options = {}) {
@@ -295,6 +300,8 @@
 	                };
 
 	                popupElement()?.addEventListener('hidden.bs.modal', function () {
+	                    rememberDismissal(popupId);
+
 	                    if (popupReturnFocus?.isConnected) {
 	                        popupReturnFocus.focus();
 	                    }
@@ -321,7 +328,7 @@
 	                });
 
 	                function maybeAutoOpen() {
-	                    if (autoOpened || window.location.pathname.includes('/join-now')) {
+	                    if (autoOpened || ! delayElapsed || ! scrollTriggered || window.location.pathname.includes('/join-now')) {
 	                        return;
 	                    }
 
@@ -331,7 +338,10 @@
 	                }
 
 	                window.addEventListener('load', function () {
-	                    window.setTimeout(maybeAutoOpen, autoDelayMs);
+	                    window.setTimeout(function () {
+	                        delayElapsed = true;
+	                        maybeAutoOpen();
+	                    }, autoDelayMs);
 	                });
 
 	                window.addEventListener('scroll', function () {
