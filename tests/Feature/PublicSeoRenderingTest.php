@@ -10,7 +10,7 @@ class PublicSeoRenderingTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_public_head_renders_cms_managed_verification_and_speakable_seo(): void
+    public function test_public_head_renders_verification_but_ignores_legacy_speakable_setting(): void
     {
         SiteSetting::insert([
             ['key' => 'google_search_console_id', 'value' => 'google-token', 'type' => 'text'],
@@ -24,7 +24,7 @@ class PublicSeoRenderingTest extends TestCase
             ->assertSee('google-token', false)
             ->assertSee('msvalidate.01', false)
             ->assertSee('bing-token', false)
-            ->assertSee('SpeakableSpecification', false)
-            ->assertSee('.course-description', false);
+            ->assertDontSee('SpeakableSpecification', false)
+            ->assertDontSee('.course-description', false);
     }
 }

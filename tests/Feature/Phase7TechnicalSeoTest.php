@@ -229,7 +229,7 @@ class Phase7TechnicalSeoTest extends TestCase
         $this->assertSame(1, collect($nodes)->where('@type', 'WebPage')->count());
     }
 
-    public function test_blog_emits_one_factual_blog_posting_and_preserves_safe_encoding(): void
+    public function test_blog_emits_one_factual_blog_posting_and_ignores_legacy_raw_schema(): void
     {
         $marker = '</script><script id="unsafe-marker">unsafe</script>';
         $post = BlogPost::factory()->create([
@@ -251,9 +251,9 @@ class Phase7TechnicalSeoTest extends TestCase
 
         $this->assertCount(1, $articles);
         $this->assertSame('Verified Blog Title', $articles->first()['headline']);
-        $this->assertSame($marker, $articles->first()['phaseMarker']);
+        $this->assertArrayNotHasKey('phaseMarker', $articles->first());
         $this->assertStringNotContainsString('<script id="unsafe-marker">', $html);
-        $this->assertStringContainsString('\u003C\/script\u003E', $html);
+        $this->assertStringNotContainsString('unsafe-marker', $html);
     }
 
     public function test_staff_can_edit_ordinary_metadata_but_cannot_submit_raw_schema(): void
@@ -280,12 +280,17 @@ class Phase7TechnicalSeoTest extends TestCase
                 'meta_description' => 'A factual staff-managed description.',
                 'schema_markup' => '{"@context":"https://schema.org","@type":"Thing"}',
             ])
-            ->assertSessionHasErrors('schema_markup');
+            ->assertRedirect(route('admin.blog.index'))
+            ->assertSessionHasNoErrors();
+
+        $storedPost = BlogPost::where('title', 'Staff Metadata Article')->firstOrFail();
+        $this->assertSame('Staff Managed Metadata', $storedPost->meta_title);
+        $this->assertNull($storedPost->schema_markup);
 
         $this->actingAs($admin)
             ->get(route('admin.blog.create'))
             ->assertOk()
-            ->assertSee('name="schema_markup"', false);
+            ->assertDontSee('name="schema_markup"', false);
     }
 
     /**

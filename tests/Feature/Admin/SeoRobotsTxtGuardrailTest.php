@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Http\Requests\Admin\SEORequest;
 use App\Models\SiteSetting;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
@@ -25,22 +24,19 @@ class SeoRobotsTxtGuardrailTest extends TestCase
         $this->admin->assignRole('Admin');
     }
 
-    public function test_safe_robots_txt_saves_without_confirmation(): void
+    public function test_crafted_robots_input_is_ignored_while_supported_metadata_saves(): void
     {
-        $robotsTxt = "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: http://localhost/sitemap.xml";
-
         $this->actingAs($this->admin)
             ->post(route('admin.seo.update'), [
                 'meta_title' => 'GoldenEye Academy SEO',
                 'meta_description' => 'Study abroad, language, and computer training in Pokhara.',
-                'robots_txt' => $robotsTxt,
+                'robots_txt' => "User-agent: *\nDisallow: /",
             ])
             ->assertRedirect()
             ->assertSessionHasNoErrors();
 
-        $this->assertDatabaseHas(SiteSetting::class, [
+        $this->assertDatabaseMissing(SiteSetting::class, [
             'key' => 'robots_txt',
-            'value' => $robotsTxt,
         ]);
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'meta_title',
@@ -52,68 +48,34 @@ class SeoRobotsTxtGuardrailTest extends TestCase
         ]);
     }
 
-    public function test_dangerous_robots_txt_fails_without_confirmation(): void
+    public function test_seo_page_exposes_a_read_only_laravel_managed_policy(): void
     {
-        $robotsTxt = "User-agent: *\nDisallow: /";
-
-        $this->actingAs($this->admin)
-            ->from(route('admin.seo.index'))
-            ->post(route('admin.seo.update'), [
-                'robots_txt' => $robotsTxt,
-            ])
-            ->assertRedirect(route('admin.seo.index'))
-            ->assertSessionHasErrors([
-                'robots_txt' => SEORequest::ROBOTS_FULL_SITE_BLOCK_WARNING,
-            ]);
-
-        $this->assertDatabaseMissing(SiteSetting::class, [
-            'key' => 'robots_txt',
-            'value' => $robotsTxt,
-        ]);
-    }
-
-    public function test_dangerous_robots_txt_saves_with_confirmation(): void
-    {
-        $robotsTxt = "User-agent: *\nDisallow: /";
-
-        $this->actingAs($this->admin)
-            ->post(route('admin.seo.update'), [
-                'robots_txt' => $robotsTxt,
-                'robots_txt_deindex_confirm' => '1',
-            ])
-            ->assertRedirect()
-            ->assertSessionHasNoErrors();
-
-        $this->assertDatabaseHas(SiteSetting::class, [
-            'key' => 'robots_txt',
-            'value' => $robotsTxt,
-        ]);
-    }
-
-    public function test_seo_page_renders_robots_txt_warning_and_help_text(): void
-    {
-        SiteSetting::create([
-            'key' => 'robots_txt',
-            'value' => "User-agent: *\nDisallow: /",
-            'type' => 'text',
-        ]);
-
         $this->actingAs($this->admin)
             ->get(route('admin.seo.index'))
             ->assertOk()
-            ->assertSee(SEORequest::ROBOTS_FULL_SITE_BLOCK_WARNING, false)
-            ->assertSee('For production, avoid', false)
-            ->assertSee('I understand this robots.txt may block the entire website from Google and other search engines.', false);
+            ->assertSee('Laravel-managed crawler policy')
+            ->assertSee('User-agent: *')
+            ->assertSee('Disallow: /admin')
+            ->assertDontSee('name="robots_txt"', false)
+            ->assertDontSee('robots_txt_deindex_confirm', false);
     }
 
-    public function test_robots_txt_detection_catches_full_site_blockers(): void
+    public function test_public_robots_policy_ignores_legacy_database_content(): void
     {
-        $this->assertTrue(SEORequest::robotsTxtBlocksFullSite("User-agent: *\nDisallow: /"));
-        $this->assertTrue(SEORequest::robotsTxtBlocksFullSite("User-agent: Googlebot\nDisallow: /*"));
-        $this->assertTrue(SEORequest::robotsTxtBlocksFullSite('X-Robots-Tag: noindex'));
-        $this->assertTrue(SEORequest::robotsTxtBlocksFullSite('Noindex: /'));
-        $this->assertFalse(SEORequest::robotsTxtBlocksFullSite("User-agent: *\nDisallow: /admin\nDisallow: /login"));
-        $this->assertFalse(SEORequest::robotsTxtBlocksFullSite(''));
+        config()->set('app.url', 'https://robots-policy.example');
+        SiteSetting::create([
+            'key' => 'robots_txt',
+            'value' => "User-agent: *\nDisallow: /\nSitemap: https://stale.example/sitemap.xml",
+            'type' => 'text',
+        ]);
+
+        $content = $this->get('/robots.txt')->assertOk()->getContent();
+
+        $this->assertStringContainsString("User-agent: *\nAllow: /", $content);
+        $this->assertStringContainsString('Disallow: /admin', $content);
+        $this->assertStringContainsString('Sitemap: https://robots-policy.example/sitemap.xml', $content);
+        $this->assertStringNotContainsString('Disallow: /\n', $content);
+        $this->assertStringNotContainsString('stale.example', $content);
     }
 
     public function test_public_homepage_contract_remains_unchanged_after_seo_update(): void
@@ -129,7 +91,6 @@ class SeoRobotsTxtGuardrailTest extends TestCase
         $this->actingAs($this->admin)
             ->post(route('admin.seo.update'), [
                 'meta_title' => 'GoldenEye Academy SEO',
-                'robots_txt' => "User-agent: *\nDisallow: /admin\nDisallow: /login",
             ])
             ->assertRedirect()
             ->assertSessionHasNoErrors();

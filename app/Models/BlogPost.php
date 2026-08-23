@@ -6,6 +6,7 @@ use App\Traits\HasUniqueSlug;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class BlogPost extends Model
 {
@@ -27,5 +28,10 @@ class BlogPost extends Model
             ->whereNotNull('slug')
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
+    }
+
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'blog_course', 'blog_id', 'course_id');
     }
 }

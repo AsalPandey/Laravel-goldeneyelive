@@ -7,14 +7,27 @@
     $coursePageTitle = \App\Support\StructuredData::titleWithBrand($course->meta_title ?: $course->name);
     $courseMetaDescription = \App\Support\StructuredData::courseMetaDescription($course);
     $courseHeroImage = \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg');
+    $breadcrumbCategoryName = $course->courseCategory?->name ?? $course->category;
+    $breadcrumbCategorySlug = $course->courseCategory?->slug ?? $course->category_slug;
+    $courseBreadcrumbItems = [
+        ['name' => 'Home', 'url' => route('home')],
+        ['name' => 'Courses', 'url' => route('courses-all')],
+    ];
+    if ($breadcrumbCategoryName) {
+        $courseBreadcrumbItems[] = [
+            'name' => $breadcrumbCategoryName,
+            'url' => $breadcrumbCategorySlug ? route('courses-all', ['category' => $breadcrumbCategorySlug]) : null,
+        ];
+    }
+    $courseBreadcrumbItems[] = ['name' => $course->name, 'url' => route('courses-detail', $course->slug)];
 @endphp
 @section('page_title', $coursePageTitle)
-@section('og_title', $course->name . ' Course at Golden Eye Academy')
+@section('og_title', $coursePageTitle)
 @section('meta_description', $courseMetaDescription)
 @section('og_image', \App\Support\PublicAsset::canonicalUrl($course->photo ?? null, 'site/img/cat-1.jpg'))
+@section('canonical_url', route('courses-detail', $course->slug))
 @section('meta_keywords', $course->meta_keywords ?? '')
 @section('aeo_summary', strip_tags($course->aeo_summary ?? ''))
-@section('og_image', \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg'))
 @section('preload_assets')
     <link rel="preload" as="image" href="{{ $courseHeroImage }}" fetchpriority="high">
 @endsection
@@ -26,6 +39,7 @@
 
 @section('schema_markup')
     @jsonld(json_encode(\App\Support\StructuredData::courseSchema($course, $settings ?? [])))
+    @jsonld(json_encode(\App\Support\StructuredData::breadcrumbSchema($courseBreadcrumbItems)))
 @endsection
 
 @section('content')
@@ -41,8 +55,6 @@
         $bestFor = $descriptionBestFor !== '' ? ucfirst($descriptionBestFor) : '';
         $nextBatch = 'Ask for current batch and availability';
         $courseImage = $courseHeroImage;
-        $breadcrumbCategoryName = $course->courseCategory?->name ?? $course->category;
-        $breadcrumbCategorySlug = $course->courseCategory?->slug ?? $course->category_slug;
         $sectionGuidanceUrl = fn (string $sourceSection) => route('join-now', [
             'course' => $course->slug,
             'selected_course' => $course->slug,
@@ -405,6 +417,33 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </section>
+            @endif
+
+            @if($helpfulBlogs->isNotEmpty())
+                <section class="mb-5" aria-labelledby="helpful-guides-heading">
+                    <div class="mb-4">
+                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Related reading</span>
+                        <h2 id="helpful-guides-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">Helpful Guides</h2>
+                        <p class="text-zinc-600 mb-0" style="font-size: 13px;">Published academy articles selected by staff for this course.</p>
+                    </div>
+                    <div class="row g-4">
+                        @foreach($helpfulBlogs as $helpfulBlog)
+                            <div class="col-lg-4 col-md-6">
+                                <article class="premium-card h-100 overflow-hidden d-flex flex-column">
+                                    <img src="{{ \App\Support\PublicAsset::url($helpfulBlog->image ?? null, 'site/img/carousel-1.png') }}" alt="{{ $helpfulBlog->title }}" class="w-100 object-cover" loading="lazy" decoding="async" width="640" height="360" style="aspect-ratio: 16 / 9;">
+                                    <div class="p-4 d-flex flex-column flex-grow-1">
+                                        @if(filled($helpfulBlog->category))
+                                            <small class="text-brand-gold fw-black text-uppercase tracking-widest mb-2" style="font-size: 8px;">{{ $helpfulBlog->category }}</small>
+                                        @endif
+                                        <h3 class="h6 fw-black text-brand-dark mb-2">{{ $helpfulBlog->title }}</h3>
+                                        <p class="text-zinc-600 mb-4" style="font-size: 12px; line-height: 1.65;">{{ \Illuminate\Support\Str::limit(strip_tags($helpfulBlog->content), 105) }}</p>
+                                        <a href="{{ route('blog-detail', $helpfulBlog->slug) }}" data-cta="helpful-guide-from-course" data-track-event="course_helpful_guide_click" data-source-page="course-detail" data-source-section="helpful-guides" data-selected-course="{{ $course->slug }}" class="text-brand-dark fw-black text-decoration-none mt-auto" style="font-size: 10px;">Read Helpful Guide <i class="fa fa-arrow-right ms-1" aria-hidden="true"></i></a>
+                                    </div>
+                                </article>
+                            </div>
+                        @endforeach
                     </div>
                 </section>
             @endif

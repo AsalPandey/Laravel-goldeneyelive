@@ -93,7 +93,6 @@ class BrandingRequest extends FormRequest
             'geo_latitude' => ['nullable', 'string', 'max:255'],
             'geo_longitude' => ['nullable', 'string', 'max:255'],
             'google_maps_embed' => ['nullable', 'string', 'max:2048', new ApprovedMapEmbedUrl],
-            'schema_markup' => ['nullable', 'string'],
             'meta_keywords' => ['nullable', 'string'],
             'image_size_limit' => ['nullable', 'integer', 'min:512', 'max:10240'],
             'hero_cta_1_text' => ['nullable', 'string', 'max:50'],

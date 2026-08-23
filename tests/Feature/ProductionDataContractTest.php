@@ -228,8 +228,8 @@ class ProductionDataContractTest extends TestCase
             'meta_description' => 'This must not be silently discarded.',
             'meta_keywords' => 'notice, course',
             'aeo_summary' => 'Durable answer summary.',
-            'schema_markup' => '{"@type":"EducationalOrganization"}',
         ]);
+        $this->assertNull(Notice::where('title', 'Durable SEO notice')->firstOrFail()->schema_markup);
 
         $pillarUrl = $this->urlOfLength(500);
         $this->actingAs($this->admin)->post(route('admin.service-pillars.store'), [

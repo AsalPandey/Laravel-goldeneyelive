@@ -72,7 +72,6 @@ class SiteSettingSeeder extends Seeder
             'google_business_profile_url' => ['', 'text'],
             'external_review_screenshot' => ['', 'image'],
             'external_review_proof_note' => ['', 'text'],
-            'speakable_selectors' => ['.hero-hook-title, .section-title, h1, h2', 'text'],
             'robots_txt' => ["User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: https://goldeneye.edu.np/sitemap.xml", 'text'],
             'geo_latitude' => ['28.2126', 'text'],
             'geo_longitude' => ['83.9786', 'text'],

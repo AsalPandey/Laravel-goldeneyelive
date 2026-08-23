@@ -15,7 +15,6 @@ class TestimonialRequest extends CMSRequest
             $rules['meta_description'],
             $rules['meta_keywords'],
             $rules['aeo_summary'],
-            $rules['schema_markup'],
         );
 
         return array_merge($rules, [

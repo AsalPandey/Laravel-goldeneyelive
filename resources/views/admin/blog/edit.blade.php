@@ -15,6 +15,7 @@
                     <div>
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Blog Title</label>
                         <input type="text" name="title" value="{{ old('title', $post->title) }}" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        @error('title') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
@@ -28,16 +29,26 @@
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Author</label>
                     <input type="text" name="author" value="{{ old('author', $post->author) }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                    @error('author') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Category</label>
-                    <input type="text" name="category" value="{{ old('category', $post->category) }}" maxlength="255" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3" placeholder="e.g. Study Guides">
+                    <input type="text" name="category" value="{{ old('category', $post->category) }}" list="blog_category_options" maxlength="255" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3" placeholder="e.g. Study Guides">
+                    <datalist id="blog_category_options">
+                        @foreach($blogCategories as $blogCategory)
+                            <option value="{{ $blogCategory }}"></option>
+                        @endforeach
+                    </datalist>
+                    @error('category') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
+
+                @include('admin.blog.partials.related-courses')
 
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Content</label>
                     <textarea name="content" rows="10" required data-cms-rich-text class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('content', $post->content) }}</textarea>
+                    @error('content') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -82,8 +93,9 @@
                                     <input type="text" name="image_path" id="image_path" value="{{ old('image_path', $post->image) }}" placeholder="e.g. site/img/carousel-1.png" class="flex-1 rounded-xl border-neutral-200 text-xs h-10 px-4 focus:border-orange-600 focus:ring-0">
                                     <button type="button" onclick="openMediaVault('image_path', 'blog_image_preview')" class="bg-neutral-900 text-[#C5A059] text-[9px] font-black uppercase px-4 flex items-center justify-center rounded-xl hover:bg-orange-600 hover:text-white transition-all">
                                          Vault
-                                     </button>
+                                    </button>
                                 </div>
+                                @error('image_path') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>

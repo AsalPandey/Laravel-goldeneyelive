@@ -19,17 +19,33 @@ class BlogController extends Controller
     public function show(string $slug): View
     {
         $post = BlogPost::publiclyVisible()->where('slug', $slug)->firstOrFail();
+        $relatedCourses = $post->courses()
+            ->publiclyVisible()
+            ->with('courseCategory:id,name,status')
+            ->orderByDesc('courses.is_featured')
+            ->orderBy('courses.display_order')
+            ->orderBy('courses.name')
+            ->limit(3)
+            ->get();
         $recentPosts = BlogPost::publiclyVisible()
             ->where('id', '!=', $post->id)
             ->latest('published_at')
             ->limit(3)
             ->get();
 
-        return view('site.blog.show', compact('post', 'recentPosts'));
+        return view('site.blog.show', compact('post', 'relatedCourses', 'recentPosts'));
     }
 
     public function preview(BlogPost $post): Response
     {
+        $relatedCourses = $post->courses()
+            ->publiclyVisible()
+            ->with('courseCategory:id,name,status')
+            ->orderByDesc('courses.is_featured')
+            ->orderBy('courses.display_order')
+            ->orderBy('courses.name')
+            ->limit(3)
+            ->get();
         $recentPosts = BlogPost::publiclyVisible()
             ->where('id', '!=', $post->id)
             ->latest('published_at')
@@ -39,6 +55,7 @@ class BlogController extends Controller
         return response()
             ->view('site.blog.show', [
                 'post' => $post,
+                'relatedCourses' => $relatedCourses,
                 'recentPosts' => $recentPosts,
                 'isPreview' => true,
             ])

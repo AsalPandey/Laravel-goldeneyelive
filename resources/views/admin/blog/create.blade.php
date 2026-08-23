@@ -26,12 +26,21 @@
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Author</label>
                     <input type="text" name="author" value="{{ old('author', auth()->user()->name) }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                    @error('author') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Category</label>
-                    <input type="text" name="category" value="{{ old('category') }}" maxlength="255" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3" placeholder="e.g. Study Guides">
+                    <input type="text" name="category" value="{{ old('category') }}" list="blog_category_options" maxlength="255" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3" placeholder="e.g. Study Guides">
+                    <datalist id="blog_category_options">
+                        @foreach($blogCategories as $blogCategory)
+                            <option value="{{ $blogCategory }}"></option>
+                        @endforeach
+                    </datalist>
+                    @error('category') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
+
+                @include('admin.blog.partials.related-courses')
 
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Content</label>
@@ -78,6 +87,7 @@
                                         Vault
                                     </button>
                                 </div>
+                                @error('image_path') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>

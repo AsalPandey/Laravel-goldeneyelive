@@ -142,7 +142,7 @@ class SeoLaunchFixTest extends TestCase
 
         $this->assertCount(1, $courseNodes);
         $this->assertSame('Dynamic IELTS Masterclass', $courseNodes[0]['name'] ?? null);
-        $this->assertSame('Advanced', $courseNodes[0]['educationalLevel'] ?? null);
+        $this->assertArrayNotHasKey('educationalLevel', $courseNodes[0]);
         $this->assertArrayNotHasKey('offers', $courseNodes[0]);
         $this->assertArrayNotHasKey('hasCourseInstance', $courseNodes[0]);
         $this->assertSame(1, $this->countSchemaType($nodes, 'EducationalOrganization'));

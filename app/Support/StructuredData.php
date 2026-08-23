@@ -20,17 +20,6 @@ final class StructuredData
     ): array {
         $organization = self::organizationSchema($settings);
         $canonicalUrl ??= CanonicalUrl::current();
-        $speakableSelectors = array_values(array_filter(
-            array_map('trim', explode(',', (string) ($settings['speakable_selectors'] ?? ''))),
-        ));
-
-        foreach (self::schemaNodes(self::decodeSchema($settings['schema_markup'] ?? null)) as $node) {
-            if (self::isOrganizationSchema($node)) {
-                $organization = self::mergeOrganizationSchema($organization, $node);
-
-                break;
-            }
-        }
 
         return self::withoutEmptyValues([
             '@context' => 'https://schema.org',
@@ -57,10 +46,6 @@ final class StructuredData
                     'about' => [
                         '@id' => self::organizationId(),
                     ],
-                    'speakable' => $speakableSelectors === [] ? null : [
-                        '@type' => 'SpeakableSpecification',
-                        'cssSelector' => $speakableSelectors,
-                    ],
                 ]),
             ],
         ]);
@@ -72,27 +57,9 @@ final class StructuredData
      */
     public static function courseSchema(Course $course, array $settings): array
     {
-        $adminCourseSchema = null;
-
-        foreach (self::schemaNodes(self::decodeSchema($course->schema_markup)) as $node) {
-            if (self::schemaHasType($node, 'Course')) {
-                $adminCourseSchema = self::withoutContext($node);
-                unset(
-                    $adminCourseSchema['aggregateRating'],
-                    $adminCourseSchema['hasCourseInstance'],
-                    $adminCourseSchema['offers'],
-                    $adminCourseSchema['review'],
-                );
-
-                break;
-            }
-        }
-
-        $schema = array_replace_recursive($adminCourseSchema ?? [], self::defaultCourseSchema($course, $settings));
-
         return self::withoutEmptyValues(array_merge([
             '@context' => 'https://schema.org',
-        ], $schema));
+        ], self::defaultCourseSchema($course, $settings)));
     }
 
     /**
@@ -101,21 +68,12 @@ final class StructuredData
      */
     public static function articleSchema(BlogPost $post, array $settings): array
     {
-        $adminArticleSchema = null;
-
-        foreach (self::schemaNodes(self::decodeSchema($post->schema_markup)) as $node) {
-            if (self::schemaHasType($node, 'Article') || self::schemaHasType($node, 'BlogPosting')) {
-                $adminArticleSchema = self::withoutContext($node);
-
-                break;
-            }
-        }
-
         $url = CanonicalUrl::route('blog-detail', ['slug' => $post->slug]);
         $description = trim(strip_tags((string) ($post->meta_description ?: $post->content)));
         $publishedAt = $post->published_at ?? $post->created_at;
 
-        $schema = array_replace_recursive($adminArticleSchema ?? [], self::withoutEmptyValues([
+        return self::withoutEmptyValues([
+            '@context' => 'https://schema.org',
             '@type' => 'BlogPosting',
             '@id' => $url.'#article',
             'url' => $url,
@@ -129,19 +87,48 @@ final class StructuredData
                 '@type' => 'Person',
                 'name' => $post->author,
             ] : [
+                '@type' => 'Organization',
                 '@id' => self::organizationId(),
+                'name' => self::siteName($settings),
             ],
             'publisher' => [
                 '@id' => self::organizationId(),
             ],
             'datePublished' => $publishedAt?->toIso8601String(),
             'dateModified' => $post->updated_at?->toIso8601String(),
-        ]));
-
-        return self::withoutEmptyValues([
-            '@context' => 'https://schema.org',
-            ...$schema,
         ]);
+    }
+
+    /**
+     * @param  array<int, array{name: string, url?: string|null}>  $items
+     * @return array<string, mixed>
+     */
+    public static function breadcrumbSchema(array $items): array
+    {
+        $elements = [];
+
+        foreach (array_values($items) as $index => $item) {
+            $name = trim(strip_tags((string) ($item['name'] ?? '')));
+
+            if ($name === '') {
+                continue;
+            }
+
+            $elements[] = self::withoutEmptyValues([
+                '@type' => 'ListItem',
+                'position' => count($elements) + 1,
+                'name' => $name,
+                'item' => filled($item['url'] ?? null)
+                    ? CanonicalUrl::normalize((string) $item['url'])
+                    : null,
+            ]);
+        }
+
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => $elements,
+        ];
     }
 
     public static function titleWithBrand(?string $title, string $brand = 'Golden Eye Academy'): string
@@ -241,35 +228,6 @@ final class StructuredData
         ]);
     }
 
-    /**
-     * @param  array<string, mixed>  $default
-     * @param  array<string, mixed>  $admin
-     * @return array<string, mixed>
-     */
-    private static function mergeOrganizationSchema(array $default, array $admin): array
-    {
-        $admin = self::withoutContext($admin);
-        $unsupportedProperties = [
-            'aggregateRating',
-            'areaServed',
-            'foundingDate',
-            'openingHours',
-            'review',
-        ];
-
-        foreach ($unsupportedProperties as $property) {
-            unset($admin[$property]);
-        }
-
-        if (isset($admin['name']) && in_array(Str::lower((string) $admin['name']), ['goldeneye academy', 'goldeneye'], true)) {
-            $admin['name'] = $default['name'] ?? 'Golden Eye Academy';
-        }
-
-        return self::withoutEmptyValues(array_replace_recursive($admin, $default, [
-            '@id' => self::organizationId(),
-        ]));
-    }
-
     public static function organizationId(): string
     {
         return CanonicalUrl::to('/').'#organization';
@@ -304,84 +262,6 @@ final class StructuredData
             ['Golden Eye Academy', 'Golden Eye'],
             $value,
         );
-    }
-
-    /**
-     * @return array<string, mixed>|null
-     */
-    private static function decodeSchema(mixed $schema): ?array
-    {
-        if (blank($schema)) {
-            return null;
-        }
-
-        if (is_array($schema)) {
-            return $schema;
-        }
-
-        $decoded = json_decode((string) $schema, true);
-
-        return json_last_error() === JSON_ERROR_NONE && is_array($decoded) ? $decoded : null;
-    }
-
-    /**
-     * @param  array<string, mixed>|null  $schema
-     * @return array<int, array<string, mixed>>
-     */
-    private static function schemaNodes(?array $schema): array
-    {
-        if ($schema === null) {
-            return [];
-        }
-
-        if (isset($schema['@graph']) && is_array($schema['@graph'])) {
-            return array_values(array_filter($schema['@graph'], 'is_array'));
-        }
-
-        return [$schema];
-    }
-
-    /**
-     * @param  array<string, mixed>  $schema
-     */
-    private static function isOrganizationSchema(array $schema): bool
-    {
-        foreach (['Organization', 'EducationalOrganization', 'LocalBusiness'] as $type) {
-            if (self::schemaHasType($schema, $type)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  array<string, mixed>  $schema
-     */
-    private static function schemaHasType(array $schema, string $type): bool
-    {
-        $schemaType = $schema['@type'] ?? null;
-
-        if (is_string($schemaType)) {
-            return $schemaType === $type;
-        }
-
-        if (is_array($schemaType)) {
-            return in_array($type, $schemaType, true);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  array<string, mixed>  $schema
-     * @return array<string, mixed>
-     */
-    private static function withoutContext(array $schema): array
-    {
-        unset($schema['@context']);
-
-        return $schema;
     }
 
     /**

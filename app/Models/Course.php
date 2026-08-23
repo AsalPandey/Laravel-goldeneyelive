@@ -40,6 +40,11 @@ class Course extends Model
         return $this->hasMany(Testimonial::class);
     }
 
+    public function blogs(): BelongsToMany
+    {
+        return $this->belongsToMany(BlogPost::class, 'blog_course', 'course_id', 'blog_id');
+    }
+
     public function scopePubliclyVisible(Builder $query): Builder
     {
         return $query

@@ -18,6 +18,8 @@ use DOMDocument;
 use DOMXPath;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Symfony\Component\Finder\SplFileInfo;
 use Tests\TestCase;
 use Throwable;
 
@@ -56,6 +58,20 @@ class Phase2bCmsSafetyTest extends TestCase
         $this->assertSame('brandingForm', $xpath->query('//button[@id="brandingSubmitBtn"]')->item(0)?->getAttribute('form'));
         $this->assertSame('brandingPurgeForm', $xpath->query('//button[@form="brandingPurgeForm"]')->item(0)?->getAttribute('form'));
         $this->assertSame('brandingAssetUploadForm', $xpath->query('//input[@name="image" and @form="brandingAssetUploadForm"]')->item(0)?->getAttribute('form'));
+    }
+
+    public function test_branding_vault_ignores_files_removed_during_enumeration(): void
+    {
+        $missingFile = new SplFileInfo(public_path('site/img/missing-vault-image.jpg'), '', 'missing-vault-image.jpg');
+
+        File::partialMock();
+        File::shouldReceive('isDirectory')->once()->andReturnTrue();
+        File::shouldReceive('allFiles')->once()->andReturn([$missingFile]);
+
+        $this->actingAs($this->admin)
+            ->get(route('admin.branding.index'))
+            ->assertOk()
+            ->assertDontSee('missing-vault-image.jpg');
     }
 
     public function test_branding_and_seo_forms_preserve_unsaved_input_after_validation_errors(): void

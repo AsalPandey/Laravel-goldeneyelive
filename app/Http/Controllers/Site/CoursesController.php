@@ -128,13 +128,20 @@ class CoursesController extends Controller
             ->latest()
             ->first();
 
+        $helpfulBlogs = $course->blogs()
+            ->publiclyVisible()
+            ->orderByDesc('blog_posts.published_at')
+            ->orderByDesc('blog_posts.id')
+            ->limit(3)
+            ->get();
+
         $faqs = $course->faqs()
             ->where('f_a_q_s.status', 'active')
             ->orderBy('f_a_q_s.order_priority')
             ->orderBy('f_a_q_s.id')
             ->get();
 
-        return compact('course', 'instructor', 'instructorCourses', 'testimonial', 'faqs');
+        return compact('course', 'instructor', 'instructorCourses', 'testimonial', 'helpfulBlogs', 'faqs');
     }
 
     /**

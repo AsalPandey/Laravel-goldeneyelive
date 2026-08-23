@@ -28,7 +28,7 @@ class JsonLdContainmentTest extends TestCase
         $this->assertSame($value, json_decode($sanitized, true, 512, JSON_THROW_ON_ERROR)['name']);
     }
 
-    public function test_rendered_cms_json_ld_cannot_create_a_second_script_element(): void
+    public function test_legacy_cms_json_ld_cannot_create_a_second_script_element(): void
     {
         $post = BlogPost::factory()->create([
             'status' => 'published',
@@ -45,10 +45,10 @@ class JsonLdContainmentTest extends TestCase
 
         $this->assertStringNotContainsString('<script id="phase-one-injected">', $content);
         $this->assertStringNotContainsString('window.phaseOneInjected=true</script>', $content);
-        $this->assertStringContainsString('\u003C\/script\u003E', $content);
+        $this->assertStringNotContainsString('phaseMarker', $content);
     }
 
-    public function test_blog_cms_schema_is_emitted_once(): void
+    public function test_blog_uses_one_laravel_generated_blog_posting_and_ignores_legacy_schema(): void
     {
         $post = BlogPost::factory()->create([
             'status' => 'published',
@@ -63,6 +63,7 @@ class JsonLdContainmentTest extends TestCase
             ->assertOk()
             ->content();
 
-        $this->assertSame(1, substr_count($content, '"phaseMarker":"single-emission"'));
+        $this->assertSame(1, substr_count($content, '"@type":"BlogPosting"'));
+        $this->assertStringNotContainsString('single-emission', $content);
     }
 }

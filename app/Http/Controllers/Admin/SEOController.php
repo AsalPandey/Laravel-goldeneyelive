@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SEORequest;
 use App\Models\SiteSetting;
-use App\Support\CanonicalUrl;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -18,7 +17,7 @@ class SEOController extends Controller
     const SEO_KEYS = [
         'meta_title', 'meta_keywords', 'meta_description',
         'google_analytics_id', 'google_search_console_id', 'bing_webmaster_id',
-        'robots_txt', 'aeo_summary', 'speakable_selectors', 'schema_markup',
+        'aeo_summary',
         'geo_latitude', 'geo_longitude', 'site_name', 'site_name_suffix', 'founding_year',
     ];
 
@@ -28,14 +27,8 @@ class SEOController extends Controller
     public function index(): View
     {
         $settings = SiteSetting::all()->pluck('value', 'key');
-        $robotsTxtWarning = SEORequest::ROBOTS_FULL_SITE_BLOCK_WARNING;
 
-        // Ensure robots.txt default if not set
-        if (! isset($settings['robots_txt'])) {
-            $settings['robots_txt'] = "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: ".CanonicalUrl::route('sitemap');
-        }
-
-        return view('admin.seo.index', compact('settings', 'robotsTxtWarning'));
+        return view('admin.seo.index', compact('settings'));
     }
 
     /**
@@ -46,16 +39,8 @@ class SEOController extends Controller
         $validated = $request->validated();
         $data = [];
         foreach (self::SEO_KEYS as $key) {
-            if ($request->has($key)) {
-                $value = $request->input($key) ?? '';
-
-                // JSON-LD Validation for Schema Markup
-                if ($key === 'schema_markup' && $value) {
-                    json_decode($value);
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        return back()->withErrors(['schema_markup' => 'The schema_markup must be a valid JSON-LD string.'])->withInput();
-                    }
-                }
+            if (array_key_exists($key, $validated)) {
+                $value = $validated[$key] ?? '';
 
                 $data[] = [
                     'key' => $key,

@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BlogRequest;
 use App\Models\BlogPost;
+use App\Models\Course;
 use App\Support\CmsDateTime;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class BlogController extends Controller
@@ -49,12 +52,17 @@ class BlogController extends Controller
 
     public function create()
     {
-        return view('admin.blog.create');
+        $courses = Course::where('status', 'active')->orderBy('name')->get(['id', 'name', 'status']);
+        $blogCategories = $this->blogCategories();
+
+        return view('admin.blog.create', compact('courses', 'blogCategories'));
     }
 
     public function store(BlogRequest $request)
     {
         $validated = $request->validated();
+        $courseIds = $validated['courses'] ?? [];
+        unset($validated['courses'], $validated['courses_present']);
 
         $validated['slug'] = $request->filled('slug')
             ? (new BlogPost)->generateUniqueSlug($request->slug)
@@ -67,9 +75,22 @@ class BlogController extends Controller
         }
 
         $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/blog', 'site/img/carousel-2.jpg');
+        $uploadedImage = $request->hasFile('image') ? $validated['image'] : null;
 
-        BlogPost::create($validated);
-        $this->clearSiteCache();
+        try {
+            DB::transaction(function () use ($validated, $courseIds): void {
+                $post = BlogPost::create($validated);
+                $post->courses()->sync($courseIds);
+
+                DB::afterCommit(fn () => $this->clearSiteCache());
+            });
+        } catch (\Throwable $exception) {
+            if ($uploadedImage) {
+                $this->secureAssetDeletion($uploadedImage);
+            }
+
+            throw $exception;
+        }
 
         Alert::success('Success', 'Blog post created successfully.');
 
@@ -83,9 +104,15 @@ class BlogController extends Controller
 
     public function edit($id)
     {
-        $post = BlogPost::findOrFail($id);
+        $post = BlogPost::with('courses')->findOrFail($id);
+        $assignedCourseIds = $post->courses->pluck('id')->all();
+        $courses = Course::where('status', 'active')
+            ->orWhereIn('id', $assignedCourseIds)
+            ->orderBy('name')
+            ->get(['id', 'name', 'status']);
+        $blogCategories = $this->blogCategories();
 
-        return view('admin.blog.edit', compact('post'));
+        return view('admin.blog.edit', compact('post', 'courses', 'blogCategories'));
     }
 
     public function update(BlogRequest $request, $id)
@@ -94,6 +121,8 @@ class BlogController extends Controller
         $oldImage = $post->image;
 
         $validated = $request->validated();
+        $courseIds = $validated['courses'] ?? [];
+        unset($validated['courses'], $validated['courses_present']);
 
         $validated['slug'] = $request->filled('slug')
             ? $post->generateUniqueSlug($request->slug, $id)
@@ -113,10 +142,26 @@ class BlogController extends Controller
         }
 
         $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/blog', $post->image);
+        $newImage = $validated['image'];
+        $newImageUploaded = $request->hasFile('image') && $newImage !== $oldImage;
 
-        $post->update($validated);
-        $this->deleteReplacedAsset($oldImage, $post->image);
-        $this->clearSiteCache();
+        try {
+            DB::transaction(function () use ($post, $validated, $courseIds, $oldImage, $newImage): void {
+                $post->update($validated);
+                $post->courses()->sync($courseIds);
+
+                DB::afterCommit(function () use ($oldImage, $newImage): void {
+                    $this->deleteReplacedAsset($oldImage, $newImage);
+                    $this->clearSiteCache();
+                });
+            });
+        } catch (\Throwable $exception) {
+            if ($newImageUploaded) {
+                $this->secureAssetDeletion($newImage);
+            }
+
+            throw $exception;
+        }
 
         Alert::success('Success', 'Blog post updated successfully.');
 
@@ -135,5 +180,18 @@ class BlogController extends Controller
         Alert::success('Success', 'Article permanently deleted.');
 
         return back();
+    }
+
+    /**
+     * @return Collection<int, string>
+     */
+    private function blogCategories(): Collection
+    {
+        return BlogPost::query()
+            ->whereNotNull('category')
+            ->where('category', '!=', '')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
     }
 }

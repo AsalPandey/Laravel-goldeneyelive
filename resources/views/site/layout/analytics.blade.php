@@ -26,6 +26,8 @@
             'whatsapp_click',
             'phone_click',
             'course_filter_used',
+            'blog_related_course_click',
+            'course_helpful_guide_click',
             'parent_inquiry_click',
             'study_abroad_inquiry_click',
             'admin_lead_status_change',

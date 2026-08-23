@@ -57,16 +57,9 @@
             @error('aeo_summary') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
         </div>
 
-        @role('Admin')
-            <div class="md:col-span-2">
-                <label class="block text-xs font-black uppercase text-zinc-500 mb-2 tracking-widest">Custom Schema Markup (JSON-LD)</label>
-                <textarea name="schema_markup" rows="3"
-                          class="w-full rounded-xl border-zinc-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white p-4 text-sm font-mono"
-                          placeholder='{ "@@context": "https://schema.org", ... }'>{{ old('schema_markup', $model?->schema_markup) }}</textarea>
-                <p class="text-[10px] text-zinc-400 mt-2">Advanced: add valid JSON-LD for this page. This control remains Admin-only.</p>
-                @error('schema_markup') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
-            </div>
-        @endrole
+        <div class="md:col-span-2 rounded-xl border border-blue-100 bg-blue-50 p-4 text-xs text-blue-900 dark:border-blue-900/40 dark:bg-blue-900/20 dark:text-blue-100">
+            Laravel generates structured data from the published title, description, image, dates, relationships, and verified academy settings. No raw scripts or JSON-LD are accepted here.
+        </div>
     </div>
 
     <div class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-100 dark:border-amber-900/30">

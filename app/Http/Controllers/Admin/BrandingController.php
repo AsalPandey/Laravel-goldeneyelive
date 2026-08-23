@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
 use RealRashid\SweetAlert\Facades\Alert;
+use RuntimeException;
 
 class BrandingController extends Controller
 {
@@ -170,14 +171,11 @@ class BrandingController extends Controller
         'privacy_header_title',
         'privacy_policy_content',
         'recent_posts_title',
-        'robots_txt',
-        'schema_markup',
         'site_address',
         'site_email',
         'site_name',
         'site_name_suffix',
         'site_phone',
-        'speakable_selectors',
         'stat_1_lab',
         'stat_1_val',
         'stat_2_lab',
@@ -208,9 +206,8 @@ class BrandingController extends Controller
      */
     const SENSITIVE_KEYS = [
         'bing_webmaster_id', 'google_analytics_id', 'google_maps_embed', 'google_search_console_id',
-        'robots_txt',
         'image_size_limit', 'geo_latitude', 'geo_longitude',
-        'schema_markup', 'aeo_summary', 'site_name', 'site_name_suffix', 'speakable_selectors',
+        'aeo_summary', 'site_name', 'site_name_suffix',
     ];
 
     /**
@@ -233,13 +230,24 @@ class BrandingController extends Controller
 
         $images = [];
         foreach ($files as $file) {
-            $relativePath = str_replace(public_path().DIRECTORY_SEPARATOR, '', $file->getRealPath());
+            try {
+                $realPath = $file->getRealPath();
+                $size = $file->getSize();
+            } catch (RuntimeException) {
+                continue;
+            }
+
+            if ($realPath === false) {
+                continue;
+            }
+
+            $relativePath = str_replace(public_path().DIRECTORY_SEPARATOR, '', $realPath);
             $relativePath = str_replace('\\', '/', $relativePath);
             $filename = $file->getFilename();
             $images[] = [
                 'name' => $filename,
                 'path' => $relativePath,
-                'size' => number_format($file->getSize() / 1024, 2).' KB',
+                'size' => number_format($size / 1024, 2).' KB',
                 'is_unused' => ! isset($usedAssets[$filename]) && ! isset($usedAssets[$relativePath]),
             ];
         }
@@ -313,14 +321,6 @@ class BrandingController extends Controller
 
                 // BrandingRequest safely extracts and validates Google Maps iframe URLs.
                 $value = $validated[$key] ?? '';
-
-                // JSON-LD Validation for Schema Markup
-                if ($key === 'schema_markup' && $value) {
-                    json_decode($value);
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        return back()->withErrors(['schema_markup' => 'The schema_markup must be a valid JSON-LD string.'])->withInput();
-                    }
-                }
 
                 $settingsData[] = [
                     'key' => $key,
