@@ -18,6 +18,7 @@ class LiveSiteSeeder extends Seeder
             CourseSeeder::class,
             NoticeSeeder::class,
             FAQSeeder::class,
+            CourseFaqSeeder::class,
             BlogSeeder::class,
             SiteSettingSeeder::class,
             ServicePillarSeeder::class,

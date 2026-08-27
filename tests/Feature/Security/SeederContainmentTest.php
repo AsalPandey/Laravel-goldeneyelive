@@ -8,6 +8,7 @@ use App\Models\SiteSetting;
 use App\Models\User;
 use Database\Seeders\BlogSeeder;
 use Database\Seeders\CourseCategorySeeder;
+use Database\Seeders\CourseFaqSeeder;
 use Database\Seeders\CourseSeeder;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\FAQSeeder;
@@ -64,6 +65,7 @@ class SeederContainmentTest extends TestCase
             'live site' => [LiveSiteSeeder::class],
             'blog' => [BlogSeeder::class],
             'course category' => [CourseCategorySeeder::class],
+            'course FAQ' => [CourseFaqSeeder::class],
             'course' => [CourseSeeder::class],
             'faq' => [FAQSeeder::class],
             'notice' => [NoticeSeeder::class],

@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\FAQ;
 use App\Models\ServicePillar;
+use App\Support\ApprovedCourseFaqDeploymentData;
 use Database\Seeders\LiveSiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -36,7 +37,7 @@ class FinalContentRefinementTest extends TestCase
         $this->seed(LiveSiteSeeder::class);
 
         $this->assertSame(
-            'Golden Eye Academy provides a certificate after completion of each course.',
+            ApprovedCourseFaqDeploymentData::CERTIFICATE_ANSWER,
             FAQ::query()->findOrFail(10)->answer,
         );
 

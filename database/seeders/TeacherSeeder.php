@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Course;
 use App\Models\Teacher;
+use App\Support\ApprovedCourseFaqDeploymentData;
 use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
 
@@ -80,5 +82,16 @@ class TeacherSeeder extends Seeder
                 $teacher,
             );
         }
+
+        $teacherIdsByName = Teacher::query()->pluck('id', 'name');
+
+        Course::query()
+            ->whereIn('slug', array_keys(ApprovedCourseFaqDeploymentData::targetCourses()))
+            ->get()
+            ->each(function (Course $course) use ($teacherIdsByName): void {
+                $course->update([
+                    'teacher_id' => $teacherIdsByName->get($course->instructor),
+                ]);
+            });
     }
 }

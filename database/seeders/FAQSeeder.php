@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\FAQ;
+use App\Support\ApprovedCourseFaqDeploymentData;
 use App\Support\GoldenEyeContentBaseline;
 use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
@@ -16,13 +17,32 @@ class FAQSeeder extends Seeder
     {
         $this->preventProductionBaselineSeeding();
 
-        foreach (GoldenEyeContentBaseline::faqs() as $faq) {
+        $faqs = array_map(function (array $faq): array {
+            if ($faq['question'] === ApprovedCourseFaqDeploymentData::CERTIFICATE_QUESTION) {
+                $faq['answer'] = ApprovedCourseFaqDeploymentData::CERTIFICATE_ANSWER;
+            }
+
+            return $faq;
+        }, GoldenEyeContentBaseline::faqs());
+
+        foreach (ApprovedCourseFaqDeploymentData::approvedFaqs() as $question => $approvedFaq) {
+            $faqs[] = [
+                'question' => $question,
+                ...$approvedFaq,
+            ];
+        }
+
+        foreach ($faqs as $faq) {
+            $identity = isset($faq['id'])
+                ? ['id' => $faq['id']]
+                : ['question' => $faq['question']];
+
             FAQ::updateOrCreate(
-                ['id' => $faq['id']],
+                $identity,
                 [
                     'question' => $faq['question'],
                     'answer' => $faq['answer'],
-                    'status' => 'active',
+                    'status' => $faq['status'] ?? 'active',
                     'order_priority' => $faq['order_priority'],
                     'meta_title' => $faq['question'].' | Golden Eye Academy FAQ',
                     'meta_description' => Str::limit($faq['answer'], 155, ''),

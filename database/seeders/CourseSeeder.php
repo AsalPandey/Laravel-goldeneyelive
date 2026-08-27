@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Course;
 use App\Models\CourseCategory;
+use App\Support\ApprovedCourseFaqDeploymentData;
 use App\Support\GoldenEyeContentBaseline;
 use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
@@ -250,6 +251,7 @@ class CourseSeeder extends Seeder
             $courseData = [
                 ...$courseData,
                 ...GoldenEyeContentBaseline::courseOverrides()[$courseData['slug']],
+                ...(ApprovedCourseFaqDeploymentData::courseMetadata()[$courseData['slug']] ?? []),
             ];
             $category = $categories->get($courseData['category_slug']);
 

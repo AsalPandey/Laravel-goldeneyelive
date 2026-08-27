@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\FAQ;
 use App\Models\SiteSetting;
 use App\Models\User;
+use App\Support\ApprovedCourseFaqDeploymentData;
 use App\Support\GoldenEyeArticleBaseline;
 use App\Support\GoldenEyeContentBaseline;
 use App\Support\StructuredData;
@@ -65,9 +66,12 @@ class GoldenEyeContentBaselineTest extends TestCase
         $this->seed(LiveSiteSeeder::class);
 
         $faqs = FAQ::query()->orderBy('id')->get();
-        $this->assertCount(20, $faqs);
-        $this->assertSame(range(1, 20), $faqs->pluck('id')->all());
-        $this->assertSame(range(10, 200, 10), $faqs->pluck('order_priority')->all());
+        $this->assertCount(24, $faqs);
+        $this->assertSame(range(1, 24), $faqs->pluck('id')->all());
+        $this->assertSame(
+            [...range(10, 200, 10), ...array_column(ApprovedCourseFaqDeploymentData::approvedFaqs(), 'order_priority')],
+            $faqs->pluck('order_priority')->all(),
+        );
         $this->assertSame(['active'], $faqs->pluck('status')->unique()->values()->all());
 
         $expectedArticles = collect(GoldenEyeArticleBaseline::articles())->keyBy('slug');

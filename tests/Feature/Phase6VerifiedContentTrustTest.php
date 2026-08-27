@@ -11,6 +11,7 @@ use App\Models\ServicePillar;
 use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use App\Models\User;
+use App\Support\ApprovedCourseFaqDeploymentData;
 use Database\Seeders\BlogSeeder;
 use Database\Seeders\CourseCategorySeeder;
 use Database\Seeders\CourseSeeder;
@@ -276,11 +277,14 @@ class Phase6VerifiedContentTrustTest extends TestCase
 
         $faqs = FAQ::query()->orderBy('order_priority')->get();
 
-        $this->assertCount(20, $faqs);
-        $this->assertSame(range(10, 200, 10), $faqs->pluck('order_priority')->all());
+        $this->assertCount(24, $faqs);
+        $this->assertSame(
+            [...range(10, 200, 10), ...array_column(ApprovedCourseFaqDeploymentData::approvedFaqs(), 'order_priority')],
+            $faqs->pluck('order_priority')->all(),
+        );
         $this->assertSame(['active'], $faqs->pluck('status')->unique()->values()->all());
         $this->assertSame(
-            'Golden Eye Academy provides a certificate after completion of each course.',
+            ApprovedCourseFaqDeploymentData::CERTIFICATE_ANSWER,
             $faqs->firstWhere('question', 'Do Golden Eye Academy courses include certificates?')?->answer,
         );
         $this->assertSame(

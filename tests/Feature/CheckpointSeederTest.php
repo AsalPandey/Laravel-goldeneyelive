@@ -12,9 +12,11 @@ use App\Models\SiteSetting;
 use App\Models\Teacher;
 use App\Models\Testimonial;
 use App\Models\User;
+use App\Support\ApprovedCourseFaqDeploymentData;
 use Database\Seeders\LiveSiteSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class CheckpointSeederTest extends TestCase
@@ -25,14 +27,15 @@ class CheckpointSeederTest extends TestCase
     {
         $this->seed(LiveSiteSeeder::class);
 
-        $this->assertGreaterThanOrEqual(5, CourseCategory::count());
-        $this->assertGreaterThanOrEqual(12, Course::count());
-        $this->assertGreaterThanOrEqual(7, Teacher::count());
-        $this->assertGreaterThanOrEqual(7, Testimonial::count());
-        $this->assertGreaterThanOrEqual(8, BlogPost::where('status', 'published')->count());
-        $this->assertGreaterThanOrEqual(20, FAQ::where('status', 'active')->count());
-        $this->assertGreaterThanOrEqual(7, ServicePillar::where('status', 'active')->count());
-        $this->assertGreaterThanOrEqual(2, Notice::count());
+        $this->assertSame(5, CourseCategory::count());
+        $this->assertSame(13, Course::count());
+        $this->assertSame(7, Teacher::count());
+        $this->assertSame(7, Testimonial::count());
+        $this->assertSame(8, BlogPost::where('status', 'published')->count());
+        $this->assertSame(24, FAQ::where('status', 'active')->count());
+        $this->assertSame(68, DB::table('course_faq')->count());
+        $this->assertSame(7, ServicePillar::where('status', 'active')->count());
+        $this->assertSame(3, Notice::count());
 
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'whatsapp_cta_text',
@@ -65,6 +68,42 @@ class CheckpointSeederTest extends TestCase
         ]);
 
         $this->assertSeededAssetsExist();
+    }
+
+    public function test_checkpoint_seeders_match_the_approved_release_data_contract(): void
+    {
+        $this->seed(LiveSiteSeeder::class);
+
+        foreach (ApprovedCourseFaqDeploymentData::courseMetadata() as $slug => $metadata) {
+            $course = Course::query()->where('slug', $slug)->firstOrFail();
+
+            $this->assertSame($metadata['name'], $course->name);
+            $this->assertSame($metadata['price'], $course->price);
+            $this->assertSame($metadata['duration'], $course->duration);
+            $this->assertSame($metadata['instructor'], $course->instructor);
+        }
+
+        foreach (ApprovedCourseFaqDeploymentData::matrix() as $slug => $questions) {
+            $assignedQuestions = Course::query()
+                ->where('slug', $slug)
+                ->firstOrFail()
+                ->faqs()
+                ->pluck('question')
+                ->all();
+
+            $this->assertEqualsCanonicalizing($questions, $assignedQuestions);
+        }
+
+        $this->assertSame(5, Course::query()->whereNotNull('teacher_id')->count());
+        $this->assertSame(4, Testimonial::query()->whereNotNull('course_id')->count());
+        $this->assertSame(0, DB::table('blog_course')->count());
+        $this->assertDatabaseMissing(BlogPost::class, ['slug' => 'phase-5b-browser-relationship-guide']);
+        $this->assertDatabaseMissing(Teacher::class, ['name' => 'Phase 5B Browser Teacher']);
+        $this->assertDatabaseMissing(Testimonial::class, ['student_name' => 'PHASE 5B TEST ONLY']);
+
+        $this->artisan('course-faq:apply-deployment-data')
+            ->expectsOutputToContain('NO CHANGES REQUIRED')
+            ->assertSuccessful();
     }
 
     public function test_seeded_public_pages_render_dynamic_cms_content(): void

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Course;
 use App\Models\Testimonial;
 use Database\Seeders\Concerns\PreventsProductionBaselineSeeding;
 use Illuminate\Database\Seeder;
@@ -17,7 +18,8 @@ class TestimonialSeeder extends Seeder
         $testimonials = [
             [
                 'student_name' => 'Sandesh Mahat',
-                'course_name' => 'Web Development with Laravel Basics',
+                'course_name' => 'Professional Web Development',
+                'course_slug' => 'professional-web-development',
                 'photo' => 'site/img/testimonial-1.jpg',
                 'content' => 'Golden Eye Academy helped me understand web development step by step. The project practice made the course useful beyond theory.',
                 'rating' => 5,
@@ -49,7 +51,8 @@ class TestimonialSeeder extends Seeder
             ],
             [
                 'student_name' => 'Rojina Gurung',
-                'course_name' => 'PTE Academic Preparation',
+                'course_name' => 'PTE Elite Academic Training',
+                'course_slug' => 'pte-elite-training',
                 'photo' => null,
                 'content' => 'The PTE templates and computer-based practice made the exam feel less confusing. I knew what to focus on each week.',
                 'rating' => 5,
@@ -57,7 +60,8 @@ class TestimonialSeeder extends Seeder
             ],
             [
                 'student_name' => 'Suman Pariyar',
-                'course_name' => 'Course Information Before Enrollment',
+                'course_name' => 'Free Course Roadmap Help',
+                'course_slug' => 'free-course-roadmap-help',
                 'photo' => null,
                 'content' => 'I was unsure between language and computer courses. The quick class-information session gave me a clear order of what to learn first.',
                 'rating' => 5,
@@ -65,7 +69,8 @@ class TestimonialSeeder extends Seeder
             ],
             [
                 'student_name' => 'Pratiksha Sharma',
-                'course_name' => 'Practical English Communication',
+                'course_name' => 'Global English Professional Track',
+                'course_slug' => 'global-english-pro',
                 'photo' => null,
                 'content' => 'My speaking confidence improved through regular practice, correction, and interview-style activities.',
                 'rating' => 5,
@@ -74,13 +79,16 @@ class TestimonialSeeder extends Seeder
         ];
 
         foreach ($testimonials as $testimonial) {
+            $courseSlug = $testimonial['course_slug'] ?? null;
+            unset($testimonial['course_slug']);
+
             $testimonial['status'] = 'active';
+            $testimonial['course_id'] = $courseSlug === null
+                ? null
+                : Course::query()->where('slug', $courseSlug)->value('id');
 
             Testimonial::updateOrCreate(
-                [
-                    'student_name' => $testimonial['student_name'],
-                    'course_name' => $testimonial['course_name'],
-                ],
+                ['student_name' => $testimonial['student_name']],
                 $testimonial,
             );
         }
