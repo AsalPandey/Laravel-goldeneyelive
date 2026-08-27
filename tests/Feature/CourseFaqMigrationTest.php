@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Course;
+use App\Models\FAQ;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
-use App\Models\Course;
-use App\Models\FAQ;
-use Illuminate\Database\Schema\Blueprint;
 
 class CourseFaqMigrationTest extends TestCase
 {
@@ -20,7 +20,7 @@ class CourseFaqMigrationTest extends TestCase
         $this->assertFalse(Schema::hasColumn('course_faq', 'id'));
         $this->assertTrue(Schema::hasColumn('course_faq', 'course_id'));
         $this->assertTrue(Schema::hasColumn('course_faq', 'faq_id'));
-        
+
         $foreignKeys = DB::select('PRAGMA foreign_key_list(course_faq)');
         $this->assertCount(2, $foreignKeys);
         foreach ($foreignKeys as $fk) {
@@ -62,7 +62,7 @@ class CourseFaqMigrationTest extends TestCase
 
         $course = Course::factory()->create();
         $faq = FAQ::factory()->create();
-        
+
         DB::table('course_faq')->insert(['course_id' => $course->id, 'faq_id' => $faq->id]);
         DB::table('course_faq')->insert(['course_id' => $course->id, 'faq_id' => $faq->id]);
 
@@ -93,14 +93,14 @@ class CourseFaqMigrationTest extends TestCase
         $course = Course::factory()->create();
         $faq = FAQ::factory()->create();
         DB::table('course_faq')->insert(['course_id' => $course->id, 'faq_id' => $faq->id]);
-        
+
         $this->assertFalse(Schema::hasColumn('course_faq', 'id'));
 
         $this->artisan('migrate:rollback', ['--path' => 'database/migrations/2026_08_06_230629_rebuild_course_faq_table.php']);
 
         $this->assertTrue(Schema::hasColumn('course_faq', 'id'));
         $this->assertDatabaseHas('course_faq', ['course_id' => $course->id, 'faq_id' => $faq->id]);
-        
+
         // Reapply
         $this->artisan('migrate', ['--path' => 'database/migrations/2026_08_06_230629_rebuild_course_faq_table.php']);
         $this->assertFalse(Schema::hasColumn('course_faq', 'id'));

@@ -533,8 +533,6 @@ class CourseFaqPhaseATest extends TestCase
         $this->assertFalse(Cache::has('site_settings'));
     }
 
-
-
     /** 20. Existing full test suite remains green */
     public function test_existing_full_suite_remains_green(): void
     {

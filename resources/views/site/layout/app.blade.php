@@ -211,25 +211,19 @@
 	                    return document.getElementById('siteNoticePopupCta');
 	                }
 
-	                function shouldOpenCourseHelpPopup(link) {
+	                function shouldOpenCampaignPopup(link) {
 	                    if (!link || link.closest('#siteNoticePopup')) {
 	                        return false;
 	                    }
 
-	                    const label = (link.dataset.ctaLabel || link.textContent || '').trim().toLowerCase();
-	                    const cta = (link.dataset.cta || '').toLowerCase();
 	                    const href = link.getAttribute('href') || '';
 
 	                    if (!href || href.startsWith('#') || link.target === '_blank') {
 	                        return false;
 	                    }
 
-                    return cta.includes('course-help')
-                        || cta.includes('course-guidance')
-                        || label.includes('ask for course help')
-                        || label.includes('course help')
-                        || label.includes('course information');
-                }
+	                    return link.dataset.popupTrigger === 'campaign';
+	                }
 
 	                function syncPopupCtaFromLink(link) {
 	                    const popupCta = popupCtaElement();
@@ -312,7 +306,7 @@
 	                document.addEventListener('click', function (event) {
 	                    const trigger = event.target.closest('a[href]');
 
-	                    if (!shouldOpenCourseHelpPopup(trigger)) {
+	                    if (!shouldOpenCampaignPopup(trigger)) {
 	                        return;
 	                    }
 

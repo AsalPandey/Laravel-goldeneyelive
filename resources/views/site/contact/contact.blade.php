@@ -107,6 +107,18 @@
                                         </p>
                                     </div>
                                 </div>
+
+                                @if(filled($settings['opening_hours'] ?? null))
+                                    <div class="d-flex align-items-center gap-3 group">
+                                        <div class="w-14 h-14 rounded-2xl bg-brand-dark text-brand-gold flex items-center justify-center flex-shrink-0 transition-all group-hover:scale-110 shadow-lg">
+                                            <i class="fa fa-clock fs-5"></i>
+                                        </div>
+                                        <div class="contact-detail-copy">
+                                            <p class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Opening hours</p>
+                                            <p class="mb-0 font-black text-brand-dark">{{ $settings['opening_hours'] }}</p>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -120,7 +120,7 @@
             ])->filter(fn ($value) => filled($value))->implode(' — ');
 
             array_splice($parentViewItems, 3, 0, [[
-                'label' => 'Matched faculty profile',
+                'label' => 'Faculty profile',
                 'value' => $instructorProfile,
             ]]);
         }
@@ -196,7 +196,7 @@
                     <div class="col-lg-5">
                         <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Who this course is for</span>
                         <h2 id="who-for-heading" class="h3 fw-black text-brand-dark mt-2 mb-3">Check fit before you enroll</h2>
-                        <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Review the published course information, then confirm any current details that are not stored on this page.</p>
+                        <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Review the published course information, then ask the academy to confirm current timing, faculty, and availability before enrollment.</p>
                     </div>
                     <div class="col-lg-7">
                         <div class="row g-3">
@@ -284,32 +284,11 @@
             </section>
 
             @if($outlineItems->isNotEmpty())
-                <section class="mb-5" aria-labelledby="learn-heading">
-                    <div class="row g-4">
-                        <div class="col-lg-5">
-                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Published course outline</span>
-                            <h2 id="learn-heading" class="h3 fw-black text-brand-dark mt-2 mb-3">Listed learning areas</h2>
-                            <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">These items come from the course outline maintained in the course CMS.</p>
-                        </div>
-                        <div class="col-lg-7">
-                            <div class="row g-3">
-                                @foreach($outlineItems->take(6) as $item)
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-start gap-3 p-3 bg-white border border-zinc-100 rounded-xl h-100">
-                                            <i class="fa fa-check text-brand-gold mt-1"></i>
-                                            <span class="fw-bold text-brand-dark" style="font-size: 13px; line-height: 1.55;">{{ $item }}</span>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
                 <section class="mb-5" aria-labelledby="curriculum-heading">
                     <div class="text-center mb-4">
-                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Course outline order</span>
-                        <h2 id="curriculum-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">Review the listed learning sequence</h2>
+                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Published course outline</span>
+                        <h2 id="curriculum-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">Listed learning areas</h2>
+                        <p class="text-zinc-600 mb-0" style="font-size: 13px;">Shown in the order maintained by academy staff.</p>
                     </div>
                     <div class="row g-3">
                         @foreach($outlineItems as $index => $item)
@@ -355,10 +334,7 @@
                                         @endif
                                         <div class="d-flex flex-wrap gap-2">
                                             @if($instructorCourseList !== '')
-                                                <span class="course-info-pill">Matched courses: {{ $instructorCourseList }}</span>
-                                            @endif
-                                            @if(filled($instructor->bio))
-                                                <span class="course-info-pill">Profile note: {{ \Illuminate\Support\Str::limit(strip_tags($instructor->bio), 90) }}</span>
+                                                <span class="course-info-pill">Courses taught: {{ $instructorCourseList }}</span>
                                             @endif
                                         </div>
                                     </div>
@@ -454,12 +430,24 @@
                         <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">FAQs</span>
                         <h2 id="faq-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">Questions before joining this course</h2>
                     </div>
-                    <div class="row g-3">
-                        @foreach($faqs as $faq)
-                            <div class="col-lg-6">
-                                <div class="h-100 p-4 bg-white border border-zinc-100 rounded-xl shadow-sm">
-                                    <h3 class="h6 fw-black text-brand-dark mb-2">{{ $faq->question }}</h3>
-                                    <p class="text-zinc-600 mb-0" style="font-size: 13px; line-height: 1.65;">{{ \Illuminate\Support\Str::limit(strip_tags($faq->answer), 155) }}</p>
+                    <div class="accordion" id="courseFaqAccordion">
+                        @foreach($faqs as $index => $faq)
+                            <div class="faq-premium-item mb-3" id="course-faq-{{ $faq->id }}">
+                                <h3 class="accordion-header" id="courseFaqHeading{{ $faq->id }}">
+                                    <button class="faq-premium-btn {{ $index !== 0 ? 'collapsed' : '' }} rounded-xl shadow-sm py-3 px-4"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#courseFaqCollapse{{ $faq->id }}"
+                                            aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
+                                            aria-controls="courseFaqCollapse{{ $faq->id }}">
+                                        <span class="font-black tracking-tight">{{ $faq->question }}</span>
+                                        <i class="fas fa-plus text-[9px]" aria-hidden="true"></i>
+                                    </button>
+                                </h3>
+                                <div id="courseFaqCollapse{{ $faq->id }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}" data-bs-parent="#courseFaqAccordion" aria-labelledby="courseFaqHeading{{ $faq->id }}">
+                                    <div class="faq-premium-body bg-zinc-50/50 p-4 rounded-b-xl border-x border-b border-zinc-100">
+                                        @sanitize($faq->answer)
+                                    </div>
                                 </div>
                             </div>
                         @endforeach

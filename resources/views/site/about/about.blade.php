@@ -165,7 +165,7 @@
                                     </tr>
                                     <tr class="border-b border-zinc-100 transition-all hover:bg-zinc-50">
                                         <td class="py-4 ps-5 fw-bold text-zinc-700 small">Who teaches it</td>
-                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Stored instructor name and any matched active profile</td>
+                                        <td class="py-4 text-center fw-black text-brand-dark small"><i class="fa fa-check text-brand-gold me-2"></i> Instructor name and linked faculty profile when available</td>
                                         <td class="py-4 text-center text-zinc-500 small">Ask who will teach your batch</td>
                                     </tr>
                                     <tr class="transition-all hover:bg-zinc-50 bg-zinc-50/50">

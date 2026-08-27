@@ -11,6 +11,7 @@
         $audienceType = request('audience_type', '');
         $selectedCourseContext = request('selected_course', $selectedCourse ?? 'undecided');
         $selectedCourseValue = old('course', $selectedCourseContext);
+        $selectedCourseName = $courses->firstWhere('slug', $selectedCourseValue)?->name;
         $helpTopics = $helpTopics ?? \App\Http\Requests\Site\JoinNowRequest::helpTopics();
         $selectedHelpTopic = old('help_topic', match (true) {
             str_contains(strtolower($sourceSection), 'parent') => 'Parent inquiry',
@@ -69,6 +70,14 @@
                             <div class="course-help-step mb-4">
                                 <span>Step 1</span>
                                 <strong>Your main request</strong>
+                            </div>
+
+                            <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2 p-3 mb-4 bg-brand-gold/10 border border-brand-gold/20 rounded-xl" data-selected-course-summary>
+                                <p class="mb-0 text-brand-dark" style="font-size: 13px;">
+                                    <strong>You are asking about:</strong>
+                                    <span data-selected-course-name>{{ $selectedCourseName ?: 'Help choosing the right course' }}</span>
+                                </p>
+                                <button type="button" class="btn btn-link p-0 fw-bold text-decoration-none text-start text-sm-end" data-change-course style="font-size: 12px;">Change course</button>
                             </div>
 
                             <div class="row g-4">
@@ -207,7 +216,7 @@
                                         <span data-submit-label>Ask for Course Help</span> <i class="fa fa-check-circle ms-2" data-submit-icon aria-hidden="true"></i>
                                     </button>
                                     <p class="text-center mt-3 text-muted small" style="font-size: 0.75rem;">
-                                        <i class="fa fa-lock me-1"></i> No spam. Our team will reply as soon as possible.
+                                        <i class="fa fa-lock me-1"></i> No spam. Our team will reply as soon as possible. Read our <a href="{{ route('privacy-policy') }}">Privacy Policy</a>.
                                     </p>
                                 </div>
                             </div>
@@ -222,26 +231,29 @@
         document.addEventListener("DOMContentLoaded", function() {
             const toggle = document.querySelector('.optional-details-toggle');
             const details = document.getElementById('extraDetails');
-            if (toggle && details) {
+            const setOptionalDetailsExpanded = (expanded) => {
+                if (!toggle || !details) {
+                    return;
+                }
+
                 const label = toggle.querySelector('span');
                 const icon = toggle.querySelector('i');
+                toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                details.classList.toggle('d-none', !expanded);
 
-                const setExpanded = (expanded) => {
-                    toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-                    details.classList.toggle('d-none', !expanded);
+                if (label) {
+                    label.textContent = expanded ? 'Hide optional details' : 'Add more details';
+                }
 
-                    if (label) {
-                        label.textContent = expanded ? 'Hide optional details' : 'Add more details';
-                    }
+                if (icon) {
+                    icon.classList.toggle('fa-plus-circle', !expanded);
+                    icon.classList.toggle('fa-minus-circle', expanded);
+                }
+            };
 
-                    if (icon) {
-                        icon.classList.toggle('fa-plus-circle', !expanded);
-                        icon.classList.toggle('fa-minus-circle', expanded);
-                    }
-                };
-
+            if (toggle && details) {
                 toggle.addEventListener('click', () => {
-                    setExpanded(details.classList.contains('d-none'));
+                    setOptionalDetailsExpanded(details.classList.contains('d-none'));
                 });
             }
 
@@ -284,6 +296,8 @@
             const form = document.getElementById('joinNow');
             const course = document.getElementById('course');
             const selectedCourse = form?.querySelector('input[name="selected_course"]');
+            const selectedCourseName = document.querySelector('[data-selected-course-name]');
+            const changeCourse = document.querySelector('[data-change-course]');
             const submitButton = form?.querySelector('button[type="submit"]');
             const submitLabel = submitButton?.querySelector('[data-submit-label]');
             const submitIcon = submitButton?.querySelector('[data-submit-icon]');
@@ -299,6 +313,10 @@
                 }
 
                 form.dataset.selectedCourse = course.value;
+
+                if (selectedCourseName) {
+                    selectedCourseName.textContent = course.selectedOptions[0]?.textContent?.trim() || 'Help choosing the right course';
+                }
             };
 
             const resetSubmitButton = () => {
@@ -321,6 +339,10 @@
             };
 
             course?.addEventListener('change', syncCourseContext);
+            changeCourse?.addEventListener('click', function () {
+                setOptionalDetailsExpanded(true);
+                course?.focus();
+            });
 
             form?.addEventListener('submit', function (event) {
                 if (! form.checkValidity()) {

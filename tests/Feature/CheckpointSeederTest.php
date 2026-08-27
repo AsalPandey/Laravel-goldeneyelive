@@ -76,7 +76,7 @@ class CheckpointSeederTest extends TestCase
             ->assertSee('Build skills you can use with confidence.')
             ->assertSee('Established in Pokhara since 2008')
             ->assertSee('Srijana Chowk, Pokhara, Nepal')
-            ->assertSee('Matched courses:')
+            ->assertSee('Courses taught:')
             ->assertDontSee('External social proof')
             ->assertSee('I am a Parent')
             ->assertSee('Explore courses students ask about most')

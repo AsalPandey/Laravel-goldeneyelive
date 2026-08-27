@@ -290,14 +290,11 @@
                                     </div>
                                 </div>
                                 <div class="d-grid gap-2">
-                                    @if(filled($teacher->designation))
-                                        <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Profile role:</strong> {{ $teacher->designation }}</p>
-                                    @endif
                                     @if($teacherCourseNames($teacher) !== '')
-                                        <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Matched courses:</strong> {{ $teacherCourseNames($teacher) }}</p>
+                                        <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Courses taught:</strong> {{ $teacherCourseNames($teacher) }}</p>
                                     @endif
                                     @if(filled($teacher->bio))
-                                        <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;"><strong class="text-brand-dark">Profile note:</strong> {{ \Illuminate\Support\Str::limit(strip_tags($teacher->bio), 110) }}</p>
+                                        <p class="mb-0 text-zinc-600" style="font-size: 11px; line-height: 1.55;">{{ \Illuminate\Support\Str::limit(strip_tags($teacher->bio), 110) }}</p>
                                     @endif
                                 </div>
                             </article>
