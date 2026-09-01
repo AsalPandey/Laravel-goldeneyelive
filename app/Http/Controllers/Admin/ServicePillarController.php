@@ -95,7 +95,6 @@ class ServicePillarController extends Controller
     private function normalizePayload(array $validated, ?ServicePillar $servicePillar = null): array
     {
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
-        $validated['is_featured'] = (bool) ($validated['is_featured'] ?? false);
         $validated['sort_order'] = (int) ($validated['sort_order'] ?? 0);
         $validated['bullets'] = collect($validated['bullets'] ?? [])
             ->filter(fn (?string $bullet): bool => filled($bullet))

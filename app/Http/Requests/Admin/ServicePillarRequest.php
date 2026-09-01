@@ -25,7 +25,6 @@ class ServicePillarRequest extends CMSRequest
             'bullets.*' => ['nullable', 'string', 'max:500'],
             'cta_label' => ['nullable', 'string', 'max:80'],
             'cta_url' => ['nullable', 'string', 'max:500', PublicCtaContract::publicUrlRule()],
-            'is_featured' => ['nullable', 'boolean'],
             'status' => ['required', 'in:active,inactive'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
         ]);

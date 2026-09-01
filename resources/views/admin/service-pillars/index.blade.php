@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between pb-4 border-b border-neutral-100">
             <div class="space-y-1">
                 <h1 class="text-3xl font-black text-neutral-900 tracking-tight uppercase">Service <span class="text-brand-gold">Pillars</span></h1>
-                <p class="text-neutral-500 text-sm">Control the homepage catalogue, positioning, and CTA paths.</p>
+                <p class="text-neutral-500 text-sm">Control catalogue positioning, ordering, and CTA paths.</p>
             </div>
             <a href="{{ route('admin.service-pillars.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-gold text-brand-dark px-6 py-3 text-sm font-black uppercase shadow-xl hover:bg-brand-dark hover:text-brand-gold transition-all">
                 <i class="fa fa-plus-circle"></i> Create Pillar
@@ -16,7 +16,6 @@
                     <tr>
                         <th class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Pillar</th>
                         <th class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">CTA</th>
-                        <th class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-neutral-400">Featured</th>
                         <th class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-neutral-400">Order</th>
                         <th class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-neutral-400">Status</th>
                         <th class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-neutral-400">Manage</th>
@@ -39,11 +38,6 @@
                             </td>
                             <td class="px-6 py-5 text-[11px] font-bold text-neutral-500">
                                 {{ $pillar->cta_label ?? 'No CTA' }}
-                            </td>
-                            <td class="px-6 py-5 text-center">
-                                <span class="inline-flex rounded-full px-3 py-1 text-[9px] font-black uppercase {{ $pillar->is_featured ? 'bg-brand-gold/10 text-brand-gold' : 'bg-neutral-100 text-neutral-400' }}">
-                                    {{ $pillar->is_featured ? 'Featured' : 'Standard' }}
-                                </span>
                             </td>
                             <td class="px-6 py-5 text-center font-mono text-xs text-neutral-500">{{ $pillar->sort_order }}</td>
                             <td class="px-6 py-5 text-center">
@@ -74,7 +68,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="py-24 text-center text-neutral-400 font-medium italic">No service pillars have been created yet.</td></tr>
+                        <tr><td colspan="5" class="py-24 text-center text-neutral-400 font-medium italic">No service pillars have been created yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>

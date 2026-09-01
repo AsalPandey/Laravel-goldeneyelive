@@ -17,7 +17,7 @@
         </div>
 
         <div class="rounded-2xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-900">
-            Notices can appear as either a popup-style notice or a top announcement bar. The separate image-led Main Campaign Popup is managed under Website Content → Marketing Tools. Scheduled times below use Nepal time.
+            Notices can appear as either a popup-style notice or a top announcement bar. While active and in schedule, a popup-style Notice temporarily takes precedence over the separate Main Campaign Popup under Website Content → Marketing Tools. Scheduled times below use Nepal time.
         </div>
 
         <div class="overflow-x-auto rounded-3xl border border-zinc-100 bg-white shadow-xl">

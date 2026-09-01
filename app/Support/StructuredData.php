@@ -214,7 +214,10 @@ final class StructuredData
      */
     private static function defaultCourseSchema(Course $course, array $settings): array
     {
-        $description = trim(strip_tags((string) $course->description));
+        $customDescription = trim(strip_tags((string) $course->meta_description));
+        $description = $customDescription !== ''
+            ? self::normalizeBrandText($customDescription)
+            : trim(strip_tags((string) $course->description));
 
         return self::withoutEmptyValues([
             '@type' => 'Course',

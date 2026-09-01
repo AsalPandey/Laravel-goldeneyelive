@@ -62,10 +62,7 @@
                     <input type="number" name="sort_order" value="{{ old('sort_order', $servicePillar?->sort_order ?? 0) }}" class="w-full px-5 py-4 rounded-xl border-neutral-100 bg-white text-sm focus:border-brand-gold focus:ring-0 transition-all font-bold">
                 </div>
             </div>
-            <label class="flex items-center gap-3 rounded-xl bg-white border border-neutral-100 p-4 cursor-pointer">
-                <input type="checkbox" name="is_featured" value="1" class="rounded border-neutral-300 text-brand-gold focus:ring-brand-gold" @checked(old('is_featured', $servicePillar?->is_featured ?? false))>
-                <span class="text-xs font-black uppercase tracking-widest text-neutral-600">Feature on Homepage</span>
-            </label>
+            <p class="rounded-xl border border-blue-100 bg-blue-50 p-4 text-xs text-blue-900">Service Pillars are ordered catalogue content. They are not displayed on the homepage.</p>
         </div>
 
         <div class="p-6 bg-neutral-50/50 rounded-2xl border border-neutral-100 space-y-4">

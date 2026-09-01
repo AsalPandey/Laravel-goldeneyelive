@@ -87,6 +87,7 @@
                             <option value="popup" {{ old('display_type', $notice->display_type) === 'popup' ? 'selected' : '' }}>Popup-style notice</option>
                             <option value="bar" {{ old('display_type', $notice->display_type) === 'bar' ? 'selected' : '' }}>Top announcement bar</option>
                         </select>
+                        <p class="mt-2 text-[10px] text-amber-700">An active popup-style Notice temporarily overrides the Main Campaign Popup. A top announcement bar does not.</p>
                     </div>
                     <div class="flex items-center gap-3 pt-4">
                         <input type="hidden" name="is_urgent" value="0">

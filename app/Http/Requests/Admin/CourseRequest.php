@@ -32,6 +32,10 @@ class CourseRequest extends CMSRequest
         }
 
         return array_merge(parent::rules(), [
+            'meta_title' => ['nullable', 'string', 'max:70'],
+            'meta_description' => ['nullable', 'string', 'max:500'],
+            'meta_keywords' => ['nullable', 'string', 'max:500'],
+            'aeo_summary' => ['nullable', 'string', 'max:500'],
             'name' => ['required', 'string', 'max:255'],
             'badge_text' => ['nullable', 'string', 'max:50'],
             'slug' => [

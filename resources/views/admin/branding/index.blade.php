@@ -657,6 +657,27 @@
                         <div class="border rounded-2xl overflow-hidden">
                             <textarea name="contact_page_content" id="editor_contact" data-cms-rich-text class="w-full min-h-[300px]">{{ $settings['contact_page_content'] ?? '' }}</textarea>
                         </div>
+                        <div class="mt-8 border-t border-zinc-100 pt-8">
+                            <h4 class="text-xs font-black uppercase tracking-widest text-zinc-700 mb-2">Form Success Messages</h4>
+                            <p class="text-xs text-zinc-500 mb-5">These messages are shown after successful contact, newsletter, and Course Help submissions.</p>
+                            <div class="grid grid-cols-1 gap-5">
+                                <div>
+                                    <label class="premium-label">Contact Form Success Message</label>
+                                    <textarea name="contact_success_message" rows="2" maxlength="500" class="premium-input h-auto py-3">{{ old('contact_success_message', $settings['contact_success_message'] ?? '') }}</textarea>
+                                    @error('contact_success_message') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label class="premium-label">Newsletter Success Message</label>
+                                    <textarea name="newsletter_success_message" rows="2" maxlength="500" class="premium-input h-auto py-3">{{ old('newsletter_success_message', $settings['newsletter_success_message'] ?? '') }}</textarea>
+                                    @error('newsletter_success_message') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label class="premium-label">Course Help Success Message</label>
+                                    <textarea name="enroll_success_message" rows="2" maxlength="500" class="premium-input h-auto py-3">{{ old('enroll_success_message', $settings['enroll_success_message'] ?? '') }}</textarea>
+                                    @error('enroll_success_message') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -825,6 +846,17 @@
                         <div class="p-3 bg-zinc-950 text-[#C5A059] rounded-2xl"><i class="fa fa-bullhorn"></i></div>
                         <h3 class="text-xl font-black uppercase text-zinc-800">Main Campaign Popup & Sticky Conversion</h3>
                     </div>
+                    @if($activeNoticePopup)
+                        <div class="mb-8 rounded-2xl border border-amber-300 bg-amber-50 p-5 text-sm text-amber-950" role="status">
+                            <p class="font-black uppercase tracking-wide">Main Campaign Popup is currently overridden</p>
+                            <p class="mt-2">The active popup notice “{{ $activeNoticePopup->title }}” currently occupies the public popup surface. Disable it or change its display style under Notices to return authority to this campaign popup.</p>
+                            <a href="{{ route('admin.notices.edit', $activeNoticePopup) }}" class="mt-3 inline-flex font-black underline">Manage overriding notice</a>
+                        </div>
+                    @else
+                        <div class="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900" role="status">
+                            No active popup-style Notice is overriding the Main Campaign Popup.
+                        </div>
+                    @endif
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                         <div class="space-y-6">

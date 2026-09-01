@@ -74,6 +74,7 @@
                             <option value="popup" @selected(old('display_type', 'popup') === 'popup')>Popup-style notice</option>
                             <option value="bar" @selected(old('display_type') === 'bar')>Top announcement bar</option>
                         </select>
+                        <p class="mt-2 text-[10px] text-amber-700">An active popup-style Notice temporarily overrides the Main Campaign Popup. A top announcement bar does not.</p>
                     </div>
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Starts At (Nepal time, optional)</label>

@@ -284,7 +284,18 @@ class BrandingController extends Controller
             ]);
         }
 
-        $activeNotice = Notice::where('status', 'active')->first();
+        $activeNoticePopup = Notice::query()
+            ->where('status', 'active')
+            ->whereIn('display_type', ['popup', 'standard'])
+            ->where(function ($query): void {
+                $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($query): void {
+                $query->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            })
+            ->orderByDesc('is_urgent')
+            ->latest('updated_at')
+            ->first();
         $isAdmin = auth()->user()->hasRole('Admin');
         $settingsArray = $settings->toArray();
         $homepageContent = CmsPublicContent::homepage($settingsArray);
@@ -296,7 +307,7 @@ class BrandingController extends Controller
             'images',
             'brandCompleteness',
             'usedAssets',
-            'activeNotice',
+            'activeNoticePopup',
             'isAdmin',
             'homepageContent',
             'homepageSectionDefinitions',

@@ -25,7 +25,7 @@ class NoticeSeeder extends Seeder
                 'image' => 'site/img/carousel-1.png',
                 'link' => '/join-now?course=undecided&selected_course=undecided&source_page=notice&source_section=course-roadmap-popup&inquiry_intent=course_guidance',
                 'button_text' => 'Ask for Course Help',
-                'status' => 'active',
+                'status' => 'inactive',
                 'display_type' => 'popup',
                 'is_urgent' => false,
             ],
