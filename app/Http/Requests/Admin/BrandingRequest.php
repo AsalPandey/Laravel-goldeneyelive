@@ -85,6 +85,7 @@ class BrandingRequest extends FormRequest
             'instagram_url' => ['nullable', 'url', 'max:255'],
             'linkedin_url' => ['nullable', 'url', 'max:255'],
             'youtube_url' => ['nullable', 'url', 'max:255'],
+            'tiktok_url' => ['nullable', 'url', 'max:255'],
             'twitter_url' => ['nullable', 'url', 'max:255'],
             'google_business_profile_url' => ['nullable', 'url', 'max:255'],
             'external_review_proof_note' => ['nullable', 'string', 'max:500'],

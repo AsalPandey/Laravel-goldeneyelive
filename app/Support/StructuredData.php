@@ -180,6 +180,7 @@ final class StructuredData
             $settings['instagram_url'] ?? null,
             $settings['linkedin_url'] ?? null,
             $settings['youtube_url'] ?? null,
+            $settings['tiktok_url'] ?? null,
         ], 'filled'));
         $hasCoordinates = filled($settings['geo_latitude'] ?? null) && filled($settings['geo_longitude'] ?? null);
 

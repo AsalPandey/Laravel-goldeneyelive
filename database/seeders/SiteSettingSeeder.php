@@ -51,6 +51,7 @@ class SiteSettingSeeder extends Seeder
             'instagram_url' => ['https://www.instagram.com/goldeneye.academy/', 'text'],
             'linkedin_url' => ['https://www.linkedin.com/company/golden-eye-academy/', 'text'],
             'youtube_url' => ['', 'text'],
+            'tiktok_url' => ['https://www.tiktok.com/@goldeneye.academy', 'text'],
             'twitter_url' => ['', 'text'],
 
             'meta_title' => ['Golden Eye Academy | Courses and Classes in Pokhara', 'text'],

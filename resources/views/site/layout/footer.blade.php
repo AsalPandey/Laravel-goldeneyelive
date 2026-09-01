@@ -42,6 +42,9 @@
                         @if(isset($settings['youtube_url']) && $settings['youtube_url'])
                         <a class="btn btn-outline-light btn-social" href="{{ $settings['youtube_url'] }}" target="_blank" rel="noopener" aria-label="Golden Eye Academy on YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a>
                         @endif
+                        @if(isset($settings['tiktok_url']) && $settings['tiktok_url'])
+                        <a class="btn btn-outline-light btn-social" href="{{ $settings['tiktok_url'] }}" target="_blank" rel="noopener" aria-label="Golden Eye Academy on TikTok"><i class="fab fa-tiktok" aria-hidden="true"></i></a>
+                        @endif
                         @if(isset($settings['whatsapp_number']) && $settings['whatsapp_number'])
                         <a class="btn btn-outline-light btn-social" href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $settings['whatsapp_number']) }}" target="_blank" rel="noopener" aria-label="Message Golden Eye Academy on WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
                         @endif

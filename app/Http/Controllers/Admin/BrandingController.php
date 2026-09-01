@@ -192,6 +192,7 @@ class BrandingController extends Controller
         'terms_and_conditions_content',
         'terms_header_title',
         'testimonials_title',
+        'tiktok_url',
         'twitter_url',
         'whatsapp_button_text',
         'whatsapp_cta_subtext',

@@ -755,7 +755,7 @@
                     <div class="brand-card lg:col-span-2">
                         <h3 class="text-xs font-black uppercase text-zinc-400 mb-6">Social Connections</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            @foreach(['facebook', 'instagram', 'linkedin', 'youtube'] as $plat)
+                            @foreach(['facebook', 'instagram', 'linkedin', 'youtube', 'tiktok'] as $plat)
                                 <div class="flex items-center gap-4">
                                     <div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0"><i class="fab fa-{{ $plat }}"></i></div>
                                     <input type="url" name="{{ $plat }}_url" value="{{ $settings[$plat.'_url'] ?? '' }}" class="premium-input" placeholder="{{ ucfirst($plat) }} URL">
