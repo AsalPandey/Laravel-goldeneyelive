@@ -60,14 +60,14 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Listed Instructor or Teaching Team</label>
-                        <input type="text" name="instructor" value="{{ old('instructor', $course->instructor) }}" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
-                        <p class="mt-1 text-xs text-neutral-500">This verified name is shown publicly even when no faculty biography is available.</p>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Manual Instructor or Teaching Team (Fallback)</label>
+                        <input type="text" name="instructor" value="{{ old('instructor', $course->instructor) }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        <p class="mt-1 text-xs text-neutral-500">Used only when no linked faculty profile is selected. Selecting a profile synchronizes the public instructor name.</p>
                         @error('instructor') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Linked Faculty Profile (optional)</label>
+                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Linked Faculty Profile (Preferred Authority)</label>
                         <select name="teacher_id" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-brand-gold focus:ring-brand-gold dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
                             <option value="">No verified faculty profile link</option>
                             @foreach($teachers as $teacher)

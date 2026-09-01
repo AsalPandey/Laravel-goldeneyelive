@@ -64,6 +64,10 @@ class CourseController extends Controller
         $validated['category'] = $category->name;
         $validated['category_slug'] = $category->slug;
 
+        if (filled($validated['teacher_id'] ?? null)) {
+            $validated['instructor'] = Teacher::findOrFail($validated['teacher_id'])->name;
+        }
+
         $validated['slug'] = Str::slug($validated['slug']);
 
         $validated['rating_star'] = '0';
@@ -71,13 +75,15 @@ class CourseController extends Controller
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['display_order'] = $validated['display_order'] ?? 100;
 
-        $uploadedPhoto = null;
-        if ($request->hasFile('photo')) {
-            $uploadedPhoto = $this->handleAssetUpload($request, 'photo', 'site/img/courses', 'site/img/carousel-1.png');
-            $validated['photo'] = $uploadedPhoto;
-        } else {
-            $validated['photo'] = 'site/img/carousel-1.png';
-        }
+        $validated['photo'] = $this->handleAssetUpload(
+            $request,
+            'photo',
+            'site/img/courses',
+            'site/img/carousel-1.png',
+        );
+        unset($validated['photo_path']);
+
+        $uploadedPhoto = $request->hasFile('photo') ? $validated['photo'] : null;
 
         try {
             DB::transaction(function () use ($validated, $faqIds) {
@@ -129,20 +135,23 @@ class CourseController extends Controller
         $validated['category'] = $category->name;
         $validated['category_slug'] = $category->slug;
 
+        if (filled($validated['teacher_id'] ?? null)) {
+            $validated['instructor'] = Teacher::findOrFail($validated['teacher_id'])->name;
+        }
+
         $validated['slug'] = Str::slug($validated['slug']);
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['display_order'] = $validated['display_order'] ?? 100;
 
         $oldPhoto = $course->photo;
-        $newPhotoUploaded = false;
+        $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/courses', $oldPhoto);
+        unset($validated['photo_path']);
 
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/courses', $oldPhoto);
-            $newPhotoUploaded = ($validated['photo'] !== $oldPhoto);
-        }
+        $photoChanged = $validated['photo'] !== $oldPhoto;
+        $newPhotoUploaded = $request->hasFile('photo') && $photoChanged;
 
         try {
-            DB::transaction(function () use ($course, $validated, $faqIds, $oldPhoto, $newPhotoUploaded) {
+            DB::transaction(function () use ($course, $validated, $faqIds, $oldPhoto, $photoChanged) {
                 $course->update($validated);
                 $course->faqs()->sync($faqIds);
 
@@ -151,9 +160,9 @@ class CourseController extends Controller
                     'course_slug' => $course->slug,
                 ]);
 
-                DB::afterCommit(function () use ($oldPhoto, $newPhotoUploaded) {
-                    if ($newPhotoUploaded && $oldPhoto && $oldPhoto !== 'site/img/carousel-1.png') {
-                        $this->secureAssetDeletion($oldPhoto);
+                DB::afterCommit(function () use ($oldPhoto, $photoChanged, $course) {
+                    if ($photoChanged) {
+                        $this->deleteReplacedAsset($oldPhoto, $course->photo);
                     }
                     $this->clearSiteCache();
                 });

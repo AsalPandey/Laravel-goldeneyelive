@@ -95,6 +95,9 @@ class CheckpointSeederTest extends TestCase
         }
 
         $this->assertSame(5, Course::query()->whereNotNull('teacher_id')->count());
+        Course::query()->whereNotNull('teacher_id')->with('teacher')->each(function (Course $course): void {
+            $this->assertSame($course->teacher->name, $course->instructor);
+        });
         $this->assertSame(4, Testimonial::query()->whereNotNull('course_id')->count());
         $this->assertSame(0, DB::table('blog_course')->count());
         $this->assertDatabaseMissing(BlogPost::class, ['slug' => 'phase-5b-browser-relationship-guide']);

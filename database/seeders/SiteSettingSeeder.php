@@ -84,8 +84,6 @@ class SiteSettingSeeder extends Seeder
             'hero_image' => ['site/img/carousel-1.png', 'image'],
             'hero_badge_text' => ['Golden Eye Academy, Pokhara', 'text'],
             'hero_title' => ['Practical courses and classes in Pokhara.', 'text'],
-            'hero_hook_headline' => ['Practical courses and classes in Pokhara.', 'text'],
-            'hero_hook_body' => ['Golden Eye Academy offers practical classes and skill-based batches for IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT learners in Pokhara.', 'text'],
             'hero_subtitle' => ['Compare available course details and ask the academy to confirm current batch information before enrollment.', 'text'],
             'hero_cta_text' => ['Ask for Course Help', 'text'],
             'hero_cta_1_text' => ['Ask for Course Help', 'text'],

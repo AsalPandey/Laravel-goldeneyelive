@@ -13,9 +13,9 @@
 	    @php
 	        $heroImage = $homeHeroImage;
 	        $heroBadge = trim((string) ($settings['hero_badge_text'] ?? 'Established in Pokhara since 2008')) ?: 'Established in Pokhara since 2008';
-	        $heroTitle = trim((string) ($settings['hero_hook_headline'] ?? $settings['hero_title'] ?? 'Build practical skills for study, work and what comes next.')) ?: 'Build practical skills for study, work and what comes next.';
-	        $heroBody = trim(strip_tags((string) ($settings['hero_hook_body'] ?? $settings['hero_subtitle'] ?? 'Explore computer, language, test-preparation and academic-support classes, with clear guidance to help you choose a suitable course and current batch.'))) ?: 'Explore computer, language, test-preparation and academic-support classes, with clear guidance to help you choose a suitable course and current batch.';
-	        $heroTrust = trim(strip_tags((string) ($settings['hero_subtitle'] ?? 'Clear course information. Practical learning. Guidance before enrollment.'))) ?: 'Clear course information. Practical learning. Guidance before enrollment.';
+	        $heroTitle = trim((string) ($settings['hero_title'] ?? 'Build practical skills for study, work and what comes next.')) ?: 'Build practical skills for study, work and what comes next.';
+	        $heroBody = trim(strip_tags((string) ($settings['hero_subtitle'] ?? 'Explore computer, language, test-preparation and academic-support classes, with clear guidance to help you choose a suitable course and current batch.'))) ?: 'Explore computer, language, test-preparation and academic-support classes, with clear guidance to help you choose a suitable course and current batch.';
+	        $heroTrust = 'Clear course information. Practical learning. Guidance before enrollment.';
 	        $heroPrimaryCta = trim((string) ($settings['hero_cta_1_text'] ?? $settings['hero_cta_text'] ?? 'Ask for Course Help')) ?: 'Ask for Course Help';
 	        $heroPrimaryCta = strtolower($heroPrimaryCta) === 'ask for course guidance' ? 'Ask for Course Help' : $heroPrimaryCta;
 	        $heroSecondaryCta = trim((string) ($settings['hero_cta_2_text'] ?? 'View Course Details')) ?: 'View Course Details';

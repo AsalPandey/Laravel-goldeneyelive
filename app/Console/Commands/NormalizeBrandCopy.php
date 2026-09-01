@@ -34,8 +34,6 @@ class NormalizeBrandCopy extends Command
         'google_maps_embed',
         'hero_badge_text',
         'hero_title',
-        'hero_hook_headline',
-        'hero_hook_body',
         'hero_subtitle',
         'stat_1_lab',
         'courses_title',

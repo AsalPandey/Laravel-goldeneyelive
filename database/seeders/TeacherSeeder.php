@@ -70,8 +70,6 @@ class TeacherSeeder extends Seeder
 
         foreach ($teachers as $teacher) {
             $teacher['status'] = 'active';
-            $teacher['facebook_url'] = 'https://www.facebook.com/goldeneyeacademy';
-            $teacher['linkedin_url'] = 'https://www.linkedin.com/company/golden-eye-academy/';
             $teacher['meta_title'] = $teacher['name'].' | Golden Eye Academy Faculty';
             $teacher['meta_description'] = $teacher['bio'];
             $teacher['meta_keywords'] = 'Golden Eye Academy faculty, '.$teacher['designation'];
@@ -83,14 +81,19 @@ class TeacherSeeder extends Seeder
             );
         }
 
-        $teacherIdsByName = Teacher::query()->pluck('id', 'name');
+        $teachersByName = Teacher::query()->get(['id', 'name'])->keyBy('name');
+        $teachersById = $teachersByName->keyBy('id');
 
         Course::query()
             ->whereIn('slug', array_keys(ApprovedCourseFaqDeploymentData::targetCourses()))
             ->get()
-            ->each(function (Course $course) use ($teacherIdsByName): void {
+            ->each(function (Course $course) use ($teachersById, $teachersByName): void {
+                $teacher = $teachersById->get($course->teacher_id)
+                    ?? $teachersByName->get($course->instructor);
+
                 $course->update([
-                    'teacher_id' => $teacherIdsByName->get($course->instructor),
+                    'teacher_id' => $teacher?->id,
+                    'instructor' => $teacher?->name ?? $course->instructor,
                 ]);
             });
     }

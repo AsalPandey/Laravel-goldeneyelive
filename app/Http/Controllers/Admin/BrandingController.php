@@ -142,8 +142,6 @@ class BrandingController extends Controller
         'hero_cta_1_text',
         'hero_cta_2_text',
         'hero_cta_text',
-        'hero_hook_body',
-        'hero_hook_headline',
         'hero_subtitle',
         'hero_title',
         'image_size_limit',

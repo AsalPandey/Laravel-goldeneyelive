@@ -43,7 +43,12 @@ class CourseRequest extends CMSRequest
             'category_id' => ['required', 'exists:course_categories,id'],
             'price' => ['required', 'string', 'max:255'],
             'duration' => ['required', 'string', 'max:255'],
-            'instructor' => ['required', 'string', 'max:255'],
+            'instructor' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::requiredIf(fn (): bool => blank($this->input('teacher_id'))),
+            ],
             'teacher_id' => ['nullable', 'integer', 'exists:teachers,id'],
             'capacity' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
