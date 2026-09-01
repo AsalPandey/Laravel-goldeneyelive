@@ -27,20 +27,6 @@ class BlogSeeder extends Seeder
             $post['meta_title'] = $post['title'].' | Golden Eye Academy';
             $post['meta_description'] = Str::limit($summary, 155, '');
             $post['aeo_summary'] = Str::limit($summary, 240, '');
-            $post['schema_markup'] = json_encode([
-                '@context' => 'https://schema.org',
-                '@type' => 'BlogPosting',
-                'headline' => $post['title'],
-                'author' => [
-                    '@type' => 'Organization',
-                    'name' => 'Golden Eye Academy',
-                ],
-                'publisher' => [
-                    '@type' => 'EducationalOrganization',
-                    'name' => 'Golden Eye Academy',
-                ],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
             BlogPost::updateOrCreate(['slug' => $post['slug']], $post);
         }
     }

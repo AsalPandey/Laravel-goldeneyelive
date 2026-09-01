@@ -224,14 +224,6 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="premium-label">About Section Title</label>
-                                <input type="text" name="about_section_title" value="{{ $settings['about_section_title'] ?? 'Why Golden Eye?' }}" class="premium-input">
-                            </div>
-                            <div>
-                                <label class="premium-label">Testimonials Title</label>
-                                <input type="text" name="testimonials_title" value="{{ $settings['testimonials_title'] ?? 'Published Student Feedback' }}" class="premium-input">
-                            </div>
-                            <div>
                                 <label class="premium-label" for="course_confirmation_note">Course Detail Confirmation Note</label>
                                 <textarea id="course_confirmation_note" name="course_confirmation_note" rows="3" class="premium-input h-auto py-3">{{ old('course_confirmation_note', $settings['course_confirmation_note'] ?? 'Confirm current batch timing, seat availability, and instructor details with the academy before enrollment.') }}</textarea>
                                 <p class="helper-text">Shown where a course does not store a live schedule or availability value.</p>
@@ -326,10 +318,6 @@
                                 <input type="text" name="hero_title" value="{{ $settings['hero_title'] ?? '' }}" class="premium-input h-14 text-lg font-black" placeholder="e.g. Empowering Your Future">
                             </div>
                             <div>
-                                <label class="premium-label">Primary Button Text</label>
-                                <input type="text" name="hero_cta_text" value="{{ $settings['hero_cta_text'] ?? 'Enroll Now' }}" class="premium-input h-14 font-black" placeholder="e.g. Get Started">
-                            </div>
-                            <div class="md:col-span-2">
                                 <label class="premium-label">Hero Sub-Heading (Rich Text)</label>
                                 <textarea name="hero_subtitle" id="editor_hero_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ $settings['hero_subtitle'] ?? '' }}</textarea>
                             </div>
@@ -417,11 +405,11 @@
                                 </div>
                                 <div>
                                     <label class="premium-label">Section Title</label>
-                                    <input type="text" name="about_content_title" value="{{ $settings['about_content_title'] ?? $settings['about_title'] ?? '' }}" class="premium-input" placeholder="e.g. Welcome to Golden Eye">
+                                    <input type="text" name="about_content_title" value="{{ $settings['about_content_title'] ?? '' }}" class="premium-input" placeholder="e.g. Welcome to Golden Eye">
                                 </div>
                                 <div>
                                     <label class="premium-label">Section Summary Text (Rich Text)</label>
-                                    <textarea name="about_content" id="editor_about_summary" rows="4" data-cms-rich-text class="premium-input h-auto py-3 leading-relaxed">{{ $settings['about_content'] ?? $settings['about_text'] ?? '' }}</textarea>
+                                    <textarea name="about_content" id="editor_about_summary" rows="4" data-cms-rich-text class="premium-input h-auto py-3 leading-relaxed">{{ $settings['about_content'] ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -442,52 +430,6 @@
                             </div>
                         </div>
 
-                        <div class="brand-card border-l-8 border-[#C5A059] lg:col-span-2">
-                            <div class="section-icon"><i class="fa fa-user-tie"></i></div>
-                            <h3 class="text-xl font-black uppercase text-zinc-800 mb-2">Founder's Vision Section</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div class="space-y-6">
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="premium-label">Founder Name</label>
-                                            <input type="text" name="founder_name" value="{{ $settings['founder_name'] ?? '' }}" class="premium-input">
-                                        </div>
-                                        <div>
-                                            <label class="premium-label">Designation</label>
-                                            <input type="text" name="founder_position" value="{{ $settings['founder_position'] ?? '' }}" class="premium-input">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="premium-label">The Message (Rich Text)</label>
-                                        <textarea name="founder_message" id="editor_founder_message" rows="5" data-cms-rich-text class="premium-input h-auto py-4 leading-relaxed">{{ $settings['founder_message'] ?? '' }}</textarea>
-                                    </div>
-                                </div>
-                                <div class="space-y-6">
-                                    <div>
-                                        <label class="premium-label">Founder Image</label>
-                                        <div class="relative rounded-2xl overflow-hidden border-4 border-zinc-50 shadow-inner h-48 mb-4">
-                                            <img src="{{ \App\Support\PublicAsset::url($settings['founder_image'] ?? null, 'site/img/message-chairperson.jpg') }}" 
-                                                 onerror="this.src='{{ asset('site/img/carousel-1.png') }}'"
-                                                 class="w-full h-full object-cover">
-                                        </div>
-                                        <div class="flex gap-2">
-                                            <input type="text" name="founder_image_path" id="input_founder_image" value="{{ $settings['founder_image'] ?? '' }}" class="premium-input h-10 text-xs font-mono bg-transparent flex-1" placeholder="site/img/message-chairperson.jpg">
-                                            <button type="button" onclick="openPicker('input_founder_image')" class="bg-zinc-800 text-[#C5A059] px-4 rounded-xl text-[10px] font-black uppercase hover:bg-orange-600 hover:text-white transition-all whitespace-nowrap">
-                                                <i class="fa fa-images"></i>
-                                            </button>
-                                        </div>
-                                        <input type="file" name="founder_image" accept="image/*" class="text-xs mt-3">
-                                        @error('founder_image_path') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
-                                        @if(filled($settings['founder_image'] ?? null))
-                                            <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700 mt-3">
-                                                <input type="checkbox" name="remove_founder_image" value="1" @checked(old('remove_founder_image')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
-                                                Remove saved Founder image and use the safe fallback
-                                            </label>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -501,25 +443,6 @@
                                 <div>
                                     <label class="premium-label">Page Title</label>
                                     <input type="text" name="about_header_title" value="{{ $settings['about_header_title'] ?? 'About Us' }}" class="premium-input">
-                                </div>
-                                <div>
-                                    <label class="premium-label">Section Tagline</label>
-                                    <input type="text" name="about_section_tagline" value="{{ $settings['about_section_tagline'] ?? 'Empowering Growth' }}" class="premium-input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="brand-card">
-                            <div class="section-icon bg-zinc-900"><i class="fa fa-quote-right text-white"></i></div>
-                            <h3 class="text-xl font-black uppercase text-zinc-800 mb-2">Founder Section Heading</h3>
-                            <div class="space-y-6">
-                                <div>
-                                    <label class="premium-label">Small Tagline</label>
-                                    <input type="text" name="founder_section_tagline" value="{{ $settings['founder_section_tagline'] ?? 'Leadership Message' }}" class="premium-input">
-                                </div>
-                                <div>
-                                    <label class="premium-label">Main Title</label>
-                                    <input type="text" name="founder_section_title" value="{{ $settings['founder_section_title'] ?? 'From Our Founder' }}" class="premium-input">
                                 </div>
                             </div>
                         </div>

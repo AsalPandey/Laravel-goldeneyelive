@@ -263,17 +263,6 @@ class CourseSeeder extends Seeder
             $courseData['display_order'] = ($index + 1) * 10;
             $courseData['meta_description'] = Str::limit($courseData['description'], 500, '');
             $courseData['aeo_summary'] = $courseData['description'];
-            $courseData['schema_markup'] = json_encode([
-                '@context' => 'https://schema.org',
-                '@type' => 'Course',
-                'name' => $courseData['name'],
-                'description' => $courseData['description'],
-                'provider' => [
-                    '@type' => 'EducationalOrganization',
-                    'name' => 'Golden Eye Academy',
-                ],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
             Course::updateOrCreate(
                 ['slug' => $courseData['slug']],
                 $courseData,

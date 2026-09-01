@@ -321,12 +321,6 @@ class PublishGoldenEyeContentBaseline extends Command
             'meta_description' => Str::limit($faq['answer'], 155, ''),
             'meta_keywords' => 'Golden Eye Academy FAQ, courses in Pokhara',
             'aeo_summary' => $faq['answer'],
-            'schema_markup' => json_encode([
-                '@context' => 'https://schema.org',
-                '@type' => 'Question',
-                'name' => $faq['question'],
-                'acceptedAnswer' => ['@type' => 'Answer', 'text' => $faq['answer']],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
         ];
     }
 
@@ -348,13 +342,6 @@ class PublishGoldenEyeContentBaseline extends Command
             'meta_description' => Str::limit($summary, 155, ''),
             'meta_keywords' => $article['meta_keywords'],
             'aeo_summary' => Str::limit($summary, 240, ''),
-            'schema_markup' => json_encode([
-                '@context' => 'https://schema.org',
-                '@type' => 'BlogPosting',
-                'headline' => $article['title'],
-                'author' => ['@type' => 'Organization', 'name' => 'Golden Eye Academy'],
-                'publisher' => ['@type' => 'EducationalOrganization', 'name' => 'Golden Eye Academy'],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
         ];
     }
 
@@ -370,13 +357,6 @@ class PublishGoldenEyeContentBaseline extends Command
             'meta_title' => $course->name.' | Golden Eye Academy',
             'meta_description' => Str::limit($override['description'], 500, ''),
             'aeo_summary' => $override['description'],
-            'schema_markup' => json_encode([
-                '@context' => 'https://schema.org',
-                '@type' => 'Course',
-                'name' => $course->name,
-                'description' => $override['description'],
-                'provider' => ['@type' => 'EducationalOrganization', 'name' => 'Golden Eye Academy'],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
         ];
     }
 
@@ -392,13 +372,6 @@ class PublishGoldenEyeContentBaseline extends Command
             'meta_description' => $baseline['summary'],
             'meta_keywords' => 'Golden Eye Academy, courses and classes in Pokhara',
             'aeo_summary' => $baseline['summary'],
-            'schema_markup' => json_encode([
-                '@context' => 'https://schema.org',
-                '@type' => 'Service',
-                'name' => $baseline['title'],
-                'description' => $baseline['summary'],
-                'provider' => ['@type' => 'EducationalOrganization', 'name' => 'Golden Eye Academy'],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
         ];
     }
 

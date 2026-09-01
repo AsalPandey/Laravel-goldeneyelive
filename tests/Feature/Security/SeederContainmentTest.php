@@ -80,7 +80,10 @@ class SeederContainmentTest extends TestCase
     {
         $this->seed(LiveSiteSeeder::class);
 
-        SiteSetting::where('key', 'recaptcha_secret_key')->update(['value' => 'test-environment-secret']);
+        SiteSetting::updateOrCreate(
+            ['key' => 'recaptcha_secret_key'],
+            ['value' => 'test-environment-secret', 'type' => 'text'],
+        );
         SiteSetting::where('key', 'google_analytics_id')->update(['value' => 'test-analytics-id']);
         SiteSetting::where('key', 'hero_title')->update(['value' => 'Damaged public content']);
 

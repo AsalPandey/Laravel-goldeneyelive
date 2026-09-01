@@ -41,7 +41,6 @@ class CmsRichTextEditorTest extends TestCase
             'resources/views/admin/branding/index.blade.php' => [
                 'hero_subtitle',
                 'about_content',
-                'founder_message',
                 'about_page_content',
                 'courses_subtitle',
                 'blog_subtitle',

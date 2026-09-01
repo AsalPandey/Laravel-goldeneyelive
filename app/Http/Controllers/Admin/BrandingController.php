@@ -26,16 +26,12 @@ class BrandingController extends Controller
     use InteractsWithAssets;
 
     const IMAGE_KEYS = [
-        'founder_image',
         'about_image',
         'popup_image',
         'hero_image',
         'external_review_screenshot',
         'site_logo',
         'site_favicon',
-        'site_footer_logo',
-        'breadcrumb_bg',
-        'cta_bg',
         'audience_students_image',
         'audience_parents_image',
         'audience_study_abroad_image',
@@ -44,7 +40,6 @@ class BrandingController extends Controller
 
     const REMOVABLE_IMAGE_KEYS = [
         'about_image',
-        'founder_image',
         'popup_image',
         'external_review_screenshot',
         'audience_students_image',
@@ -75,10 +70,6 @@ class BrandingController extends Controller
         'about_point_7',
         'about_point_8',
         'about_point_9',
-        'about_section_tagline',
-        'about_section_title',
-        'about_text',
-        'about_title',
         'aeo_facts_title',
         'aeo_summary',
         'bing_webmaster_id',
@@ -138,11 +129,6 @@ class BrandingController extends Controller
         'footer_quick_link_title',
         'footer_social_title',
         'external_review_proof_note',
-        'founder_message',
-        'founder_name',
-        'founder_position',
-        'founder_section_tagline',
-        'founder_section_title',
         'geo_latitude',
         'geo_longitude',
         'google_analytics_id',
@@ -152,7 +138,6 @@ class BrandingController extends Controller
         'hero_badge_text',
         'hero_cta_1_text',
         'hero_cta_2_text',
-        'hero_cta_text',
         'hero_subtitle',
         'hero_title',
         'image_size_limit',
@@ -196,13 +181,9 @@ class BrandingController extends Controller
         'sticky_cta_badge',
         'sticky_cta_desc',
         'sticky_cta_text',
-        'teachers_subtitle',
-        'teachers_title',
         'terms_and_conditions_content',
         'terms_header_title',
-        'testimonials_title',
         'tiktok_url',
-        'twitter_url',
         'whatsapp_button_text',
         'whatsapp_cta_subtext',
         'whatsapp_cta_text',
@@ -264,9 +245,9 @@ class BrandingController extends Controller
 
         // 3. Calculate Brand Completeness (Dynamic Analytics)
         $expectedKeys = [
-            'hero_title', 'hero_subtitle', 'hero_cta_text', 'hero_image',
+            'hero_title', 'hero_subtitle', 'hero_cta_1_text', 'hero_image',
             'site_logo', 'site_favicon', 'site_email', 'site_phone', 'site_address',
-            'about_title', 'about_text', 'founder_name', 'founder_image',
+            'about_content_title', 'about_content', 'about_image',
             'facebook_url', 'instagram_url', 'meta_title', 'meta_description',
         ];
         $filledCount = 0;
@@ -476,12 +457,12 @@ class BrandingController extends Controller
         }
 
         // Safety: Prevent deleting assets currently in use by core site settings
-        $inUse = SiteSetting::whereIn('key', ['site_logo', 'site_favicon', 'hero_image', 'about_image', 'founder_image'])
+        $inUse = SiteSetting::whereIn('key', ['site_logo', 'site_favicon', 'hero_image', 'about_image'])
             ->where('value', $requestedPath)
             ->exists();
 
         if ($inUse) {
-            Alert::error('Protected Asset', 'Cannot delete this file. It is currently set as an active Branding asset (Logo, Hero, or Founder Photo). Change the setting before deleting.');
+            Alert::error('Protected Asset', 'Cannot delete this file. It is currently set as an active Branding asset (Logo, Hero, or About image). Change the setting before deleting.');
 
             return back();
         }

@@ -218,7 +218,6 @@ class Phase3b2CmsMediaIntegrityTest extends TestCase
     {
         $removableImages = [
             'about_image' => 'site/img/about.jpg',
-            'founder_image' => 'site/img/message-chairperson.jpg',
             'popup_image' => 'site/img/premium.png',
             'external_review_screenshot' => 'site/img/testimonial-1.jpg',
             'audience_students_image' => 'site/img/cat-1.jpg',
@@ -294,7 +293,7 @@ class Phase3b2CmsMediaIntegrityTest extends TestCase
 
     public function test_media_removal_controls_match_supported_surfaces_and_notice_bar_is_clear(): void
     {
-        foreach (['about_image', 'founder_image', 'popup_image', 'external_review_screenshot'] as $imageKey) {
+        foreach (['about_image', 'popup_image', 'external_review_screenshot'] as $imageKey) {
             SiteSetting::query()->create(['key' => $imageKey, 'value' => 'site/img/premium.png', 'type' => 'image']);
         }
 
@@ -311,7 +310,7 @@ class Phase3b2CmsMediaIntegrityTest extends TestCase
         $this->actingAs($this->admin)->get(route('admin.notices.edit', $notice))->assertOk()->assertSee('name="remove_image"', false)->assertSee('top announcement bar intentionally does not display an image');
 
         $branding = $this->actingAs($this->admin)->get(route('admin.branding.index'))->assertOk();
-        foreach (['about_image', 'founder_image', 'popup_image', 'external_review_screenshot', 'audience_students_image', 'audience_parents_image', 'audience_study_abroad_image', 'audience_job_computer_skills_image'] as $imageKey) {
+        foreach (['about_image', 'popup_image', 'external_review_screenshot', 'audience_students_image', 'audience_parents_image', 'audience_study_abroad_image', 'audience_job_computer_skills_image'] as $imageKey) {
             $branding->assertSee('name="remove_'.$imageKey.'"', false);
         }
         $branding

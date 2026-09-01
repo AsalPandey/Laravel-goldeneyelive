@@ -23,7 +23,6 @@ final class GoldenEyeContentBaseline
             'hero_badge_text' => 'Established in Pokhara since 2008',
             'hero_title' => 'Build skills you can use with confidence.',
             'hero_subtitle' => 'Explore focused classes, compare the learning areas and choose a suitable current batch.',
-            'hero_cta_text' => 'Ask for Course Help',
             'hero_cta_1_text' => 'Ask for Course Help',
             'hero_cta_2_text' => 'View Course Details',
 
@@ -45,16 +44,12 @@ final class GoldenEyeContentBaseline
             'courses_all_title' => 'Explore practical classes by subject.',
             'home_courses_batch_note' => 'Ask about the current batch',
 
-            'about_title' => 'Practical learning in Pokhara since 2008',
-            'about_text' => 'Golden Eye Academy provides structured courses, classes and academic support for learners building useful skills in Pokhara.',
             'about_point_1' => 'Established in Pokhara since 2008',
             'about_point_2' => 'Computer, language and test-preparation classes',
             'about_point_3' => 'Academic support for students and families',
             'about_point_4' => 'Practical learning connected to real goals',
             'about_content_title' => 'Learning with a clear purpose',
             'about_content' => 'Golden Eye Academy helps learners understand a course, choose a suitable starting point and build skills through structured classes and practical learning.',
-            'about_section_tagline' => 'The Golden Eye approach',
-            'about_section_title' => 'Clear choices, purposeful classes and practical progress',
             'about_header_title' => 'About Golden Eye Academy',
             'about_page_content' => <<<'HTML'
 <h2>An established academy in Pokhara</h2>
@@ -73,10 +68,6 @@ HTML,
             'about_feat_3_desc' => 'Students and families can discuss course suitability, fees, timing and learning goals.',
             'about_feat_4_title' => 'Clear Course Information',
             'about_feat_4_desc' => 'Course pages and the academy team help learners compare the details that shape a good decision.',
-
-            'teachers_title' => 'Meet the Golden Eye Faculty',
-            'teachers_subtitle' => 'Explore active faculty profiles and ask who is teaching the batch you are considering.',
-            'testimonials_title' => 'Student Experiences at Golden Eye Academy',
 
             'blog_title' => 'Golden Eye Academy Learning Guides',
             'blog_header_title' => 'Learning Guides',

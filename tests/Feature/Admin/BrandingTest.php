@@ -32,14 +32,14 @@ class BrandingTest extends TestCase
     /** @test */
     public function test_branding_index_calculates_completeness_correctly()
     {
-        // We have 2 settings filled out of 17 expected keys in BrandingController
-        // 2 / 17 = 11.76% -> 12%
+        // We have 2 settings filled out of 16 active expected keys in BrandingController.
+        // 2 / 16 = 12.5% -> 13%.
 
         $response = $this->actingAs($this->admin)
             ->get(route('admin.branding.index'));
 
         $response->assertStatus(200);
-        $response->assertViewHas('brandCompleteness', 12);
+        $response->assertViewHas('brandCompleteness', 13);
     }
 
     /** @test */

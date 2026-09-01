@@ -139,16 +139,6 @@ class ServicePillarSeeder extends Seeder
                     'meta_description' => $pillar['summary'],
                     'meta_keywords' => 'Golden Eye Academy, courses and classes in Pokhara',
                     'aeo_summary' => $pillar['summary'],
-                    'schema_markup' => json_encode([
-                        '@context' => 'https://schema.org',
-                        '@type' => 'Service',
-                        'name' => $pillar['title'],
-                        'description' => $pillar['summary'],
-                        'provider' => [
-                            '@type' => 'EducationalOrganization',
-                            'name' => 'Golden Eye Academy',
-                        ],
-                    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
                 ],
             );
         }
