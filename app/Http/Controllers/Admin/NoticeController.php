@@ -43,7 +43,8 @@ class NoticeController extends Controller
         $validated['starts_at'] = CmsDateTime::fromStaffInput($validated['starts_at'] ?? null);
         $validated['expires_at'] = CmsDateTime::fromStaffInput($validated['expires_at'] ?? null);
 
-        $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/notices');
+        $validated['image'] = $this->resolveAssetUpdate($request, 'image', 'site/img/notices', null, 'remove_image');
+        unset($validated['image_path'], $validated['remove_image']);
         $uploadedImage = $request->hasFile('image') ? $validated['image'] : null;
 
         try {
@@ -94,9 +95,8 @@ class NoticeController extends Controller
             $notice->expires_at,
         );
 
-        $validated['image'] = $request->hasFile('image')
-            ? $this->handleAssetUpload($request, 'image', 'site/img/notices')
-            : $this->handleAssetUpload($request, 'image', 'site/img/notices', $notice->image);
+        $validated['image'] = $this->resolveAssetUpdate($request, 'image', 'site/img/notices', $notice->image, 'remove_image');
+        unset($validated['image_path'], $validated['remove_image']);
         $uploadedImage = $request->hasFile('image') ? $validated['image'] : null;
 
         try {

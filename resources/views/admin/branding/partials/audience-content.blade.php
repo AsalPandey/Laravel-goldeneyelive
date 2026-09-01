@@ -57,6 +57,11 @@
                         <input id="input_{{ $prefix }}_image" type="text" name="{{ $prefix }}_image_path" value="{{ old("{$prefix}_image_path", $page['image']) }}" class="premium-input flex-1">
                         <button type="button" onclick="openPicker('input_{{ $prefix }}_image')" class="px-4 rounded-xl bg-zinc-800 text-brand-gold text-[10px] font-black uppercase">Pick</button>
                     </div>
+                    @error("{$prefix}_image_path") <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                    <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700 mt-3">
+                        <input type="checkbox" name="remove_{{ $prefix }}_image" value="1" @checked(old("remove_{$prefix}_image")) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                        Remove saved audience image and use the safe fallback
+                    </label>
                 </div>
             </div>
 

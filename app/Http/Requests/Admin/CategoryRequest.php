@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\SiteSetting;
+use App\Rules\PublicMediaPath;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -37,7 +38,8 @@ class CategoryRequest extends CMSRequest
             ],
             'description' => ['nullable', 'string', 'max:10000'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
-            'image_path' => ['nullable', 'string', 'max:255'],
+            'image_path' => ['exclude_if:remove_image,1', 'nullable', 'string', 'max:255', new PublicMediaPath],
+            'remove_image' => ['nullable', 'boolean'],
             'status' => ['required', 'in:active,inactive'],
             'order_priority' => ['nullable', 'integer', 'min:0', 'max:9999'],
         ]);

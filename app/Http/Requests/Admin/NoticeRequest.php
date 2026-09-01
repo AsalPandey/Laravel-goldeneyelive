@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\SiteSetting;
+use App\Rules\PublicMediaPath;
 use App\Support\PublicCtaContract;
 
 class NoticeRequest extends CMSRequest
@@ -21,7 +22,8 @@ class NoticeRequest extends CMSRequest
             'subtitle' => ['nullable', 'string', 'max:255'],
             'badge' => ['nullable', 'string', 'max:50'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
-            'image_path' => ['nullable', 'string', 'max:255'],
+            'image_path' => ['exclude_if:remove_image,1', 'nullable', 'string', 'max:255', new PublicMediaPath],
+            'remove_image' => ['nullable', 'boolean'],
             'link' => ['nullable', 'string', 'max:500', PublicCtaContract::publicUrlRule()],
             'button_text' => ['nullable', 'string', 'max:50'],
             'status' => ['required', 'in:active,inactive'],

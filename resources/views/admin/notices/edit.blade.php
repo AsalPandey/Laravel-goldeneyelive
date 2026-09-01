@@ -97,7 +97,8 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Update Notice Graphic (Optional)</label>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Popup/Standard Notice Graphic (Optional)</label>
+                    <p class="text-[10px] text-neutral-500 mb-3">Images appear on popup and standard notices. The top announcement bar intentionally does not display an image.</p>
                     <div class="relative group cursor-pointer mb-4">
                         <input type="file" name="image" id="imageInput" class="hidden" accept="image/*">
                         <div onclick="document.getElementById('imageInput').click()" 
@@ -115,7 +116,14 @@
                             Pick from Library
                         </button>
                     </div>
-                    <p class="text-[10px] text-neutral-400 mt-2 italic font-medium">Leave empty to keep the current graphic. Max 2MB.</p>
+                    @error('image_path') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                    @if($notice->image)
+                        <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700 mt-3">
+                            <input type="checkbox" name="remove_image" value="1" @checked(old('remove_image')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                            Remove current notice graphic
+                        </label>
+                    @endif
+                    <p class="text-[10px] text-neutral-400 mt-2 italic font-medium">Use the explicit remove option to clear the graphic. Max 2MB.</p>
                 </div>
             </div>
 

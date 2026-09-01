@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Http\Controllers\Admin\BrandingController;
 use App\Models\SiteSetting;
 use App\Rules\ApprovedMapEmbedUrl;
+use App\Rules\PublicMediaPath;
 use App\Support\CmsPublicContent;
 use App\Support\PublicCtaContract;
 use Illuminate\Foundation\Http\FormRequest;
@@ -110,16 +111,16 @@ class BrandingRequest extends FormRequest
             'popup_register_link' => ['nullable', 'string', 'max:500', PublicCtaContract::publicUrlRule()],
 
             // Image paths (vault selection)
-            'site_logo_path' => ['nullable', 'string', 'max:255'],
-            'site_favicon_path' => ['nullable', 'string', 'max:255'],
-            'site_footer_logo_path' => ['nullable', 'string', 'max:255'],
-            'breadcrumb_bg_path' => ['nullable', 'string', 'max:255'],
-            'cta_bg_path' => ['nullable', 'string', 'max:255'],
-            'hero_image_path' => ['nullable', 'string', 'max:255'],
-            'about_image_path' => ['nullable', 'string', 'max:255'],
-            'founder_image_path' => ['nullable', 'string', 'max:255'],
-            'popup_image_path' => ['nullable', 'string', 'max:255'],
-            'external_review_screenshot_path' => ['nullable', 'string', 'max:255'],
+            'site_logo_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
+            'site_favicon_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
+            'site_footer_logo_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
+            'breadcrumb_bg_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
+            'cta_bg_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
+            'hero_image_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
+            'about_image_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
+            'founder_image_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
+            'popup_image_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
+            'external_review_screenshot_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
 
             // Image uploads
             'site_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"],
@@ -135,8 +136,19 @@ class BrandingRequest extends FormRequest
         ];
 
         foreach (CmsPublicContent::imageKeys() as $imageKey) {
-            $rules[$imageKey.'_path'] = ['nullable', 'string', 'max:255'];
+            $rules[$imageKey.'_path'] = ['nullable', 'string', 'max:255', new PublicMediaPath];
             $rules[$imageKey] = ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', "max:{$imageLimit}"];
+        }
+
+        foreach (BrandingController::REMOVABLE_IMAGE_KEYS as $imageKey) {
+            $rules['remove_'.$imageKey] = ['nullable', 'boolean'];
+            $rules[$imageKey.'_path'] = [
+                'exclude_if:remove_'.$imageKey.',1',
+                'nullable',
+                'string',
+                'max:255',
+                new PublicMediaPath,
+            ];
         }
 
         $rules = array_merge($rules, CmsPublicContent::validationRules());

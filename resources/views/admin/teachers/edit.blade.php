@@ -61,6 +61,13 @@
                                     <input type="text" name="photo_path" value="{{ old('photo_path', $teacher->photo) }}" placeholder="e.g. site/img/team-1.jpg" class="flex-1 text-xs rounded border-neutral-300 dark:bg-neutral-800 h-8 px-2">
                                     <button type="button" onclick="openMediaVault('photo_path', 'teacher_photo_preview')" class="bg-neutral-900 text-white text-[8px] font-black uppercase px-3 rounded-md hover:bg-orange-600 transition-all">Pick</button>
                                 </div>
+                                @error('photo_path') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
+                                @if($teacher->photo)
+                                    <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700">
+                                        <input type="checkbox" name="remove_photo" value="1" @checked(old('remove_photo')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                                        Remove current staff photo
+                                    </label>
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -56,6 +56,7 @@
                                     Pick
                                 </button>
                             </div>
+                            @error('photo_path') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>

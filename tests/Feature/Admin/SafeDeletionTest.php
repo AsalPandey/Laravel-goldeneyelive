@@ -61,7 +61,7 @@ class SafeDeletionTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('Admin');
 
-        $customPath = 'site/img/courses/custom_test_image.jpg';
+        $customPath = 'site/img/courses/1700000000_AbC12.jpg';
         $fullPath = public_path($customPath);
 
         if (! File::isDirectory(dirname($fullPath))) {
@@ -100,7 +100,7 @@ class SafeDeletionTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('Admin');
 
-        $customPath = 'site/img/custom_category_test_image.jpg';
+        $customPath = 'site/img/1700000001_DeF34.jpg';
         $fullPath = public_path($customPath);
 
         if (! File::isDirectory(dirname($fullPath))) {

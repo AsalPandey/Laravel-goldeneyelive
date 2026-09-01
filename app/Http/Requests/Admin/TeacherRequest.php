@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\SiteSetting;
+use App\Rules\PublicMediaPath;
 
 class TeacherRequest extends CMSRequest
 {
@@ -17,7 +18,8 @@ class TeacherRequest extends CMSRequest
             'facebook_url' => ['nullable', 'url', 'max:255'],
             'linkedin_url' => ['nullable', 'url', 'max:255'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
-            'photo_path' => ['nullable', 'string', 'max:255'],
+            'photo_path' => ['exclude_if:remove_photo,1', 'nullable', 'string', 'max:255', new PublicMediaPath],
+            'remove_photo' => ['nullable', 'boolean'],
             'status' => ['required', 'in:active,inactive'],
             'is_featured' => ['nullable', 'boolean'],
         ]);

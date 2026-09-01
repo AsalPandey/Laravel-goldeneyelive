@@ -389,7 +389,7 @@
                                 <div>
                                     <label class="premium-label">Summary Photo</label>
                                     <div class="relative rounded-2xl overflow-hidden border-4 border-zinc-50 shadow-inner group">
-                                        <img src="{{ asset($settings['about_image'] ?? 'site/img/about.jpg') }}" 
+                                        <img src="{{ \App\Support\PublicAsset::url($settings['about_image'] ?? null, 'site/img/about.jpg') }}"
                                              onerror="this.src='{{ asset('site/img/carousel-1.png') }}'"
                                              class="w-full h-48 object-cover group-hover:scale-105 transition-transform">
                                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -406,6 +406,13 @@
                                                 <i class="fa fa-images"></i>
                                             </button>
                                         </div>
+                                        @error('about_image_path') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                                        @if(filled($settings['about_image'] ?? null))
+                                            <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700 mt-3">
+                                                <input type="checkbox" name="remove_about_image" value="1" @checked(old('remove_about_image')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                                                Remove saved About image and use the safe fallback
+                                            </label>
+                                        @endif
                                     </div>
                                 </div>
                                 <div>
@@ -469,6 +476,14 @@
                                                 <i class="fa fa-images"></i>
                                             </button>
                                         </div>
+                                        <input type="file" name="founder_image" accept="image/*" class="text-xs mt-3">
+                                        @error('founder_image_path') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                                        @if(filled($settings['founder_image'] ?? null))
+                                            <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700 mt-3">
+                                                <input type="checkbox" name="remove_founder_image" value="1" @checked(old('remove_founder_image')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                                                Remove saved Founder image and use the safe fallback
+                                            </label>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -782,6 +797,13 @@
                                     </button>
                                 </div>
                                 <input type="file" name="external_review_screenshot" class="text-xs mt-3">
+                                @error('external_review_screenshot_path') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                                @if(filled($settings['external_review_screenshot'] ?? null))
+                                    <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700 mt-3">
+                                        <input type="checkbox" name="remove_external_review_screenshot" value="1" @checked(old('remove_external_review_screenshot')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                                        Remove current review screenshot
+                                    </label>
+                                @endif
                             </div>
                             <div class="lg:col-span-2">
                                 <label class="premium-label">Public Review Proof Note</label>
@@ -816,12 +838,20 @@
                             <div>
                                 <label class="premium-label">Graphic Asset</label>
                                 <div class="aspect-square bg-white rounded-2xl border-4 border-white shadow-sm overflow-hidden mb-4">
-                                    <img src="{{ asset($settings['popup_image'] ?? 'site/img/carousel-1.png') }}" class="w-full h-full object-cover">
+                                    <img src="{{ \App\Support\PublicAsset::url($settings['popup_image'] ?? null, 'site/img/carousel-1.png') }}" class="w-full h-full object-cover">
                                 </div>
                                 <div class="flex gap-2">
                                     <input type="text" name="popup_image_path" id="input_popup_image" value="{{ $settings['popup_image'] ?? '' }}" class="premium-input h-10 text-xs flex-1">
                                     <button type="button" onclick="openPicker('input_popup_image')" class="bg-zinc-800 text-[#C5A059] px-3 rounded-xl text-[9px] font-black uppercase">Pick</button>
                                 </div>
+                                <input type="file" name="popup_image" accept="image/*" class="text-xs mt-3">
+                                @error('popup_image_path') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                                @if(filled($settings['popup_image'] ?? null))
+                                    <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700 mt-3">
+                                        <input type="checkbox" name="remove_popup_image" value="1" @checked(old('remove_popup_image')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                                        Remove saved popup image and use the safe fallback
+                                    </label>
+                                @endif
                             </div>
                         </div>
 

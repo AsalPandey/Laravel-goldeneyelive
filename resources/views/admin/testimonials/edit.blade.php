@@ -58,6 +58,13 @@
                                      Pick
                                  </button>
                             </div>
+                            @error('photo_path') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
+                            @if($testimonial->photo)
+                                <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700">
+                                    <input type="checkbox" name="remove_photo" value="1" @checked(old('remove_photo')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                                    Remove current student photo
+                                </label>
+                            @endif
                         </div>
                     </div>
                 </div>

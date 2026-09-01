@@ -42,6 +42,17 @@ class BrandingController extends Controller
         'audience_job_computer_skills_image',
     ];
 
+    const REMOVABLE_IMAGE_KEYS = [
+        'about_image',
+        'founder_image',
+        'popup_image',
+        'external_review_screenshot',
+        'audience_students_image',
+        'audience_parents_image',
+        'audience_study_abroad_image',
+        'audience_job_computer_skills_image',
+    ];
+
     const TEXT_KEYS = [
         'about_content',
         'about_content_title',
@@ -330,44 +341,57 @@ class BrandingController extends Controller
         }
 
         // Batch prepare image settings
+        $replacedImages = [];
+        $uploadedImages = [];
         foreach ($imageKeys as $imageKey) {
             $pathKey = $imageKey.'_path';
-            if ($request->hasFile($imageKey)) {
-                $settingsData[] = [
-                    'key' => $imageKey,
-                    'value' => $this->uploadAsset($request->file($imageKey)),
-                    'type' => 'image',
-                ];
-            } elseif (filled($validated[$pathKey] ?? null)) {
-                $path = ltrim($validated[$pathKey], '/');
-                // Ensure manual paths start with site/img/ if they are intended to be local
-                if (! str_starts_with($path, 'http') && ! str_starts_with($path, 'site/')) {
-                    $path = 'site/img/'.$path;
-                }
-                $settingsData[] = [
-                    'key' => $imageKey,
-                    'value' => $path,
-                    'type' => 'image',
-                ];
+            $removeKey = 'remove_'.$imageKey;
+            $isRemovable = in_array($imageKey, self::REMOVABLE_IMAGE_KEYS, true);
+            $hasExplicitRemoval = $isRemovable && $request->boolean($removeKey);
+            $hasSelectedPath = filled($validated[$pathKey] ?? null);
+
+            if (! $request->hasFile($imageKey) && ! $hasExplicitRemoval && ! $hasSelectedPath) {
+                continue;
+            }
+
+            $oldPath = SiteSetting::query()->where('key', $imageKey)->value('value');
+            $newPath = $this->resolveAssetUpdate(
+                $request,
+                $imageKey,
+                'site/img',
+                $oldPath,
+                $isRemovable ? $removeKey : null,
+            );
+
+            $settingsData[] = [
+                'key' => $imageKey,
+                'value' => $newPath ?? '',
+                'type' => 'image',
+            ];
+
+            if ($oldPath !== $newPath) {
+                $replacedImages[] = ['old' => $oldPath, 'new' => $newPath];
+            }
+
+            if ($request->hasFile($imageKey) && $newPath) {
+                $uploadedImages[] = $newPath;
             }
         }
 
         // Perform Upsert (requires unique key on 'key' column)
         if (! empty($settingsData)) {
-            $oldImagePaths = [];
-            foreach ($imageKeys as $imageKey) {
-                if ($request->hasFile($imageKey)) {
-                    $oldImagePaths[] = SiteSetting::where('key', $imageKey)->value('value');
+            try {
+                SiteSetting::upsert($settingsData, ['key'], ['value', 'type']);
+            } catch (\Throwable $exception) {
+                foreach ($uploadedImages as $uploadedImage) {
+                    $this->secureAssetDeletion($uploadedImage);
                 }
+
+                throw $exception;
             }
 
-            SiteSetting::upsert($settingsData, ['key'], ['value', 'type']);
-
-            // Cleanup replaced assets AFTER database is updated
-            foreach ($oldImagePaths as $oldPath) {
-                if ($oldPath) {
-                    $this->deleteAsset($oldPath);
-                }
+            foreach ($replacedImages as $replacement) {
+                $this->deleteReplacedAsset($replacement['old'], $replacement['new']);
             }
         }
 
@@ -479,8 +503,9 @@ class BrandingController extends Controller
             $filename = $file->getFilename();
 
             if (! isset($usedAssets[$filename]) && ! isset($usedAssets[$relativePath]) && ! $this->isProtectedAsset($relativePath)) {
-                $this->deleteAsset($relativePath);
-                $purgedCount++;
+                if ($this->deleteAsset($relativePath)) {
+                    $purgedCount++;
+                }
             }
         }
 

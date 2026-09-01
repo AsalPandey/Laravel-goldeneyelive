@@ -97,6 +97,12 @@
                                 </div>
                                 @error('image_path') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
+                            @if($post->image)
+                                <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700">
+                                    <input type="checkbox" name="remove_image" value="1" @checked(old('remove_image')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                                    Remove current featured graphic
+                                </label>
+                            @endif
                         </div>
                     </div>
                     <div class="flex flex-col justify-center items-center text-center p-6 border-l border-neutral-100">

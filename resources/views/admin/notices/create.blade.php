@@ -94,7 +94,8 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-4">Notice Graphic</label>
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Popup/Standard Notice Graphic</label>
+                    <p class="text-[10px] text-neutral-500 mb-4">Images appear on popup and standard notices. The top announcement bar intentionally does not display an image.</p>
                     <div class="relative group cursor-pointer mb-6">
                         <input type="file" name="image" id="imageInput" class="hidden" accept="image/*">
                         <div onclick="document.getElementById('imageInput').click()" 
@@ -111,6 +112,7 @@
                             Vault Picker
                         </button>
                     </div>
+                    @error('image_path') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
                 </div>
             </div>
 

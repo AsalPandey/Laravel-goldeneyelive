@@ -77,6 +77,7 @@
                                             <input type="text" name="image_path" id="cat_image_path" value="{{ old('image_path') }}" class="flex-1 px-3 py-2 rounded-lg border-neutral-100 bg-white text-[10px] font-mono" placeholder="site/img/cat-1.jpg">
                                             <button type="button" onclick="openMediaVault('image_path', 'cat_preview')" class="px-3 py-2 bg-neutral-900 text-white text-[9px] font-black uppercase rounded-lg hover:bg-orange-600 transition-all">Pick</button>
                                         </div>
+                                        @error('image_path') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                                     </div>
                                 </div>
                             </div>

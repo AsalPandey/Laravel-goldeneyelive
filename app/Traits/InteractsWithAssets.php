@@ -53,6 +53,24 @@ trait InteractsWithAssets
     }
 
     /**
+     * Resolve an editable asset using one consistent precedence:
+     * upload, explicit removal, selected Media Vault path, existing value.
+     */
+    protected function resolveAssetUpdate(
+        $request,
+        string $fieldName,
+        string $directory,
+        ?string $oldPath = null,
+        ?string $removeField = null,
+    ): ?string {
+        if (! $request->hasFile($fieldName) && $removeField && $request->boolean($removeField)) {
+            return null;
+        }
+
+        return $this->handleAssetUpload($request, $fieldName, $directory, $oldPath);
+    }
+
+    /**
      * Handle file upload and return the relative path.
      */
     protected function uploadAsset($file, string $directory = 'site/img', ?string $oldPath = null): string
@@ -80,7 +98,7 @@ trait InteractsWithAssets
     {
         $cleanPath = $this->normalizePublicAssetPath($path);
 
-        if (! $cleanPath || $this->isProtectedAsset($cleanPath)) {
+        if (! $cleanPath || $this->isProtectedAsset($cleanPath) || ! $this->isRuntimeUploadedAsset($cleanPath)) {
             return false;
         }
 
@@ -195,6 +213,15 @@ trait InteractsWithAssets
         $filename = basename($path);
 
         return in_array($filename, $this->protectedAssets);
+    }
+
+    /**
+     * Runtime uploads use uploadAsset's timestamp/random filename convention.
+     * Files outside that convention may be repository/static assets and are retained.
+     */
+    protected function isRuntimeUploadedAsset(string $path): bool
+    {
+        return preg_match('/^\d{9,}_[A-Za-z0-9]{5}\.(?:gif|jpe?g|png|svg|webp)$/i', basename($path)) === 1;
     }
 
     protected function normalizePublicAssetPath(?string $path): ?string

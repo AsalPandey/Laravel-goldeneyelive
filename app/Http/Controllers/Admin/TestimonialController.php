@@ -47,7 +47,8 @@ class TestimonialController extends Controller
             : null;
 
         $validated['is_featured'] = $request->boolean('is_featured');
-        $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/testimonials', null);
+        $validated['photo'] = $this->resolveAssetUpdate($request, 'photo', 'site/img/testimonials', null, 'remove_photo');
+        unset($validated['photo_path'], $validated['remove_photo']);
 
         Testimonial::create($validated);
         $this->clearSiteCache();
@@ -83,7 +84,8 @@ class TestimonialController extends Controller
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
-        $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/testimonials', $testimonial->photo);
+        $validated['photo'] = $this->resolveAssetUpdate($request, 'photo', 'site/img/testimonials', $testimonial->photo, 'remove_photo');
+        unset($validated['photo_path'], $validated['remove_photo']);
 
         $testimonial->update($validated);
         $this->deleteReplacedAsset($oldPhoto, $testimonial->photo);

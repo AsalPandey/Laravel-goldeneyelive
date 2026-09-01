@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\SiteSetting;
+use App\Rules\PublicMediaPath;
 use Illuminate\Validation\Rule;
 
 class BlogRequest extends CMSRequest
@@ -27,7 +28,8 @@ class BlogRequest extends CMSRequest
             'category' => ['nullable', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
-            'image_path' => ['nullable', 'string', 'max:255'],
+            'image_path' => ['exclude_if:remove_image,1', 'nullable', 'string', 'max:255', new PublicMediaPath],
+            'remove_image' => ['nullable', 'boolean'],
             'status' => ['required', 'in:draft,published'],
             'published_at' => ['nullable', 'date', 'after_or_equal:1970-01-01', 'before_or_equal:2038-01-18 23:59:59'],
             'courses_present' => ['sometimes', 'accepted'],

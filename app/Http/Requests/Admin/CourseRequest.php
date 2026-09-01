@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\SiteSetting;
+use App\Rules\PublicMediaPath;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -54,7 +55,7 @@ class CourseRequest extends CMSRequest
             'description' => ['required', 'string'],
             'course_outline' => ['required', 'string'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
-            'photo_path' => ['nullable', 'string', 'max:255'],
+            'photo_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
             'status' => ['required', 'in:active,inactive'],
             'is_featured' => ['nullable', 'boolean'],
             'display_order' => ['nullable', 'integer', 'min:0', 'max:9999'],

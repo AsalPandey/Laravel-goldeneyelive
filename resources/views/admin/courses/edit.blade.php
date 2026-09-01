@@ -122,6 +122,7 @@
                                 <input type="text" name="photo_path" value="{{ old('photo_path', $course->photo) }}" placeholder="e.g. site/img/cat-1.jpg" class="flex-1 text-xs rounded border-neutral-300 dark:bg-neutral-800 h-8 px-2">
                                     <button type="button" onclick="openMediaVault('photo_path', 'course_photo_preview')" class="bg-brand-dark text-brand-gold text-[8px] font-black uppercase px-3 rounded-md hover:bg-brand-gold hover:text-brand-dark transition-all">Pick</button>
                                 </div>
+                                @error('photo_path') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>

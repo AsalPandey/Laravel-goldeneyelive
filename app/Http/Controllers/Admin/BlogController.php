@@ -74,7 +74,8 @@ class BlogController extends Controller
             $validated['published_at'] = now();
         }
 
-        $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/blog', 'site/img/carousel-2.jpg');
+        $validated['image'] = $this->resolveAssetUpdate($request, 'image', 'site/img/blog', 'site/img/carousel-2.jpg', 'remove_image');
+        unset($validated['image_path'], $validated['remove_image']);
         $uploadedImage = $request->hasFile('image') ? $validated['image'] : null;
 
         try {
@@ -141,7 +142,8 @@ class BlogController extends Controller
             $validated['published_at'] = now();
         }
 
-        $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/blog', $post->image);
+        $validated['image'] = $this->resolveAssetUpdate($request, 'image', 'site/img/blog', $post->image, 'remove_image');
+        unset($validated['image_path'], $validated['remove_image']);
         $newImage = $validated['image'];
         $newImageUploaded = $request->hasFile('image') && $newImage !== $oldImage;
 

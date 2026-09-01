@@ -50,7 +50,8 @@ class CourseCategoryController extends Controller
 
         $validated['slug'] = Str::slug($validated['slug']);
 
-        $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/categories', null);
+        $validated['image'] = $this->resolveAssetUpdate($request, 'image', 'site/img/categories', null, 'remove_image');
+        unset($validated['image_path'], $validated['remove_image']);
 
         CourseCategory::create($validated);
         $this->clearSiteCache();
@@ -80,7 +81,8 @@ class CourseCategoryController extends Controller
         $validated['slug'] = Str::slug($validated['slug']);
 
         $oldImage = $category->image;
-        $validated['image'] = $this->handleAssetUpload($request, 'image', 'site/img/categories', $category->image);
+        $validated['image'] = $this->resolveAssetUpdate($request, 'image', 'site/img/categories', $category->image, 'remove_image');
+        unset($validated['image_path'], $validated['remove_image']);
 
         $category->update($validated);
         $category->refresh();

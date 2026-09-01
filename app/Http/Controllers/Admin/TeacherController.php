@@ -40,7 +40,8 @@ class TeacherController extends Controller
         $validated = $request->validated();
 
         $validated['is_featured'] = $request->boolean('is_featured');
-        $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/teachers', 'site/img/team-1.jpg');
+        $validated['photo'] = $this->resolveAssetUpdate($request, 'photo', 'site/img/teachers', 'site/img/team-1.jpg', 'remove_photo');
+        unset($validated['photo_path'], $validated['remove_photo']);
 
         Teacher::create($validated);
         $this->clearSiteCache();
@@ -69,7 +70,8 @@ class TeacherController extends Controller
 
         $validated['is_featured'] = $request->boolean('is_featured');
         $oldPhoto = $teacher->photo;
-        $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/teachers', $teacher->photo);
+        $validated['photo'] = $this->resolveAssetUpdate($request, 'photo', 'site/img/teachers', $teacher->photo, 'remove_photo');
+        unset($validated['photo_path'], $validated['remove_photo']);
 
         $teacher->update($validated);
         $this->deleteReplacedAsset($oldPhoto, $teacher->photo);
