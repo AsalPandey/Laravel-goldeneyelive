@@ -6,7 +6,7 @@ final class ApprovedCourseFaqDeploymentData
 {
     public const CERTIFICATE_QUESTION = 'Do Golden Eye Academy courses include certificates?';
 
-    public const CERTIFICATE_ANSWER = 'Golden Eye Academy provides a certificate after completion of each course. Ask the academy team about the completion requirements for the course you are considering.';
+    public const CERTIFICATE_ANSWER = 'Golden Eye Academy provides a certificate after completion of each course. Course-specific completion requirements may be confirmed with the academy team.';
 
     public const BATCH_TIMING_QUESTION = 'How do I find the current batch timing?';
 

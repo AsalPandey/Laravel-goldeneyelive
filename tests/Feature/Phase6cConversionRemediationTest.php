@@ -245,8 +245,8 @@ class Phase6cConversionRemediationTest extends TestCase
         $html = $response->getContent();
 
         $response
-            ->assertSee('Published course outline', false)
-            ->assertSee('Listed learning areas', false)
+            ->assertSee('Course outline', false)
+            ->assertSee('What you’ll learn', false)
             ->assertSee('Courses taught:', false)
             ->assertSee('Faculty profile', false)
             ->assertDontSee('Course outline order', false)

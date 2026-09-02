@@ -15,21 +15,21 @@ class PublicAudienceLandingPageTest extends TestCase
         $pages = [
             [
                 'route' => 'for-students',
-                'headline' => 'Choose a course around your goal.',
+                'headline' => 'Find a course that fits your starting point.',
                 'source_page' => 'for_students',
                 'audience_type' => 'student',
                 'inquiry_intent' => 'course_selection_help',
             ],
             [
                 'route' => 'for-parents',
-                'headline' => 'Make the course decision with confidence.',
+                'headline' => 'Clear course information for parents.',
                 'source_page' => 'for_parents',
                 'audience_type' => 'parent',
                 'inquiry_intent' => 'parent_course_guidance',
             ],
             [
                 'route' => 'study-abroad-guidance',
-                'headline' => 'Prepare for your next education step with the right support.',
+                'headline' => 'Build the language and test skills your plan requires.',
                 'source_page' => 'study_abroad_guidance',
                 'audience_type' => 'study_abroad_applicant',
                 'inquiry_intent' => 'study_abroad_course_guidance',

@@ -117,7 +117,7 @@
                         <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_1'] ?? 'Academic support before enrollment' }}</p></div>
                         <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_2'] ?? 'Language, test prep, IT, and office skills' }}</p></div>
                         <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_3'] ?? 'Support for students, parents, and learners' }}</p></div>
-                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_4'] ?? 'Current details confirmed before enrollment' }}</p></div>
+                        <div class="col-sm-6"><p class="mb-0 fw-bold text-brand-dark small uppercase tracking-wide"><i class="fa fa-check-circle text-brand-gold me-2"></i>{{ $settings['about_point_4'] ?? 'Clear information before enrollment' }}</p></div>
                     </div>
                     <a class="btn btn-primary py-3 px-6 rounded-xl shadow-xl font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 11px;" href="{{ route('courses-all') }}">
                         View Course Details <i class="fas fa-arrow-right ms-2"></i>

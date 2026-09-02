@@ -59,7 +59,7 @@ class FinalContentRefinementTest extends TestCase
         $course = Course::query()->where('slug', 'professional-web-development')->firstOrFail();
         $this->get(route('courses-detail', $course->slug))
             ->assertOk()
-            ->assertSee('Build web-development foundations through practical project work covering HTML, CSS, responsive interfaces, Laravel, databases, API integration and deployment concepts.', false)
+            ->assertSee('Learn how websites are built through practical project work covering HTML, CSS, responsive interfaces, Laravel, databases, API integration and deployment concepts.', false)
             ->assertDontSee('Best for:', false);
 
         $course->update(['description' => 'Build strong web foundations through guided project work. Best for learners who already use a computer confidently.']);

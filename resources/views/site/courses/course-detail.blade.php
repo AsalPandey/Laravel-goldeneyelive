@@ -53,7 +53,7 @@
             ? trim((string) \Illuminate\Support\Str::of($descriptionText)->after('Best for')->before('.')->trim(' :'))
             : '';
         $bestFor = $descriptionBestFor !== '' ? ucfirst($descriptionBestFor) : '';
-        $nextBatch = 'Ask for current batch and availability';
+        $nextBatch = 'Ask about current timings';
         $courseImage = $courseHeroImage;
         $sectionGuidanceUrl = fn (string $sourceSection) => route('join-now', [
             'course' => $course->slug,
@@ -80,36 +80,34 @@
             ['icon' => 'fa fa-clock', 'label' => 'Duration', 'value' => $course->duration ?: 'Confirm with academy'],
             ['icon' => 'fa fa-tag', 'label' => 'Fee', 'value' => $course->price ?: 'Fee available on request'],
             ['icon' => 'fa fa-layer-group', 'label' => 'Category', 'value' => $breadcrumbCategoryName ?: 'Confirm with academy'],
-            ['icon' => 'fa fa-user', 'label' => 'Listed instructor', 'value' => $course->instructor ?: 'Confirm with academy'],
+            ['icon' => 'fa fa-user', 'label' => 'Instructor', 'value' => $course->instructor ?: 'Ask the academy'],
             ['icon' => 'fa fa-map-marker-alt', 'label' => 'Academy location', 'value' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal'],
-            ['icon' => 'fa fa-calendar-alt', 'label' => 'Current details', 'value' => $courseConfirmationNote],
+            ['icon' => 'fa fa-calendar-alt', 'label' => 'Current schedule', 'value' => $courseConfirmationNote],
         ];
         $localTrustMarkers = [
             ['icon' => 'fa fa-map-marker-alt', 'label' => 'Location', 'value' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal'],
             ['icon' => 'fa fa-phone', 'label' => 'Phone', 'value' => $settings['site_phone'] ?? '061-572599'],
             ['icon' => 'fa fa-envelope', 'label' => 'Email', 'value' => $settings['site_email'] ?? 'goldeneyeacademy2008@gmail.com'],
-            ['icon' => 'fa fa-calendar-check', 'label' => 'Current course details', 'value' => $courseConfirmationNote],
+            ['icon' => 'fa fa-calendar-check', 'label' => 'Plan your visit', 'value' => 'Call or message before visiting to discuss the course and current timings.'],
         ];
         $whoFor = collect([
             $bestFor,
-            'Review the published course description and outline on this page.',
-            'Confirm the current schedule, instructor, and seat availability before enrollment.',
-            'Ask how the course fits your current level and learning goal.',
+            'Read what the course covers and check that it matches your goal.',
+            'Ask whether your current level is suitable for the class.',
+            'Contact the academy for current timings and availability.',
         ])->filter()->values();
         $studentViewItems = [
-            ['label' => 'Course description', 'value' => $descriptionText ?: 'Ask the academy for the current course description.'],
-            ['label' => 'Published outline', 'value' => $outlineItems->isNotEmpty() ? $outlineItems->count().' learning areas are listed below.' : 'No course outline is currently published. Ask the academy before enrollment.'],
-            ['label' => 'Duration', 'value' => $course->duration ?: 'Confirm with academy'],
-            ['label' => 'Fee', 'value' => $course->price ?: 'Confirm with academy'],
-            ['label' => 'Current details', 'value' => $courseConfirmationNote],
+            ['label' => 'About this course', 'value' => $descriptionText ?: 'Ask the academy what the course covers.'],
+            ['label' => 'What you will practise', 'value' => $outlineItems->isNotEmpty() ? $outlineItems->count().' learning areas are shown below.' : 'Ask the academy about the learning areas before enrollment.'],
+            ['label' => 'Before you join', 'value' => $courseConfirmationNote],
         ];
         $parentViewItems = [
             ['label' => 'Total fee', 'value' => $course->price ?: 'Confirm current fee with the academy team.'],
             ['label' => 'Duration', 'value' => $course->duration ?: 'Confirm duration before enrollment.'],
-            ['label' => 'Current details', 'value' => $courseConfirmationNote],
+            ['label' => 'Current schedule', 'value' => $courseConfirmationNote],
             ['label' => 'Academy location', 'value' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal'],
-            ['label' => 'Listed instructor', 'value' => $course->instructor ?: 'Confirm with academy'],
-            ['label' => 'Learning progress', 'value' => 'Progress depends on the learnerâ€™s starting point, attendance, practice and continued effort.'],
+            ['label' => 'Instructor', 'value' => $course->instructor ?: 'Ask the academy'],
+            ['label' => 'Learning progress', 'value' => 'Progress depends on the learner’s starting point, attendance, practice and continued effort. Ask the academy how progress can be discussed for this course.'],
         ];
 
         if ($instructor) {
@@ -154,7 +152,7 @@
                         @endif
                         <span class="course-hero-chip">Duration: {{ $course->duration ?: 'Confirm with academy' }}</span>
                         <span class="course-hero-chip">Fee: {{ $course->price ?: 'Available on request' }}</span>
-                        <span class="course-hero-chip">Next batch: {{ $nextBatch }}</span>
+                        <span class="course-hero-chip">Class schedule: {{ $nextBatch }}</span>
                     </div>
                     <div class="d-flex flex-column flex-sm-row gap-3">
                         <a href="{{ $sectionGuidanceUrl('course-detail-hero') }}" data-cta="course-detail-course-guidance" class="btn btn-primary py-3 px-5 rounded-xl fw-black text-uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
@@ -286,16 +284,16 @@
             @if($outlineItems->isNotEmpty())
                 <section class="mb-5" aria-labelledby="curriculum-heading">
                     <div class="text-center mb-4">
-                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Published course outline</span>
-                        <h2 id="curriculum-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">Listed learning areas</h2>
-                        <p class="text-zinc-600 mb-0" style="font-size: 13px;">Shown in the order maintained by academy staff.</p>
+                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Course outline</span>
+                        <h2 id="curriculum-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">What you’ll learn</h2>
+                        <p class="text-zinc-600 mb-0" style="font-size: 13px;">The main topics and activities covered in this course.</p>
                     </div>
                     <div class="row g-3">
                         @foreach($outlineItems as $index => $item)
                             <div class="col-md-6 col-xl-3">
                                 <div class="h-100 p-4 bg-zinc-50 border border-zinc-100 rounded-xl">
                                     <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-brand-gold text-brand-dark fw-black mb-3" style="width: 38px; height: 38px; font-size: 11px;">{{ $index + 1 }}</span>
-                                    <p class="text-zinc-500 fw-black text-uppercase tracking-widest mb-1" style="font-size: 9px;">Outline item {{ $index + 1 }}</p>
+                                    <p class="text-zinc-500 fw-black text-uppercase tracking-widest mb-1" style="font-size: 9px;">Learning area {{ $index + 1 }}</p>
                                     <h3 class="h6 fw-black text-brand-dark mb-0" style="line-height: 1.4;">{{ $item }}</h3>
                                 </div>
                             </div>
@@ -308,8 +306,8 @@
                 <div class="row g-4">
                     <div class="{{ $instructor ? 'col-lg-6' : 'col-12' }}">
                         <div class="h-100 p-4 p-lg-5 bg-brand-dark text-white rounded-xl">
-                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Batch timing and fee</span>
-                            <h2 id="fee-heading" class="h3 fw-black text-white mt-2 mb-4">Confirm schedule before enrollment</h2>
+                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Course fee and timing</span>
+                            <h2 id="fee-heading" class="h3 fw-black text-white mt-2 mb-4">Ask about current batch timings</h2>
                             <div class="d-grid gap-3">
                                 <div class="course-dark-row"><span>Fee</span><strong>{{ $course->price ?: 'Available on request' }}</strong></div>
                                 <div class="course-dark-row"><span>Duration</span><strong>{{ $course->duration ?: 'Confirm with academy' }}</strong></div>
@@ -350,16 +348,16 @@
                     <div class="p-4 p-lg-5 bg-zinc-50 border border-zinc-100 rounded-xl">
                         <div class="row g-4 align-items-center">
                             <div class="col-lg-4">
-                                <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Published student feedback</span>
-                                <h2 id="proof-heading" class="h3 fw-black text-brand-dark mt-2 mb-0">Feedback linked to this course</h2>
+                                <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Student feedback</span>
+                                <h2 id="proof-heading" class="h3 fw-black text-brand-dark mt-2 mb-0">A learner’s experience</h2>
                             </div>
                             <div class="col-lg-8">
                                 <div class="d-flex flex-column flex-md-row gap-4 align-items-md-center bg-white border border-zinc-100 rounded-xl p-4">
                                     <x-testimonial-avatar :name="$testimonial->student_name" :photo="$testimonial->photo" :size="82" />
                                     <div>
                                         <h3 class="h6 fw-black text-brand-dark mb-1">{{ $testimonial->student_name }}</h3>
-                                        <p class="text-brand-gold fw-black mb-2" style="font-size: 11px;">Course listed: {{ $testimonial->course_name }}</p>
-                                        <p class="text-zinc-700 fw-bold mb-2" style="font-size: 13px;">Feedback summary: {{ $testimonialResult }}</p>
+                                        <p class="text-brand-gold fw-black mb-2" style="font-size: 11px;">Course: {{ $testimonial->course_name }}</p>
+                                        <p class="text-zinc-700 fw-bold mb-2" style="font-size: 13px;">{{ $testimonialResult }}</p>
                                         <p class="text-zinc-600 mb-0" style="font-size: 13px; line-height: 1.65;">"{{ \Illuminate\Support\Str::limit(strip_tags($testimonial->content), 180) }}"</p>
                                     </div>
                                 </div>
@@ -402,7 +400,7 @@
                     <div class="mb-4">
                         <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Related reading</span>
                         <h2 id="helpful-guides-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">Helpful Guides</h2>
-                        <p class="text-zinc-600 mb-0" style="font-size: 13px;">Published academy articles selected by staff for this course.</p>
+                        <p class="text-zinc-600 mb-0" style="font-size: 13px;">Read more about this subject and how to prepare for learning.</p>
                     </div>
                     <div class="row g-4">
                         @foreach($helpfulBlogs as $helpfulBlog)
@@ -459,9 +457,9 @@
                 <div class="p-4 p-lg-5 bg-brand-dark text-white rounded-xl">
                     <div class="row g-4 align-items-center justify-content-between">
                         <div class="col-lg-8">
-                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Inquiry CTA</span>
+                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Need help deciding?</span>
                             <h2 id="inquiry-heading" class="h3 fw-black text-white mt-2 mb-3">Want to check if {{ $course->name }} fits you?</h2>
-                            <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Send your goal, current level, preferred timing, and parent questions. We will explain suitable class options before enrollment.</p>
+                            <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Tell us your goal, current level and preferred time to study. We will explain whether this course may be a suitable next step.</p>
                         </div>
                         <div class="col-lg-4 d-flex flex-column gap-2">
                             <a href="{{ $sectionGuidanceUrl('course-detail-final') }}" data-cta="course-detail-final-guidance" class="btn btn-primary py-3 rounded-xl fw-black text-uppercase tracking-widest">Ask for Course Help</a>

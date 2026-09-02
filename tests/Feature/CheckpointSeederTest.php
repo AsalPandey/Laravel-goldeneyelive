@@ -59,7 +59,7 @@ class CheckpointSeederTest extends TestCase
 
         $this->assertDatabaseHas(SiteSetting::class, [
             'key' => 'course_confirmation_note',
-            'value' => 'Ask the academy team for the current batch timing, seats and faculty information.',
+            'value' => 'Contact the academy for current batch timings and availability.',
         ]);
 
         $this->assertDatabaseHas(Course::class, [
@@ -115,7 +115,7 @@ class CheckpointSeederTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Build skills you can use with confidence.')
+            ->assertSee('Practical courses for your next step.')
             ->assertSee('Established in Pokhara since 2008')
             ->assertSee('Srijana Chowk, Pokhara, Nepal')
             ->assertSee('Courses taught:')
@@ -123,7 +123,7 @@ class CheckpointSeederTest extends TestCase
             ->assertSee('I am a Parent')
             ->assertSee('Explore courses students ask about most')
             ->assertSee('Find classes by subject and skill.')
-            ->assertSee('Ready to find a suitable course?')
+            ->assertSee('Need help choosing a course?')
             ->assertSee('Message on WhatsApp')
             ->assertSee('Ask for Course Help');
 

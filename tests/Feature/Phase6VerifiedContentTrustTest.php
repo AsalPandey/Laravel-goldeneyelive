@@ -229,7 +229,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
             ->assertSee('Quick facts')
             ->assertSee('Student View')
             ->assertSee('Parent View')
-            ->assertSee('Confirm schedule before enrollment')
+            ->assertSee('Ask about current batch timings')
             ->assertDontSee('Best for:')
             ->assertDontSee('Published course outline')
             ->assertDontSee('Week-by-week curriculum')

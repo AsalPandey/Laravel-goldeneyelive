@@ -98,7 +98,7 @@ class SiteSettingSeeder extends Seeder
             'about_point_1' => ['Academic support before enrollment', 'text'],
             'about_point_2' => ['Language, test prep, IT, and office skills', 'text'],
             'about_point_3' => ['Support for students, parents, and learners', 'text'],
-            'about_point_4' => ['Current details confirmed before enrollment', 'text'],
+            'about_point_4' => ['Clear information before enrollment', 'text'],
             'about_content_title' => ['Understand the course before enrollment', 'text'],
             'about_content' => ['Review the course focus, fee, duration, outline, and available instructor information, then ask the academy to confirm the current schedule and support.', 'text'],
             'about_header_title' => ['About Golden Eye Academy', 'text'],

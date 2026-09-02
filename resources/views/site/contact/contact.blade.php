@@ -185,7 +185,7 @@
 
                                 <div class="col-12 pt-2">
                                     <button class="btn btn-primary w-100 py-3 rounded-xl shadow-lg animate-glow font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 11px;" type="submit">
-                                        Ask for Course Help <i class="fa fa-paper-plane ms-2"></i>
+                                        Send Inquiry <i class="fa fa-paper-plane ms-2"></i>
                                     </button>
                                 </div>
                             </div>

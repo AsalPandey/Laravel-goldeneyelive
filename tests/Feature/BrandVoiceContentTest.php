@@ -38,8 +38,8 @@ class BrandVoiceContentTest extends TestCase
     {
         $this->get(route('study-abroad-guidance'))
             ->assertOk()
-            ->assertSee('Prepare for your next education step with the right support.', false)
-            ->assertSee('Preparation classes are provided by Golden Eye Academy.', false)
+            ->assertSee('Build the language and test skills your plan requires.', false)
+            ->assertSee('Focus on the skills you need to practise.', false)
             ->assertSee('Brilliant Education Pokhara', false)
             ->assertDontSee('legal and billing operator', false)
             ->assertDontSee('migration', false);

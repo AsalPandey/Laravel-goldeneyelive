@@ -28,8 +28,8 @@ class GoldenEyeContentBaselineTest extends TestCase
         $this->get(route('home'))
             ->assertOk()
             ->assertSeeText('Established in Pokhara since 2008')
-            ->assertSeeText('Build skills you can use with confidence.')
-            ->assertSeeText('Explore focused classes, compare the learning areas and choose a suitable current batch.')
+            ->assertSeeText('Practical courses for your next step.')
+            ->assertSeeText('Golden Eye Academy offers language, test-preparation, computer and IT classes in Pokhara. Compare courses or ask our team where to begin.')
             ->assertSeeText('Ask for Course Help')
             ->assertSeeText('View Course Details')
             ->assertSeeText('Message on WhatsApp')
@@ -56,7 +56,7 @@ class GoldenEyeContentBaselineTest extends TestCase
 
         $this->get(route('study-abroad-guidance'))
             ->assertOk()
-            ->assertSeeText('Golden Eye Academy provides courses, classes and academic support. For education-consulting guidance, Golden Eye Academy works with its partner, Brilliant Education Pokhara.')
+            ->assertSeeText('Broader education-consulting questions belong with Brilliant Education Pokhara.')
             ->assertSeeText('Ask for Course Help');
     }
 
