@@ -16,6 +16,7 @@ param (
 )
 
 $ErrorActionPreference = 'Stop'
+$approvedProtectedDatabaseHash = 'b4c15825c6ec130ecd4d83f73647b43dde72d9fd27d4743c10aca3a9d460a313'
 
 function Resolve-ExistingPath {
     param (
@@ -61,8 +62,14 @@ if (-not $repositoryRoot.Equals($gitRoot, [System.StringComparison]::OrdinalIgno
     throw "Harness repository root '$repositoryRoot' does not equal Git root '$gitRoot'."
 }
 
-$disposableDatabase = Resolve-ExistingPath $DisposableDatabasePath
 $protectedDatabase = Resolve-ExistingPath $ProtectedDatabasePath
+$protectedHashBefore = (Get-FileHash -LiteralPath $protectedDatabase -Algorithm SHA256).Hash.ToLowerInvariant()
+
+if ($protectedHashBefore -ne $approvedProtectedDatabaseHash) {
+    throw "Protected database starting hash '$protectedHashBefore' does not match the approved B4 hash '$approvedProtectedDatabaseHash'. Startup refused."
+}
+
+$disposableDatabase = Resolve-ExistingPath $DisposableDatabasePath
 
 if ($disposableDatabase.Equals($protectedDatabase, [System.StringComparison]::OrdinalIgnoreCase)) {
     throw 'Disposable database resolves to the protected operational database. Startup refused.'
@@ -81,7 +88,6 @@ foreach ($worktreeRoot in $worktreeRoots) {
 }
 
 $php = Get-Command php -ErrorAction Stop
-$protectedHashBefore = (Get-FileHash -LiteralPath $protectedDatabase -Algorithm SHA256).Hash.ToLowerInvariant()
 $environmentNames = @(
     'APP_ENV',
     'APP_DEBUG',
@@ -182,6 +188,12 @@ echo json_encode([
     }
 
     if ($PreflightOnly) {
+        $protectedHashAfterPreflight = (Get-FileHash -LiteralPath $protectedDatabase -Algorithm SHA256).Hash.ToLowerInvariant()
+        if ($protectedHashAfterPreflight -ne $approvedProtectedDatabaseHash) {
+            throw 'Protected database does not match the approved B4 hash after guarded preflight.'
+        }
+
+        $result.protected_hash_after_preflight = $protectedHashAfterPreflight
         $result | ConvertTo-Json
         return
     }
@@ -232,8 +244,8 @@ echo json_encode([
         }
 
         $protectedHashAfterStartup = (Get-FileHash -LiteralPath $protectedDatabase -Algorithm SHA256).Hash.ToLowerInvariant()
-        if ($protectedHashAfterStartup -ne $protectedHashBefore) {
-            throw 'Protected database hash changed during guarded startup.'
+        if ($protectedHashAfterStartup -ne $approvedProtectedDatabaseHash) {
+            throw 'Protected database does not match the approved B4 hash after guarded startup.'
         }
 
         $result.server_pid = $server.Id
