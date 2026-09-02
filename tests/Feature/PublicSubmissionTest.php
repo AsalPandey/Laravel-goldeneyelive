@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\CourseCategory;
 use App\Models\JoinNowQuery;
 use App\Models\NewsLetter;
+use App\Models\SiteSetting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -38,7 +39,9 @@ class PublicSubmissionTest extends TestCase
             'message' => 'I want to know more about IELTS classes.',
         ]);
 
-        $response->assertRedirect(route('contact'));
+        $response
+            ->assertRedirect(route('contact'))
+            ->assertSessionHas('alert.config');
 
         $this->assertDatabaseHas(Contact::class, [
             'email' => 'asha@example.com',
@@ -102,7 +105,12 @@ class PublicSubmissionTest extends TestCase
 
         $response
             ->assertRedirect(route('join-now'))
-            ->assertSessionHas('success', 'Thank you! We received your inquiry. Our team will contact you soon.');
+            ->assertSessionMissing('success')
+            ->assertSessionHas('alert.config');
+
+        $alertConfiguration = (string) $response->getSession()->get('alert.config');
+        $this->assertStringContainsString('Thank you!', $alertConfiguration);
+        $this->assertStringContainsString('Thank you! We received your inquiry. Our team will contact you soon.', $alertConfiguration);
 
         $this->assertDatabaseHas(JoinNowQuery::class, [
             'firstName' => 'Asha',
@@ -161,7 +169,8 @@ class PublicSubmissionTest extends TestCase
 
         $response
             ->assertRedirect(route('courses-detail', $course->slug))
-            ->assertSessionHas('success', 'Thank you! We received your inquiry. Our team will contact you soon.');
+            ->assertSessionMissing('success')
+            ->assertSessionHas('alert.config');
 
         $this->assertDatabaseHas(JoinNowQuery::class, [
             'email' => 'asha@example.com',
@@ -179,6 +188,33 @@ class PublicSubmissionTest extends TestCase
             'lead_score' => 23,
             'lead_status' => 'Hot',
         ]);
+    }
+
+    public function test_join_now_uses_one_cms_managed_success_confirmation(): void
+    {
+        Mail::fake();
+
+        SiteSetting::create([
+            'key' => 'enroll_success_message',
+            'value' => 'Course Help confirmation managed by staff.',
+            'type' => 'text',
+        ]);
+
+        $response = $this->from(route('join-now'))->post(route('join-now-submit'), [
+            'full_name' => 'Asha Sharma',
+            'phone' => '9823456780',
+            'help_topic' => 'Choosing a course',
+        ]);
+
+        $response
+            ->assertRedirect(route('join-now'))
+            ->assertSessionMissing('success')
+            ->assertSessionHas('alert.config');
+
+        $alertConfiguration = (string) $response->getSession()->get('alert.config');
+        $this->assertSame(1, substr_count($alertConfiguration, 'Course Help confirmation managed by staff.'));
+        $this->assertDatabaseCount(JoinNowQuery::class, 1);
+        Mail::assertQueued(ContactMail::class);
     }
 
     public function test_join_now_form_rejects_overlong_query_and_goal(): void
@@ -268,7 +304,9 @@ class PublicSubmissionTest extends TestCase
             'email' => 'news@example.com',
         ]);
 
-        $response->assertRedirect(route('home'));
+        $response
+            ->assertRedirect(route('home'))
+            ->assertSessionHas('alert.config');
         $this->assertDatabaseHas(NewsLetter::class, ['email' => 'news@example.com']);
     }
 

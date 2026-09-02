@@ -140,7 +140,8 @@ class InquiryReliabilityTest extends TestCase
 
         $response
             ->assertRedirect(route('join-now'))
-            ->assertSessionHas('success');
+            ->assertSessionMissing('success')
+            ->assertSessionHas('alert.config');
         $inquiry = JoinNowQuery::sole();
 
         Log::shouldHaveReceived('warning')

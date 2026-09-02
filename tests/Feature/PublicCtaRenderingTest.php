@@ -128,7 +128,7 @@ class PublicCtaRenderingTest extends TestCase
             'status' => 'active',
         ]);
 
-        $this->get(route('join-now', [
+        $response = $this->get(route('join-now', [
             'course' => 'ielts-masterclass',
             'selected_course' => 'ielts-masterclass',
             'source_page' => 'home',
@@ -154,6 +154,11 @@ class PublicCtaRenderingTest extends TestCase
             ->assertSee('Add more details', false)
             ->assertSee('pattern="[+0-9() .-]{9,20}"', false)
             ->assertSee('data-cta="join-now-form-submit"', false);
+
+        $this->assertMatchesRegularExpression(
+            '/if \(! form\.checkValidity\(\)\) \{\s*event\.preventDefault\(\);\s*form\.reportValidity\(\);\s*return;/s',
+            $response->getContent(),
+        );
     }
 
     public function test_contact_page_forms_have_accessible_labels_errors_and_phone_help(): void

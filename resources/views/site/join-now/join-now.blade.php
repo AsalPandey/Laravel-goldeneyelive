@@ -49,12 +49,6 @@
                         <p class="text-zinc-600 mb-0" style="font-size: 14px;">Start with three required details. Add more only if you want a more specific reply.</p>
                     </div>
 
-                    @if(session('success'))
-                        <div class="alert alert-success rounded-xl border-0 shadow-sm mb-4" role="status">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
                     <div class="premium-card p-4 p-lg-5 shadow-lg form-conversational course-help-card">
                         <form action="{{ route('join-now-submit') }}" method="POST" id="joinNow" novalidate data-analytics-form="course-help" data-source-page="{{ $sourcePage }}" data-source-section="{{ $sourceSection }}" data-selected-course="{{ $selectedCourseContext }}" data-audience-type="{{ $audienceType }}" data-inquiry-intent="{{ $inquiryIntent }}">
                             @csrf
@@ -346,6 +340,9 @@
 
             form?.addEventListener('submit', function (event) {
                 if (! form.checkValidity()) {
+                    event.preventDefault();
+                    form.reportValidity();
+
                     return;
                 }
 

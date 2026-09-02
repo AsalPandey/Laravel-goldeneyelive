@@ -206,7 +206,7 @@ class ContactController extends Controller
             ]);
         }
 
-        return back()->with('success', SiteSetting::getValue('enroll_success_message', 'Thank you! We received your inquiry. Our team will contact you soon.'));
+        return back();
     }
 
     /**
