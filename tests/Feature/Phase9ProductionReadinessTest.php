@@ -41,11 +41,11 @@ class Phase9ProductionReadinessTest extends TestCase
         $editorStylePath = public_path('build/'.$manifest['resources/js/app.js']['css'][0]);
 
         $this->assertSame(383, filesize($manifestPath));
-        $this->assertSame('5b712ce6dcac335a575d8dfba3ffce54c57ffa8fd787352e843eabcaa3d3a7b7', hash_file('sha256', $manifestPath));
-        $this->assertSame('assets/app-y3kOT6uH.css', $manifest['resources/css/app.css']['file']);
+        $this->assertSame('eea07a1056cc5ec57b1288bd1b7ce501b531c07b3a342793dbb15ca6a898aed1', hash_file('sha256', $manifestPath));
+        $this->assertSame('assets/app-Bxbibrtw.css', $manifest['resources/css/app.css']['file']);
         $this->assertFileExists($assetPath);
-        $this->assertSame(298107, filesize($assetPath));
-        $this->assertSame('3b6b988afa37f6a7acf5a7e45dff48418ef5e93dd6f79eee1d0139f01e6ca6db', hash_file('sha256', $assetPath));
+        $this->assertSame(298252, filesize($assetPath));
+        $this->assertSame('7dde1e02c16977903632d4943013fb5daf35c5fea078620673603512f6694c33', hash_file('sha256', $assetPath));
         $this->assertSame('assets/app-CRWgJY2L.js', $manifest['resources/js/app.js']['file']);
         $this->assertFileExists($editorScriptPath);
         $this->assertSame(533444, filesize($editorScriptPath));
