@@ -33,6 +33,8 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 Route::get('/robots.txt', RobotsController::class);
 Route::redirect('/catelogue', '/catalogue', 301)->name('catalogue.legacy');
 Route::redirect('/all-courses', '/courses-all', 301)->name('all-courses.redirect');
+Route::redirect('/privacy', '/privacy-policy', 301)->name('privacy-policy.legacy');
+Route::redirect('/terms', '/terms-and-conditions', 301)->name('terms-and-conditions.legacy');
 Route::post('/analytics/events', [AnalyticsEventController::class, 'store'])
     ->middleware('throttle:120,1')
     ->name('analytics.events.store');

@@ -40,6 +40,20 @@ class PublicRouteCompatibilityTest extends TestCase
             ->assertRedirect(route('courses-all'));
     }
 
+    public function test_legacy_legal_aliases_redirect_permanently_to_canonical_pages(): void
+    {
+        $this->get('/privacy')
+            ->assertStatus(301)
+            ->assertRedirect(route('privacy-policy'));
+
+        $this->get('/terms')
+            ->assertStatus(301)
+            ->assertRedirect(route('terms-and-conditions'));
+
+        $this->get(route('privacy-policy'))->assertOk();
+        $this->get(route('terms-and-conditions'))->assertOk();
+    }
+
     public function test_course_detail_uses_courses_slug_and_does_not_render_under_blog(): void
     {
         $course = Course::factory()->create([
