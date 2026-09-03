@@ -1,6 +1,13 @@
 @extends('site.layout.app')
 @section('page_title', \App\Support\StructuredData::titleWithBrand($settings['about_header_title'] ?? 'About Golden Eye Academy', \App\Support\StructuredData::siteName($settings ?? [])))
 @section('meta_description', $settings['meta_description'] ?? 'Learn about Golden Eye Academy and its language, test preparation, computer, office, web development, and IT classes in Pokhara.')
+@section('og_image', \App\Support\PublicAsset::canonicalUrl(
+    $settings['about_image'] ?? null,
+    \App\Support\PublicAsset::path(
+        $settings['homepage_social_image'] ?? null,
+        \App\Support\PublicAsset::path($settings['hero_image'] ?? null, 'site/img/logo.png'),
+    ),
+))
 
 @section('schema_markup')
     {{-- Person Schema for Teachers (AEO/GEO) --}}

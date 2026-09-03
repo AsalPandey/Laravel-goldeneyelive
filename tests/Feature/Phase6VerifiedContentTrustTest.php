@@ -156,7 +156,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
             ->assertSee('foundingDate', false);
 
         $this->assertStringContainsString(
-            'Golden Eye Academy | Courses and Classes in Pokhara',
+            'Golden Eye Academy | Computer, Language &amp; IELTS/PTE in Pokhara',
             $response->getContent(),
         );
     }

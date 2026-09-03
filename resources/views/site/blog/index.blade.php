@@ -1,6 +1,6 @@
 @extends('site.layout.app')
-@section('page_title', $settings['blog_header_title'] ?? 'Golden Eye Academy Learning Guides')
-@section('meta_description', filled($settings['blog_subtitle'] ?? null) ? trim(strip_tags($settings['blog_subtitle'])) : 'Read Golden Eye Academy guides about courses, language learning, computer skills, academic support, and study decisions in Pokhara.')
+@section('page_title', $settings['blog_header_title'] ?? 'Course and Learning Guides | Golden Eye Academy')
+@section('meta_description', filled($settings['blog_subtitle'] ?? null) ? trim(strip_tags($settings['blog_subtitle'])) : 'Practical guides for choosing computer, language and test-preparation courses, building study routines and asking better questions before enrollment.')
 @section('content')
     @php
         $blogGuidanceUrl = route('join-now', [

@@ -1,6 +1,6 @@
 @extends('site.layout.app')
 @section('page_title', ($settings['privacy_header_title'] ?? 'Privacy Policy') . ' - ' . \App\Support\StructuredData::siteName($settings ?? []))
-@section('meta_description', $settings['meta_description'] ?? 'Learn how ' . \App\Support\StructuredData::siteName($settings ?? []) . ' protects your privacy and personal data.')
+@section('meta_description', 'Read how Golden Eye Academy handles information submitted through course, enrollment, contact and newsletter forms.')
 @section('content')
     <!-- Header Start -->
     <div class="container-fluid page-header">
@@ -127,4 +127,3 @@
     </div>
     <!-- Privacy Policy End -->
 @endsection
-

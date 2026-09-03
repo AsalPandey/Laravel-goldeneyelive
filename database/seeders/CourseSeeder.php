@@ -259,9 +259,9 @@ class CourseSeeder extends Seeder
             $courseData['category'] = $category?->name ?? 'Academic Support and Events';
             $courseData['category_slug'] = $category?->slug ?? 'other-classes';
             $courseData['status'] = 'active';
-            $courseData['meta_title'] = $courseData['name'].' | Golden Eye Academy';
+            $courseData['meta_title'] ??= $courseData['name'].' | Golden Eye Academy';
             $courseData['display_order'] = ($index + 1) * 10;
-            $courseData['meta_description'] = Str::limit($courseData['description'], 500, '');
+            $courseData['meta_description'] ??= Str::limit($courseData['description'], 500, '');
             $courseData['aeo_summary'] = $courseData['description'];
             Course::updateOrCreate(
                 ['slug' => $courseData['slug']],

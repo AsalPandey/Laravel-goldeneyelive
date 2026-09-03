@@ -67,6 +67,7 @@ class SiteSettingSeeder extends Seeder
             'image_size_limit' => ['2048', 'text'],
 
             'hero_image' => ['site/img/carousel-1.png', 'image'],
+            'homepage_social_image' => ['', 'image'],
             'hero_badge_text' => ['Golden Eye Academy, Pokhara', 'text'],
             'hero_title' => ['Practical courses and classes in Pokhara.', 'text'],
             'hero_subtitle' => ['Compare available course details and ask the academy to confirm current batch information before enrollment.', 'text'],

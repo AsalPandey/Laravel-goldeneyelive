@@ -1,18 +1,27 @@
 @php
     $brandName = \App\Support\StructuredData::siteName($settings ?? []);
     $defaultTitle = $settings['meta_title'] ?? 'Golden Eye Academy | Courses and Classes in Pokhara';
-    $requestedTitle = trim($__env->yieldContent('page_title', $defaultTitle));
+    $decodeMetaText = static fn (string $value): string => html_entity_decode(
+        trim($value),
+        ENT_QUOTES | ENT_HTML5,
+        'UTF-8',
+    );
+    $requestedTitle = $decodeMetaText($__env->yieldContent('page_title', $defaultTitle));
     $pageTitle = $requestedTitle !== '' ? $requestedTitle : $defaultTitle;
     $defaultDescription = $settings['meta_description'] ?? 'Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.';
-    $requestedDescription = trim($__env->yieldContent('meta_description', $defaultDescription));
+    $requestedDescription = $decodeMetaText($__env->yieldContent('meta_description', $defaultDescription));
     $pageDescription = $requestedDescription !== '' ? $requestedDescription : $defaultDescription;
     $requestedCanonical = trim($__env->yieldContent('canonical_url', ''));
     $canonicalUrl = $requestedCanonical !== ''
         ? \App\Support\CanonicalUrl::normalize($requestedCanonical)
         : \App\Support\CanonicalUrl::current();
     $robotsDirective = trim($__env->yieldContent('robots', ''));
-    $ogTitle = trim($__env->yieldContent('og_title', $pageTitle)) ?: $pageTitle;
-    $ogImage = trim($__env->yieldContent('og_image', \App\Support\PublicAsset::canonicalUrl($settings['hero_image'] ?? null, 'site/img/logo.png')));
+    $ogTitle = $decodeMetaText($__env->yieldContent('og_title', $pageTitle)) ?: $pageTitle;
+    $globalSocialImage = \App\Support\PublicAsset::path(
+        $settings['homepage_social_image'] ?? null,
+        \App\Support\PublicAsset::path($settings['hero_image'] ?? null, 'site/img/logo.png'),
+    );
+    $ogImage = trim($__env->yieldContent('og_image', \App\Support\PublicAsset::canonicalUrl($globalSocialImage, 'site/img/logo.png')));
 @endphp
 <head>
     <meta charset="utf-8">

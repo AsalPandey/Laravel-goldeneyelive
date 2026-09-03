@@ -25,7 +25,8 @@ class BlogSeeder extends Seeder
             $post['published_at'] = BlogPost::where('slug', $post['slug'])->value('published_at')
                 ?? CarbonImmutable::parse(self::BASELINE_PUBLISHED_AT)->subDays($index);
             $post['meta_title'] = $post['title'].' | Golden Eye Academy';
-            $post['meta_description'] = Str::limit($summary, 155, '');
+            $post['meta_description'] = GoldenEyeArticleBaseline::socialPreviewDescriptions()[$post['slug']]
+                ?? Str::limit($summary, 155, '');
             $post['aeo_summary'] = Str::limit($summary, 240, '');
             BlogPost::updateOrCreate(['slug' => $post['slug']], $post);
         }

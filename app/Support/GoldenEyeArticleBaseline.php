@@ -420,6 +420,21 @@ HTML,
         ];
     }
 
+    /** @return array<string, string> */
+    public static function socialPreviewDescriptions(): array
+    {
+        return [
+            'which-course-should-i-choose-after-see-or-plus-two' => 'Compare course goals, starting levels, fees, durations and study time before choosing your next class after SEE or Plus Two in Pokhara.',
+            'ielts-or-pte-how-to-choose-the-right-test' => 'Compare IELTS and PTE formats, test requirements and preparation routines before choosing a class at Golden Eye Academy in Pokhara.',
+            'why-office-skills-still-matter-for-job-seekers' => 'See how documents, spreadsheets, presentations, email and file management support study and everyday workplace tasks.',
+            'how-web-development-builds-a-career-portfolio' => 'Learn what to include in a beginner web-development portfolio, how to explain your work and how to protect private data.',
+            'korean-eps-topik-preparation-what-beginners-should-know' => 'Use this beginner checklist to plan Hangul, vocabulary, reading, listening and regular practice before starting EPS-TOPIK preparation.',
+            'japanese-jlpt-n5-a-practical-starting-plan' => 'Plan JLPT N5 study across Hiragana, Katakana, vocabulary, grammar, reading and listening with a routine you can maintain.',
+            'parents-guide-how-to-evaluate-a-training-institute' => 'A practical checklist for parents comparing course suitability, fees, schedules, faculty, safety and realistic learning expectations.',
+            'why-you-should-ask-before-enrollment' => 'Ask about course focus, starting level, fee, duration, instructor, timetable and practice expectations before enrolling.',
+        ];
+    }
+
     /**
      * @return array<string, array{title: string, content: string, category: string, author: string}>
      */

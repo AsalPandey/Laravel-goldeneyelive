@@ -6,7 +6,13 @@
 @section('canonical_url', route('blog-detail', $post->slug))
 @section('meta_keywords', $post->meta_keywords ?? '')
 @section('aeo_summary', $post->aeo_summary ?? '')
-@section('og_image', \App\Support\PublicAsset::canonicalUrl($post->image ?? null, 'site/img/carousel-1.png'))
+@section('og_image', \App\Support\PublicAsset::canonicalUrl(
+    $post->image ?? null,
+    \App\Support\PublicAsset::path(
+        $settings['homepage_social_image'] ?? null,
+        \App\Support\PublicAsset::path($settings['hero_image'] ?? null, 'site/img/logo.png'),
+    ),
+))
 @if($post->image)
     @section('preload_assets')
         <link rel="preload" as="image" href="{{ \App\Support\PublicAsset::url($post->image, 'site/img/carousel-1.png') }}" fetchpriority="high">

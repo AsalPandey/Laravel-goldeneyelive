@@ -1,7 +1,7 @@
 @extends('site.layout.app')
 
-@section('page_title', $settings['courses_title'] ?? 'Courses - Golden Eye Academy')
-@section('meta_description', trim(strip_tags($settings['courses_subtitle'] ?? 'Browse Golden Eye Academy courses by category, search by subject, and ask the academy team before enrollment.')))
+@section('page_title', $settings['courses_title'] ?? 'Computer, Language and IELTS/PTE Courses in Pokhara')
+@section('meta_description', trim(strip_tags($settings['courses_subtitle'] ?? 'Explore practical computer, office and web-development courses, alongside language and IELTS/PTE classes. Compare learning areas, fees and durations.')))
 @if(request()->filled('search') || request()->filled('category'))
     @section('robots', 'noindex, follow')
     @section('canonical_url', \App\Support\CanonicalUrl::route('courses-all'))

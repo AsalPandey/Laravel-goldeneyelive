@@ -29,6 +29,7 @@ class BrandingController extends Controller
         'about_image',
         'popup_image',
         'hero_image',
+        'homepage_social_image',
         'external_review_screenshot',
         'site_logo',
         'site_favicon',
@@ -41,6 +42,7 @@ class BrandingController extends Controller
     const REMOVABLE_IMAGE_KEYS = [
         'about_image',
         'popup_image',
+        'homepage_social_image',
         'external_review_screenshot',
         'audience_students_image',
         'audience_parents_image',
@@ -457,7 +459,7 @@ class BrandingController extends Controller
         }
 
         // Safety: Prevent deleting assets currently in use by core site settings
-        $inUse = SiteSetting::whereIn('key', ['site_logo', 'site_favicon', 'hero_image', 'about_image'])
+        $inUse = SiteSetting::whereIn('key', ['site_logo', 'site_favicon', 'hero_image', 'homepage_social_image', 'about_image'])
             ->where('value', $requestedPath)
             ->exists();
 

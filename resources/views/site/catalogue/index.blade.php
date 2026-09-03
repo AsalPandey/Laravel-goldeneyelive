@@ -1,6 +1,6 @@
 @extends('site.layout.app')
-@section('page_title', $settings['catalogue_meta_title'] ?? 'Golden Eye Academy Courses and Learning Support in Pokhara')
-@section('meta_description', $settings['catalogue_meta_description'] ?? 'Explore Golden Eye Academy courses, classes and learning-support areas in Pokhara, then ask for help choosing a suitable current batch.')
+@section('page_title', $settings['catalogue_meta_title'] ?? 'Compare Courses, Fees & Durations | Golden Eye Academy Pokhara')
+@section('meta_description', $settings['catalogue_meta_description'] ?? 'Compare Golden Eye Academy computer, office, web-development, language and IELTS/PTE courses by fee, duration and learning focus before choosing.')
 
 @section('content')
     @php

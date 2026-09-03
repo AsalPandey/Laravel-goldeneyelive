@@ -2,6 +2,13 @@
 
 @section('page_title', $landingPage['page_title'])
 @section('meta_description', $landingPage['meta_description'])
+@section('og_image', \App\Support\PublicAsset::canonicalUrl(
+    $landingPage['social_image'] ?? null,
+    \App\Support\PublicAsset::path(
+        $settings['homepage_social_image'] ?? null,
+        \App\Support\PublicAsset::path($settings['hero_image'] ?? null, 'site/img/logo.png'),
+    ),
+))
 @section('tracking_source_page', $landingPage['source_page'])
 @section('tracking_audience_type', $landingPage['audience_type'])
 @section('tracking_inquiry_intent', $landingPage['inquiry_intent'])

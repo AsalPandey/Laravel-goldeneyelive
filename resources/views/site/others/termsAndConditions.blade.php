@@ -1,6 +1,6 @@
 @extends('site.layout.app')
 @section('page_title', ($settings['terms_header_title'] ?? 'Terms and Conditions') . ' - ' . \App\Support\StructuredData::siteName($settings ?? []))
-@section('meta_description', $settings['meta_description'] ?? 'Read the Terms and Conditions for using ' . \App\Support\StructuredData::siteName($settings ?? []) . ' services.')
+@section('meta_description', 'Read the terms for using Golden Eye Academy website information, inquiries and enrollment-related services.')
 @section('content')
     <!-- Header Start -->
     <div class="container-fluid page-header">

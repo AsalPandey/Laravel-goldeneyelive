@@ -92,7 +92,7 @@ class Phase3b2CmsMediaIntegrityTest extends TestCase
         $this->assertFileExists(public_path('site/img/premium.png'));
         $this->get(route('blog-detail', $blog->slug))
             ->assertOk()
-            ->assertSee('site/img/carousel-1.png', false);
+            ->assertSee('site/img/logo.png', false);
 
         $category = CourseCategory::factory()->create(['image' => 'site/img/cat-2.jpg']);
         $this->actingAs($this->admin)

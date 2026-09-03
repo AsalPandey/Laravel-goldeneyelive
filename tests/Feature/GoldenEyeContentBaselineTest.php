@@ -29,7 +29,7 @@ class GoldenEyeContentBaselineTest extends TestCase
             ->assertOk()
             ->assertSeeText('Established in Pokhara since 2008')
             ->assertSeeText('Practical courses for your next step.')
-            ->assertSeeText('Golden Eye Academy offers language, test-preparation, computer and IT classes in Pokhara. Compare courses or ask our team where to begin.')
+            ->assertSeeText('Golden Eye Academy offers computer and digital-skills courses in Pokhara, alongside language and IELTS/PTE preparation. Compare courses or ask where to begin.')
             ->assertSeeText('Ask for Course Help')
             ->assertSeeText('View Course Details')
             ->assertSeeText('Message on WhatsApp')

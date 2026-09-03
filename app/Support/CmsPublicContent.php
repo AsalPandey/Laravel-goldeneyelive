@@ -34,8 +34,8 @@ final class CmsPublicContent
             'students' => [
                 'label' => 'Students',
                 'route' => 'for-students',
-                'page_title' => 'Course and Class Information for Students in Pokhara - Golden Eye Academy',
-                'meta_description' => 'Golden Eye Academy helps students in Pokhara compare IELTS/PTE, language, computer, office, web development, and IT classes before enrollment.',
+                'page_title' => 'Courses for Students in Pokhara | Golden Eye Academy',
+                'meta_description' => 'Compare practical computer, language and IELTS/PTE courses in Pokhara by learning focus, fee and duration, then ask which starting point fits your goal.',
                 'source_page' => 'for_students',
                 'audience_type' => 'student',
                 'inquiry_intent' => 'course_selection_help',
@@ -62,8 +62,8 @@ final class CmsPublicContent
             'parents' => [
                 'label' => 'Parents',
                 'route' => 'for-parents',
-                'page_title' => 'Course and Class Information for Parents in Pokhara - Golden Eye Academy',
-                'meta_description' => 'Golden Eye Academy helps parents understand course fit, fees, timing, academic support, and realistic outcomes before enrollment.',
+                'page_title' => 'Course Guide for Parents in Pokhara | Golden Eye Academy',
+                'meta_description' => 'Compare course suitability, fees, duration, instructors, current timings and completion certificates before helping your son or daughter choose.',
                 'source_page' => 'for_parents',
                 'audience_type' => 'parent',
                 'inquiry_intent' => 'parent_course_guidance',
@@ -93,8 +93,8 @@ final class CmsPublicContent
             'study_abroad' => [
                 'label' => 'IELTS, PTE and language preparation',
                 'route' => 'study-abroad-guidance',
-                'page_title' => 'IELTS, PTE and Language Preparation in Pokhara - Golden Eye Academy',
-                'meta_description' => 'Explore IELTS, PTE, Japanese, Korean, English, computer, and practical classes for international study goals at Golden Eye Academy in Pokhara.',
+                'page_title' => 'IELTS, PTE & Language Preparation in Pokhara | Golden Eye Academy',
+                'meta_description' => 'See Golden Eye Academy preparation classes for IELTS, PTE and languages. For wider study-abroad consulting questions, contact Brilliant Education Pokhara.',
                 'source_page' => 'study_abroad_guidance',
                 'audience_type' => 'study_abroad_applicant',
                 'inquiry_intent' => 'study_abroad_course_guidance',
@@ -124,8 +124,8 @@ final class CmsPublicContent
             'job_computer_skills' => [
                 'label' => 'Computer and job skills',
                 'route' => 'job-computer-skills',
-                'page_title' => 'Computer and Job Skills Courses in Pokhara - Golden Eye Academy',
-                'meta_description' => 'Golden Eye Academy helps learners build useful computer, office, web development, and IT skills for study, work, and career growth.',
+                'page_title' => 'Computer & Digital Skills Courses in Pokhara | Golden Eye Academy',
+                'meta_description' => 'Build practical computer and workplace skills through documents, spreadsheets, presentations, email and web development with Laravel, APIs and deployment concepts.',
                 'source_page' => 'job_computer_skills',
                 'audience_type' => 'job_skill_learner',
                 'inquiry_intent' => 'computer_skill_guidance',
@@ -231,8 +231,8 @@ final class CmsPublicContent
 
         return [
             'sections' => $sections,
-            'meta_title' => self::value($settings, 'home_meta_title', 'Golden Eye Academy | Courses and Classes in Pokhara'),
-            'meta_description' => self::value($settings, 'home_meta_description', 'Golden Eye Academy offers IELTS/PTE, Japanese, Korean, English, computer, office, web development, and IT classes in Pokhara, Nepal.'),
+            'meta_title' => self::value($settings, 'home_meta_title', 'Golden Eye Academy | Computer, Language & IELTS/PTE in Pokhara'),
+            'meta_description' => self::value($settings, 'home_meta_description', 'Learn practical computer, office and web-development skills in Pokhara, alongside language and IELTS/PTE preparation. Compare courses, fees and durations.'),
             'trust_items_text' => self::value($settings, 'home_trust_items', implode("\n", $trustDefaults)),
             'trust_items' => self::lines($settings, 'home_trust_items', $trustDefaults),
             'audience_tagline' => self::value($settings, 'home_audience_tagline', 'Start here'),
@@ -298,6 +298,7 @@ final class CmsPublicContent
                 'page_title' => self::value($settings, "{$prefix}_page_title", $defaults['page_title']),
                 'meta_description' => self::value($settings, "{$prefix}_meta_description", $defaults['meta_description']),
                 'image' => self::value($settings, "{$prefix}_image", self::value($settings, 'hero_image', 'site/img/carousel-1.png')),
+                'social_image' => trim((string) ($settings["{$prefix}_image"] ?? '')),
                 'badge' => self::value($settings, "{$prefix}_badge", $defaults['badge']),
                 'headline' => self::value($settings, "{$prefix}_headline", $defaults['headline']),
                 'subheadline' => self::value($settings, "{$prefix}_subheadline", $defaults['subheadline']),

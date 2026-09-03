@@ -306,6 +306,38 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="pt-6 border-t border-zinc-100">
+                                <label class="premium-label">Social Share Image</label>
+                                <p class="helper-text mb-4">Used when the homepage is shared on WhatsApp, Facebook, LinkedIn and other platforms. A wide classroom or computer-class image works best.</p>
+                                <div class="relative rounded-2xl overflow-hidden border-4 border-zinc-50 shadow-inner group">
+                                    <img src="{{ \App\Support\PublicAsset::url($settings['homepage_social_image'] ?? null, \App\Support\PublicAsset::path($settings['hero_image'] ?? null, 'site/img/logo.png')) }}"
+                                         onerror="this.src='{{ asset('site/img/logo.png') }}'"
+                                         class="w-full h-40 object-cover group-hover:scale-105 transition-transform"
+                                         alt="Homepage social share preview">
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <label class="px-4 py-2 bg-white rounded-lg text-xs font-black uppercase cursor-pointer">Change Image
+                                            <input type="file" name="homepage_social_image" class="hidden">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <label class="premium-label">Photo Reference (Vault Path)</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" name="homepage_social_image_path" id="input_homepage_social_image" value="{{ $settings['homepage_social_image'] ?? '' }}" class="premium-input h-10 text-xs font-mono bg-transparent flex-1" placeholder="Uses the Hero image when empty">
+                                        <button type="button" onclick="openPicker('input_homepage_social_image')" class="bg-zinc-800 text-[#C5A059] px-4 rounded-xl text-[10px] font-black uppercase hover:bg-orange-600 hover:text-white transition-all whitespace-nowrap">
+                                            <i class="fa fa-images mr-1"></i> Browse
+                                        </button>
+                                    </div>
+                                    @error('homepage_social_image_path') <p class="text-xs text-red-600 mt-2">{{ $message }}</p> @enderror
+                                    @if(filled($settings['homepage_social_image'] ?? null))
+                                        <label class="inline-flex items-center gap-2 text-xs font-bold text-red-700 mt-3">
+                                            <input type="checkbox" name="remove_homepage_social_image" value="1" @checked(old('remove_homepage_social_image')) class="rounded border-red-300 text-red-600 focus:ring-red-500">
+                                            Remove saved social image and use the Hero image
+                                        </label>
+                                    @endif
+                                </div>
+                                <p class="helper-text mt-3">Recommended sharing size: approximately 1200 × 630 pixels. Other valid image dimensions are accepted.</p>
+                            </div>
                         </div>
                     </div>
 
