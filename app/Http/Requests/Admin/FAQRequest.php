@@ -11,6 +11,12 @@ class FAQRequest extends CMSRequest
         if ($this->routeIs('admin.faq.store')) {
             $this->mergeIfMissing(['status' => 'inactive']);
         }
+
+        if ($this->has('order_priority') && blank($this->input('order_priority'))) {
+            $this->merge([
+                'order_priority' => 0,
+            ]);
+        }
     }
 
     public function rules(): array

@@ -49,6 +49,7 @@ class FAQController extends Controller
     public function store(FAQRequest $request)
     {
         $validated = $request->validated();
+        $validated['order_priority'] = (int) ($validated['order_priority'] ?? 0);
         $validated['status'] ??= 'inactive';
         $courseIds = $validated['courses'] ?? [];
         unset($validated['courses']);
@@ -86,6 +87,7 @@ class FAQController extends Controller
     {
         $faq = FAQ::findOrFail($id);
         $validated = $request->validated();
+        $validated['order_priority'] = (int) ($validated['order_priority'] ?? 0);
         $courseIds = $validated['courses'] ?? [];
         unset($validated['courses']);
 

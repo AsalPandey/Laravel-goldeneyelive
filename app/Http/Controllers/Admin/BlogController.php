@@ -11,6 +11,7 @@ use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class BlogController extends Controller
@@ -64,9 +65,11 @@ class BlogController extends Controller
         $courseIds = $validated['courses'] ?? [];
         unset($validated['courses'], $validated['courses_present']);
 
-        $validated['slug'] = $request->filled('slug')
-            ? (new BlogPost)->generateUniqueSlug($request->slug)
-            : (new BlogPost)->generateUniqueSlug($validated['title']);
+        $rawSlug = $request->filled('slug') && filled(Str::slug((string) $request->slug))
+            ? (string) $request->slug
+            : (string) $validated['title'];
+
+        $validated['slug'] = (new BlogPost)->generateUniqueSlug($rawSlug);
 
         $validated['published_at'] = CmsDateTime::fromStaffInput($validated['published_at'] ?? null);
 
@@ -125,9 +128,11 @@ class BlogController extends Controller
         $courseIds = $validated['courses'] ?? [];
         unset($validated['courses'], $validated['courses_present']);
 
-        $validated['slug'] = $request->filled('slug')
-            ? $post->generateUniqueSlug($request->slug, $id)
-            : $post->generateUniqueSlug($validated['title'], $id);
+        $rawSlug = $request->filled('slug') && filled(Str::slug((string) $request->slug))
+            ? (string) $request->slug
+            : (string) $validated['title'];
+
+        $validated['slug'] = $post->generateUniqueSlug($rawSlug, $id);
 
         if (filled($validated['published_at'] ?? null)) {
             $validated['published_at'] = CmsDateTime::fromStaffInput(

@@ -47,6 +47,7 @@ class CourseCategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $validated = $request->validated();
+        $validated['order_priority'] = (int) ($validated['order_priority'] ?? 0);
 
         $validated['slug'] = Str::slug($validated['slug']);
 
@@ -77,6 +78,7 @@ class CourseCategoryController extends Controller
     {
         $category = CourseCategory::findOrFail($id);
         $validated = $request->validated();
+        $validated['order_priority'] = (int) ($validated['order_priority'] ?? 0);
 
         $validated['slug'] = Str::slug($validated['slug']);
 

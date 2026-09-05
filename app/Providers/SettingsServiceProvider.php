@@ -59,6 +59,8 @@ class SettingsServiceProvider extends ServiceProvider
                                     $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
                                 })
                                 ->orderByDesc('is_urgent')
+                                ->orderByRaw('CASE WHEN starts_at IS NOT NULL THEN 1 ELSE 0 END DESC')
+                                ->latest('starts_at')
                                 ->latest('updated_at')
                                 ->get();
 

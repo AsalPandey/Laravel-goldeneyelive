@@ -16,6 +16,12 @@ class CategoryRequest extends CMSRequest
                 'slug' => Str::slug((string) $this->input('slug')),
             ]);
         }
+
+        if ($this->has('order_priority') && blank($this->input('order_priority'))) {
+            $this->merge([
+                'order_priority' => 0,
+            ]);
+        }
     }
 
     public function rules(): array

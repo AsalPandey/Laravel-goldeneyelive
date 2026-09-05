@@ -8,6 +8,16 @@ use Illuminate\Validation\Rule;
 
 class BlogRequest extends CMSRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('slug')) {
+            $slug = trim((string) $this->input('slug'));
+            $this->merge([
+                'slug' => $slug === '' ? null : $slug,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         $imageLimit = SiteSetting::getValue('image_size_limit', 2048);
@@ -23,7 +33,7 @@ class BlogRequest extends CMSRequest
             'meta_keywords' => ['nullable', 'string', 'max:500'],
             'aeo_summary' => ['nullable', 'string', 'max:300'],
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', 'alpha_dash:ascii'],
             'author' => ['nullable', 'string', 'max:255'],
             'category' => ['nullable', 'string', 'max:255'],
             'content' => ['required', 'string'],
@@ -52,5 +62,12 @@ class BlogRequest extends CMSRequest
                 }),
             ],
         ]);
+    }
+
+    public function messages(): array
+    {
+        return [
+            'slug.alpha_dash' => 'The blog slug may only contain letters, numbers, dashes, and underscores.',
+        ];
     }
 }

@@ -12,6 +12,9 @@ trait HasUniqueSlug
     public function generateUniqueSlug($title, $id = null)
     {
         $slug = Str::slug($title);
+        if (blank($slug)) {
+            $slug = strtolower(class_basename($this)) ?: 'item';
+        }
 
         // Fetch all matching patterns in a single query
         $existingSlugs = $this->where('slug', 'like', $slug.'%')

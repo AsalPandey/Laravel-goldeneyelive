@@ -94,18 +94,24 @@ class ServicePillarController extends Controller
      */
     private function normalizePayload(array $validated, ?ServicePillar $servicePillar = null): array
     {
-        $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
+        $rawSlug = filled($validated['slug'] ?? null) ? (string) $validated['slug'] : (string) ($validated['title'] ?? '');
+        $baseSlug = Str::slug($rawSlug);
+        if (blank($baseSlug)) {
+            $baseSlug = 'service-pillar';
+        }
+
         $validated['sort_order'] = (int) ($validated['sort_order'] ?? 0);
         $validated['bullets'] = collect($validated['bullets'] ?? [])
             ->filter(fn (?string $bullet): bool => filled($bullet))
             ->values()
             ->all();
 
-        if ($servicePillar && $validated['slug'] === $servicePillar->slug) {
+        if ($servicePillar && $baseSlug === $servicePillar->slug) {
+            $validated['slug'] = $baseSlug;
+
             return $validated;
         }
 
-        $baseSlug = $validated['slug'];
         $slug = $baseSlug;
         $counter = 2;
 

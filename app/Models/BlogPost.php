@@ -26,6 +26,7 @@ class BlogPost extends Model
         return $query
             ->where('status', 'published')
             ->whereNotNull('slug')
+            ->where('slug', '!=', '')
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
     }

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\TeacherRequest;
+use App\Models\Course;
 use App\Models\Teacher;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class TeacherController extends Controller
@@ -72,10 +74,22 @@ class TeacherController extends Controller
         $oldPhoto = $teacher->photo;
         $validated['photo'] = $this->resolveAssetUpdate($request, 'photo', 'site/img/teachers', $teacher->photo, 'remove_photo');
         unset($validated['photo_path'], $validated['remove_photo']);
+        $oldName = $teacher->name;
 
-        $teacher->update($validated);
-        $this->deleteReplacedAsset($oldPhoto, $teacher->photo);
-        $this->clearSiteCache();
+        DB::transaction(function () use ($teacher, $validated, $oldName, $oldPhoto): void {
+            $teacher->update($validated);
+
+            if ($oldName !== $teacher->name) {
+                Course::where('teacher_id', $teacher->id)->update([
+                    'instructor' => $teacher->name,
+                ]);
+            }
+
+            DB::afterCommit(function () use ($oldPhoto, $teacher): void {
+                $this->deleteReplacedAsset($oldPhoto, $teacher->photo);
+                $this->clearSiteCache();
+            });
+        });
 
         Alert::success('Success', 'Teacher updated successfully.');
 

@@ -9,6 +9,7 @@ use App\Models\CourseCategory;
 use App\Models\FAQ;
 use App\Models\JoinNowQuery;
 use App\Models\Teacher;
+use App\Models\Testimonial;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -143,6 +144,7 @@ class CourseController extends Controller
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['display_order'] = $validated['display_order'] ?? 100;
 
+        $oldCourseName = $course->name;
         $oldPhoto = $course->photo;
         $validated['photo'] = $this->handleAssetUpload($request, 'photo', 'site/img/courses', $oldPhoto);
         unset($validated['photo_path']);
@@ -151,7 +153,7 @@ class CourseController extends Controller
         $newPhotoUploaded = $request->hasFile('photo') && $photoChanged;
 
         try {
-            DB::transaction(function () use ($course, $validated, $faqIds, $oldPhoto, $photoChanged) {
+            DB::transaction(function () use ($course, $validated, $faqIds, $oldPhoto, $photoChanged, $oldCourseName) {
                 $course->update($validated);
                 $course->faqs()->sync($faqIds);
 
@@ -159,6 +161,17 @@ class CourseController extends Controller
                     'course' => $course->name,
                     'course_slug' => $course->slug,
                 ]);
+
+                if ($oldCourseName !== $course->name) {
+                    Testimonial::where('course_id', $course->id)
+                        ->orWhere(function ($query) use ($oldCourseName): void {
+                            $query->whereNull('course_id')->where('course_name', $oldCourseName);
+                        })
+                        ->update([
+                            'course_name' => $course->name,
+                            'course_id' => $course->id,
+                        ]);
+                }
 
                 DB::afterCommit(function () use ($oldPhoto, $photoChanged, $course) {
                     if ($photoChanged) {

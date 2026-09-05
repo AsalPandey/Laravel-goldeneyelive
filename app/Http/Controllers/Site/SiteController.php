@@ -77,6 +77,9 @@ class SiteController extends Controller
                 ->where(function ($query) {
                     $query->whereNull('expires_at')->orWhere('expires_at', '>=', now());
                 })
+                ->orderByDesc('is_urgent')
+                ->orderByRaw('CASE WHEN starts_at IS NOT NULL THEN 1 ELSE 0 END DESC')
+                ->latest('starts_at')
                 ->latest('updated_at')
                 ->limit(3)
                 ->get(),
