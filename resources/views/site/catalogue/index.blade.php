@@ -19,13 +19,13 @@
         <div class="container py-5">
             <div class="row align-items-center g-4">
                 <div class="col-lg-8">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['catalogue_badge'] ?? 'Golden Eye Academy learning options' }}</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $settings['catalogue_badge'] ?? 'Golden Eye Academy learning options' }}</span>
                     <h1 class="display-5 fw-black mt-3 mb-3 text-white" style="letter-spacing: 0;">{{ $settings['catalogue_title'] ?? 'Explore courses, classes and academic support.' }}</h1>
                     <p class="text-white/75 mb-0" style="font-size: 15px; line-height: 1.8; max-width: 760px;">{{ $settings['catalogue_description'] ?? 'Start with your learning goal, compare active courses and ask the academy team to help you choose a suitable next step.' }}</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
                     <a href="{{ $guidanceUrl('catalogue-hero') }}" data-cta="catalogue-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask for Course Help</a>
-                    <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="catalogue-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Message on WhatsApp</a>
+                    <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="catalogue-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">Message on WhatsApp</a>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-8">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['catalogue_services_tagline'] ?? 'Ways we support learning' }}</span>
+                        <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $settings['catalogue_services_tagline'] ?? 'Ways we support learning' }}</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $settings['catalogue_services_title'] ?? 'Choose the support area that matches your goal.' }}</h2>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <a href="{{ $pillar->cta_url ?: $guidanceUrl('catalogue-service-'.$pillar->slug) }}" data-cta="catalogue-service-{{ $pillar->slug }}" class="catalogue-service-cta text-brand-dark font-black uppercase tracking-widest text-decoration-none hover:text-brand-gold transition-all" style="font-size: 9px;">
+                                <a href="{{ $pillar->cta_url ?: $guidanceUrl('catalogue-service-'.$pillar->slug) }}" data-cta="catalogue-service-{{ $pillar->slug }}" class="catalogue-service-cta text-brand-dark font-black uppercase tracking-widest text-decoration-none hover:text-brand-gold transition-all" style="font-size: 11px;">
                                     {{ $pillar->cta_label }} <i class="fa fa-arrow-right ms-1"></i>
                                 </a>
                             </article>
@@ -76,7 +76,7 @@
         <section class="py-5 bg-zinc-50/50">
             <div class="container">
                 <div class="mb-4">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['catalogue_categories_tagline'] ?? 'Browse by subject' }}</span>
+                    <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $settings['catalogue_categories_tagline'] ?? 'Browse by subject' }}</span>
                     <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $settings['catalogue_categories_title'] ?? 'Explore active course categories.' }}</h2>
                 </div>
                 <div class="row g-4">
@@ -90,7 +90,7 @@
                                     <div class="p-4">
                                         <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
                                             <h3 class="h6 fw-black text-brand-dark mb-0" style="line-height: 1.35;">{{ $category->name }}</h3>
-                                            <span class="bg-brand-gold text-brand-dark px-2 py-1 rounded-full font-black uppercase tracking-widest" style="font-size: 8px;">{{ $category->courses_count }} Courses</span>
+                                            <span class="bg-brand-gold text-brand-dark px-2 py-1 rounded-full font-black uppercase tracking-widest" style="font-size: 11px;">{{ $category->courses_count }} Courses</span>
                                         </div>
                                         @if($category->description)
                                             <p class="text-zinc-600 mb-0" style="font-size: 12px; line-height: 1.65;">{{ Str::limit(strip_tags($category->description), 125) }}</p>
@@ -110,11 +110,11 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-8">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $settings['catalogue_courses_tagline'] ?? 'Current course options' }}</span>
+                        <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $settings['catalogue_courses_tagline'] ?? 'Current course options' }}</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $settings['catalogue_courses_title'] ?? 'Open a course to understand what it covers.' }}</h2>
                     </div>
                     <div class="col-lg-4 text-lg-end">
-                        <a href="{{ route('courses-all') }}" data-cta="catalogue-all-courses" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">View Course Details</a>
+                        <a href="{{ route('courses-all') }}" data-cta="catalogue-all-courses" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">View Course Details</a>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -122,21 +122,21 @@
                         <div class="col-lg-4 col-md-6">
                             <article class="premium-card p-0 overflow-hidden h-100 d-flex flex-column">
                                 <div class="aspect-[16/9] overflow-hidden position-relative">
-                                    <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full text-[7.5px] font-black uppercase tracking-[0.3em] shadow-lg z-10">
+                                    <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full text-[11px] font-black uppercase tracking-[0.2em] shadow-lg z-10">
                                         {{ $course->badge_text ?? 'Available' }}
                                     </span>
                                     <img class="img-fluid w-100 h-100 object-cover" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $course->name }}" loading="lazy" decoding="async" width="640" height="360">
                                 </div>
                                 <div class="p-4 flex-grow-1 d-flex flex-column">
-                                    <small class="text-brand-gold font-black uppercase tracking-[0.25em] mb-2" style="font-size: 8px;">{{ $course->courseCategory?->name ?? $course->category }}</small>
+                                    <small class="text-brand-gold-accessible font-black uppercase tracking-[0.25em] mb-2" style="font-size: 11px;">{{ $course->courseCategory?->name ?? $course->category }}</small>
                                     <h3 class="h6 fw-black text-brand-dark mb-2" style="line-height: 1.35;">{{ $course->name }}</h3>
                                     <p class="text-zinc-600 mb-4" style="font-size: 12px; line-height: 1.65;">{{ Str::limit(strip_tags($course->description), 120) }}</p>
                                     <div class="d-flex flex-wrap gap-2 mb-4 mt-auto">
-                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->duration }}</span>
-                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->price }}</span>
+                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 11px;">{{ $course->duration }}</span>
+                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 11px;">{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="catalogue-course-details" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">View Course Details</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="catalogue-course-details" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">View Course Details</a>
                                     </div>
                                 </div>
                             </article>
@@ -151,13 +151,13 @@
         <div class="container">
             <div class="row align-items-center justify-content-between g-4">
                 <div class="col-lg-8">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Still comparing?</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.25em]" style="font-size: 11px;">Still comparing?</span>
                     <h2 class="h3 fw-black text-white mt-3 mb-3">{{ $settings['catalogue_final_title'] ?? 'Need help choosing between courses?' }}</h2>
                     <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $settings['catalogue_final_description'] ?? 'Share your current level, goal and preferred timing. Our academy team will help you compare the relevant options.' }}</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
                     <a href="{{ $guidanceUrl('catalogue-final') }}" data-cta="catalogue-final-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">Ask for Course Help</a>
-                    <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="catalogue-final-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Message on WhatsApp</a>
+                    <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="catalogue-final-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">Message on WhatsApp</a>
                 </div>
             </div>
         </div>

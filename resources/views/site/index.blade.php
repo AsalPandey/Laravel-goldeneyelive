@@ -69,7 +69,7 @@
 	        <div class="container py-5">
 	            <div class="row align-items-center g-4 home-hero-row">
 	                <div class="col-lg-8 py-5 home-hero-copy">
-	                    <span class="badge responsive-cms-badge rounded-pill bg-brand-gold px-4 py-2 text-[8px] fw-black text-brand-dark text-uppercase tracking-[4px] mb-4">
+	                    <span class="badge responsive-cms-badge rounded-pill bg-brand-gold px-4 py-2 text-[11px] fw-black text-brand-dark text-uppercase tracking-[3px] mb-4">
 	                        {{ $heroBadge }}
 	                    </span>
 	                    <h1 class="hero-hook-title font-black mb-4 text-white" style="font-size: clamp(2.2rem, 5vw, 4.4rem); line-height: 1.02; letter-spacing: 0;">
@@ -82,10 +82,10 @@
 	                        {{ $heroTrust }}
 	                    </p>
 	                    <div class="d-flex flex-column flex-sm-row gap-3 home-hero-actions">
-	                        <a href="{{ $guidanceUrl('hero') }}" data-cta="hero-course-help" data-cta-label="{{ $heroPrimaryCta }}" class="btn btn-primary py-3 px-5 rounded-pill shadow-xl font-black uppercase tracking-widest" style="font-size: 10px;">
+	                        <a href="{{ $guidanceUrl('hero') }}" data-cta="hero-course-help" data-cta-label="{{ $heroPrimaryCta }}" class="btn btn-primary py-3 px-5 rounded-pill shadow-xl font-black uppercase tracking-widest" style="font-size: 11px;">
 	                            {{ $heroPrimaryCta }}
 	                        </a>
-	                        <a href="{{ route('courses-all') }}" data-cta="hero-course-details" data-cta-label="{{ $heroSecondaryCta }}" class="btn btn-outline-light py-3 px-5 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">
+	                        <a href="{{ route('courses-all') }}" data-cta="hero-course-details" data-cta-label="{{ $heroSecondaryCta }}" class="btn btn-outline-light py-3 px-5 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">
 	                            {{ $heroSecondaryCta }}
 	                        </a>
 	                    </div>
@@ -116,7 +116,7 @@
     <section class="py-5 bg-white">
         <div class="container">
             <div class="text-center mb-4">
-                <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['audience_tagline'] }}</span>
+                <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['audience_tagline'] }}</span>
                 <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['audience_title'] }}</h2>
             </div>
             <div class="row g-3">
@@ -145,11 +145,11 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-7">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['courses_tagline'] }}</span>
+                        <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['courses_tagline'] }}</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['courses_title'] }}</h2>
                     </div>
                     <div class="col-lg-4 text-lg-end">
-                        <a href="{{ route('courses-all') }}" data-cta="homepage-all-course-details" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">{{ $homepageContent['courses_cta_text'] }}</a>
+                        <a href="{{ route('courses-all') }}" data-cta="homepage-all-course-details" class="btn btn-outline-brand-dark px-5 py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">{{ $homepageContent['courses_cta_text'] }}</a>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -171,8 +171,8 @@
                                         @endif
                                     </div>
                                     <div class="d-grid gap-2">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="homepage-course-details" class="btn btn-primary py-2.5 rounded-lg font-black uppercase tracking-widest" style="font-size: 9px;">View Course Details</a>
-                                        <a href="{{ $guidanceUrl('homepage-course-card', $course->slug) }}" data-cta="homepage-course-guidance" class="btn btn-outline-brand-dark py-2.5 rounded-lg font-black uppercase tracking-widest" style="font-size: 9px;">Ask for Course Help</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="homepage-course-details" class="btn btn-primary py-2.5 rounded-lg font-black uppercase tracking-widest" style="font-size: 11px;">View Course Details</a>
+                                        <a href="{{ $guidanceUrl('homepage-course-card', $course->slug) }}" data-cta="homepage-course-guidance" class="btn btn-outline-brand-dark py-2.5 rounded-lg font-black uppercase tracking-widest" style="font-size: 11px;">Ask for Course Help</a>
                                     </div>
                                 </div>
                             </article>
@@ -187,7 +187,7 @@
         <section class="py-5 bg-white">
             <div class="container">
                 <div class="mb-4">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['categories_tagline'] }}</span>
+                    <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['categories_tagline'] }}</span>
                     <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['categories_title'] }}</h2>
                 </div>
                 <div class="row g-3">
@@ -218,7 +218,7 @@
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-5">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['why_tagline'] }}</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['why_tagline'] }}</span>
                     <h2 class="h3 fw-black text-white mt-2 mb-3">{{ $homepageContent['why_title'] }}</h2>
                     <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $homepageContent['why_description'] }}</p>
                 </div>
@@ -243,7 +243,7 @@
         <section class="py-5 bg-white">
             <div class="container">
                 <div class="text-center mb-4">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['testimonials_tagline'] }}</span>
+                    <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['testimonials_tagline'] }}</span>
                     <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['testimonials_title'] }}</h2>
                 </div>
                 <div class="row g-4 justify-content-center">
@@ -254,7 +254,7 @@
                                     <x-testimonial-avatar :name="$testimonial->student_name ?? 'Golden Eye student'" :photo="$testimonial->photo" :size="54" />
                                     <div>
                                         <h3 class="mb-1 fw-black text-brand-dark" style="font-size: 13px;">{{ $testimonial->student_name ?? 'Student' }}</h3>
-                                        <small class="text-zinc-500 fw-bold d-block" style="font-size: 10px;">
+                                        <small class="text-zinc-500 fw-bold d-block" style="font-size: 11px;">
                                             {{ filled($testimonial->course_id ?? null) && isset($testimonial->course) ? 'Verified course: '.$testimonial->course->name : 'Academy experience' }}
                                         </small>
                                     </div>
@@ -274,7 +274,7 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-8">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['faculty_tagline'] }}</span>
+                        <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['faculty_tagline'] }}</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['faculty_title'] }}</h2>
                     </div>
                 </div>
@@ -286,7 +286,7 @@
                                     <img src="{{ \App\Support\PublicAsset::url($teacher->photo ?? null, 'site/img/team-1.jpg') }}" alt="{{ $teacher->name }}" class="rounded-circle object-cover" loading="lazy" decoding="async" width="58" height="58" style="width: 58px; height: 58px;">
                                     <div>
                                         <h3 class="mb-1 fw-black text-brand-dark" style="font-size: 13px;">{{ $teacher->name }}</h3>
-                                        <p class="mb-0 text-zinc-500 fw-bold" style="font-size: 10px; line-height: 1.4;">{{ $teacher->designation }}</p>
+                                        <p class="mb-0 text-zinc-500 fw-bold" style="font-size: 11px; line-height: 1.4;">{{ $teacher->designation }}</p>
                                     </div>
                                 </div>
                                 <div class="d-grid gap-2">
@@ -310,7 +310,7 @@
             <div class="container">
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-5">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['reviews_tagline'] }}</span>
+                        <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['reviews_tagline'] }}</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-3">{{ $homepageContent['reviews_title'] }}</h2>
                         @if($externalReviewNote !== '')
                             <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $externalReviewNote }}</p>
@@ -338,7 +338,7 @@
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-5">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['parent_tagline'] }}</span>
+                    <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['parent_tagline'] }}</span>
                     <h2 class="h3 fw-black text-brand-dark mt-2 mb-3">{{ $homepageContent['parent_title'] }}</h2>
                     <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $homepageContent['parent_description'] }}</p>
                 </div>
@@ -363,7 +363,7 @@
         <section class="py-5 bg-zinc-50/60">
             <div class="container">
                 <div class="text-center mb-4">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['faq_tagline'] }}</span>
+                    <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['faq_tagline'] }}</span>
                     <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">{{ $homepageContent['faq_title'] }}</h2>
                 </div>
                 <div class="row g-3 justify-content-center">
@@ -385,13 +385,13 @@
         <div class="container">
             <div class="row align-items-center justify-content-between g-4">
                 <div class="col-lg-8">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">{{ $homepageContent['final_tagline'] }}</span>
+                    <span class="text-brand-gold font-black uppercase tracking-[0.25em]" style="font-size: 11px;">{{ $homepageContent['final_tagline'] }}</span>
                     <h2 class="h3 fw-black text-white mt-3 mb-3">{{ $homepageContent['final_title'] }}</h2>
                     <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $homepageContent['final_description'] }}</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-column gap-2">
                     <a href="{{ $guidanceUrl('homepage-final') }}" data-cta="homepage-final-course-guidance" class="btn btn-primary py-3 rounded-xl font-black uppercase tracking-widest">{{ $homepageContent['final_primary_cta_text'] }}</a>
-                    <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="homepage-final-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">{{ $homepageContent['final_secondary_cta_text'] }}</a>
+                    <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="homepage-final-whatsapp" class="btn btn-outline-light py-3 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">{{ $homepageContent['final_secondary_cta_text'] }}</a>
                 </div>
             </div>
         </div>

@@ -90,7 +90,7 @@
             <div class="container">
                 <div class="row justify-content-between align-items-end mb-4 g-3">
                     <div class="col-lg-7">
-                        <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Popular courses</span>
+                        <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">Popular courses</span>
                         <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">Courses students ask about first.</h2>
                         <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Start here if you want to compare common classes before choosing a batch.</p>
                     </div>
@@ -101,17 +101,17 @@
                             <article class="premium-card h-100 overflow-hidden d-flex flex-column">
                                 <div class="position-relative aspect-[16/9] overflow-hidden bg-zinc-100">
                                     <img class="w-100 h-100 object-cover" loading="lazy" decoding="async" width="640" height="360" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
-                                    <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full font-black uppercase tracking-[0.25em]" style="font-size: 8px;">{{ $course->badge_text ?? 'Hot Course' }}</span>
+                                    <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full font-black uppercase tracking-[0.25em]" style="font-size: 10px;">{{ $course->badge_text ?? 'Hot Course' }}</span>
                                 </div>
                                 <div class="p-4 flex-grow-1 d-flex flex-column">
                                     <h3 class="h6 fw-black text-brand-dark mb-2">{{ $course->name }}</h3>
                                     <p class="text-zinc-600 mb-4" style="font-size: 12px; line-height: 1.65;">{{ Str::limit(strip_tags($course->description), 120) }}</p>
                                     <div class="d-flex flex-wrap gap-2 mb-4 mt-auto">
-                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->duration }}</span>
-                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;">{{ $course->price }}</span>
+                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 10px;">{{ $course->duration }}</span>
+                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 10px;">{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="popular-course-details" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 9px;">View Course Details</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="popular-course-details" class="btn btn-primary py-2.5 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">View Course Details</a>
                                     </div>
                                 </div>
                             </article>
@@ -125,9 +125,9 @@
     <section class="course-category-shortcuts py-4 bg-zinc-50/50 border-bottom border-zinc-100" aria-label="Course category shortcuts">
         <div class="container">
             <div class="d-flex flex-wrap gap-2 align-items-center justify-content-center">
-                <a href="{{ route('courses-all') }}" class="btn {{ blank($categorySlug) ? 'btn-brand-dark' : 'btn-outline-brand-dark' }} rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 9px;" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="category-filter" data-cta-label="All">All</a>
+                <a href="{{ route('courses-all') }}" class="btn {{ blank($categorySlug) ? 'btn-brand-dark' : 'btn-outline-brand-dark' }} rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 11px;" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="category-filter" data-cta-label="All">All</a>
                 @foreach($categories as $category)
-                    <a href="{{ route('courses-all', ['category' => $category->slug, 'search' => $search ?: null]) }}" class="btn {{ $categorySlug === $category->slug ? 'btn-brand-dark' : 'btn-outline-brand-dark' }} rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 9px;" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="category-filter" data-cta-label="{{ $category->name }}">
+                    <a href="{{ route('courses-all', ['category' => $category->slug, 'search' => $search ?: null]) }}" class="btn {{ $categorySlug === $category->slug ? 'btn-brand-dark' : 'btn-outline-brand-dark' }} rounded-pill px-4 py-2 font-black uppercase tracking-widest" style="font-size: 11px;" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="category-filter" data-cta-label="{{ $category->name }}">
                         {{ $category->name }} <span class="opacity-60">({{ $category->courses_count }})</span>
                     </a>
                 @endforeach
@@ -139,7 +139,7 @@
         <div class="container">
             <div class="row justify-content-between align-items-end mb-4 g-3">
                 <div class="col-lg-8">
-                    <span class="text-brand-gold font-black uppercase tracking-[0.35em]" style="font-size: 9px;">Course list</span>
+                    <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">Course list</span>
                     <h2 class="h3 fw-black text-brand-dark mt-2 mb-2">
                         @if($search || $categorySlug)
                             Matching courses
@@ -147,6 +147,24 @@
                             All available courses
                         @endif
                     </h2>
+                    @if($search || $categorySlug)
+                        <div class="my-2 d-flex flex-wrap align-items-center gap-2" role="status" aria-live="polite">
+                            <span class="text-zinc-600 small fw-bold">Active filters:</span>
+                            @if($search)
+                                <span class="badge bg-zinc-100 text-brand-dark border border-zinc-200 px-3 py-1.5 rounded-pill font-bold" style="font-size: 11px;">
+                                    Search: "{{ $search }}"
+                                </span>
+                            @endif
+                            @if($categorySlug)
+                                <span class="badge bg-zinc-100 text-brand-dark border border-zinc-200 px-3 py-1.5 rounded-pill font-bold" style="font-size: 11px;">
+                                    Category: {{ $categories->firstWhere('slug', $categorySlug)?->name ?? $categorySlug }}
+                                </span>
+                            @endif
+                            <a href="{{ route('courses-all') }}" class="btn btn-link text-danger p-0 ms-2 small fw-bold text-decoration-none">
+                                <i class="fa fa-times-circle me-1" aria-hidden="true"></i> Clear filters
+                            </a>
+                        </div>
+                    @endif
                     <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Open the course details first, then ask for class and enrollment support with the course context attached.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
@@ -161,18 +179,18 @@
                             <article class="premium-card p-0 overflow-hidden h-100 d-flex flex-column border border-zinc-100 shadow-lg rounded-xl">
                                 <div class="position-relative overflow-hidden aspect-[16/9] bg-zinc-100">
                                     <img class="w-100 h-100 object-cover" loading="lazy" decoding="async" width="640" height="360" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
-                                    <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2 py-1 m-3 rounded-full font-black uppercase tracking-widest shadow-lg" style="font-size: 8px;">{{ $course->badge_text ?? 'Available' }}</span>
+                                    <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full font-black uppercase tracking-widest shadow-lg" style="font-size: 10px;">{{ $course->badge_text ?? 'Available' }}</span>
                                 </div>
                                 <div class="p-4 flex-grow-1 d-flex flex-column">
-                                    <small class="text-brand-gold font-black uppercase tracking-[0.25em] mb-2" style="font-size: 8px;">{{ $course->courseCategory?->name ?? $course->category }}</small>
+                                    <small class="text-brand-gold-accessible font-black uppercase tracking-[0.25em] mb-2" style="font-size: 10px;">{{ $course->courseCategory?->name ?? $course->category }}</small>
                                     <h3 class="h6 mb-2 font-black text-brand-dark" style="line-height: 1.35;">{{ $course->name }}</h3>
                                     <p class="text-zinc-600 mb-4" style="font-size: 12px; line-height: 1.65;">{{ Str::limit(strip_tags($course->description), 120) }}</p>
                                     <div class="d-flex flex-wrap gap-2 mb-4 mt-auto">
-                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;"><i class="fa fa-clock text-brand-gold me-1"></i>{{ $course->duration }}</span>
-                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 8px;"><i class="fa fa-tag text-brand-gold me-1"></i>{{ $course->price }}</span>
+                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 10px;"><i class="fa fa-clock text-brand-gold me-1"></i>{{ $course->duration }}</span>
+                                        <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 10px;"><i class="fa fa-tag text-brand-gold me-1"></i>{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="course-card-details" class="btn btn-primary py-2 rounded-lg font-black uppercase tracking-widest shadow-lg" style="font-size: 9px;">View Course Details</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="course-card-details" class="btn btn-primary py-2.5 rounded-lg font-black uppercase tracking-widest shadow-lg" style="font-size: 11px;">View Course Details</a>
                                     </div>
                                 </div>
                             </article>
@@ -188,8 +206,8 @@
                     <h3 class="h5 fw-black text-brand-dark mb-2">No course matched that search.</h3>
                     <p class="text-zinc-600 mb-4">Try one subject, language, exam, or category at a time, or ask the academy team to suggest the closest current option.</p>
                     <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                        <a href="{{ route('courses-all') }}" class="btn btn-outline-brand-dark rounded-xl px-5 py-3 font-black uppercase tracking-widest" style="font-size: 10px;">Clear Search</a>
-                        <a href="{{ $guidanceUrl('courses-empty') }}" data-cta="courses-empty-course-guidance" class="btn btn-primary rounded-xl px-5 py-3 font-black uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
+                        <a href="{{ route('courses-all') }}" class="btn btn-outline-brand-dark rounded-xl px-5 py-3 font-black uppercase tracking-widest" style="font-size: 11px;">Clear Search</a>
+                        <a href="{{ $guidanceUrl('courses-empty') }}" data-cta="courses-empty-course-guidance" class="btn btn-primary rounded-xl px-5 py-3 font-black uppercase tracking-widest" style="font-size: 11px;">Ask for Course Help</a>
                     </div>
                 </div>
             @endif

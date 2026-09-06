@@ -63,10 +63,10 @@
             <div class="text-center wow fadeInUp mb-12" data-wow-delay="0.1s">
                 <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
-                    <span class="text-brand-gold font-black uppercase tracking-[0.3em]" style="font-size: 11px;">Admissions & Support</span>
+                    <span class="text-brand-gold-accessible font-black uppercase tracking-[0.25em]" style="font-size: 11px;">Admissions & Support</span>
                     <div style="width: 40px; height: 2px; background: var(--brand-gold);"></div>
                 </div>
-                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Frequently Asked <span class="text-brand-gold">Questions</span></h2>
+                <h2 class="h3 fw-black text-brand-dark uppercase tracking-tighter">Frequently Asked <span class="text-brand-gold-accessible">Questions</span></h2>
             </div>
 
             @if(isset($settings['faq_page_content']) && !empty($settings['faq_page_content']))
@@ -97,7 +97,7 @@
                                             aria-controls="collapse{{ $index }}"
                                             style="font-size: 14px;">
                                         <span class="font-black tracking-tight">{{ $faq->question }}</span>
-                                        <i class="fas fa-plus text-[9px] transition-transform duration-300" aria-hidden="true"></i>
+                                        <i class="fas fa-plus text-[11px] transition-transform duration-300" aria-hidden="true"></i>
                                     </button>
                                 </h2>
                                 <div id="collapse{{ $index }}" class="accordion-collapse collapse {{ $index == 0 ? 'show' : '' }}" data-bs-parent="#faqAccordion" aria-labelledby="faqHeading{{ $index }}">
@@ -131,8 +131,8 @@
                             <h2 class="font-black mb-2 uppercase tracking-tighter text-brand-gold">{{ $settings['faq_lead_title'] ?? 'Need class information before enrollment?' }}</h2>
                             <p class="mb-4 text-white/60 extra-small leading-relaxed">Send a quick question and our academy team will explain suitable courses, class timing, and enrollment support.</p>
                             <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                                <a href="{{ $faqGuidanceUrl }}" data-cta="faq-course-guidance" class="btn btn-primary py-2.5 px-5 rounded-lg shadow-lg font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 10px;">Ask for Course Help</a>
-                                <a href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599') }}?text={{ rawurlencode('Hi Golden Eye Academy, I have a question about classes and enrollment.') }}" target="_blank" rel="noopener" data-cta="faq-whatsapp" class="btn btn-outline-brand-gold py-2.5 px-5 rounded-lg font-black uppercase tracking-widest hover:bg-brand-gold hover:text-brand-dark transition-all" style="font-size: 10px;">Message on WhatsApp</a>
+                                <a href="{{ $faqGuidanceUrl }}" data-cta="faq-course-guidance" class="btn btn-primary py-2.5 px-5 rounded-lg shadow-lg font-black uppercase tracking-widest hover:scale-105 transition-all" style="font-size: 11px;">Ask for Course Help</a>
+                                <a href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $settings['whatsapp_number'] ?? '9779856058599') }}?text={{ rawurlencode('Hi Golden Eye Academy, I have a question about classes and enrollment.') }}" target="_blank" rel="noopener" data-cta="faq-whatsapp" class="btn btn-outline-brand-gold py-2.5 px-5 rounded-lg font-black uppercase tracking-widest hover:bg-brand-gold hover:text-brand-dark transition-all" style="font-size: 11px;">Message on WhatsApp</a>
                             </div>
                         </div>
                     </div>

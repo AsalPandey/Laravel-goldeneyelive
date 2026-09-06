@@ -143,7 +143,7 @@
             </nav>
             <div class="row align-items-end g-4" style="min-height: 55vh;">
                 <div class="col-lg-8">
-                    <span class="badge responsive-cms-badge rounded-pill bg-brand-gold text-brand-dark px-4 py-2 fw-black text-uppercase tracking-[0.3em] mb-4" style="font-size: 9px;">{{ $course->badge_text ?? 'Course Details' }}</span>
+                    <span class="badge responsive-cms-badge rounded-pill bg-brand-gold text-brand-dark px-4 py-2 fw-black text-uppercase tracking-[0.3em] mb-4" style="font-size: 11px;">{{ $course->badge_text ?? 'Course Details' }}</span>
                     <h1 class="font-black text-white mb-4" style="font-size: clamp(2rem, 5vw, 4.2rem); line-height: 1.04; letter-spacing: 0;">{{ $course->name }}</h1>
                     <p class="text-white/90 mb-4" style="font-size: 16px; line-height: 1.7; max-width: 760px;">{{ $outcome }}</p>
                     <div class="d-flex flex-wrap gap-2 mb-4">
@@ -155,8 +155,8 @@
                         <span class="course-hero-chip">Class schedule: {{ $nextBatch }}</span>
                     </div>
                     <div class="d-flex flex-column flex-sm-row gap-3">
-                        <a href="{{ $sectionGuidanceUrl('course-detail-hero') }}" data-cta="course-detail-course-guidance" class="btn btn-primary py-3 px-5 rounded-xl fw-black text-uppercase tracking-widest" style="font-size: 10px;">Ask for Course Help</a>
-                        <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="course-detail-whatsapp" class="btn btn-outline-light py-3 px-5 rounded-xl fw-black text-uppercase tracking-widest" style="font-size: 10px;">Message on WhatsApp</a>
+                        <a href="{{ $sectionGuidanceUrl('course-detail-hero') }}" data-cta="course-detail-course-guidance" class="btn btn-primary py-3 px-5 rounded-xl fw-black text-uppercase tracking-widest" style="font-size: 11px;">Ask for Course Help</a>
+                        <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="course-detail-whatsapp" class="btn btn-outline-light py-3 px-5 rounded-xl fw-black text-uppercase tracking-widest" style="font-size: 11px;">Message on WhatsApp</a>
                     </div>
                 </div>
             </div>
@@ -168,7 +168,7 @@
             <section class="mb-5" aria-labelledby="quick-facts-heading">
                 <div class="d-flex align-items-end justify-content-between gap-3 mb-4">
                     <div>
-                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Quick facts</span>
+                        <span class="text-brand-gold-accessible fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Quick facts</span>
                         <h2 id="quick-facts-heading" class="h3 fw-black text-brand-dark mt-2 mb-0">Course details at a glance</h2>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                                 <div class="d-flex align-items-start gap-3 course-contact-row">
                                     <span class="course-fact-icon"><i class="{{ $fact['icon'] }}"></i></span>
                                     <div class="course-contact-copy">
-                                        <p class="mb-1 text-zinc-500 fw-black text-uppercase tracking-widest" style="font-size: 9px;">{{ $fact['label'] }}</p>
+                                        <p class="mb-1 text-zinc-500 fw-black text-uppercase tracking-widest" style="font-size: 10px;">{{ $fact['label'] }}</p>
                                         <p class="mb-0 text-brand-dark fw-bold" style="font-size: 13px; line-height: 1.55;">{{ $fact['value'] }}</p>
                                     </div>
                                 </div>
@@ -192,7 +192,7 @@
             <section class="mb-5" aria-labelledby="who-for-heading">
                 <div class="row g-4 align-items-start">
                     <div class="col-lg-5">
-                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Who this course is for</span>
+                        <span class="text-brand-gold-accessible fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Who this course is for</span>
                         <h2 id="who-for-heading" class="h3 fw-black text-brand-dark mt-2 mb-3">Check fit before you enroll</h2>
                         <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">Review the published course information, then ask the academy to confirm current timing, faculty, and availability before enrollment.</p>
                     </div>
@@ -215,7 +215,7 @@
                 <div class="p-4 p-lg-5 bg-brand-dark text-white rounded-xl">
                     <div class="row g-4 align-items-start">
                         <div class="col-lg-4">
-                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Local trust</span>
+                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Local trust</span>
                             <h2 id="course-local-trust-heading" class="h3 fw-black text-white mt-2 mb-3">Pokhara-based course support</h2>
                             <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Students and parents can check location, fee, timing, support, and course fit before enrollment.</p>
                         </div>
@@ -227,7 +227,7 @@
                                             <div class="d-flex align-items-start gap-3 course-contact-row">
                                                 <i class="{{ $marker['icon'] }} text-brand-gold mt-1" aria-hidden="true"></i>
                                                 <div class="course-contact-copy">
-                                                    <p class="mb-1 text-white/50 fw-black text-uppercase tracking-widest" style="font-size: 8px;">{{ $marker['label'] }}</p>
+                                                    <p class="mb-1 text-white/50 fw-black text-uppercase tracking-widest" style="font-size: 10px;">{{ $marker['label'] }}</p>
                                                     <p class="mb-0 fw-bold" style="font-size: 13px; line-height: 1.55;">{{ $marker['value'] }}</p>
                                                 </div>
                                             </div>
@@ -244,7 +244,7 @@
                 <div class="bg-white border border-zinc-100 rounded-xl p-4 p-lg-5 shadow-sm">
                     <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
                         <div>
-                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Student view / Parent view</span>
+                            <span class="text-brand-gold-accessible fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Student view / Parent view</span>
                             <h2 id="audience-view-heading" class="h3 fw-black text-brand-dark mt-2 mb-0">See the details that matter to you</h2>
                         </div>
                         <div class="nav nav-pills course-view-toggle" id="course-view-tabs" role="tablist" aria-label="Course detail view">
@@ -284,7 +284,7 @@
             @if($outlineItems->isNotEmpty())
                 <section class="mb-5" aria-labelledby="curriculum-heading">
                     <div class="text-center mb-4">
-                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Course outline</span>
+                        <span class="text-brand-gold-accessible fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Course outline</span>
                         <h2 id="curriculum-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">What you’ll learn</h2>
                         <p class="text-zinc-600 mb-0" style="font-size: 13px;">The main topics and activities covered in this course.</p>
                     </div>
@@ -293,7 +293,7 @@
                             <div class="col-md-6 col-xl-3">
                                 <div class="h-100 p-4 bg-zinc-50 border border-zinc-100 rounded-xl">
                                     <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-brand-gold text-brand-dark fw-black mb-3" style="width: 38px; height: 38px; font-size: 11px;">{{ $index + 1 }}</span>
-                                    <p class="text-zinc-500 fw-black text-uppercase tracking-widest mb-1" style="font-size: 9px;">Learning area {{ $index + 1 }}</p>
+                                    <p class="text-zinc-500 fw-black text-uppercase tracking-widest mb-1" style="font-size: 10px;">Learning area {{ $index + 1 }}</p>
                                     <h3 class="h6 fw-black text-brand-dark mb-0" style="line-height: 1.4;">{{ $item }}</h3>
                                 </div>
                             </div>
@@ -306,7 +306,7 @@
                 <div class="row g-4">
                     <div class="{{ $instructor ? 'col-lg-6' : 'col-12' }}">
                         <div class="h-100 p-4 p-lg-5 bg-brand-dark text-white rounded-xl">
-                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Course fee and timing</span>
+                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Course fee and timing</span>
                             <h2 id="fee-heading" class="h3 fw-black text-white mt-2 mb-4">Ask about current batch timings</h2>
                             <div class="d-grid gap-3">
                                 <div class="course-dark-row"><span>Fee</span><strong>{{ $course->price ?: 'Available on request' }}</strong></div>
@@ -319,13 +319,13 @@
                     @if($instructor)
                         <div class="col-lg-6">
                             <div class="h-100 p-4 p-lg-5 bg-white border border-zinc-100 rounded-xl shadow-sm">
-                                <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Instructor profile</span>
+                                <span class="text-brand-gold-accessible fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Instructor profile</span>
                                 <div class="d-flex align-items-start gap-4 mt-3">
                                     <img src="{{ \App\Support\PublicAsset::url($instructor->photo, 'site/img/team-1.jpg') }}" alt="{{ $instructor->name }}" class="rounded-circle object-cover flex-shrink-0" loading="lazy" decoding="async" width="86" height="86" style="width: 86px; height: 86px;">
                                     <div class="course-contact-copy">
                                         <h2 class="h5 fw-black text-brand-dark mb-1">{{ $instructor->name }}</h2>
                                         @if(filled($instructor->designation))
-                                            <p class="text-brand-gold fw-black mb-2" style="font-size: 12px;">{{ $instructor->designation }}</p>
+                                            <p class="text-brand-gold-accessible fw-black mb-2" style="font-size: 12px;">{{ $instructor->designation }}</p>
                                         @endif
                                         @if(filled($instructor->bio))
                                             <p class="text-zinc-600 mb-3" style="font-size: 13px; line-height: 1.65;">{{ \Illuminate\Support\Str::limit(strip_tags($instructor->bio), 150) }}</p>
@@ -348,7 +348,7 @@
                     <div class="p-4 p-lg-5 bg-zinc-50 border border-zinc-100 rounded-xl">
                         <div class="row g-4 align-items-center">
                             <div class="col-lg-4">
-                                <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Student feedback</span>
+                                <span class="text-brand-gold-accessible fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Student feedback</span>
                                 <h2 id="proof-heading" class="h3 fw-black text-brand-dark mt-2 mb-0">A learner’s experience</h2>
                             </div>
                             <div class="col-lg-8">
@@ -356,7 +356,7 @@
                                     <x-testimonial-avatar :name="$testimonial->student_name" :photo="$testimonial->photo" :size="82" />
                                     <div>
                                         <h3 class="h6 fw-black text-brand-dark mb-1">{{ $testimonial->student_name }}</h3>
-                                        <p class="text-brand-gold fw-black mb-2" style="font-size: 11px;">Course: {{ $testimonial->course_name }}</p>
+                                        <p class="text-brand-gold-accessible fw-black mb-2" style="font-size: 11px;">Course: {{ $testimonial->course_name }}</p>
                                         <p class="text-zinc-700 fw-bold mb-2" style="font-size: 13px;">{{ $testimonialResult }}</p>
                                         <p class="text-zinc-600 mb-0" style="font-size: 13px; line-height: 1.65;">"{{ \Illuminate\Support\Str::limit(strip_tags($testimonial->content), 180) }}"</p>
                                     </div>
@@ -372,7 +372,7 @@
                     <div class="p-4 p-lg-5 bg-white border border-zinc-100 rounded-xl shadow-sm">
                         <div class="row g-4 align-items-center">
                             <div class="col-lg-5">
-                                <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Verified external reviews</span>
+                                <span class="text-brand-gold-accessible fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Verified external reviews</span>
                                 <h2 id="external-proof-heading" class="h3 fw-black text-brand-dark mt-2 mb-3">Independent review information</h2>
                                 @if($externalReviewNote !== '')
                                     <p class="text-zinc-600 mb-0" style="font-size: 14px; line-height: 1.7;">{{ $externalReviewNote }}</p>
@@ -398,7 +398,7 @@
             @if($helpfulBlogs->isNotEmpty())
                 <section class="mb-5" aria-labelledby="helpful-guides-heading">
                     <div class="mb-4">
-                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Related reading</span>
+                        <span class="text-brand-gold-accessible fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Related reading</span>
                         <h2 id="helpful-guides-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">Helpful Guides</h2>
                         <p class="text-zinc-600 mb-0" style="font-size: 13px;">Read more about this subject and how to prepare for learning.</p>
                     </div>
@@ -409,11 +409,11 @@
                                     <img src="{{ \App\Support\PublicAsset::url($helpfulBlog->image ?? null, 'site/img/carousel-1.png') }}" alt="{{ $helpfulBlog->title }}" class="w-100 object-cover" loading="lazy" decoding="async" width="640" height="360" style="aspect-ratio: 16 / 9;">
                                     <div class="p-4 d-flex flex-column flex-grow-1">
                                         @if(filled($helpfulBlog->category))
-                                            <small class="text-brand-gold fw-black text-uppercase tracking-widest mb-2" style="font-size: 8px;">{{ $helpfulBlog->category }}</small>
+                                            <small class="text-brand-gold-accessible fw-black text-uppercase tracking-widest mb-2" style="font-size: 10px;">{{ $helpfulBlog->category }}</small>
                                         @endif
                                         <h3 class="h6 fw-black text-brand-dark mb-2">{{ $helpfulBlog->title }}</h3>
                                         <p class="text-zinc-600 mb-4" style="font-size: 12px; line-height: 1.65;">{{ \Illuminate\Support\Str::limit(strip_tags($helpfulBlog->content), 105) }}</p>
-                                        <a href="{{ route('blog-detail', $helpfulBlog->slug) }}" data-cta="helpful-guide-from-course" data-track-event="course_helpful_guide_click" data-source-page="course-detail" data-source-section="helpful-guides" data-selected-course="{{ $course->slug }}" class="text-brand-dark fw-black text-decoration-none mt-auto" style="font-size: 10px;">Read Helpful Guide <i class="fa fa-arrow-right ms-1" aria-hidden="true"></i></a>
+                                        <a href="{{ route('blog-detail', $helpfulBlog->slug) }}" data-cta="helpful-guide-from-course" data-track-event="course_helpful_guide_click" data-source-page="course-detail" data-source-section="helpful-guides" data-selected-course="{{ $course->slug }}" class="text-brand-dark fw-black text-decoration-none mt-auto" style="font-size: 11px;">Read Helpful Guide <i class="fa fa-arrow-right ms-1" aria-hidden="true"></i></a>
                                     </div>
                                 </article>
                             </div>
@@ -425,7 +425,7 @@
             @if($faqs->isNotEmpty())
                 <section class="mb-5" aria-labelledby="faq-heading">
                     <div class="text-center mb-4">
-                        <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">FAQs</span>
+                        <span class="text-brand-gold-accessible fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">FAQs</span>
                         <h2 id="faq-heading" class="h3 fw-black text-brand-dark mt-2 mb-2">Questions before joining this course</h2>
                     </div>
                     <div class="accordion" id="courseFaqAccordion">
@@ -439,7 +439,7 @@
                                             aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
                                             aria-controls="courseFaqCollapse{{ $faq->id }}">
                                         <span class="font-black tracking-tight">{{ $faq->question }}</span>
-                                        <i class="fas fa-plus text-[9px]" aria-hidden="true"></i>
+                                        <i class="fas fa-plus text-[11px]" aria-hidden="true"></i>
                                     </button>
                                 </h3>
                                 <div id="courseFaqCollapse{{ $faq->id }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}" data-bs-parent="#courseFaqAccordion" aria-labelledby="courseFaqHeading{{ $faq->id }}">
@@ -457,13 +457,13 @@
                 <div class="p-4 p-lg-5 bg-brand-dark text-white rounded-xl">
                     <div class="row g-4 align-items-center justify-content-between">
                         <div class="col-lg-8">
-                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.35em]" style="font-size: 9px;">Need help deciding?</span>
+                            <span class="text-brand-gold fw-black text-uppercase tracking-[0.25em]" style="font-size: 11px;">Need help deciding?</span>
                             <h2 id="inquiry-heading" class="h3 fw-black text-white mt-2 mb-3">Want to check if {{ $course->name }} fits you?</h2>
                             <p class="text-white/70 mb-0" style="font-size: 14px; line-height: 1.7;">Tell us your goal, current level and preferred time to study. We will explain whether this course may be a suitable next step.</p>
                         </div>
                         <div class="col-lg-4 d-flex flex-column gap-2">
                             <a href="{{ $sectionGuidanceUrl('course-detail-final') }}" data-cta="course-detail-final-guidance" class="btn btn-primary py-3 rounded-xl fw-black text-uppercase tracking-widest">Ask for Course Help</a>
-                            <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="course-detail-final-whatsapp" class="btn btn-outline-light py-3 rounded-xl fw-black text-uppercase tracking-widest" style="font-size: 10px;">Message on WhatsApp</a>
+                            <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="course-detail-final-whatsapp" class="btn btn-outline-light py-3 rounded-xl fw-black text-uppercase tracking-widest" style="font-size: 11px;">Message on WhatsApp</a>
                         </div>
                     </div>
                 </div>

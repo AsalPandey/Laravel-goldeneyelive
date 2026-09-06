@@ -111,11 +111,11 @@ class PublicJourneyFixTest extends TestCase
         $this->assertStringNotContainsString('.whatsapp-btn-container.is-obscured', $css);
         $this->assertStringNotContainsString('.whatsapp-btn-container.is-collision-hidden', $css);
         $this->assertMatchesRegularExpression('/\.whatsapp-btn-container\s*\{[^}]*position:\s*fixed;/s', $css);
-        $this->assertMatchesRegularExpression('/\.whatsapp-chat-cta\s*\{[^}]*backdrop-filter:\s*blur\(18px\)\s+saturate\(170%\);/s', $css);
-        $this->assertStringContainsString('.whatsapp-chat-cta::before', $css);
-        $this->assertStringContainsString('.whatsapp-chat-cta::after', $css);
-        $this->assertStringContainsString('background: linear-gradient(145deg, rgba(236, 253, 245, 0.36), rgba(110, 231, 183, 0.16));', $css);
-        $this->assertStringContainsString('backdrop-filter: blur(10px) saturate(155%);', $css);
+        $this->assertMatchesRegularExpression('/\.whatsapp-chat-cta\s*\{[^}]*background:\s*#1fa855;/s', $css);
+        $this->assertDoesNotMatchRegularExpression('/\.whatsapp-chat-cta\s*\{[^}]*backdrop-filter/s', $css);
+        $this->assertStringNotContainsString('.whatsapp-chat-cta::before', $css);
+        $this->assertStringNotContainsString('.whatsapp-chat-cta::after', $css);
+        $this->assertStringNotContainsString('backdrop-filter: blur(10px)', $css);
         $this->assertMatchesRegularExpression('/\.footer\s+\.btn\.btn-social\s*\{[^}]*width:\s*44px;[^}]*height:\s*44px;/s', $css);
         $this->assertMatchesRegularExpression('/\.site-notice-close\s*\{[^}]*min-width:\s*44px;[^}]*min-height:\s*44px;/s', $css);
         $this->assertStringContainsString('.breadcrumb-item a', $css);
