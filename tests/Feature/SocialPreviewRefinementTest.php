@@ -6,6 +6,8 @@ use App\Models\BlogPost;
 use App\Models\Course;
 use App\Models\SiteSetting;
 use App\Models\User;
+use App\Support\CanonicalUrl;
+use App\Support\SocialImage;
 use Database\Seeders\LiveSiteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
@@ -194,6 +196,9 @@ class SocialPreviewRefinementTest extends TestCase
     private function assertSocialImage(TestResponse $response, string $path): void
     {
         $url = url($path);
+        if (str_contains($response->getContent(), 'property="og:url" content="'.CanonicalUrl::baseUrl().'"')) {
+            $url = SocialImage::resolve($path)['url'];
+        }
 
         $response
             ->assertOk()

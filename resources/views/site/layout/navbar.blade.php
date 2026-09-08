@@ -170,6 +170,22 @@
             updateNavigationState(isOpen);
         });
 
+        document.addEventListener('pointerdown', function (event) {
+            if (!window.matchMedia('(max-width: 991.98px)').matches
+                || !navigation.classList.contains('show')
+                || navigation.contains(event.target)
+                || toggle.contains(event.target)) {
+                return;
+            }
+
+            if (window.bootstrap?.Collapse) {
+                bootstrap.Collapse.getOrCreateInstance(navigation, { toggle: false }).hide();
+            } else {
+                navigation.classList.remove('show');
+                updateNavigationState(false);
+            }
+        });
+
         navigation.addEventListener('keydown', function (event) {
             if (event.key !== 'Escape') {
                 return;

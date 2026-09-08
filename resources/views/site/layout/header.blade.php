@@ -22,6 +22,12 @@
         \App\Support\PublicAsset::path($settings['hero_image'] ?? null, 'site/img/logo.png'),
     );
     $ogImage = trim($__env->yieldContent('og_image', \App\Support\PublicAsset::canonicalUrl($globalSocialImage, 'site/img/logo.png')));
+    $socialImage = null;
+    if (request()->routeIs('home')) {
+        $canonicalUrl = \App\Support\CanonicalUrl::baseUrl();
+        $socialImage = \App\Support\SocialImage::resolve($settings['homepage_social_image'] ?? null, $settings['hero_image'] ?? null);
+        $ogImage = $socialImage['url'];
+    }
 @endphp
 <head>
     <meta charset="utf-8">
@@ -76,6 +82,13 @@
     <meta property="og:title" content="{{ $ogTitle }}">
     <meta property="og:description" content="{{ $pageDescription }}">
     <meta property="og:image" content="{{ $ogImage }}">
+    @if($socialImage)
+        <meta property="og:image:secure_url" content="{{ $ogImage }}">
+        <meta property="og:image:type" content="{{ $socialImage['type'] }}">
+        <meta property="og:image:width" content="{{ $socialImage['width'] }}">
+        <meta property="og:image:height" content="{{ $socialImage['height'] }}">
+        <meta property="og:image:alt" content="{{ $brandName }}">
+    @endif
 
     {{-- Twitter --}}
     <meta name="twitter:card" content="summary_large_image">
@@ -87,7 +100,9 @@
     <link rel="canonical" href="{{ $canonicalUrl }}">
 
     <!-- Favicon -->
-    <link href="{{ \App\Support\PublicAsset::url($settings['site_favicon'] ?? ($settings['site_logo'] ?? null), 'site/img/logo.png') }}" rel="icon">
+    <link rel="icon" href="{{ asset('favicon.ico') }}?v={{ substr(hash_file('sha256', public_path('favicon.ico')), 0, 12) }}" sizes="any">
+    <link rel="icon" href="{{ asset('favicon.svg') }}?v={{ substr(hash_file('sha256', public_path('favicon.svg')), 0, 12) }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}?v={{ substr(hash_file('sha256', public_path('apple-touch-icon.png')), 0, 12) }}" sizes="180x180">
 
     @yield('preload_assets')
 
