@@ -113,13 +113,51 @@
     @vite(['resources/css/app.css'])
 
     <!-- Template Stylesheet -->
-    <link href="{{ asset("site/css/style.css") }}" rel="stylesheet">
+    <link href="{{ asset('site/css/style.css') }}?v={{ @filemtime(public_path('site/css/style.css')) ?: '2' }}" rel="stylesheet">
     @if(\App\Support\Recaptcha::enabled())
     <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     @endif
 
     <style>
+        .skip-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            clip-path: inset(50%);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .skip-link:focus,
+        .skip-link:focus-visible {
+            position: fixed;
+            top: 0.75rem;
+            left: 0.75rem;
+            z-index: 1000000;
+            width: auto;
+            height: auto;
+            padding: 0.75rem 1rem;
+            margin: 0;
+            overflow: visible;
+            clip: auto;
+            clip-path: none;
+            white-space: normal;
+            border-radius: 8px;
+            color: #ffffff;
+            background: #050C1C;
+            box-shadow: 0 10px 30px rgba(5, 12, 28, 0.25);
+            outline: 3px solid #C5A059;
+            outline-offset: 2px;
+            text-decoration: none;
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #fff; 
