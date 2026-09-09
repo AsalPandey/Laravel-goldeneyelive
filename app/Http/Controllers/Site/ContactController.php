@@ -49,8 +49,8 @@ class ContactController extends Controller
 
         Alert::success('Success', SiteSetting::getValue('contact_success_message', 'We appreciate your feedback. Our team will contact you soon.'));
 
-        // Use database setting for admin email, fallback to config
-        $adminEmail = SiteSetting::getValue('site_email', config('mail.from.address', 'contact@goldeneye.edu.np'));
+        // Send inquiry notification to canonical official email
+        $adminEmail = config('goldeneye.official_email', 'contact@goldeneye.edu.np');
 
         try {
             Mail::to($adminEmail)->queue(new ContactMail([
@@ -189,7 +189,7 @@ class ContactController extends Controller
 
         Alert::success('Thank you!', SiteSetting::getValue('enroll_success_message', 'Thank you! We received your inquiry. Our team will contact you soon.'));
 
-        $adminEmail = SiteSetting::getValue('site_email', config('mail.from.address', 'contact@goldeneye.edu.np'));
+        $adminEmail = config('goldeneye.official_email', 'contact@goldeneye.edu.np');
 
         try {
             Mail::to($adminEmail)->queue(new ContactMail([

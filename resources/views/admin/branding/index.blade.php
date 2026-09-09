@@ -88,7 +88,7 @@
                             <h2 class="text-3xl font-black tracking-tighter leading-none mb-2">{{ $settings['site_name'] ?? 'Golden Eye' }} {{ $settings['site_name_suffix'] ?? 'Academy' }}</h2>
                             <p class="text-zinc-400 text-sm font-medium italic">"{{ Str::limit($settings['meta_description'] ?? 'Tagline not set...', 80) }}"</p>
                             <div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
-                                <span class="text-[10px] font-bold text-zinc-500 uppercase flex items-center gap-2"><i class="fa fa-envelope text-[#C5A059]"></i> {{ $settings['site_email'] ?? 'Not Set' }}</span>
+                                <span class="text-[10px] font-bold text-zinc-500 uppercase flex items-center gap-2"><i class="fa fa-envelope text-[#C5A059]"></i> {{ config('goldeneye.official_email', 'contact@goldeneye.edu.np') }}</span>
                                 <span class="text-[10px] font-bold text-zinc-500 uppercase flex items-center gap-2"><i class="fa fa-phone text-[#C5A059]"></i> {{ $settings['site_phone'] ?? 'Not Set' }}</span>
                             </div>
                         </div>
@@ -674,8 +674,9 @@
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label class="premium-label">Academy Email</label>
-                                    <input type="email" name="site_email" value="{{ $settings['site_email'] ?? '' }}" class="premium-input" placeholder="e.g. info@goldeneye.edu.np">
+                                    <label class="premium-label">Academy Email <span class="text-[10px] font-bold text-brand-gold uppercase tracking-wider">(Canonical)</span></label>
+                                    <input type="email" name="site_email" value="{{ $settings['site_email'] ?? config('goldeneye.official_email', 'contact@goldeneye.edu.np') }}" class="premium-input bg-zinc-100 text-zinc-500 cursor-not-allowed select-none" readonly title="Canonical official email managed in application configuration">
+                                    <p class="text-[10px] text-zinc-400 mt-1">Managed canonically in application configuration (contact@goldeneye.edu.np).</p>
                                 </div>
                                 <div>
                                     <label class="premium-label">Phone Number</label>

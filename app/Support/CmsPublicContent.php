@@ -213,7 +213,7 @@ final class CmsPublicContent
             'Golden Eye Academy, Pokhara',
             self::value($settings, 'site_address', 'Srijana Chowk, Pokhara, Nepal'),
             'Phone: '.self::value($settings, 'site_phone', '061-572599'),
-            'Email: '.self::value($settings, 'site_email', 'goldeneyeacademy2008@gmail.com'),
+            'Email: '.config('goldeneye.official_email', 'contact@goldeneye.edu.np'),
             'Current batch timing confirmed before enrollment',
         ];
         $advantageDefaults = [

@@ -87,7 +87,7 @@
         $localTrustMarkers = [
             ['icon' => 'fa fa-map-marker-alt', 'label' => 'Location', 'value' => $settings['site_address'] ?? 'Srijana Chowk, Pokhara, Nepal'],
             ['icon' => 'fa fa-phone', 'label' => 'Phone', 'value' => $settings['site_phone'] ?? '061-572599'],
-            ['icon' => 'fa fa-envelope', 'label' => 'Email', 'value' => $settings['site_email'] ?? 'goldeneyeacademy2008@gmail.com'],
+            ['icon' => 'fa fa-envelope', 'label' => 'Email', 'value' => config('goldeneye.official_email', 'contact@goldeneye.edu.np')],
             ['icon' => 'fa fa-calendar-check', 'label' => 'Plan your visit', 'value' => 'Call or message before visiting to discuss the course and current timings.'],
         ];
         $whoFor = collect([

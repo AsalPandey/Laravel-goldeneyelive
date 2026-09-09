@@ -28,7 +28,7 @@
                             @endforeach
                         </div>
                     </div>
-                    <p class="mb-2 extra-small"><i class="fa fa-envelope me-3 text-brand-gold"></i>{{ $settings['site_email'] ?? 'contact@goldeneye.edu.np' }}</p>
+                    <p class="mb-2 extra-small"><i class="fa fa-envelope me-3 text-brand-gold"></i>{{ config('goldeneye.official_email', 'contact@goldeneye.edu.np') }}</p>
                     <div class="d-flex pt-2">
                         @if(isset($settings['facebook_url']) && $settings['facebook_url'])
                         <a class="btn btn-outline-light btn-social" href="{{ $settings['facebook_url'] }}" target="_blank" rel="noopener" aria-label="Golden Eye Academy on Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>

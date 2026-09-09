@@ -39,7 +39,7 @@ class SiteSettingSeeder extends Seeder
             'site_logo' => ['site/img/logo.png', 'image'],
             'site_favicon' => ['site/img/logo.png', 'image'],
             'logo_subtitle' => ['Pokhara, Nepal', 'text'],
-            'site_email' => ['goldeneyeacademy2008@gmail.com', 'text'],
+            'site_email' => [config('goldeneye.official_email', 'contact@goldeneye.edu.np'), 'text'],
             'site_phone' => ['061-572599', 'text'],
             'whatsapp_number' => ['9779856058599', 'text'],
             'site_address' => ['Srijana Chowk, Pokhara, Nepal', 'text'],

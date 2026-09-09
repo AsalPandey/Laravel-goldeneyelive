@@ -202,7 +202,7 @@ final class StructuredData
                 'latitude' => $settings['geo_latitude'],
                 'longitude' => $settings['geo_longitude'],
             ] : null,
-            'email' => $settings['site_email'] ?? null,
+            'email' => config('goldeneye.official_email', 'contact@goldeneye.edu.np'),
             'telephone' => $settings['site_phone'] ?? null,
             'sameAs' => $socialLinks,
         ]);

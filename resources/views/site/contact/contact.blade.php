@@ -103,7 +103,7 @@
                                     <div class="contact-detail-copy">
                                         <p class="text-zinc-400 font-black uppercase tracking-widest mb-1" style="font-size: 9px;">Email</p>
                                         <p class="mb-0 font-black text-brand-dark">
-                                            <a href="mailto:{{ $settings['site_email'] ?? 'info@goldeneye.edu.np' }}" class="text-brand-dark text-decoration-none contact-intent-link">{{ $settings['site_email'] ?? 'info@goldeneye.edu.np' }}</a>
+                                            <a href="mailto:{{ config('goldeneye.official_email', 'contact@goldeneye.edu.np') }}" class="text-brand-dark text-decoration-none contact-intent-link">{{ config('goldeneye.official_email', 'contact@goldeneye.edu.np') }}</a>
                                         </p>
                                     </div>
                                 </div>
