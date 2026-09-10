@@ -2,13 +2,16 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Mail\StaffWelcomeMail;
 use App\Models\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Livewire\Livewire;
+use RuntimeException;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -40,12 +43,134 @@ class StaffManagementTest extends TestCase
         $this->actingAs($this->admin)->get(route('admin.staff.index'))->assertOk()->assertSee($this->staff->email);
         $this->get(route('admin.staff.create'))->assertOk()->assertDontSee('name="password"', false);
         $this->post(route('admin.staff.store'), ['name' => 'New Staff', 'email' => 'NEW@GOLDENEYE.EDU.NP'])
-            ->assertRedirect(route('admin.staff.index'))->assertSessionHas('success');
+            ->assertRedirect(route('admin.staff.index'))
+            ->assertSessionHas('success', 'Staff account created and onboarding instructions were emailed successfully.');
         $created = User::where('email', 'new@goldeneye.edu.np')->firstOrFail();
         $this->assertTrue($created->hasRole('Staff'));
         $this->assertFalse($created->hasRole('Admin'));
         $this->assertFalse(Hash::check('password', $created->password));
         $this->assertNull($created->email_verified_at);
+    }
+
+    public function test_admin_creates_staff_and_automatically_sends_onboarding_email(): void
+    {
+        Mail::fake();
+
+        $response = $this->actingAs($this->admin)->post(route('admin.staff.store'), [
+            'name' => 'Bikram Thapa',
+            'email' => 'bikram.thapa@goldeneye.edu.np',
+        ]);
+
+        $response->assertRedirect(route('admin.staff.index'))
+            ->assertSessionHas('success', 'Staff account created and onboarding instructions were emailed successfully.');
+
+        $created = User::where('email', 'bikram.thapa@goldeneye.edu.np')->firstOrFail();
+        $this->assertTrue($created->hasRole('Staff'));
+        $this->assertFalse($created->hasRole('Admin'));
+
+        Mail::assertSent(StaffWelcomeMail::class, 1);
+        Mail::assertSent(StaffWelcomeMail::class, function (StaffWelcomeMail $mail) use ($created): bool {
+            return $mail->hasTo($created->email)
+                && $mail->envelope()->from->address === config('goldeneye.security_email')
+                && $mail->envelope()->from->name === config('goldeneye.security_email_name')
+                && $mail->envelope()->subject === 'Your Golden Eye Academy CMS Account Is Ready';
+        });
+
+        $mailable = new StaffWelcomeMail($created);
+        $mailable->assertSeeInHtml($created->name);
+        $mailable->assertSeeInHtml($created->email);
+        $mailable->assertSeeInHtml(route('login'));
+        $mailable->assertSeeInHtml(route('password.request'));
+        $mailable->assertSeeInHtml('For security, no temporary password has been sent by email.');
+        $mailable->assertDontSeeInHtml($created->password);
+    }
+
+    public function test_both_permanent_admins_can_onboard_staff_and_send_email(): void
+    {
+        Mail::fake();
+
+        $secondAdmin = User::factory()->create(['email' => config('goldeneye.permanent_admin_emails')[1]]);
+        $secondAdmin->assignRole('Admin');
+
+        $this->actingAs($this->admin)->post(route('admin.staff.store'), [
+            'name' => 'Staff One',
+            'email' => 'staffone@goldeneye.edu.np',
+        ])->assertRedirect(route('admin.staff.index'))->assertSessionHas('success');
+
+        $this->actingAs($secondAdmin)->post(route('admin.staff.store'), [
+            'name' => 'Staff Two',
+            'email' => 'stafftwo@goldeneye.edu.np',
+        ])->assertRedirect(route('admin.staff.index'))->assertSessionHas('success');
+
+        Mail::assertSent(StaffWelcomeMail::class, 2);
+    }
+
+    public function test_non_admin_cannot_trigger_staff_creation_or_onboarding_email(): void
+    {
+        Mail::fake();
+
+        $this->post(route('admin.staff.store'), [
+            'name' => 'Unauthorized Guest',
+            'email' => 'guest@goldeneye.edu.np',
+        ])->assertRedirect(route('login'));
+
+        $this->actingAs($this->staff)->post(route('admin.staff.store'), [
+            'name' => 'Unauthorized Staff',
+            'email' => 'anotherstaff@goldeneye.edu.np',
+        ])->assertForbidden();
+
+        Mail::assertNothingSent();
+    }
+
+    public function test_invalid_or_duplicate_email_does_not_send_onboarding_email(): void
+    {
+        Mail::fake();
+
+        $this->actingAs($this->admin);
+
+        $this->post(route('admin.staff.store'), [
+            'name' => 'Invalid Domain',
+            'email' => 'user@gmail.com',
+        ])->assertSessionHasErrors('email');
+
+        $this->post(route('admin.staff.store'), [
+            'name' => 'Duplicate Email',
+            'email' => $this->staff->email,
+        ])->assertSessionHasErrors('email');
+
+        $this->post(route('admin.staff.store'), [
+            'name' => 'Reserved Admin',
+            'email' => config('goldeneye.permanent_admin_emails')[1],
+        ])->assertSessionHasErrors('email');
+
+        Mail::assertNothingSent();
+    }
+
+    public function test_staff_account_remains_created_and_warning_shown_when_mail_fails(): void
+    {
+        $this->actingAs($this->admin);
+
+        Mail::shouldReceive('to')
+            ->once()
+            ->with('mailfailure@goldeneye.edu.np')
+            ->andReturnSelf();
+
+        Mail::shouldReceive('send')
+            ->once()
+            ->andThrow(new RuntimeException('SMTP transport connection refused'));
+
+        $response = $this->post(route('admin.staff.store'), [
+            'name' => 'Mail Failure Staff',
+            'email' => 'mailfailure@goldeneye.edu.np',
+        ]);
+
+        $response->assertRedirect(route('admin.staff.index'))
+            ->assertSessionHas('warning', 'Staff account created, but the welcome email could not be sent. The staff member can still use Forgot Password to set their password.');
+
+        $created = User::where('email', 'mailfailure@goldeneye.edu.np')->firstOrFail();
+        $this->assertTrue($created->hasRole('Staff'));
+        $this->assertFalse($created->hasRole('Admin'));
+        $this->assertModelExists($created);
     }
 
     public function test_invalid_duplicate_and_reserved_emails_and_role_injection_are_rejected(): void

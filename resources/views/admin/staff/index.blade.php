@@ -5,6 +5,11 @@
             <flux:button :href="route('admin.staff.create')" variant="primary">{{ __('Add Staff') }}</flux:button>
         </div>
         <x-auth-session-status :status="session('success')" />
+        @if (session('warning'))
+            <div class="font-medium text-sm text-amber-600 dark:text-amber-400">
+                {{ session('warning') }}
+            </div>
+        @endif
         <flux:error name="staff" />
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
