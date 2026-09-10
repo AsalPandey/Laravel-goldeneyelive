@@ -55,6 +55,10 @@ class TeacherController extends Controller
 
     public function show(string $id)
     {
+        if (! auth()->user()->hasRole('Admin')) {
+            return redirect()->route('admin.teachers.index');
+        }
+
         return redirect()->route('admin.teachers.edit', $id);
     }
 

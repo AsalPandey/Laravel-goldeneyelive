@@ -8,6 +8,11 @@
         <div class="rounded-xl border border-neutral-200 bg-white p-8 shadow-sm dark:border-neutral-700 dark:bg-neutral-800">
             <form action="{{ route('admin.teachers.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
+            @role('Staff')
+                @unless(auth()->user()->hasRole('Admin'))
+                    <p class="text-sm text-neutral-500">New content is saved as draft or inactive. An Admin can publish it.</p>
+                @endunless
+            @endrole
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Full Name</label>
@@ -38,7 +43,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Status</label>
-                    <select name="status" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                    <select name="status" @disabled(! auth()->user()->hasRole('Admin')) class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
                         <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
                         <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                     </select>
@@ -59,8 +64,8 @@
 
                 <x-seo-aeo-fields />
                 <div class="flex items-center gap-2">
-                    <input type="hidden" name="is_featured" value="0">
-                    <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }} class="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500">
+                    <input type="hidden" name="is_featured" @disabled(! auth()->user()->hasRole('Admin')) value="0">
+                    <input type="checkbox" name="is_featured" @disabled(! auth()->user()->hasRole('Admin')) id="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }} class="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500">
                     <label for="is_featured" class="text-sm font-bold text-neutral-900">Feature this teacher on homepage?</label>
                 </div>
                 <p class="text-[10px] text-neutral-500 italic">Featured teachers appear in the "Our Instructors" carousel on the homepage.</p>

@@ -10,9 +10,11 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\SEOController;
 use App\Http\Controllers\Admin\ServicePillarController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\SubmissionController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Auth\PasswordOtpController;
 use App\Http\Controllers\Site\AnalyticsEventController;
 use App\Http\Controllers\Site\BlogController as PublicBlogController;
 use App\Http\Controllers\Site\ContactController;
@@ -96,48 +98,50 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('courses/{course}/preview', [CoursesController::class, 'preview'])->name('courses.preview');
             Route::get('blog/{post}/preview', [PublicBlogController::class, 'preview'])->name('blog.preview');
-            Route::resource('courses', CourseController::class)->except('destroy');
-            Route::resource('categories', CourseCategoryController::class)->except('destroy');
-            Route::patch('categories/{id}/toggle-status', [CourseCategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
-            Route::resource('service-pillars', ServicePillarController::class)->except('destroy');
-            Route::patch('service-pillars/{service_pillar}/toggle-status', [ServicePillarController::class, 'toggleStatus'])->name('service-pillars.toggle-status');
-            Route::patch('courses/{id}/toggle-status', [CourseController::class, 'toggleStatus'])->name('courses.toggle-status');
-            Route::patch('courses/{id}/toggle-featured', [CourseController::class, 'toggleFeatured'])->name('courses.toggle-featured');
-            Route::resource('blog', BlogController::class)->except('destroy');
-            Route::patch('blog/{id}/toggle-status', [BlogController::class, 'toggleStatus'])->name('blog.toggle-status');
-            Route::resource('faq', FAQController::class)->except('destroy');
-            Route::patch('faq/{id}/toggle-status', [FAQController::class, 'toggleStatus'])->name('faq.toggle-status');
-            Route::resource('teachers', TeacherController::class)->except('destroy');
-            Route::patch('teachers/{id}/toggle-status', [TeacherController::class, 'toggleStatus'])->name('teachers.toggle-status');
-            Route::patch('teachers/{id}/toggle-featured', [TeacherController::class, 'toggleFeatured'])->name('teachers.toggle-featured');
-            Route::resource('testimonials', TestimonialController::class)->except('destroy');
-            Route::patch('testimonials/{id}/toggle-status', [TestimonialController::class, 'toggleStatus'])->name('testimonials.toggle-status');
-            Route::patch('testimonials/{id}/toggle-featured', [TestimonialController::class, 'toggleFeatured'])->name('testimonials.toggle-featured');
-            Route::resource('notices', NoticeController::class)->except('destroy');
-            Route::patch('notices/{id}/toggle', [NoticeController::class, 'toggleStatus'])->name('notices.toggle');
+            Route::resource('courses', CourseController::class)->except('destroy')->middlewareFor(['edit', 'update'], 'role:Admin');
+            Route::resource('categories', CourseCategoryController::class)->except('destroy')->middlewareFor(['edit', 'update'], 'role:Admin');
+            Route::patch('categories/{id}/toggle-status', [CourseCategoryController::class, 'toggleStatus'])->name('categories.toggle-status')->middleware('role:Admin');
+            Route::resource('service-pillars', ServicePillarController::class)->except('destroy')->middlewareFor(['edit', 'update'], 'role:Admin');
+            Route::patch('service-pillars/{service_pillar}/toggle-status', [ServicePillarController::class, 'toggleStatus'])->name('service-pillars.toggle-status')->middleware('role:Admin');
+            Route::patch('courses/{id}/toggle-status', [CourseController::class, 'toggleStatus'])->name('courses.toggle-status')->middleware('role:Admin');
+            Route::patch('courses/{id}/toggle-featured', [CourseController::class, 'toggleFeatured'])->name('courses.toggle-featured')->middleware('role:Admin');
+            Route::resource('blog', BlogController::class)->except('destroy')->middlewareFor(['edit', 'update'], 'role:Admin');
+            Route::patch('blog/{id}/toggle-status', [BlogController::class, 'toggleStatus'])->name('blog.toggle-status')->middleware('role:Admin');
+            Route::resource('faq', FAQController::class)->except('destroy')->middlewareFor(['edit', 'update'], 'role:Admin');
+            Route::patch('faq/{id}/toggle-status', [FAQController::class, 'toggleStatus'])->name('faq.toggle-status')->middleware('role:Admin');
+            Route::resource('teachers', TeacherController::class)->except('destroy')->middlewareFor(['edit', 'update'], 'role:Admin');
+            Route::patch('teachers/{id}/toggle-status', [TeacherController::class, 'toggleStatus'])->name('teachers.toggle-status')->middleware('role:Admin');
+            Route::patch('teachers/{id}/toggle-featured', [TeacherController::class, 'toggleFeatured'])->name('teachers.toggle-featured')->middleware('role:Admin');
+            Route::resource('testimonials', TestimonialController::class)->except('destroy')->middlewareFor(['edit', 'update'], 'role:Admin');
+            Route::patch('testimonials/{id}/toggle-status', [TestimonialController::class, 'toggleStatus'])->name('testimonials.toggle-status')->middleware('role:Admin');
+            Route::patch('testimonials/{id}/toggle-featured', [TestimonialController::class, 'toggleFeatured'])->name('testimonials.toggle-featured')->middleware('role:Admin');
+            Route::resource('notices', NoticeController::class)->except('destroy')->middlewareFor(['edit', 'update'], 'role:Admin');
+            Route::patch('notices/{id}/toggle', [NoticeController::class, 'toggleStatus'])->name('notices.toggle')->middleware('role:Admin');
             Route::get('media', [MediaController::class, 'index'])->name('media.index');
             Route::post('media', [MediaController::class, 'store'])->name('media.store');
 
             // Website content and non-destructive media operations
-            Route::get('branding', [BrandingController::class, 'index'])->name('branding.index');
-            Route::post('branding/update', [BrandingController::class, 'update'])->name('branding.update');
-            Route::post('branding/asset', [BrandingController::class, 'storeAsset'])->name('branding.asset.store');
+            Route::get('branding', [BrandingController::class, 'index'])->name('branding.index')->middleware('role:Admin');
+            Route::post('branding/update', [BrandingController::class, 'update'])->name('branding.update')->middleware('role:Admin');
+            Route::post('branding/asset', [BrandingController::class, 'storeAsset'])->name('branding.asset.store')->middleware('role:Admin');
+
+            Route::resource('staff', StaffController::class)->only(['index', 'create', 'store', 'destroy'])->middleware('role:Admin');
 
             // Admin Only: Site Authority & Security Settings
             Route::middleware('role:Admin')->group(function () {
-                Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
-                Route::delete('categories/{category}', [CourseCategoryController::class, 'destroy'])->name('categories.destroy');
-                Route::delete('service-pillars/{service_pillar}', [ServicePillarController::class, 'destroy'])->name('service-pillars.destroy');
-                Route::delete('blog/{blog}', [BlogController::class, 'destroy'])->name('blog.destroy');
-                Route::delete('faq/{faq}', [FAQController::class, 'destroy'])->name('faq.destroy');
-                Route::delete('teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
-                Route::delete('testimonials/{testimonial}', [TestimonialController::class, 'destroy'])->name('testimonials.destroy');
-                Route::delete('notices/{notice}', [NoticeController::class, 'destroy'])->name('notices.destroy');
-                Route::delete('submissions/newsletter/{id}', [SubmissionController::class, 'destroyNewsletter'])->name('submissions.newsletter.destroy');
+                Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy')->middleware('role:Admin');
+                Route::delete('categories/{category}', [CourseCategoryController::class, 'destroy'])->name('categories.destroy')->middleware('role:Admin');
+                Route::delete('service-pillars/{service_pillar}', [ServicePillarController::class, 'destroy'])->name('service-pillars.destroy')->middleware('role:Admin');
+                Route::delete('blog/{blog}', [BlogController::class, 'destroy'])->name('blog.destroy')->middleware('role:Admin');
+                Route::delete('faq/{faq}', [FAQController::class, 'destroy'])->name('faq.destroy')->middleware('role:Admin');
+                Route::delete('teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy')->middleware('role:Admin');
+                Route::delete('testimonials/{testimonial}', [TestimonialController::class, 'destroy'])->name('testimonials.destroy')->middleware('role:Admin');
+                Route::delete('notices/{notice}', [NoticeController::class, 'destroy'])->name('notices.destroy')->middleware('role:Admin');
+                Route::delete('submissions/newsletter/{id}', [SubmissionController::class, 'destroyNewsletter'])->name('submissions.newsletter.destroy')->middleware('role:Admin');
 
                 // Destructive asset operations
-                Route::delete('branding/asset', [BrandingController::class, 'destroyAsset'])->name('branding.asset.destroy');
-                Route::post('branding/asset/purge', [BrandingController::class, 'purgeAssets'])->name('branding.asset.purge');
+                Route::delete('branding/asset', [BrandingController::class, 'destroyAsset'])->name('branding.asset.destroy')->middleware('role:Admin');
+                Route::post('branding/asset/purge', [BrandingController::class, 'purgeAssets'])->name('branding.asset.purge')->middleware('role:Admin');
 
                 // SEO & AI Authority Center
                 Route::get('seo', [SEOController::class, 'index'])->name('seo.index');
@@ -147,20 +151,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
             // Admin Submission Listings & Management
             Route::prefix('submissions')->name('submissions.')->group(function () {
                 Route::get('contacts', [SubmissionController::class, 'contact_display'])->name('contact-display');
-                Route::patch('contacts/{id}/status', [SubmissionController::class, 'updateContactStatus'])->name('contact.status.update');
-                Route::delete('contacts/{id}', [SubmissionController::class, 'destroyContact'])->name('contact.destroy');
-                Route::patch('contacts/{id}/restore', [SubmissionController::class, 'restoreContact'])->name('contact.restore');
+                Route::patch('contacts/{id}/status', [SubmissionController::class, 'updateContactStatus'])->name('contact.status.update')->middleware('role:Admin');
+                Route::delete('contacts/{id}', [SubmissionController::class, 'destroyContact'])->name('contact.destroy')->middleware('role:Admin');
+                Route::patch('contacts/{id}/restore', [SubmissionController::class, 'restoreContact'])->name('contact.restore')->middleware('role:Admin');
 
                 Route::get('enrollments', [SubmissionController::class, 'join_now_display'])->name('join_now-display');
-                Route::patch('enrollments/{id}/status', [SubmissionController::class, 'updateJoinStatus'])->name('join_now.status.update');
-                Route::delete('enrollments/{id}', [SubmissionController::class, 'destroyJoin'])->name('join_now.destroy');
-                Route::patch('enrollments/{id}/restore', [SubmissionController::class, 'restoreJoin'])->name('join_now.restore');
+                Route::patch('enrollments/{id}/status', [SubmissionController::class, 'updateJoinStatus'])->name('join_now.status.update')->middleware('role:Admin');
+                Route::delete('enrollments/{id}', [SubmissionController::class, 'destroyJoin'])->name('join_now.destroy')->middleware('role:Admin');
+                Route::patch('enrollments/{id}/restore', [SubmissionController::class, 'restoreJoin'])->name('join_now.restore')->middleware('role:Admin');
 
                 Route::get('newsletter', [SubmissionController::class, 'newsletter_display'])->name('newsletter-display');
-                Route::post('bulk-delete', [SubmissionController::class, 'bulkDestroy'])->name('bulk-delete');
+                Route::post('bulk-delete', [SubmissionController::class, 'bulkDestroy'])->name('bulk-delete')->middleware('role:Admin');
             });
         });
     });
 });
 
 require __DIR__.'/settings.php';
+
+Route::middleware('guest')->controller(PasswordOtpController::class)->group(function () {
+    Route::get('forgot-password', 'create')->name('password.request');
+    Route::post('forgot-password', 'store')->middleware('throttle:password-otp')->name('password.email');
+    Route::get('verify-password-otp', 'challenge')->name('password.otp');
+    Route::post('verify-password-otp', 'verify')->middleware('throttle:password-otp-verify')->name('password.otp.verify');
+    Route::get('reset-password', 'edit')->name('password.reset');
+    Route::post('reset-password', 'update')->middleware('throttle:password-otp-reset')->name('password.update');
+});

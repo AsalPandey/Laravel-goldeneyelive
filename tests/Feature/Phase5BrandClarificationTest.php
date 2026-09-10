@@ -19,7 +19,7 @@ class Phase5BrandClarificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    private User $staff;
+    private User $admin;
 
     protected function setUp(): void
     {
@@ -27,8 +27,8 @@ class Phase5BrandClarificationTest extends TestCase
 
         $this->seed(RoleSeeder::class);
 
-        $this->staff = User::factory()->create();
-        $this->staff->assignRole('Staff');
+        $this->admin = User::factory()->create();
+        $this->admin->assignRole('Admin');
     }
 
     public function test_golden_eye_academy_remains_the_primary_public_identity(): void
@@ -65,9 +65,9 @@ class Phase5BrandClarificationTest extends TestCase
             ->assertSee('href="'.route('courses-all').'"', false);
     }
 
-    public function test_staff_can_edit_every_changed_public_statement_through_existing_cms_fields(): void
+    public function test_admin_can_edit_every_changed_public_statement_through_existing_cms_fields(): void
     {
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->get(route('admin.branding.index'))
             ->assertOk()
             ->assertSee('name="footer_about_text"', false)
@@ -86,7 +86,7 @@ class Phase5BrandClarificationTest extends TestCase
             'audience_study_abroad_proof' => "CMS5 custom German pathway\nCMS5 custom billing disclosure",
         ];
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), $values)
             ->assertRedirect();
 
@@ -112,7 +112,7 @@ class Phase5BrandClarificationTest extends TestCase
             }
         }
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [
                 'footer_about_text' => str_repeat('a', 1001),
                 'audience_study_abroad_proof' => str_repeat('b', 1501),
@@ -144,7 +144,7 @@ class Phase5BrandClarificationTest extends TestCase
         $this->assertCount(5, $categoriesBefore);
         $this->assertCount(7, $servicePillarsBefore);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [
                 'footer_about_text' => 'A brand-only setting update.',
                 'audience_study_abroad_why' => 'A consultancy-boundary setting update.',

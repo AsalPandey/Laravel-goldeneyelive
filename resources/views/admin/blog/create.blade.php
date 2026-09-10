@@ -8,6 +8,11 @@
         <div class="rounded-xl border border-neutral-200 bg-white p-8 shadow-sm dark:border-neutral-700 dark:bg-neutral-800">
             <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
+            @role('Staff')
+                @unless(auth()->user()->hasRole('Admin'))
+                    <p class="text-sm text-neutral-500">New content is saved as draft or inactive. An Admin can publish it.</p>
+                @endunless
+            @endrole
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Blog Title</label>
@@ -51,7 +56,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Status</label>
-                        <select name="status" required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        <select name="status" @disabled(! auth()->user()->hasRole('Admin')) required class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
                             <option value="draft" {{ old('status', 'draft') === 'draft' ? 'selected' : '' }}>Draft</option>
                             <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>Published</option>
                         </select>
@@ -59,7 +64,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Publish Date & Time (Nepal time)</label>
-                        <input type="datetime-local" name="published_at" value="{{ old('published_at') }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
+                        <input type="datetime-local" name="published_at" @disabled(! auth()->user()->hasRole('Admin')) value="{{ old('published_at') }}" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3">
                         <p class="mt-1 text-xs text-neutral-500">Leave blank for immediate publication. A future Nepal time schedules the article.</p>
                         @error('published_at') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>

@@ -60,6 +60,10 @@ class TestimonialController extends Controller
 
     public function show(string $id)
     {
+        if (! auth()->user()->hasRole('Admin')) {
+            return redirect()->route('admin.testimonials.index');
+        }
+
         return redirect()->route('admin.testimonials.edit', $id);
     }
 

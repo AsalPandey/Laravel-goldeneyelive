@@ -26,7 +26,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
 {
     use RefreshDatabase;
 
-    private User $staff;
+    private User $admin;
 
     protected function setUp(): void
     {
@@ -35,11 +35,11 @@ class Phase6VerifiedContentTrustTest extends TestCase
         cache()->flush();
         $this->seed(RoleSeeder::class);
 
-        $this->staff = User::factory()->create();
-        $this->staff->assignRole('Staff');
+        $this->admin = User::factory()->create();
+        $this->admin->assignRole('Admin');
     }
 
-    public function test_staff_can_manage_safe_batch_and_course_confirmation_copy_end_to_end(): void
+    public function test_admin_can_manage_safe_batch_and_course_confirmation_copy_end_to_end(): void
     {
         $course = Course::factory()->create([
             'name' => 'CMS Confirmation Course',
@@ -47,7 +47,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
             'status' => 'active',
         ]);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->get(route('admin.branding.index'))
             ->assertOk()
             ->assertSee('name="home_courses_batch_note"', false)
@@ -58,7 +58,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
             'course_confirmation_note' => 'CMS6 confirm schedule, availability, and instructor',
         ];
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), $values)
             ->assertRedirect();
 
@@ -79,7 +79,7 @@ class Phase6VerifiedContentTrustTest extends TestCase
             ->assertOk()
             ->assertSeeText($values['course_confirmation_note']);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [
                 'home_courses_batch_note' => str_repeat('a', 1001),
                 'course_confirmation_note' => str_repeat('b', 501),

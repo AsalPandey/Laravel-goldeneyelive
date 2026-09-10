@@ -15,7 +15,7 @@ class BrandingRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->hasAnyRole(['Admin', 'Staff']) ?? false;
+        return $this->user()?->hasRole('Admin') ?? false;
     }
 
     protected function prepareForValidation(): void

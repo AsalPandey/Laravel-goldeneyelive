@@ -46,6 +46,10 @@ class ServicePillarController extends Controller
 
     public function show(ServicePillar $servicePillar)
     {
+        if (! auth()->user()->hasRole('Admin')) {
+            return redirect()->route('admin.service-pillars.index');
+        }
+
         return redirect()->route('admin.service-pillars.edit', $servicePillar);
     }
 

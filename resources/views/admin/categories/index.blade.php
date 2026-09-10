@@ -78,6 +78,7 @@
                             {{ $category->order_priority }}
                         </td>
                         <td class="px-6 py-5 text-center">
+                            @role('Admin')
                             <form action="{{ route('admin.categories.toggle-status', $category->id) }}" method="POST">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black tracking-tight uppercase transition-all shadow-sm border {{ $category->status === 'active' ? 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100' : 'bg-rose-50 text-rose-700 border-rose-100 hover:bg-rose-100' }}">
@@ -85,12 +86,17 @@
                                     {{ $category->status }}
                                 </button>
                             </form>
+                            @else
+                            <span class="text-xs text-neutral-500">{{ ucfirst($category->status) }}</span>
+                            @endrole
                         </td>
                         <td class="px-6 py-5">
                             <div class="flex justify-center gap-2">
+                                @role('Admin')
                                 <a href="{{ route('admin.categories.edit', $category->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-orange-600 hover:border-orange-200 hover:shadow-lg transition-all" title="Edit Category" aria-label="Edit {{ $category->name }}">
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
+                                @endrole
                                 @role('Admin')
                                 <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Permanently delete this category? This cannot be undone.')">
                                     @csrf @method('DELETE')

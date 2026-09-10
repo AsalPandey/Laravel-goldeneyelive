@@ -2,6 +2,14 @@
 
 return [
 
+    'permanent_admin_emails' => [
+        'asal.pandey@goldeneye.edu.np',
+        'admin@goldeneye.edu.np',
+    ],
+    'organization_email_domain' => 'goldeneye.edu.np',
+    'security_email' => 'security@goldeneye.edu.np',
+    'security_email_name' => 'Golden Eye Academy Security',
+
     /*
     |--------------------------------------------------------------------------
     | Official Academy Email

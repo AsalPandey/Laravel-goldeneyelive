@@ -64,6 +64,7 @@
                             </div>
                         </td>
                         <td class="px-8 py-6">
+                            @role('Admin')
                             <form action="{{ route('admin.notices.toggle', $notice->id) }}" method="POST">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="inline-flex items-center rounded-full border-2 {{ $notice->status === 'active' ? 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100' : 'bg-rose-50 text-rose-700 border-rose-100 hover:bg-rose-100' }} px-4 py-1 text-[9px] font-black uppercase tracking-widest transition-all shadow-sm">
@@ -71,12 +72,17 @@
                                     {{ $notice->status }}
                                 </button>
                             </form>
+                            @else
+                            <span class="text-xs text-neutral-500">{{ ucfirst($notice->status) }}</span>
+                            @endrole
                         </td>
                         <td class="px-8 py-6">
                             <div class="flex justify-center gap-3">
+                                @role('Admin')
                                 <a href="{{ route('admin.notices.edit', $notice->id) }}" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-zinc-100 text-neutral-600 hover:bg-brand-gold hover:text-brand-dark hover:shadow-lg transition-all border border-zinc-200 hover:border-brand-gold">
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
+                                @endrole
                                 @role('Admin')
                                 <form action="{{ route('admin.notices.destroy', $notice->id) }}" method="POST" onsubmit="return confirm('Permanently delete this notice? This cannot be undone.')">
                                     @csrf @method('DELETE')

@@ -8,6 +8,8 @@ class FAQRequest extends CMSRequest
 {
     protected function prepareForValidation(): void
     {
+        parent::prepareForValidation();
+
         if ($this->routeIs('admin.faq.store')) {
             $this->mergeIfMissing(['status' => 'inactive']);
         }

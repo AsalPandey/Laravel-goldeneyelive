@@ -52,7 +52,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-2">
                     <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">Status</label>
-                    <select name="status" class="w-full px-5 py-4 rounded-xl border-neutral-100 bg-white text-sm focus:border-brand-gold focus:ring-0 transition-all font-bold">
+                    <select name="status" @disabled(! auth()->user()->hasRole('Admin')) class="w-full px-5 py-4 rounded-xl border-neutral-100 bg-white text-sm focus:border-brand-gold focus:ring-0 transition-all font-bold">
                         <option value="active" @selected(old('status', $servicePillar?->status ?? 'active') === 'active')>Active</option>
                         <option value="inactive" @selected(old('status', $servicePillar?->status) === 'inactive')>Inactive</option>
                     </select>

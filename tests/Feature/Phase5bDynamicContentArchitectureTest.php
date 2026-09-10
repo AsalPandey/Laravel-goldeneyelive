@@ -40,14 +40,14 @@ class Phase5bDynamicContentArchitectureTest extends TestCase
         ]);
     }
 
-    public function test_staff_can_attach_and_detach_all_related_courses_while_preserving_blog_category(): void
+    public function test_admin_can_attach_and_detach_all_related_courses_while_preserving_blog_category(): void
     {
-        $staff = $this->staffUser();
+        $admin = $this->adminUser();
         $firstCourse = Course::factory()->create(['name' => 'First Related Course']);
         $secondCourse = Course::factory()->create(['name' => 'Second Related Course']);
         BlogPost::factory()->create(['category' => 'Student Guides']);
 
-        $this->actingAs($staff)
+        $this->actingAs($admin)
             ->get(route('admin.blog.create'))
             ->assertOk()
             ->assertSee('Related Courses')
@@ -56,7 +56,7 @@ class Phase5bDynamicContentArchitectureTest extends TestCase
             ->assertSee('name="courses[]"', false)
             ->assertDontSee('name="schema_markup"', false);
 
-        $this->actingAs($staff)
+        $this->actingAs($admin)
             ->post(route('admin.blog.store'), $this->blogPayload([
                 'title' => 'Relationship CMS Article',
                 'category' => 'Career & Skills',
@@ -103,7 +103,7 @@ class Phase5bDynamicContentArchitectureTest extends TestCase
 
     public function test_failed_blog_update_rolls_back_blog_and_pivot_changes_together(): void
     {
-        $staff = $this->staffUser();
+        $admin = $this->adminUser();
         $originalCourse = Course::factory()->create();
         $rejectedCourse = Course::factory()->create();
         $blog = BlogPost::factory()->create(['title' => 'Original Transactional Title']);
@@ -113,7 +113,7 @@ class Phase5bDynamicContentArchitectureTest extends TestCase
             .'WHEN NEW.course_id = '.$rejectedCourse->id.' BEGIN '
             ."SELECT RAISE(ABORT, 'phase5b rollback proof'); END");
 
-        $this->actingAs($staff)->withoutExceptionHandling();
+        $this->actingAs($admin)->withoutExceptionHandling();
 
         try {
             $this->put(route('admin.blog.update', $blog), $this->blogPayload([
@@ -281,7 +281,7 @@ class Phase5bDynamicContentArchitectureTest extends TestCase
 
     public function test_teacher_and_testimonial_relationships_retain_factual_snapshots_when_links_clear(): void
     {
-        $staff = $this->staffUser();
+        $admin = $this->adminUser();
         $teacher = Teacher::factory()->create(['name' => 'Verified Teacher Profile', 'status' => 'active']);
         $course = Course::factory()->create([
             'teacher_id' => $teacher->id,
@@ -293,7 +293,7 @@ class Phase5bDynamicContentArchitectureTest extends TestCase
             'status' => 'active',
         ]);
 
-        $this->actingAs($staff)
+        $this->actingAs($admin)
             ->put(route('admin.testimonials.update', $testimonial), [
                 'student_name' => $testimonial->student_name,
                 'course_id' => '',
@@ -395,13 +395,13 @@ class Phase5bDynamicContentArchitectureTest extends TestCase
         ], $overrides);
     }
 
-    private function staffUser(): User
+    private function adminUser(): User
     {
         $this->seed(RoleSeeder::class);
-        $staff = User::factory()->create();
-        $staff->assignRole('Staff');
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
 
-        return $staff;
+        return $admin;
     }
 
     private function metaValue(string $html, string $key, string $attribute = 'name'): ?string

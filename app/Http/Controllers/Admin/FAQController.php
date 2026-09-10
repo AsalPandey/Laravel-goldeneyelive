@@ -68,6 +68,10 @@ class FAQController extends Controller
 
     public function show($id)
     {
+        if (! auth()->user()->hasRole('Admin')) {
+            return redirect()->route('admin.faq.index');
+        }
+
         return redirect()->route('admin.faq.edit', $id);
     }
 

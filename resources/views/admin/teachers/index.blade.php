@@ -56,6 +56,7 @@
                         </td>
                         <td class="px-6 py-5">
                             <div class="flex flex-col gap-2">
+                                @role('Admin')
                                 <form action="{{ route('admin.teachers.toggle-status', $teacher->id) }}" method="POST">
                                     @csrf @method('PATCH')
                                     <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border {{ $teacher->status === 'active' ? 'bg-green-50 text-green-700 border-green-100 hover:bg-green-100' : 'bg-red-50 text-red-700 border-red-100 hover:bg-red-100' }} px-2.5 py-1 text-[9px] font-black uppercase tracking-tighter transition-all shadow-sm w-24">
@@ -63,6 +64,10 @@
                                         {{ $teacher->status }}
                                     </button>
                                 </form>
+                                @else
+                                <span class="text-xs text-neutral-500">{{ ucfirst($teacher->status) }}</span>
+                                @endrole
+                                @role('Admin')
                                 <form action="{{ route('admin.teachers.toggle-featured', $teacher->id) }}" method="POST">
                                     @csrf @method('PATCH')
                                     <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border {{ $teacher->is_featured ? 'bg-brand-gold/10 text-brand-gold border-brand-gold/20 hover:bg-brand-gold/20' : 'bg-neutral-50 text-neutral-400 border-neutral-100 hover:bg-neutral-100' }} px-2.5 py-1 text-[9px] font-black uppercase tracking-tighter transition-all shadow-sm w-24">
@@ -70,6 +75,9 @@
                                         {{ $teacher->is_featured ? 'Featured' : 'Regular' }}
                                     </button>
                                 </form>
+                                @else
+                                <span class="text-xs text-neutral-500">{{ $teacher->is_featured ? 'Featured' : 'Not featured' }}</span>
+                                @endrole
                             </div>
                         </td>
                         <td class="px-6 py-5">
@@ -91,9 +99,11 @@
                         </td>
                         <td class="px-6 py-5">
                             <div class="flex justify-end gap-2">
+                                @role('Admin')
                                 <a href="{{ route('admin.teachers.edit', $teacher->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 hover:shadow-lg transition-all">
                                     <i class="fa fa-pencil-alt text-xs"></i>
                                 </a>
+                                @endrole
                                 @role('Admin')
                                 <form action="{{ route('admin.teachers.destroy', $teacher->id) }}" method="POST" onsubmit="return confirm('Permanently delete this faculty member? This cannot be undone.')">
                                     @csrf @method('DELETE')

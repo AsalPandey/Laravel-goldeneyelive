@@ -41,6 +41,7 @@
                             </td>
                             <td class="px-6 py-5 text-center font-mono text-xs text-neutral-500">{{ $pillar->sort_order }}</td>
                             <td class="px-6 py-5 text-center">
+                                @role('Admin')
                                 <form action="{{ route('admin.service-pillars.toggle-status', $pillar) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
@@ -49,12 +50,17 @@
                                         {{ $pillar->status }}
                                     </button>
                                 </form>
+                                @else
+                                <span class="text-xs text-neutral-500">{{ ucfirst($pillar->status) }}</span>
+                                @endrole
                             </td>
                             <td class="px-6 py-5">
                                 <div class="flex justify-center gap-2">
+                                    @role('Admin')
                                     <a href="{{ route('admin.service-pillars.edit', $pillar) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-orange-600 hover:border-orange-200 hover:shadow-lg transition-all">
                                         <i class="fa fa-pencil-alt text-xs"></i>
                                     </a>
+                                    @endrole
                                     @role('Admin')
                                     <form action="{{ route('admin.service-pillars.destroy', $pillar) }}" method="POST" onsubmit="return confirm('Permanently delete this service pillar? This cannot be undone.')">
                                         @csrf

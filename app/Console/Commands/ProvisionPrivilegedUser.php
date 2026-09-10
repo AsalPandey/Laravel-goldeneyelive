@@ -3,22 +3,21 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
+use App\Rules\OrganizationEmail;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
-use Throwable;
 
 #[Signature('account:provision-privileged
     {email : Email address owned by the authorized account holder}
     {--name= : Full name of the account holder}
     {--role= : Privileged role to assign (Admin or Staff)}')]
-#[Description('Create a privileged account with a random unusable password and send a one-time password setup link.')]
+#[Description('Create a privileged account with a random unusable password for email OTP password setup.')]
 class ProvisionPrivilegedUser extends Command
 {
     /**
@@ -33,7 +32,7 @@ class ProvisionPrivilegedUser extends Command
         ];
 
         $validator = Validator::make($input, [
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', new OrganizationEmail],
             'name' => ['required', 'string', 'max:255'],
             'role' => ['required', Rule::in(['Admin', 'Staff'])],
         ]);
@@ -52,7 +51,13 @@ class ProvisionPrivilegedUser extends Command
             return self::FAILURE;
         }
 
-        if (User::where('email', $input['email'])->exists()) {
+        if ((new User(['email' => $input['email']]))->isPermanentAdmin() && $input['role'] !== 'Admin') {
+            $this->error('Permanent Admin emails cannot be provisioned as Staff.');
+
+            return self::INVALID;
+        }
+
+        if (User::whereRaw('LOWER(email) = ?', [$input['email']])->exists()) {
             $this->warn('An account already exists. No account data was changed; use the password-reset workflow.');
 
             return self::FAILURE;
@@ -68,7 +73,7 @@ class ProvisionPrivilegedUser extends Command
             return self::FAILURE;
         }
 
-        $user = DB::transaction(function () use ($input, $role): User {
+        DB::transaction(function () use ($input, $role): User {
             $user = User::create([
                 'name' => $input['name'],
                 'email' => $input['email'],
@@ -80,21 +85,7 @@ class ProvisionPrivilegedUser extends Command
             return $user;
         });
 
-        try {
-            $status = Password::broker()->sendResetLink(['email' => $user->email]);
-        } catch (Throwable) {
-            $status = null;
-        }
-
-        if ($status !== Password::RESET_LINK_SENT) {
-            Password::broker()->deleteToken($user);
-            $user->delete();
-            $this->error('The one-time setup link could not be sent, so the account was not retained.');
-
-            return self::FAILURE;
-        }
-
-        $this->info('The privileged account was created and a one-time password setup link was sent.');
+        $this->info('The privileged account was created. Use Forgot Password to set the password with an email OTP.');
 
         return self::SUCCESS;
     }

@@ -60,18 +60,18 @@ class InquiryManagementTest extends TestCase
     public function test_status_changes_are_consistent_and_only_contacted_records_get_follow_up_timestamps(): void
     {
         Carbon::setTestNow('2026-07-29 10:00:00');
-        $staff = $this->userWithRole('Staff');
+        $admin = $this->userWithRole('Admin');
         $contact = Contact::factory()->create(['status' => 'new']);
         $courseInquiry = JoinNowQuery::factory()->create(['status' => 'new']);
 
-        $this->actingAs($staff)
+        $this->actingAs($admin)
             ->patch(route('admin.submissions.contact.status.update', $contact->id), [
                 'status' => 'contacted',
                 'admin_notes' => 'Called the parent.',
             ])
             ->assertRedirect();
 
-        $this->actingAs($staff)
+        $this->actingAs($admin)
             ->patch(route('admin.submissions.join_now.status.update', $courseInquiry->id), [
                 'status' => 'resolved',
                 'admin_notes' => 'Question resolved by message.',
@@ -119,26 +119,26 @@ class InquiryManagementTest extends TestCase
         $this->assertNotSoftDeleted($contact);
     }
 
-    public function test_staff_can_archive_and_restore_a_course_inquiry(): void
+    public function test_admin_can_archive_and_restore_a_course_inquiry(): void
     {
-        $staff = $this->userWithRole('Staff');
+        $admin = $this->userWithRole('Admin');
         $courseInquiry = JoinNowQuery::factory()->create([
             'queries' => 'Keep this original course message.',
         ]);
 
-        $this->actingAs($staff)
+        $this->actingAs($admin)
             ->delete(route('admin.submissions.join_now.destroy', $courseInquiry->id))
             ->assertRedirect();
 
         $this->assertSoftDeleted($courseInquiry);
 
-        $this->actingAs($staff)
+        $this->actingAs($admin)
             ->get(route('admin.submissions.join_now-display', ['view' => 'archived']))
             ->assertOk()
             ->assertSee('Keep this original course message.')
             ->assertSee('Restore course inquiry');
 
-        $this->actingAs($staff)
+        $this->actingAs($admin)
             ->patch(route('admin.submissions.join_now.restore', $courseInquiry->id))
             ->assertRedirect();
 

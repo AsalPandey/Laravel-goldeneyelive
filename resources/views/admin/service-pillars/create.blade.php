@@ -13,6 +13,11 @@
         <div class="bg-white rounded-3xl border border-neutral-100 shadow-xl overflow-hidden">
             <form action="{{ route('admin.service-pillars.store') }}" method="POST" class="p-10">
                 @csrf
+            @role('Staff')
+                @unless(auth()->user()->hasRole('Admin'))
+                    <p class="text-sm text-neutral-500">New content is saved as draft or inactive. An Admin can publish it.</p>
+                @endunless
+            @endrole
                 @include('admin.service-pillars._form')
                 <div class="mt-10 pt-8 border-t border-neutral-100 flex justify-end gap-4">
                     <button type="reset" class="px-8 py-4 rounded-xl bg-neutral-100 text-neutral-500 text-sm font-black uppercase hover:bg-neutral-200 transition-all">Reset</button>

@@ -15,6 +15,12 @@ class PublicCtaRenderingTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        cache()->flush();
+    }
+
     public function test_public_navigation_is_simplified_for_desktop_and_mobile(): void
     {
         $this->seed(LiveSiteSeeder::class);

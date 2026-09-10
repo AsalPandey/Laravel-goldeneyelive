@@ -31,7 +31,7 @@ class BlogMetadataStaffTest extends TestCase
             ->assertDontSee('name="schema_markup"', false);
     }
 
-    public function test_staff_can_save_and_edit_ordinary_blog_metadata(): void
+    public function test_staff_can_create_but_cannot_edit_ordinary_blog_metadata(): void
     {
         $this->seed(RoleSeeder::class);
         $staff = User::factory()->create();
@@ -56,9 +56,7 @@ class BlogMetadataStaffTest extends TestCase
 
         $this->actingAs($staff)
             ->get(route('admin.blog.edit', $post))
-            ->assertOk()
-            ->assertSee('value="Staff Search Title"', false)
-            ->assertDontSee('name="schema_markup"', false);
+            ->assertForbidden();
     }
 
     public function test_blog_metadata_limits_return_clear_field_errors(): void

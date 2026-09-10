@@ -11,6 +11,8 @@ class CategoryRequest extends CMSRequest
 {
     protected function prepareForValidation(): void
     {
+        parent::prepareForValidation();
+
         if ($this->has('slug')) {
             $this->merge([
                 'slug' => Str::slug((string) $this->input('slug')),

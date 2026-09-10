@@ -83,6 +83,7 @@
         <div id="bulkActionsBar" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-6 z-[1000] transition-all transform translate-y-24 opacity-0">
             <span class="text-sm font-bold"><span id="selectedCount">0</span> subscribers selected</span>
             <div class="h-6 w-px bg-neutral-700"></div>
+            @role('Admin')
             <form action="{{ route('admin.submissions.bulk-delete') }}" method="POST" onsubmit="return confirm('Delete all selected subscribers forever?')">
                 @csrf
                 <input type="hidden" name="type" value="newsletter">
@@ -92,6 +93,7 @@
                     Bulk Delete
                 </button>
             </form>
+            @endrole
             <button onclick="unselectAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
         </div>
         @endrole

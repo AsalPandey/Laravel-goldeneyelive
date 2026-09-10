@@ -8,6 +8,11 @@
         <div class="rounded-2xl border border-neutral-100 bg-white p-10 shadow-sm dark:border-neutral-700 dark:bg-neutral-800">
             <form action="{{ route('admin.faq.store') }}" method="POST" class="space-y-8">
                 @csrf
+            @role('Staff')
+                @unless(auth()->user()->hasRole('Admin'))
+                    <p class="text-sm text-neutral-500">New content is saved as draft or inactive. An Admin can publish it.</p>
+                @endunless
+            @endrole
                 <div>
                     <label class="premium-label">Question / Inquiry Title</label>
                     <input type="text" name="question" value="{{ old('question') }}" required class="premium-input" placeholder="e.g. What is the duration of the Web Development course?">
@@ -23,7 +28,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <label class="premium-label">Publication Status</label>
-                        <select name="status" required class="premium-input cursor-pointer">
+                        <select name="status" @disabled(! auth()->user()->hasRole('Admin')) required class="premium-input cursor-pointer">
                             <option value="inactive" {{ old('status', 'inactive') === 'inactive' ? 'selected' : '' }}>INACTIVE (Not Public)</option>
                             <option value="active" {{ old('status') === 'active' ? 'selected' : '' }}>PUBLIC (Live on Website)</option>
                         </select>

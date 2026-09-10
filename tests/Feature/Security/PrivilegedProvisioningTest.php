@@ -4,7 +4,6 @@ namespace Tests\Feature\Security;
 
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
@@ -24,25 +23,27 @@ class PrivilegedProvisioningTest extends TestCase
         $this->assertDatabaseCount(User::class, 0);
     }
 
-    public function test_privileged_provisioning_uses_a_one_time_setup_link_without_exposing_account_details(): void
+    public function test_privileged_provisioning_directs_user_to_otp_without_exposing_account_details(): void
     {
         Notification::fake();
         $this->seed(RoleSeeder::class);
 
-        $email = 'authorized-owner@example.test';
+        $email = 'authorized-owner@goldeneye.edu.np';
         $exitCode = Artisan::call('account:provision-privileged', [
             'email' => $email,
             '--name' => 'Authorized Owner',
             '--role' => 'Admin',
         ]);
+        $output = Artisan::output();
 
         $user = User::where('email', $email)->firstOrFail();
 
         $this->assertSame(0, $exitCode);
         $this->assertTrue($user->hasRole('Admin'));
         $this->assertNull($user->email_verified_at);
-        $this->assertStringNotContainsString($email, Artisan::output());
-        Notification::assertSentTo($user, ResetPassword::class);
+        $this->assertStringNotContainsString($email, $output);
+        Notification::assertNothingSent();
+        $this->assertStringContainsString('Forgot Password', $output);
     }
 
     public function test_existing_account_is_not_changed_by_privileged_provisioning(): void
@@ -51,6 +52,7 @@ class PrivilegedProvisioningTest extends TestCase
         $this->seed(RoleSeeder::class);
 
         $user = User::factory()->create([
+            'email' => 'existing@goldeneye.edu.np',
             'password' => Hash::make('existing-test-secret'),
         ]);
         $passwordHash = $user->password;
@@ -80,7 +82,7 @@ class PrivilegedProvisioningTest extends TestCase
 
         try {
             $this->artisan('account:provision-privileged', [
-                'email' => 'production-owner@example.test',
+                'email' => 'production-owner@goldeneye.edu.np',
                 '--name' => 'Production Owner',
                 '--role' => 'Staff',
             ])

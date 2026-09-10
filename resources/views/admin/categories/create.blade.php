@@ -13,6 +13,11 @@
         <div class="bg-white rounded-3xl border border-neutral-100 shadow-xl overflow-hidden">
             <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data" class="p-10">
                 @csrf
+            @role('Staff')
+                @unless(auth()->user()->hasRole('Admin'))
+                    <p class="text-sm text-neutral-500">New content is saved as draft or inactive. An Admin can publish it.</p>
+                @endunless
+            @endrole
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Basic Information -->
                     <div class="space-y-6">
@@ -43,7 +48,7 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="space-y-2">
                                     <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">Status</label>
-                                    <select name="status" class="w-full px-5 py-4 rounded-xl border-neutral-100 bg-white text-sm focus:border-orange-500 focus:ring-0 transition-all font-bold">
+                                    <select name="status" @disabled(! auth()->user()->hasRole('Admin')) class="w-full px-5 py-4 rounded-xl border-neutral-100 bg-white text-sm focus:border-orange-500 focus:ring-0 transition-all font-bold">
                                         <option value="active" {{ old('status') === 'active' ? 'selected' : '' }}>Active</option>
                                         <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                                     </select>

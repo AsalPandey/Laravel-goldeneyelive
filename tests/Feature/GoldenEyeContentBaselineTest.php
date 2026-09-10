@@ -128,13 +128,19 @@ class GoldenEyeContentBaselineTest extends TestCase
         $this->assertSame(StructuredData::organizationId(), $articleSchema['publisher']['@id']);
     }
 
-    public function test_staff_can_edit_new_catalogue_and_contact_copy_while_established_year_stays_admin_only(): void
+    public function test_only_admin_can_edit_catalogue_contact_copy_and_established_year(): void
     {
         $this->seed([LiveSiteSeeder::class, RoleSeeder::class]);
         $staff = User::factory()->create();
         $staff->assignRole('Staff');
 
         $this->actingAs($staff)
+            ->get(route('admin.branding.index'))
+            ->assertForbidden();
+        $this->post(route('admin.branding.update'), ['catalogue_title' => 'Unauthorized'])->assertForbidden();
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
+        $this->actingAs($admin)
             ->get(route('admin.branding.index'))
             ->assertOk()
             ->assertSee('name="catalogue_title"', false)
@@ -143,10 +149,10 @@ class GoldenEyeContentBaselineTest extends TestCase
             ->assertSee('name="contact_form_title"', false)
             ->assertDontSee('name="founding_year"', false);
 
-        $this->actingAs($staff)->post(route('admin.branding.update'), [
+        $this->actingAs($admin)->post(route('admin.branding.update'), [
             'catalogue_title' => 'A staff-edited catalogue heading',
             'contact_form_title' => 'A staff-edited contact heading',
-            'founding_year' => '1999',
+            'founding_year' => '2008',
         ])->assertRedirect();
 
         cache()->flush();

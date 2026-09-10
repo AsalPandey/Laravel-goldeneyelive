@@ -69,6 +69,10 @@ class NoticeController extends Controller
 
     public function show($id)
     {
+        if (! auth()->user()->hasRole('Admin')) {
+            return redirect()->route('admin.notices.index');
+        }
+
         return redirect()->route('admin.notices.edit', $id);
     }
 

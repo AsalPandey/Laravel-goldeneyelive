@@ -103,6 +103,10 @@ class BlogController extends Controller
 
     public function show($id)
     {
+        if (! auth()->user()->hasRole('Admin')) {
+            return redirect()->route('admin.blog.preview', $id);
+        }
+
         return redirect()->route('admin.blog.edit', $id);
     }
 

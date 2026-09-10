@@ -12,6 +12,11 @@
 
         <form action="{{ route('admin.notices.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
             @csrf
+            @role('Staff')
+                @unless(auth()->user()->hasRole('Admin'))
+                    <p class="text-sm text-neutral-500">New content is saved as draft or inactive. An Admin can publish it.</p>
+                @endunless
+            @endrole
             @if($errors->any())
                 <div class="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-800" role="alert">
                     <p class="text-xs font-black uppercase">Please correct these notice fields:</p>
@@ -44,7 +49,7 @@
 
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Status</label>
-                        <select name="status" class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
+                        <select name="status" @disabled(! auth()->user()->hasRole('Admin')) class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
                             <option value="active" @selected(old('status') === 'active')>Active (Visible)</option>
                             <option value="inactive" @selected(old('status', 'inactive') === 'inactive')>Inactive (Hidden)</option>
                         </select>

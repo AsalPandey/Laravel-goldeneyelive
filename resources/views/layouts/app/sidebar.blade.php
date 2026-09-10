@@ -35,10 +35,13 @@
                     <flux:sidebar.item icon="chat-bubble-bottom-center-text" :href="route('admin.faq.index')" :current="request()->routeIs('admin.faq.*')" wire:navigate>
                         {{ __('Manage FAQs') }}
                     </flux:sidebar.item>
+                    @role('Admin')
                     <flux:sidebar.item icon="sparkles" :href="route('admin.branding.index')" :current="request()->routeIs('admin.branding.*')" wire:navigate>
                         {{ __('Website Content') }}
                     </flux:sidebar.item>
-                    @role('Admin')
+                        <flux:sidebar.item icon="users" :href="route('admin.staff.index')" :current="request()->routeIs('admin.staff.*')" wire:navigate>
+                            {{ __('Staff Management') }}
+                        </flux:sidebar.item>
                         <flux:sidebar.item icon="globe-alt" :href="route('admin.seo.index')" :current="request()->routeIs('admin.seo.*')" wire:navigate>
                             {{ __('SEO & AI Authority') }}
                         </flux:sidebar.item>
@@ -174,7 +177,9 @@
                         <input type="file" name="image" accept="image/jpeg,image/png,image/gif" required class="max-w-56 text-[10px] text-neutral-500">
                         <button type="submit" class="rounded-lg bg-brand-dark px-3 py-2 text-[9px] font-black uppercase text-brand-gold">Upload Image</button>
                     </form>
+                    @role('Admin')
                     <a href="{{ route('admin.branding.index') }}" target="_blank" class="text-xs font-black uppercase text-brand-gold hover:underline">Open Website Content</a>
+                    @endrole
                 </div>
             </div>
         </div>

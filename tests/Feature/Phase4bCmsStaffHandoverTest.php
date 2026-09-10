@@ -44,9 +44,9 @@ class Phase4bCmsStaffHandoverTest extends TestCase
         $this->student->assignRole('Student');
     }
 
-    public function test_staff_can_manage_homepage_copy_cards_and_default_visible_section_controls(): void
+    public function test_admin_can_manage_homepage_copy_cards_and_default_visible_section_controls(): void
     {
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->get(route('admin.branding.index'))
             ->assertOk()
             ->assertSeeText('Homepage Sections & Cards')
@@ -64,7 +64,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             ->assertSee('Choose the path that fits your goal.')
             ->assertSee('Know what you are joining.');
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [
                 'home_audience_status' => 'inactive',
                 'home_audience_title' => 'Unique retained audience heading',
@@ -81,7 +81,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             ->assertDontSee('Unique retained audience heading')
             ->assertDontSee('Unique student pathway');
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), ['home_audience_status' => 'active'])
             ->assertRedirect();
 
@@ -90,7 +90,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             ->assertSee('Unique retained audience heading')
             ->assertSee('Unique student pathway');
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [
                 'audience_students_secondary_action' => 'unsafe-destination',
             ])
@@ -99,7 +99,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
 
     public function test_audience_page_content_sections_visibility_and_sitemap_follow_cms_state(): void
     {
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [
                 'audience_students_status' => 'active',
                 'audience_students_hero_status' => 'inactive',
@@ -109,7 +109,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             ])
             ->assertSessionHasErrors('audience_students_status');
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [
                 'audience_students_status' => 'active',
                 'audience_students_hero_status' => 'active',
@@ -131,7 +131,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             ->assertSee('Compare all courses')
             ->assertDontSee('Retained guidance content marker');
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), ['audience_students_status' => 'inactive'])
             ->assertRedirect();
 
@@ -140,7 +140,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             ->assertOk()
             ->assertDontSee(route('for-students'));
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [
                 'audience_students_status' => 'active',
                 'audience_students_guidance_status' => 'active',
@@ -234,7 +234,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             'audience_students_secondary_cta_text' => 'CMS4B audience secondary action',
         ];
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [...$homepageFields, ...$audienceFields])
             ->assertRedirect();
 
@@ -329,11 +329,11 @@ class Phase4bCmsStaffHandoverTest extends TestCase
         $staffIndex->assertDontSee('action="'.route('admin.blog.destroy', $records[3][0]).'"', false);
     }
 
-    public function test_nepal_staff_schedules_are_stored_in_utc_and_respect_public_boundaries(): void
+    public function test_nepal_admin_schedules_are_stored_in_utc_and_respect_public_boundaries(): void
     {
         $this->travelTo(Carbon::parse('2025-12-31 18:29:00', 'UTC'));
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.blog.store'), [
                 'title' => 'Kathmandu Boundary Article',
                 'slug' => 'kathmandu-boundary-article',
@@ -347,7 +347,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
         $this->assertSame('2025-12-31 18:30:00', $post->published_at->utc()->format('Y-m-d H:i:s'));
         $this->get(route('blog-detail', $post->slug))->assertNotFound();
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.notices.store'), [
                 'title' => 'Kathmandu Boundary Notice',
                 'status' => 'active',
@@ -377,7 +377,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             'status' => 'published',
             'published_at' => Carbon::parse('2025-06-01 04:15:37', 'UTC'),
         ]);
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->put(route('admin.blog.update', $historicalPost), [
                 'title' => $historicalPost->title,
                 'slug' => $historicalPost->slug,
@@ -396,7 +396,7 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             'starts_at' => Carbon::parse('2025-06-01 04:15:37', 'UTC'),
             'expires_at' => Carbon::parse('2025-06-02 04:15:49', 'UTC'),
         ]);
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->put(route('admin.notices.update', $historicalNotice), [
                 'title' => $historicalNotice->title,
                 'status' => $historicalNotice->status,
@@ -450,7 +450,6 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             'admin.teachers.index',
             'admin.testimonials.index',
             'admin.notices.index',
-            'admin.branding.index',
             'admin.media.index',
         ];
 
@@ -459,17 +458,9 @@ class Phase4bCmsStaffHandoverTest extends TestCase
             $this->actingAs($this->student)->get(route($routeName))->assertForbidden();
         }
 
-        $staffBranding = $this->actingAs($this->staff)
+        $this->actingAs($this->staff)
             ->get(route('admin.branding.index'))
-            ->assertOk()
-            ->assertDontSee('name="recaptcha_secret_key"', false)
-            ->assertDontSee('name="google_analytics_id"', false)
-            ->assertDontSee('name="google_maps_embed"', false)
-            ->assertDontSee('name="schema_markup"', false)
-            ->assertDontSee('name="robots_txt"', false)
-            ->assertDontSee('Purge Unused');
-
-        $this->assertStringNotContainsString('Admin Only: Site Authority', $staffBranding->getContent());
+            ->assertForbidden();
         $this->actingAs($this->staff)->get(route('admin.seo.index'))->assertForbidden();
         $this->actingAs($this->admin)->get(route('admin.seo.index'))->assertOk();
     }

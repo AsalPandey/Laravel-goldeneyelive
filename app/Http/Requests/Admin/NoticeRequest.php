@@ -10,6 +10,8 @@ class NoticeRequest extends CMSRequest
 {
     protected function prepareForValidation(): void
     {
+        parent::prepareForValidation();
+
         $this->merge(PublicCtaContract::normalizeNoticePayload($this->all()));
     }
 

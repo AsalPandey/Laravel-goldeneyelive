@@ -38,9 +38,9 @@
                 <thead class="bg-neutral-50/50">
                     <tr>
                         <th scope="col" class="px-6 py-4 text-left">
-                            @unless($showArchived)
+                            @if(! $showArchived && auth()->user()->hasRole('Admin'))
                                 <input type="checkbox" id="selectAll" class="rounded border-neutral-300 text-brand-gold focus:ring-brand-gold">
-                            @endunless
+                            @endif
                         </th>
                         <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Student Profile</th>
                         <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Target Course</th>
@@ -53,9 +53,9 @@
                     @forelse($joinNowQueries as $data)
                     <tr class="hover:bg-neutral-50/30 transition-all select-row">
                         <td class="px-6 py-5">
-                            @unless($showArchived)
+                            @if(! $showArchived && auth()->user()->hasRole('Admin'))
                                 <input type="checkbox" name="ids[]" value="{{ $data->id }}" class="row-checkbox rounded border-neutral-300 text-brand-gold focus:ring-brand-gold">
-                            @endunless
+                            @endif
                         </td>
                         <td class="px-6 py-5">
                             <div class="text-sm font-black text-neutral-900 leading-tight">{{ $data->firstName }} {{ $data->lastName }}</div>
@@ -144,19 +144,23 @@
                                     <i class="fa fa-eye text-xs"></i>
                                 </button>
                                 @if($showArchived)
+                                    @role('Admin')
                                     <form action="{{ route('admin.submissions.join_now.restore', $data->id) }}" method="POST" onsubmit="return confirm('Restore this course inquiry to the active list?')">
                                         @csrf @method('PATCH')
                                         <button type="submit" title="Restore course inquiry" class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-700 hover:bg-emerald-100 transition-all">
                                             <i class="fa fa-undo text-xs"></i>
                                         </button>
                                     </form>
+                                    @endrole
                                 @else
+                                    @role('Admin')
                                     <form action="{{ route('admin.submissions.join_now.destroy', $data->id) }}" method="POST" onsubmit="return confirm('Archive this course inquiry? You can restore it later.')">
                                         @csrf @method('DELETE')
                                         <button type="submit" title="Archive course inquiry" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-400 hover:text-red-500 hover:border-red-200 hover:shadow-lg transition-all">
                                             <i class="fa fa-archive text-xs"></i>
                                         </button>
                                     </form>
+                                    @endrole
                                 @endif
                             </div>
                         </td>
@@ -171,11 +175,12 @@
             {{ $joinNowQueries->links() }}
         </div>
 
-        @unless($showArchived)
+        @if(! $showArchived && auth()->user()->hasRole('Admin'))
         <!-- Bulk Actions Bar -->
         <div id="bulkActionsBar" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-6 z-[1000] transition-all transform translate-y-24 opacity-0">
             <span class="text-sm font-bold"><span id="selectedCount">0</span> enrollments selected</span>
             <div class="h-6 w-px bg-neutral-700"></div>
+            @role('Admin')
             <form action="{{ route('admin.submissions.bulk-delete') }}" method="POST" onsubmit="return confirm('Archive all selected course inquiries? You can restore them later.')">
                 @csrf
                 <input type="hidden" name="type" value="join_now">
@@ -185,9 +190,10 @@
                     Bulk Archive
                 </button>
             </form>
+            @endrole
             <button onclick="unselectAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
         </div>
-        @endunless
+        @endif
     </div>
 
     <!-- Enrollment Modal -->
@@ -251,7 +257,7 @@
                         <!-- Status Selection -->
                         <div class="space-y-2">
                             <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">Application Stage</label>
-                            <select name="status" id="modal_status" class="w-full px-4 py-3 rounded-xl border-neutral-100 bg-neutral-50 text-xs font-black uppercase tracking-widest focus:ring-brand-gold focus:border-brand-gold transition-all cursor-pointer">
+                            <select name="status" @disabled(! auth()->user()->hasRole('Admin')) id="modal_status" class="w-full px-4 py-3 rounded-xl border-neutral-100 bg-neutral-50 text-xs font-black uppercase tracking-widest focus:ring-brand-gold focus:border-brand-gold transition-all cursor-pointer">
                                 @foreach($statusOptions as $value => $label)
                                     <option value="{{ $value }}">{{ $label }}</option>
                                 @endforeach
@@ -261,15 +267,15 @@
                         <!-- Notes Area -->
                         <div class="space-y-2">
                             <label class="text-[11px] font-black uppercase text-neutral-500 tracking-wider">Internal Follow-up Log</label>
-                            <textarea name="admin_notes" id="modal_notes" rows="3" class="w-full px-4 py-3 rounded-xl border-neutral-100 bg-neutral-50 text-xs font-medium focus:ring-brand-gold focus:border-brand-gold transition-all resize-none" placeholder="Note down student interaction, call results, or documents needed..."></textarea>
+                            <textarea name="admin_notes" @readonly(! auth()->user()->hasRole('Admin')) id="modal_notes" rows="3" class="w-full px-4 py-3 rounded-xl border-neutral-100 bg-neutral-50 text-xs font-medium focus:ring-brand-gold focus:border-brand-gold transition-all resize-none" placeholder="Note down student interaction, call results, or documents needed..."></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="px-8 py-6 border-t border-neutral-100 bg-neutral-50/50 flex justify-end gap-3">
                     <button type="button" onclick="closeModal()" class="px-6 py-3 text-xs font-black uppercase text-neutral-500 hover:text-neutral-800 transition-colors">Discard</button>
-                    @unless($showArchived)
+                    @if(! $showArchived && auth()->user()->hasRole('Admin'))
                         <button type="submit" class="px-8 py-3 rounded-xl bg-brand-gold text-brand-dark text-xs font-black uppercase shadow-lg hover:bg-brand-dark hover:text-brand-gold transition-all">Update Inquiry</button>
-                    @endunless
+                    @endif
                 </div>
             </form>
         </div>

@@ -20,6 +20,14 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
 
+    public function isPermanentAdmin(): bool
+    {
+        return in_array(Str::lower(trim($this->email)), array_map(
+            fn (string $email): string => Str::lower(trim($email)),
+            config('goldeneye.permanent_admin_emails', []),
+        ), true);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

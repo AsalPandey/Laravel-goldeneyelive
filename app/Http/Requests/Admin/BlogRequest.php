@@ -10,6 +10,8 @@ class BlogRequest extends CMSRequest
 {
     protected function prepareForValidation(): void
     {
+        parent::prepareForValidation();
+
         if ($this->has('slug')) {
             $slug = trim((string) $this->input('slug'));
             $this->merge([

@@ -64,6 +64,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-5">
+                            @role('Admin')
                             <form action="{{ route('admin.faq.toggle-status', $faq->id) }}" method="POST">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="group transition-all">
@@ -79,12 +80,17 @@
                                     @endif
                                 </button>
                             </form>
+                            @else
+                            <span class="text-xs text-neutral-500">{{ ucfirst($faq->status) }}</span>
+                            @endrole
                         </td>
                         <td class="px-6 py-5 text-right">
                             <div class="flex justify-end gap-2">
+                                @role('Admin')
                                 <a href="{{ route('admin.faq.edit', $faq->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:border-neutral-900 hover:shadow-lg transition-all">
                                     <i class="fa fa-pen-nib"></i>
                                 </a>
+                                @endrole
                                 @role('Admin')
                                 <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST" onsubmit="return confirm('Permanently delete this FAQ? This cannot be undone.')">
                                     @csrf @method('DELETE')

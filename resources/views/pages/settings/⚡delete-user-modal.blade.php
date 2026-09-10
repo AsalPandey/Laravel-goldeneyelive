@@ -15,6 +15,8 @@ new class extends Component {
      */
     public function deleteUser(Logout $logout): void
     {
+        abort_if(Auth::user()->isPermanentAdmin() || Auth::user()->hasRole('Staff'), 403);
+
         $this->validate([
             'password' => $this->currentPasswordRules(),
         ]);

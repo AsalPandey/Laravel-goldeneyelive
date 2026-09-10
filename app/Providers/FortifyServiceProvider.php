@@ -68,5 +68,18 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)->by($throttleKey);
         });
+
+        RateLimiter::for('password-otp', function (Request $request): array {
+            $value = $request->input('email');
+            $email = hash('sha256', is_string($value) ? Str::lower(trim($value)) : 'invalid');
+
+            return [
+                Limit::perMinute(5)->by('ip:'.$request->ip()),
+                Limit::perMinute(1)->by('email-minute:'.$email),
+                Limit::perHour(5)->by('email-hour:'.$email),
+            ];
+        });
+        RateLimiter::for('password-otp-verify', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
+        RateLimiter::for('password-otp-reset', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
     }
 }

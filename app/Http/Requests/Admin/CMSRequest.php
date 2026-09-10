@@ -11,7 +11,19 @@ class CMSRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasAnyRole(['Admin', 'Staff']);
+        return $this->user()?->hasRole('Admin')
+            || ($this->user()?->hasRole('Staff') && $this->routeIs('admin.*.store'));
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->user()?->hasRole('Staff') && ! $this->user()->hasRole('Admin') && $this->routeIs('admin.*.store')) {
+            $this->merge([
+                'status' => $this->routeIs('admin.blog.store') ? 'draft' : 'inactive',
+                'is_featured' => false,
+                'published_at' => null,
+            ]);
+        }
     }
 
     /**

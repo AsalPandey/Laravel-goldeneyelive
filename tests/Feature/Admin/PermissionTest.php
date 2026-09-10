@@ -38,15 +38,12 @@ class PermissionTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_staff_can_access_ordinary_website_content_settings()
+    public function test_staff_cannot_access_website_content_settings()
     {
         $response = $this->actingAs($this->staff)
             ->get(route('admin.branding.index'));
 
-        $response->assertStatus(200)
-            ->assertSee('Website Content')
-            ->assertDontSee('name="recaptcha_secret_key"', false)
-            ->assertDontSee('Purge Unused');
+        $response->assertForbidden();
     }
 
     public function test_admin_can_access_seo_center()

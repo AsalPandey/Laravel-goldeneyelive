@@ -32,6 +32,15 @@ new #[Title('Profile settings')] class extends Component {
 
         $validated = $this->validate($this->profileRules($user->id));
 
+        if ($user->email !== $validated['email']) {
+            abort_if($user->isPermanentAdmin() || (new \App\Models\User(['email' => $validated['email']]))->isPermanentAdmin(), 403);
+        }
+
+        if ($user->hasAnyRole(['Admin', 'Staff'])) {
+            $validated['email'] = \Illuminate\Support\Str::lower(trim($validated['email']));
+            \Illuminate\Support\Facades\Validator::make($validated, ['email' => [new \App\Rules\OrganizationEmail]])->validate();
+        }
+
         $user->fill($validated);
 
         if ($user->isDirty('email')) {
@@ -70,6 +79,10 @@ new #[Title('Profile settings')] class extends Component {
     #[Computed]
     public function showDeleteUser(): bool
     {
+        if (Auth::user()->isPermanentAdmin() || Auth::user()->hasRole('Staff')) {
+            return false;
+        }
+
         return ! Auth::user() instanceof MustVerifyEmail
             || (Auth::user() instanceof MustVerifyEmail && Auth::user()->hasVerifiedEmail());
     }

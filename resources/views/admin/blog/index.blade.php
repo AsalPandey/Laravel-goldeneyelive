@@ -57,6 +57,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-5">
+                            @role('Admin')
                             <form action="{{ route('admin.blog.toggle-status', $post->id) }}" method="POST">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="group transition-all">
@@ -77,6 +78,9 @@
                                     @endif
                                 </button>
                             </form>
+                            @else
+                            <span class="text-xs text-neutral-500">{{ ucfirst($post->status) }}</span>
+                            @endrole
                         </td>
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-2">
@@ -97,9 +101,11 @@
                                 <a href="{{ route('admin.blog.preview', $post) }}" target="_blank" rel="noopener" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-blue-600 hover:border-blue-200 hover:shadow-lg transition-all" title="Preview article" aria-label="Preview {{ $post->title }}">
                                     <i class="fa fa-eye"></i>
                                 </a>
+                                @role('Admin')
                                 <a href="{{ route('admin.blog.edit', $post->id) }}" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-lg transition-all">
                                     <i class="fa fa-highlighter"></i>
                                 </a>
+                                @endrole
                                 @role('Admin')
                                 <form action="{{ route('admin.blog.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Permanently delete this article? This cannot be undone.')">
                                     @csrf @method('DELETE')

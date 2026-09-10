@@ -107,6 +107,10 @@ class CourseController extends Controller
 
     public function show($id)
     {
+        if (! auth()->user()->hasRole('Admin')) {
+            return redirect()->route('admin.courses.preview', $id);
+        }
+
         return redirect()->route('admin.courses.edit', $id);
     }
 

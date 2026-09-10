@@ -111,7 +111,7 @@ class Phase2bCmsSafetyTest extends TestCase
 
     public function test_new_faq_and_course_default_inactive_but_can_be_explicitly_published(): void
     {
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.faq.store'), [
                 'question' => 'Inactive by default?',
                 'answer' => '<p>Yes.</p>',
@@ -121,7 +121,7 @@ class Phase2bCmsSafetyTest extends TestCase
 
         $this->assertDatabaseHas(FAQ::class, ['question' => 'Inactive by default?', 'status' => 'inactive']);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.faq.store'), [
                 'question' => 'Explicitly public?',
                 'answer' => '<p>Yes.</p>',
@@ -145,13 +145,13 @@ class Phase2bCmsSafetyTest extends TestCase
             'course_outline' => '<ul><li>Outline</li></ul>',
         ];
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.courses.store'), $coursePayload)
             ->assertRedirect(route('admin.courses.index'));
 
         $this->assertDatabaseHas(Course::class, ['slug' => 'safe-draft-course', 'status' => 'inactive']);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.courses.store'), array_merge($coursePayload, [
                 'name' => 'Explicit Public Course',
                 'slug' => 'explicit-public-course',
@@ -173,7 +173,7 @@ class Phase2bCmsSafetyTest extends TestCase
             'is_featured' => true,
         ]);
 
-        $normalEdit = $this->actingAs($this->staff)
+        $normalEdit = $this->actingAs($this->admin)
             ->get(route('admin.courses.edit', $course))
             ->assertOk();
         $normalXPath = $this->xpath($normalEdit->getContent());
@@ -193,7 +193,7 @@ class Phase2bCmsSafetyTest extends TestCase
             'is_featured' => '0',
         ];
 
-        $invalidEdit = $this->actingAs($this->staff)
+        $invalidEdit = $this->actingAs($this->admin)
             ->followingRedirects()
             ->from(route('admin.courses.edit', $course))
             ->put(route('admin.courses.update', $course), array_merge($payload, [
@@ -209,7 +209,7 @@ class Phase2bCmsSafetyTest extends TestCase
         $this->assertTrue($invalidXPath->query('//option[@value="inactive"]')->item(0)->hasAttribute('selected'));
         $this->assertSame('active', $course->fresh()->status);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->put(route('admin.courses.update', $course), $payload)
             ->assertRedirect(route('admin.courses.index'));
 
@@ -218,9 +218,9 @@ class Phase2bCmsSafetyTest extends TestCase
         $this->assertSame(0, (int) $course->is_featured);
     }
 
-    public function test_blog_category_is_staff_editable_persisted_and_rendered_publicly(): void
+    public function test_blog_category_is_admin_editable_persisted_and_rendered_publicly(): void
     {
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.blog.store'), [
                 'title' => 'Category Workflow Article',
                 'slug' => 'category-workflow-article',
@@ -234,7 +234,7 @@ class Phase2bCmsSafetyTest extends TestCase
         $post = BlogPost::where('slug', 'category-workflow-article')->firstOrFail();
         $this->assertSame('Study Guides', $post->category);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->get(route('admin.blog.edit', $post))
             ->assertOk()
             ->assertSee('value="Study Guides"', false);
@@ -381,7 +381,7 @@ class Phase2bCmsSafetyTest extends TestCase
         $this->withoutExceptionHandling();
 
         try {
-            $this->actingAs($this->staff)->post(route('admin.notices.store'), [
+            $this->actingAs($this->admin)->post(route('admin.notices.store'), [
                 'title' => 'Failing Replacement',
                 'status' => 'active',
                 'display_type' => 'popup',
@@ -407,7 +407,7 @@ class Phase2bCmsSafetyTest extends TestCase
         $updateFailure = null;
         $this->withoutExceptionHandling();
         try {
-            $this->actingAs($this->staff)->put(route('admin.notices.update', $candidate), [
+            $this->actingAs($this->admin)->put(route('admin.notices.update', $candidate), [
                 'title' => 'Failing Update',
                 'status' => 'active',
                 'display_type' => 'popup',
@@ -423,7 +423,7 @@ class Phase2bCmsSafetyTest extends TestCase
         $this->assertSame('active', $current->fresh()->status);
         $this->assertSame('inactive', $candidate->fresh()->status);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.notices.store'), [
                 'title' => 'Future Replacement',
                 'status' => 'active',
@@ -434,7 +434,7 @@ class Phase2bCmsSafetyTest extends TestCase
 
         $this->assertSame('active', $current->fresh()->status);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.notices.store'), [
                 'title' => 'Successful Current Replacement',
                 'status' => 'active',

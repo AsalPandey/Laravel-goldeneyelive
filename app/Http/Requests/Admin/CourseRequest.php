@@ -11,6 +11,8 @@ class CourseRequest extends CMSRequest
 {
     protected function prepareForValidation(): void
     {
+        parent::prepareForValidation();
+
         if ($this->routeIs('admin.courses.store')) {
             $this->mergeIfMissing(['status' => 'inactive']);
         }

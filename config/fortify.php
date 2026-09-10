@@ -146,7 +146,7 @@ return [
     'features' => [
         // Public registration is intentionally disabled. Re-enable this feature
         // only when an approved student account workflow and authorization model exist.
-        Features::resetPasswords(),
+        // Password recovery uses the session-bound email OTP routes.
         Features::emailVerification(),
         Features::twoFactorAuthentication([
             'confirm' => true,

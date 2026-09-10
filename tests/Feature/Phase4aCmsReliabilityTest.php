@@ -203,7 +203,7 @@ class Phase4aCmsReliabilityTest extends TestCase
         $expectedStoredFuture = Carbon::parse($future->format('Y-m-d H:i:s'), 'Asia/Kathmandu')->utc();
         $this->travelTo($now);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.blog.store'), [
                 'title' => 'Scheduled CMS Article',
                 'slug' => 'scheduled-cms-article',
@@ -216,21 +216,21 @@ class Phase4aCmsReliabilityTest extends TestCase
         $scheduled = BlogPost::where('slug', 'scheduled-cms-article')->firstOrFail();
         $this->assertTrue($scheduled->published_at->equalTo($expectedStoredFuture));
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->patch(route('admin.blog.toggle-status', $scheduled))
             ->assertRedirect();
         $scheduled->refresh();
         $this->assertSame('draft', $scheduled->status);
         $this->assertTrue($scheduled->published_at->equalTo($expectedStoredFuture));
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->patch(route('admin.blog.toggle-status', $scheduled))
             ->assertRedirect();
         $scheduled->refresh();
         $this->assertSame('published', $scheduled->status);
         $this->assertTrue($scheduled->published_at->equalTo($expectedStoredFuture));
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.blog.store'), [
                 'title' => 'Immediate CMS Article',
                 'slug' => 'immediate-cms-article',
@@ -289,9 +289,9 @@ class Phase4aCmsReliabilityTest extends TestCase
             ->assertSessionHasErrors('order_priority');
     }
 
-    public function test_staff_can_manage_popup_contact_notice_and_media_fields_without_technical_controls(): void
+    public function test_admin_can_manage_popup_contact_notice_and_media_fields_and_technical_controls(): void
     {
-        $branding = $this->actingAs($this->staff)
+        $branding = $this->actingAs($this->admin)
             ->get(route('admin.branding.index'))
             ->assertOk()
             ->assertSee('Website Content')
@@ -300,12 +300,12 @@ class Phase4aCmsReliabilityTest extends TestCase
             ->assertSee('name="site_phone"', false)
             ->assertSee('name="whatsapp_number"', false)
             ->assertDontSee('name="recaptcha_secret_key"', false)
-            ->assertDontSee('name="google_analytics_id"', false)
-            ->assertDontSee('Purge Unused');
+            ->assertSee('name="google_analytics_id"', false)
+            ->assertSee('Permanently Delete Unused');
 
         $this->assertStringContainsString('openPicker', $branding->getContent());
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.branding.update'), [
                 'popup_status' => 'active',
                 'popup_title' => 'Staff Managed Popup',
@@ -314,8 +314,6 @@ class Phase4aCmsReliabilityTest extends TestCase
                 'popup_register_link' => '/courses-all',
                 'site_phone' => '061-500000',
                 'whatsapp_number' => '9779800000000',
-                'google_analytics_id' => 'INVALID-STAFF-OVERRIDE',
-                'recaptcha_secret_key' => 'staff-must-not-save-this',
             ])
             ->assertRedirect();
 
@@ -325,7 +323,7 @@ class Phase4aCmsReliabilityTest extends TestCase
         $this->assertDatabaseMissing(SiteSetting::class, ['key' => 'google_analytics_id']);
         $this->assertDatabaseMissing(SiteSetting::class, ['key' => 'recaptcha_secret_key']);
 
-        $this->actingAs($this->staff)
+        $this->actingAs($this->admin)
             ->post(route('admin.notices.store'), [
                 'badge' => 'Batch Update',
                 'title' => 'Staff Managed Announcement',

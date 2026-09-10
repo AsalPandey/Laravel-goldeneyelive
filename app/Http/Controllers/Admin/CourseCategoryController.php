@@ -64,6 +64,10 @@ class CourseCategoryController extends Controller
 
     public function show($id)
     {
+        if (! auth()->user()->hasRole('Admin')) {
+            return redirect()->route('admin.categories.index');
+        }
+
         return redirect()->route('admin.categories.edit', $id);
     }
 
