@@ -1,5 +1,5 @@
 <x-layouts::app :title="__('Enrollment Queries')">
-    <div class="flex h-full w-full flex-1 flex-col gap-6 p-6">
+    <div id="joinNowDisplayPage" class="flex h-full w-full flex-1 flex-col gap-6 p-6">
         <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-neutral-100">
             <div class="space-y-1">
                 <h1 class="text-3xl font-black text-neutral-900 tracking-tight uppercase">Enrollment <span class="text-brand-gold">Queries</span></h1>
@@ -191,14 +191,14 @@
                 </button>
             </form>
             @endrole
-            <button onclick="unselectAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
+            <button onclick="unselectEnrollmentAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
         </div>
         @endif
     </div>
 
     <!-- Enrollment Modal -->
     <div id="enrollmentModal" class="fixed inset-0 z-[999] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-neutral-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="absolute inset-0 bg-neutral-900/60 backdrop-blur-sm" onclick="closeEnrollmentModal()"></div>
         <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-neutral-100">
             <form id="enrollmentForm" method="POST">
                 @csrf @method('PATCH')
@@ -207,7 +207,7 @@
                         <h3 class="text-xl font-black uppercase tracking-tight text-neutral-900">Enrollment <span class="text-brand-gold">Audit</span></h3>
                         <p id="modal_date" class="text-xs text-neutral-500 font-medium"></p>
                     </div>
-                    <button type="button" onclick="closeModal()" class="p-2 text-neutral-400 hover:text-rose-500 transition-colors">
+                    <button type="button" onclick="closeEnrollmentModal()" class="p-2 text-neutral-400 hover:text-rose-500 transition-colors">
                         <i class="fa fa-times text-lg"></i>
                     </button>
                 </div>
@@ -272,7 +272,7 @@
                     </div>
                 </div>
                 <div class="px-8 py-6 border-t border-neutral-100 bg-neutral-50/50 flex justify-end gap-3">
-                    <button type="button" onclick="closeModal()" class="px-6 py-3 text-xs font-black uppercase text-neutral-500 hover:text-neutral-800 transition-colors">Discard</button>
+                    <button type="button" onclick="closeEnrollmentModal()" class="px-6 py-3 text-xs font-black uppercase text-neutral-500 hover:text-neutral-800 transition-colors">Discard</button>
                     @if(! $showArchived && auth()->user()->hasRole('Admin'))
                         <button type="submit" class="px-8 py-3 rounded-xl bg-brand-gold text-brand-dark text-xs font-black uppercase shadow-lg hover:bg-brand-dark hover:text-brand-gold transition-all">Update Inquiry</button>
                     @endif
@@ -282,85 +282,113 @@
     </div>
 
     <script>
-        if (typeof window.enrollmentDisplayInited === 'undefined') {
-            window.enrollmentDisplayInited = true;
+        window.openEnrollmentModal = function(data) {
+            const modal = document.getElementById('enrollmentModal');
+            const form = document.getElementById('enrollmentForm');
+            if (!modal || !form) return;
+            
+            const urlTemplate = "{{ route('admin.submissions.join_now.status.update', ['id' => ':id']) }}";
+            form.action = urlTemplate.replace(':id', data.id);
+            const nameEl = document.getElementById('modal_name');
+            if (nameEl) nameEl.innerText = `${data.firstName || ''} ${data.lastName || ''}`.trim();
+            const contactEl = document.getElementById('modal_contact');
+            if (contactEl) contactEl.innerText = `${data.email || 'No email yet'} | ${data.phone || ''}`;
+            const addressEl = document.getElementById('modal_address');
+            if (addressEl) addressEl.innerText = data.address || '';
+            const methodEl = document.getElementById('modal_contact_method');
+            if (methodEl) methodEl.innerText = data.contactMethod || 'Phone Call';
+            const courseEl = document.getElementById('modal_course');
+            if (courseEl) courseEl.innerText = data.course || '';
+            const helpEl = document.getElementById('modal_help_topic');
+            if (helpEl) helpEl.innerText = data.help_topic ? `Help topic: ${data.help_topic}` : 'Help topic not captured';
+            const batchEl = document.getElementById('modal_batch_time');
+            if (batchEl) batchEl.innerText = data.preferred_batch_time ? `Preferred batch: ${data.preferred_batch_time}` : '';
+            const leadEl = document.getElementById('modal_lead_status');
+            if (leadEl) leadEl.innerText = `${(data.lead_status || 'Basic').replace(' Lead', '')} (${data.lead_score || 0})`;
+            const intentEl = document.getElementById('modal_intent');
+            if (intentEl) intentEl.innerText = [data.audience_type, data.inquiry_intent].filter(Boolean).join(' | ') || 'No audience or intent captured.';
+            const queriesEl = document.getElementById('modal_queries');
+            if (queriesEl) queriesEl.innerText = data.queries ? `"${data.queries}"` : 'No additional questions provided.';
+            const sourceEl = document.getElementById('modal_source');
+            if (sourceEl) sourceEl.innerText = [data.lead_source, data.source_page, data.source_section, data.cta_id, data.landing_page].filter(Boolean).join(' | ') || 'No source data captured.';
+            const dateEl = document.getElementById('modal_date');
+            if (dateEl) dateEl.innerText = `Received on ${new Date(data.created_at).toLocaleString()}`;
+            const statusEl = document.getElementById('modal_status');
+            if (statusEl) statusEl.value = data.status || '';
+            const notesEl = document.getElementById('modal_notes');
+            if (notesEl) notesEl.value = data.admin_notes || '';
+            
+            modal.classList.remove('hidden');
+        };
 
-            window.openEnrollmentModal = function(data) {
-                const modal = document.getElementById('enrollmentModal');
-                const form = document.getElementById('enrollmentForm');
+        window.closeEnrollmentModal = function() {
+            const modal = document.getElementById('enrollmentModal');
+            if (modal) modal.classList.add('hidden');
+        };
+        window.closeModal = function() {
+            window.closeContactModal?.();
+            window.closeEnrollmentModal?.();
+        };
+
+        function initEnrollmentBulkActions() {
+            const page = document.getElementById('joinNowDisplayPage');
+            if (!page) return;
+
+            const selectAllEnrollments = page.querySelector('#selectAll');
+            const checkboxes = page.querySelectorAll('.row-checkbox');
+            const bulkBar = page.querySelector('#bulkActionsBar');
+            const selectedCount = page.querySelector('#selectedCount');
+            const bulkIdsContainer = page.querySelector('#bulkIdsContainer');
+
+            if (!selectAllEnrollments || !bulkBar || !selectedCount || !bulkIdsContainer) return;
+
+            function updateBulkBar() {
+                const checked = page.querySelectorAll('.row-checkbox:checked');
+                selectedCount.innerText = checked.length;
                 
-                const urlTemplate = "{{ route('admin.submissions.join_now.status.update', ['id' => ':id']) }}";
-                form.action = urlTemplate.replace(':id', data.id);
-                document.getElementById('modal_name').innerText = `${data.firstName} ${data.lastName}`;
-                document.getElementById('modal_contact').innerText = `${data.email || 'No email yet'} | ${data.phone}`;
-                document.getElementById('modal_address').innerText = data.address;
-                document.getElementById('modal_contact_method').innerText = data.contactMethod || 'Phone Call';
-                document.getElementById('modal_course').innerText = data.course;
-                document.getElementById('modal_help_topic').innerText = data.help_topic ? `Help topic: ${data.help_topic}` : 'Help topic not captured';
-                document.getElementById('modal_batch_time').innerText = data.preferred_batch_time ? `Preferred batch: ${data.preferred_batch_time}` : '';
-                document.getElementById('modal_lead_status').innerText = `${(data.lead_status || 'Basic').replace(' Lead', '')} (${data.lead_score || 0})`;
-                document.getElementById('modal_intent').innerText = [data.audience_type, data.inquiry_intent].filter(Boolean).join(' | ') || 'No audience or intent captured.';
-                document.getElementById('modal_queries').innerText = data.queries ? `"${data.queries}"` : 'No additional questions provided.';
-                document.getElementById('modal_source').innerText = [data.lead_source, data.source_page, data.source_section, data.cta_id, data.landing_page].filter(Boolean).join(' | ') || 'No source data captured.';
-                document.getElementById('modal_date').innerText = `Received on ${new Date(data.created_at).toLocaleString()}`;
-                document.getElementById('modal_status').value = data.status;
-                document.getElementById('modal_notes').value = data.admin_notes || '';
-                
-                modal.classList.remove('hidden');
-            };
-
-            window.closeModal = function() {
-                document.getElementById('enrollmentModal').classList.add('hidden');
-            };
-
-            function initEnrollmentBulkActions() {
-                const selectAllEnrollments = document.getElementById('selectAll');
-                const checkboxes = document.querySelectorAll('.row-checkbox');
-                const bulkBar = document.getElementById('bulkActionsBar');
-                const selectedCount = document.getElementById('selectedCount');
-                const bulkIdsContainer = document.getElementById('bulkIdsContainer');
-
-                if (!selectAllEnrollments) return;
-
-                function updateBulkBar() {
-                    const checked = document.querySelectorAll('.row-checkbox:checked');
-                    selectedCount.innerText = checked.length;
-                    
-                    bulkIdsContainer.innerHTML = '';
-                    checked.forEach(cb => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'ids[]';
-                        input.value = cb.value;
-                        bulkIdsContainer.appendChild(input);
-                    });
-
-                    if (checked.length > 0) {
-                        bulkBar.classList.remove('translate-y-24', 'opacity-0');
-                    } else {
-                        bulkBar.classList.add('translate-y-24', 'opacity-0');
-                        selectAllEnrollments.checked = false;
-                    }
-                }
-
-                selectAllEnrollments.addEventListener('change', () => {
-                    checkboxes.forEach(cb => cb.checked = selectAllEnrollments.checked);
-                    updateBulkBar();
+                bulkIdsContainer.innerHTML = '';
+                checked.forEach(cb => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids[]';
+                    input.value = cb.value;
+                    bulkIdsContainer.appendChild(input);
                 });
 
-                checkboxes.forEach(cb => {
-                    cb.addEventListener('change', updateBulkBar);
-                });
-
-                window.unselectAll = function() {
-                    checkboxes.forEach(cb => cb.checked = false);
+                if (checked.length > 0) {
+                    bulkBar.classList.remove('translate-y-24', 'opacity-0');
+                } else {
+                    bulkBar.classList.add('translate-y-24', 'opacity-0');
                     selectAllEnrollments.checked = false;
-                    updateBulkBar();
-                };
+                }
             }
 
-            document.addEventListener('livewire:navigated', initEnrollmentBulkActions);
-            document.addEventListener('DOMContentLoaded', initEnrollmentBulkActions);
+            selectAllEnrollments.onchange = () => {
+                checkboxes.forEach(cb => cb.checked = selectAllEnrollments.checked);
+                updateBulkBar();
+            };
+
+            checkboxes.forEach(cb => {
+                cb.onchange = updateBulkBar;
+            });
+
+            window.unselectEnrollmentAll = function() {
+                const currentPage = document.getElementById('joinNowDisplayPage');
+                if (!currentPage) return;
+                currentPage.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = false);
+                const selAll = currentPage.querySelector('#selectAll');
+                if (selAll) selAll.checked = false;
+                updateBulkBar();
+            };
+            window.unselectAll = function() {
+                window.unselectContactAll?.();
+                window.unselectEnrollmentAll?.();
+                window.unselectNewsletterAll?.();
+            };
         }
+
+        document.addEventListener('livewire:navigated', initEnrollmentBulkActions);
+        document.addEventListener('DOMContentLoaded', initEnrollmentBulkActions);
+        initEnrollmentBulkActions();
     </script>
 </x-layouts::app>

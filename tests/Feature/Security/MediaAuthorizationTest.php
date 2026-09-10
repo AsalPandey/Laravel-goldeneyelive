@@ -56,6 +56,7 @@ class MediaAuthorizationTest extends TestCase
     public function test_staff_can_upload_a_new_media_asset(): void
     {
         $before = File::files(public_path('site/img'));
+        $uploadedFileRealPath = null;
 
         try {
             $this->actingAs($this->staff)
@@ -72,11 +73,10 @@ class MediaAuthorizationTest extends TestCase
             );
 
             $this->assertCount(1, $created);
+            $uploadedFileRealPath = $created->first()?->getRealPath();
         } finally {
-            foreach (File::files(public_path('site/img')) as $file) {
-                if (! collect($before)->contains(fn ($original): bool => $original->getRealPath() === $file->getRealPath())) {
-                    File::delete($file->getRealPath());
-                }
+            if ($uploadedFileRealPath && File::exists($uploadedFileRealPath)) {
+                File::delete($uploadedFileRealPath);
             }
         }
     }

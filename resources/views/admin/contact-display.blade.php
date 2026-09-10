@@ -1,5 +1,5 @@
 <x-layouts::app :title="__('Contact Inquiries')">
-    <div class="flex h-full w-full flex-1 flex-col gap-6 p-6">
+    <div id="contactDisplayPage" class="flex h-full w-full flex-1 flex-col gap-6 p-6">
         <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-neutral-100">
             <div class="space-y-1">
                 <h1 class="text-3xl font-black text-neutral-900 tracking-tight uppercase">Contact <span class="text-brand-gold">Inquiries</span></h1>
@@ -93,7 +93,7 @@
                         </td>
                         <td class="px-6 py-5 text-right">
                             <div class="flex justify-end gap-2 pr-4">
-                                <button onclick="openEditModal({{ json_encode($contact) }})" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-brand-gold hover:border-brand-gold/20 hover:shadow-lg transition-all">
+                                <button onclick="openContactModal({{ json_encode($contact) }})" class="p-2.5 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-600 hover:text-brand-gold hover:border-brand-gold/20 hover:shadow-lg transition-all">
                                     <i class="fa fa-eye text-xs"></i>
                                 </button>
                                 @if($showArchived)
@@ -144,14 +144,14 @@
                 </button>
             </form>
             @endrole
-            <button onclick="unselectAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
+            <button onclick="unselectContactAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
         </div>
         @endif
     </div>
 
     <!-- Edit/Detail Modal -->
     <div id="inquiryModal" class="fixed inset-0 z-[999] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-neutral-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="absolute inset-0 bg-neutral-900/60 backdrop-blur-sm" onclick="closeContactModal()"></div>
         <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-neutral-100">
             <form id="editForm" method="POST">
                 @csrf @method('PATCH')
@@ -160,7 +160,7 @@
                         <h3 class="text-xl font-black uppercase tracking-tight text-neutral-900">Inquiry <span class="text-brand-gold">Review</span></h3>
                         <p id="modal_date" class="text-xs text-neutral-500 font-medium"></p>
                     </div>
-                    <button type="button" onclick="closeModal()" class="p-2 text-neutral-400 hover:text-rose-500 transition-colors">
+                    <button type="button" onclick="closeContactModal()" class="p-2 text-neutral-400 hover:text-rose-500 transition-colors">
                         <i class="fa fa-times text-lg"></i>
                     </button>
                 </div>
@@ -203,7 +203,7 @@
                     </div>
                 </div>
                 <div class="px-8 py-6 border-t border-neutral-100 bg-neutral-50/50 flex justify-end gap-3">
-                    <button type="button" onclick="closeModal()" class="px-6 py-3 text-xs font-black uppercase text-neutral-500 hover:text-neutral-800 transition-colors">Discard</button>
+                    <button type="button" onclick="closeContactModal()" class="px-6 py-3 text-xs font-black uppercase text-neutral-500 hover:text-neutral-800 transition-colors">Discard</button>
                     @if(! $showArchived && auth()->user()->hasRole('Admin'))
                         <button type="submit" class="px-8 py-3 rounded-xl bg-brand-gold text-brand-dark text-xs font-black uppercase shadow-lg hover:bg-brand-dark hover:text-brand-gold transition-all">Update Submission</button>
                     @endif
@@ -213,79 +213,100 @@
     </div>
 
     <script>
-        if (typeof window.contactDisplayInited === 'undefined') {
-            window.contactDisplayInited = true;
+        window.openContactModal = function(contact) {
+            const modal = document.getElementById('inquiryModal');
+            const form = document.getElementById('editForm');
+            if (!modal || !form) return;
+            
+            const urlTemplate = "{{ route('admin.submissions.contact.status.update', ['id' => ':id']) }}";
+            form.action = urlTemplate.replace(':id', contact.id);
+            const nameEl = document.getElementById('modal_name');
+            if (nameEl) nameEl.innerText = contact.name || '';
+            const contactEl = document.getElementById('modal_contact');
+            if (contactEl) contactEl.innerText = `${contact.email || ''} | ${contact.phone || ''}`;
+            const subjectEl = document.getElementById('modal_subject');
+            if (subjectEl) subjectEl.innerText = contact.subject || '';
+            const msgEl = document.getElementById('modal_message');
+            if (msgEl) msgEl.innerText = `"${contact.message || ''}"`;
+            const dateEl = document.getElementById('modal_date');
+            if (dateEl) dateEl.innerText = `Submitted on ${new Date(contact.created_at).toLocaleString()}`;
+            const statusEl = document.getElementById('modal_status');
+            if (statusEl) statusEl.value = contact.status || '';
+            const notesEl = document.getElementById('modal_notes');
+            if (notesEl) notesEl.value = contact.admin_notes || '';
+            
+            modal.classList.remove('hidden');
+        };
+        window.openEditModal = window.openContactModal;
 
-            window.openEditModal = function(contact) {
-                const modal = document.getElementById('inquiryModal');
-                const form = document.getElementById('editForm');
+        window.closeContactModal = function() {
+            const modal = document.getElementById('inquiryModal');
+            if (modal) modal.classList.add('hidden');
+        };
+        window.closeModal = function() {
+            window.closeContactModal?.();
+            window.closeEnrollmentModal?.();
+        };
+
+        function initContactBulkActions() {
+            const page = document.getElementById('contactDisplayPage');
+            if (!page) return;
+
+            const selectAllInquiries = page.querySelector('#selectAll');
+            const checkboxes = page.querySelectorAll('.row-checkbox');
+            const bulkBar = page.querySelector('#bulkActionsBar');
+            const selectedCount = page.querySelector('#selectedCount');
+            const bulkIdsContainer = page.querySelector('#bulkIdsContainer');
+
+            if (!selectAllInquiries || !bulkBar || !selectedCount || !bulkIdsContainer) return;
+
+            function updateBulkBar() {
+                const checked = page.querySelectorAll('.row-checkbox:checked');
+                selectedCount.innerText = checked.length;
                 
-                const urlTemplate = "{{ route('admin.submissions.contact.status.update', ['id' => ':id']) }}";
-                form.action = urlTemplate.replace(':id', contact.id);
-                document.getElementById('modal_name').innerText = contact.name;
-                document.getElementById('modal_contact').innerText = `${contact.email} | ${contact.phone}`;
-                document.getElementById('modal_subject').innerText = contact.subject;
-                document.getElementById('modal_message').innerText = `"${contact.message}"`;
-                document.getElementById('modal_date').innerText = `Submitted on ${new Date(contact.created_at).toLocaleString()}`;
-                document.getElementById('modal_status').value = contact.status;
-                document.getElementById('modal_notes').value = contact.admin_notes || '';
-                
-                modal.classList.remove('hidden');
-            };
-
-            window.closeModal = function() {
-                document.getElementById('inquiryModal').classList.add('hidden');
-            };
-
-            // Initialize selectAll and other elements after DOM is ready/navigated
-            function initBulkActions() {
-                const selectAllInquiries = document.getElementById('selectAll');
-                const checkboxes = document.querySelectorAll('.row-checkbox');
-                const bulkBar = document.getElementById('bulkActionsBar');
-                const selectedCount = document.getElementById('selectedCount');
-                const bulkIdsContainer = document.getElementById('bulkIdsContainer');
-
-                if (!selectAllInquiries) return;
-
-                function updateBulkBar() {
-                    const checked = document.querySelectorAll('.row-checkbox:checked');
-                    selectedCount.innerText = checked.length;
-                    
-                    bulkIdsContainer.innerHTML = '';
-                    checked.forEach(cb => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'ids[]';
-                        input.value = cb.value;
-                        bulkIdsContainer.appendChild(input);
-                    });
-
-                    if (checked.length > 0) {
-                        bulkBar.classList.remove('translate-y-24', 'opacity-0');
-                    } else {
-                        bulkBar.classList.add('translate-y-24', 'opacity-0');
-                        selectAllInquiries.checked = false;
-                    }
-                }
-
-                selectAllInquiries.addEventListener('change', () => {
-                    checkboxes.forEach(cb => cb.checked = selectAllInquiries.checked);
-                    updateBulkBar();
+                bulkIdsContainer.innerHTML = '';
+                checked.forEach(cb => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids[]';
+                    input.value = cb.value;
+                    bulkIdsContainer.appendChild(input);
                 });
 
-                checkboxes.forEach(cb => {
-                    cb.addEventListener('change', updateBulkBar);
-                });
-                
-                window.unselectAll = function() {
-                    checkboxes.forEach(cb => cb.checked = false);
+                if (checked.length > 0) {
+                    bulkBar.classList.remove('translate-y-24', 'opacity-0');
+                } else {
+                    bulkBar.classList.add('translate-y-24', 'opacity-0');
                     selectAllInquiries.checked = false;
-                    updateBulkBar();
-                };
+                }
             }
 
-            document.addEventListener('livewire:navigated', initBulkActions);
-            document.addEventListener('DOMContentLoaded', initBulkActions);
+            selectAllInquiries.onchange = () => {
+                checkboxes.forEach(cb => cb.checked = selectAllInquiries.checked);
+                updateBulkBar();
+            };
+
+            checkboxes.forEach(cb => {
+                cb.onchange = updateBulkBar;
+            });
+            
+            window.unselectContactAll = function() {
+                const currentPage = document.getElementById('contactDisplayPage');
+                if (!currentPage) return;
+                currentPage.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = false);
+                const selAll = currentPage.querySelector('#selectAll');
+                if (selAll) selAll.checked = false;
+                updateBulkBar();
+            };
+            window.unselectAll = function() {
+                window.unselectContactAll?.();
+                window.unselectEnrollmentAll?.();
+                window.unselectNewsletterAll?.();
+            };
         }
+
+        document.addEventListener('livewire:navigated', initContactBulkActions);
+        document.addEventListener('DOMContentLoaded', initContactBulkActions);
+        initContactBulkActions();
     </script>
 </x-layouts::app>

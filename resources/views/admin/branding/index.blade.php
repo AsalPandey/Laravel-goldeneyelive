@@ -1,18 +1,4 @@
 <x-layouts::app :title="__('Website Brand Authority')">
-    @if($errors->any())
-        @php
-            foreach (old() as $oldKey => $oldValue) {
-                if (! is_scalar($oldValue) && $oldValue !== null) {
-                    continue;
-                }
-
-                $settings[$oldKey] = $oldValue;
-                if (str_ends_with($oldKey, '_path')) {
-                    $settings[str($oldKey)->beforeLast('_path')->toString()] = $oldValue;
-                }
-            }
-        @endphp
-    @endif
     <style>
         .brand-hub-tabs button.active {
             border-bottom: 4px solid var(--color-brand-gold);
@@ -149,7 +135,7 @@
                                     <div class="flex-1 space-y-2">
                                         <input type="file" name="site_logo" class="text-xs">
                                         <div class="flex gap-2">
-                                            <input type="text" name="site_logo_path" id="input_site_logo" value="{{ $settings['site_logo'] ?? '' }}" class="premium-input h-10 text-[10px] py-1 px-3 flex-1" placeholder="Or select from library...">
+                                            <input type="text" name="site_logo_path" id="input_site_logo" value="{{ old('site_logo_path', $settings['site_logo'] ?? '') }}" class="premium-input h-10 text-[10px] py-1 px-3 flex-1" placeholder="Or select from library...">
                                             <button type="button" onclick="openPicker('input_site_logo')" class="bg-zinc-800 text-[#C5A059] px-4 rounded-xl text-[9px] font-black uppercase hover:bg-[#C5A059] hover:text-white transition-all whitespace-nowrap">
                                                 <i class="fa fa-images"></i>
                                             </button>
@@ -162,11 +148,11 @@
                                 @if($isAdmin)
                                 <div>
                                     <label class="premium-label">Institution Name</label>
-                                    <input type="text" name="site_name" value="{{ $settings['site_name'] ?? 'Golden Eye' }}" class="premium-input font-black text-[#050C1C]" placeholder="e.g. Golden Eye">
+                                    <input type="text" name="site_name" value="{{ old('site_name', $settings['site_name'] ?? 'Golden Eye') }}" class="premium-input font-black text-[#050C1C]" placeholder="e.g. Golden Eye">
                                 </div>
                                 <div>
                                     <label class="premium-label">Brand Suffix</label>
-                                    <input type="text" name="site_name_suffix" value="{{ $settings['site_name_suffix'] ?? 'Academy' }}" class="premium-input" placeholder="e.g. Academy">
+                                    <input type="text" name="site_name_suffix" value="{{ old('site_name_suffix', $settings['site_name_suffix'] ?? 'Academy') }}" class="premium-input" placeholder="e.g. Academy">
                                 </div>
                                 @else
                                 <div class="col-span-2 p-4 bg-zinc-50 rounded-xl border border-dashed border-zinc-200">
@@ -177,7 +163,7 @@
 
                             <div>
                                 <label class="premium-label">Logo Location Subtitle</label>
-                                <input type="text" name="logo_subtitle" value="{{ $settings['logo_subtitle'] ?? 'Pokhara — Srijanachowk' }}" class="premium-input" placeholder="e.g. Pokhara — Nepal">
+                                <input type="text" name="logo_subtitle" value="{{ old('logo_subtitle', $settings['logo_subtitle'] ?? 'Pokhara — Srijanachowk') }}" class="premium-input" placeholder="e.g. Pokhara — Nepal">
                                 <p class="helper-text">Appears below the Academy name in the header.</p>
                             </div>
 
@@ -192,7 +178,7 @@
                                     <div class="flex-1 space-y-2">
                                         <input type="file" name="site_favicon" class="text-xs">
                                         <div class="flex gap-2">
-                                            <input type="text" name="site_favicon_path" id="input_site_favicon" value="{{ $settings['site_favicon'] ?? '' }}" class="premium-input h-10 text-[10px] py-1 px-3 flex-1" placeholder="Or select from library...">
+                                            <input type="text" name="site_favicon_path" id="input_site_favicon" value="{{ old('site_favicon_path', $settings['site_favicon'] ?? '') }}" class="premium-input h-10 text-[10px] py-1 px-3 flex-1" placeholder="Or select from library...">
                                             <button type="button" onclick="openPicker('input_site_favicon')" class="bg-zinc-800 text-[#C5A059] px-4 rounded-xl text-[9px] font-black uppercase hover:bg-[#C5A059] hover:text-white transition-all whitespace-nowrap">
                                                 <i class="fa fa-images"></i>
                                             </button>
@@ -211,16 +197,16 @@
                         <div class="space-y-6">
                             <div>
                                 <label class="premium-label">Hero Gold Badge Text</label>
-                                <input type="text" name="hero_badge_text" value="{{ $settings['hero_badge_text'] ?? 'Official Global Academy' }}" class="premium-input">
+                                <input type="text" name="hero_badge_text" value="{{ old('hero_badge_text', $settings['hero_badge_text'] ?? 'Official Global Academy') }}" class="premium-input">
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="premium-label">Hero CTA 1 (Primary)</label>
-                                    <input type="text" name="hero_cta_1_text" value="{{ $settings['hero_cta_1_text'] ?? 'Ask for Course Help' }}" class="premium-input">
+                                    <input type="text" name="hero_cta_1_text" value="{{ old('hero_cta_1_text', $settings['hero_cta_1_text'] ?? 'Ask for Course Help') }}" class="premium-input">
                                 </div>
                                 <div>
                                     <label class="premium-label">Hero CTA 2 (Secondary)</label>
-                                    <input type="text" name="hero_cta_2_text" value="{{ $settings['hero_cta_2_text'] ?? 'See Courses' }}" class="premium-input">
+                                    <input type="text" name="hero_cta_2_text" value="{{ old('hero_cta_2_text', $settings['hero_cta_2_text'] ?? 'See Courses') }}" class="premium-input">
                                 </div>
                             </div>
                             <div>
@@ -241,23 +227,23 @@
                         <div class="space-y-6">
                             <div>
                                 <label class="premium-label">Mobile Menu Label</label>
-                                <input type="text" name="navbar_menu_label" value="{{ $settings['navbar_menu_label'] ?? 'MENU' }}" class="premium-input" placeholder="e.g. EXPLORE">
+                                <input type="text" name="navbar_menu_label" value="{{ old('navbar_menu_label', $settings['navbar_menu_label'] ?? 'MENU') }}" class="premium-input" placeholder="e.g. EXPLORE">
                             </div>
                             <div>
                                 <label class="premium-label">Footer FAQ Heading</label>
-                                <input type="text" name="footer_faq_title" value="{{ $settings['footer_faq_title'] ?? 'Academic Guide' }}" class="premium-input">
+                                <input type="text" name="footer_faq_title" value="{{ old('footer_faq_title', $settings['footer_faq_title'] ?? 'Academic Guide') }}" class="premium-input">
                             </div>
                             <div>
                                 <label class="premium-label">WhatsApp CTA Text</label>
-                                <input type="text" name="whatsapp_cta_text" value="{{ $settings['whatsapp_cta_text'] ?? $settings['whatsapp_button_text'] ?? 'Message on WhatsApp' }}" class="premium-input" placeholder="Message on WhatsApp">
-                                <input type="text" name="whatsapp_cta_subtext" value="{{ $settings['whatsapp_cta_subtext'] ?? 'Quick reply for course questions.' }}" class="premium-input mt-3" placeholder="Quick reply for course questions.">
-                                <textarea name="whatsapp_prefill_message" rows="2" class="premium-input h-auto py-3 mt-3" placeholder="Prefilled WhatsApp message">{{ $settings['whatsapp_prefill_message'] ?? 'Hi Golden Eye Academy, I have a question about classes and enrollment.' }}</textarea>
+                                <input type="text" name="whatsapp_cta_text" value="{{ old('whatsapp_cta_text', $settings['whatsapp_cta_text'] ?? $settings['whatsapp_button_text'] ?? 'Message on WhatsApp') }}" class="premium-input" placeholder="Message on WhatsApp">
+                                <input type="text" name="whatsapp_cta_subtext" value="{{ old('whatsapp_cta_subtext', $settings['whatsapp_cta_subtext'] ?? 'Quick reply for course questions.') }}" class="premium-input mt-3" placeholder="Quick reply for course questions.">
+                                <textarea name="whatsapp_prefill_message" rows="2" class="premium-input h-auto py-3 mt-3" placeholder="Prefilled WhatsApp message">{{ old('whatsapp_prefill_message', $settings['whatsapp_prefill_message'] ?? 'Hi Golden Eye Academy, I have a question about classes and enrollment.') }}</textarea>
                             </div>
                             <div class="pt-6 border-t border-zinc-100">
                                 <label class="premium-label">Sticky Inquiry Labels</label>
                                 <div class="space-y-4">
-                                    <input type="text" name="inquiry_title" value="{{ $settings['inquiry_title'] ?? 'Quick Inquiry' }}" class="premium-input" placeholder="Title">
-                                    <input type="text" name="inquiry_tab_text" value="{{ $settings['inquiry_tab_text'] ?? 'Quick Inquiry' }}" class="premium-input" placeholder="Tab Label">
+                                    <input type="text" name="inquiry_title" value="{{ old('inquiry_title', $settings['inquiry_title'] ?? 'Quick Inquiry') }}" class="premium-input" placeholder="Title">
+                                    <input type="text" name="inquiry_tab_text" value="{{ old('inquiry_tab_text', $settings['inquiry_tab_text'] ?? 'Quick Inquiry') }}" class="premium-input" placeholder="Tab Label">
                                 </div>
                             </div>
                         </div>
@@ -272,8 +258,8 @@
                             @for($i=1; $i<=4; $i++)
                             <div class="p-3 bg-zinc-50 rounded-2xl border border-zinc-100">
                                 <label class="premium-label text-[9px]">Stat {{ $i }}</label>
-                                <input type="text" name="stat_{{ $i }}_val" value="{{ $settings['stat_'.$i.'_val'] ?? '' }}" class="premium-input h-10 mb-2 font-black text-[#C5A059] text-xs" placeholder="Value (e.g. 5,000+)">
-                                <input type="text" name="stat_{{ $i }}_lab" value="{{ $settings['stat_'.$i.'_lab'] ?? '' }}" class="premium-input h-8 text-[8px] uppercase tracking-wider" placeholder="Label (e.g. Graduates)">
+                                <input type="text" name="stat_{{ $i }}_val" value="{{ old('stat_'.$i.'_val', $settings['stat_'.$i.'_val'] ?? '') }}" class="premium-input h-10 mb-2 font-black text-[#C5A059] text-xs" placeholder="Value (e.g. 5,000+)">
+                                <input type="text" name="stat_{{ $i }}_lab" value="{{ old('stat_'.$i.'_lab', $settings['stat_'.$i.'_lab'] ?? '') }}" class="premium-input h-8 text-[8px] uppercase tracking-wider" placeholder="Label (e.g. Graduates)">
                             </div>
                             @endfor
                         </div>
@@ -299,7 +285,7 @@
                                 <div class="mt-4">
                                     <label class="premium-label">Photo Reference (Vault Path)</label>
                                     <div class="flex gap-2">
-                                        <input type="text" name="hero_image_path" id="input_hero_image" value="{{ $settings['hero_image'] ?? '' }}" class="premium-input h-10 text-xs font-mono bg-transparent flex-1" placeholder="site/img/carousel-1.png">
+                                        <input type="text" name="hero_image_path" id="input_hero_image" value="{{ old('hero_image_path', $settings['hero_image'] ?? '') }}" class="premium-input h-10 text-xs font-mono bg-transparent flex-1" placeholder="site/img/carousel-1.png">
                                         <button type="button" onclick="openPicker('input_hero_image')" class="bg-zinc-800 text-[#C5A059] px-4 rounded-xl text-[10px] font-black uppercase hover:bg-orange-600 hover:text-white transition-all whitespace-nowrap">
                                             <i class="fa fa-images mr-1"></i> Browse
                                         </button>
@@ -323,7 +309,7 @@
                                 <div class="mt-4">
                                     <label class="premium-label">Photo Reference (Vault Path)</label>
                                     <div class="flex gap-2">
-                                        <input type="text" name="homepage_social_image_path" id="input_homepage_social_image" value="{{ $settings['homepage_social_image'] ?? '' }}" class="premium-input h-10 text-xs font-mono bg-transparent flex-1" placeholder="Uses the Hero image when empty">
+                                        <input type="text" name="homepage_social_image_path" id="input_homepage_social_image" value="{{ old('homepage_social_image_path', $settings['homepage_social_image'] ?? '') }}" class="premium-input h-10 text-xs font-mono bg-transparent flex-1" placeholder="Uses the Hero image when empty">
                                         <button type="button" onclick="openPicker('input_homepage_social_image')" class="bg-zinc-800 text-[#C5A059] px-4 rounded-xl text-[10px] font-black uppercase hover:bg-orange-600 hover:text-white transition-all whitespace-nowrap">
                                             <i class="fa fa-images mr-1"></i> Browse
                                         </button>
@@ -347,11 +333,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <label class="premium-label">Main Heading</label>
-                                <input type="text" name="hero_title" value="{{ $settings['hero_title'] ?? '' }}" class="premium-input h-14 text-lg font-black" placeholder="e.g. Empowering Your Future">
+                                <input type="text" name="hero_title" value="{{ old('hero_title', $settings['hero_title'] ?? '') }}" class="premium-input h-14 text-lg font-black" placeholder="e.g. Empowering Your Future">
                             </div>
                             <div>
                                 <label class="premium-label">Hero Sub-Heading (Rich Text)</label>
-                                <textarea name="hero_subtitle" id="editor_hero_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ $settings['hero_subtitle'] ?? '' }}</textarea>
+                                <textarea name="hero_subtitle" id="editor_hero_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ old('hero_subtitle', $settings['hero_subtitle'] ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -421,7 +407,7 @@
                                     <div class="mt-4">
                                         <label class="premium-label">Photo Reference (Vault Path)</label>
                                         <div class="flex gap-2">
-                                            <input type="text" name="about_image_path" id="input_about_image" value="{{ $settings['about_image'] ?? '' }}" class="premium-input h-10 text-xs font-mono bg-transparent flex-1" placeholder="site/img/about.jpg">
+                                            <input type="text" name="about_image_path" id="input_about_image" value="{{ old('about_image_path', $settings['about_image'] ?? '') }}" class="premium-input h-10 text-xs font-mono bg-transparent flex-1" placeholder="site/img/about.jpg">
                                             <button type="button" onclick="openPicker('input_about_image')" class="bg-zinc-800 text-[#C5A059] px-4 rounded-xl text-[10px] font-black uppercase hover:bg-orange-600 hover:text-white transition-all whitespace-nowrap">
                                                 <i class="fa fa-images"></i>
                                             </button>
@@ -437,11 +423,11 @@
                                 </div>
                                 <div>
                                     <label class="premium-label">Section Title</label>
-                                    <input type="text" name="about_content_title" value="{{ $settings['about_content_title'] ?? '' }}" class="premium-input" placeholder="e.g. Welcome to Golden Eye">
+                                    <input type="text" name="about_content_title" value="{{ old('about_content_title', $settings['about_content_title'] ?? '') }}" class="premium-input" placeholder="e.g. Welcome to Golden Eye">
                                 </div>
                                 <div>
                                     <label class="premium-label">Section Summary Text (Rich Text)</label>
-                                    <textarea name="about_content" id="editor_about_summary" rows="4" data-cms-rich-text class="premium-input h-auto py-3 leading-relaxed">{{ $settings['about_content'] ?? '' }}</textarea>
+                                    <textarea name="about_content" id="editor_about_summary" rows="4" data-cms-rich-text class="premium-input h-auto py-3 leading-relaxed">{{ old('about_content', $settings['about_content'] ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -455,7 +441,7 @@
                                         <label class="premium-label text-[9px]">Point {{ $i }}</label>
                                         <div class="relative">
                                             <i class="fas fa-check-circle absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500 text-xs"></i>
-                                            <input type="text" name="about_point_{{ $i }}" value="{{ $settings['about_point_'.$i] ?? '' }}" class="premium-input h-10 text-xs pl-9">
+                                            <input type="text" name="about_point_{{ $i }}" value="{{ old('about_point_'.$i, $settings['about_point_'.$i] ?? '') }}" class="premium-input h-10 text-xs pl-9">
                                         </div>
                                     </div>
                                 @endfor
@@ -474,7 +460,7 @@
                             <div class="space-y-6">
                                 <div>
                                     <label class="premium-label">Page Title</label>
-                                    <input type="text" name="about_header_title" value="{{ $settings['about_header_title'] ?? 'About Us' }}" class="premium-input">
+                                    <input type="text" name="about_header_title" value="{{ old('about_header_title', $settings['about_header_title'] ?? 'About Us') }}" class="premium-input">
                                 </div>
                             </div>
                         </div>
@@ -482,7 +468,7 @@
                         <div class="brand-card lg:col-span-2">
                             <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">MAIN ABOUT PAGE CONTENT</h3>
                             <div class="border rounded-2xl overflow-hidden shadow-sm">
-                                <textarea name="about_page_content" id="editor_about" data-cms-rich-text class="w-full min-h-[400px]">{{ $settings['about_page_content'] ?? '' }}</textarea>
+                                <textarea name="about_page_content" id="editor_about" data-cms-rich-text class="w-full min-h-[400px]">{{ old('about_page_content', $settings['about_page_content'] ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -497,11 +483,11 @@
                             <div class="space-y-6">
                                 <div>
                                     <label class="premium-label">Main Heading</label>
-                                    <input type="text" name="courses_title" value="{{ $settings['courses_title'] ?? 'Career Pathways' }}" class="premium-input">
+                                    <input type="text" name="courses_title" value="{{ old('courses_title', $settings['courses_title'] ?? 'Career Pathways') }}" class="premium-input">
                                 </div>
                                 <div>
                                     <label class="premium-label">Sub-heading (Rich Text)</label>
-                                    <textarea name="courses_subtitle" id="editor_courses_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ $settings['courses_subtitle'] ?? '' }}</textarea>
+                                    <textarea name="courses_subtitle" id="editor_courses_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ old('courses_subtitle', $settings['courses_subtitle'] ?? '') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -509,10 +495,10 @@
                             <div class="section-icon bg-orange-600"><i class="fa fa-award text-white"></i></div>
                             <h3 class="text-xl font-black uppercase text-zinc-800 mb-2">Course Highlights</h3>
                             <div class="space-y-4">
-                                <input type="text" name="career_highlight_1" value="{{ $settings['career_highlight_1'] ?? '' }}" class="premium-input h-10" placeholder="Highlight 1">
-                                <input type="text" name="career_highlight_2" value="{{ $settings['career_highlight_2'] ?? '' }}" class="premium-input h-10" placeholder="Highlight 2">
-                                <input type="text" name="career_highlight_3" value="{{ $settings['career_highlight_3'] ?? '' }}" class="premium-input h-10" placeholder="Highlight 3">
-                                <input type="text" name="career_highlight_4" value="{{ $settings['career_highlight_4'] ?? '' }}" class="premium-input h-10" placeholder="Highlight 4">
+                                <input type="text" name="career_highlight_1" value="{{ old('career_highlight_1', $settings['career_highlight_1'] ?? '') }}" class="premium-input h-10" placeholder="Highlight 1">
+                                <input type="text" name="career_highlight_2" value="{{ old('career_highlight_2', $settings['career_highlight_2'] ?? '') }}" class="premium-input h-10" placeholder="Highlight 2">
+                                <input type="text" name="career_highlight_3" value="{{ old('career_highlight_3', $settings['career_highlight_3'] ?? '') }}" class="premium-input h-10" placeholder="Highlight 3">
+                                <input type="text" name="career_highlight_4" value="{{ old('career_highlight_4', $settings['career_highlight_4'] ?? '') }}" class="premium-input h-10" placeholder="Highlight 4">
                             </div>
                         </div>
                         <div class="brand-card lg:col-span-2">
@@ -557,11 +543,11 @@
                         <div class="space-y-6">
                             <div>
                                 <label class="premium-label">Main Title</label>
-                                <input type="text" name="blog_title" value="{{ $settings['blog_title'] ?? 'Academy Blog' }}" class="premium-input h-12">
+                                <input type="text" name="blog_title" value="{{ old('blog_title', $settings['blog_title'] ?? 'Academy Blog') }}" class="premium-input h-12">
                             </div>
                             <div>
                                 <label class="premium-label">Sub-heading (Rich Text)</label>
-                                <textarea name="blog_subtitle" id="editor_blog_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ $settings['blog_subtitle'] ?? '' }}</textarea>
+                                <textarea name="blog_subtitle" id="editor_blog_subtitle" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ old('blog_subtitle', $settings['blog_subtitle'] ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -572,16 +558,16 @@
                     <div class="brand-card">
                         <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">FAQ Page Header Content</h3>
                         <div class="border rounded-2xl overflow-hidden">
-                            <textarea name="faq_page_content" id="editor_faq" data-cms-rich-text class="w-full min-h-[300px]">{{ $settings['faq_page_content'] ?? '' }}</textarea>
+                            <textarea name="faq_page_content" id="editor_faq" data-cms-rich-text class="w-full min-h-[300px]">{{ old('faq_page_content', $settings['faq_page_content'] ?? '') }}</textarea>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                             <div>
                                 <label class="premium-label">Collapsed FAQ Button Text</label>
-                                <input type="text" name="faq_btn_text" value="{{ $settings['faq_btn_text'] ?? 'Show More FAQs' }}" class="premium-input" placeholder="Show More FAQs">
+                                <input type="text" name="faq_btn_text" value="{{ old('faq_btn_text', $settings['faq_btn_text'] ?? 'Show More FAQs') }}" class="premium-input" placeholder="Show More FAQs">
                             </div>
                             <div>
                                 <label class="premium-label">Expanded FAQ Button Text</label>
-                                <input type="text" name="faq_btn_text_expanded" value="{{ $settings['faq_btn_text_expanded'] ?? 'Show Fewer FAQs' }}" class="premium-input" placeholder="Show Fewer FAQs">
+                                <input type="text" name="faq_btn_text_expanded" value="{{ old('faq_btn_text_expanded', $settings['faq_btn_text_expanded'] ?? 'Show Fewer FAQs') }}" class="premium-input" placeholder="Show Fewer FAQs">
                             </div>
                         </div>
                     </div>
@@ -610,7 +596,7 @@
                             </div>
                         </div>
                         <div class="border rounded-2xl overflow-hidden">
-                            <textarea name="contact_page_content" id="editor_contact" data-cms-rich-text class="w-full min-h-[300px]">{{ $settings['contact_page_content'] ?? '' }}</textarea>
+                            <textarea name="contact_page_content" id="editor_contact" data-cms-rich-text class="w-full min-h-[300px]">{{ old('contact_page_content', $settings['contact_page_content'] ?? '') }}</textarea>
                         </div>
                         <div class="mt-8 border-t border-zinc-100 pt-8">
                             <h4 class="text-xs font-black uppercase tracking-widest text-zinc-700 mb-2">Form Success Messages</h4>
@@ -641,7 +627,7 @@
                     <div class="brand-card">
                         <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">Privacy Policy</h3>
                         <div class="border rounded-2xl overflow-hidden">
-                            <textarea name="privacy_policy_content" id="editor_privacy" data-cms-rich-text class="w-full min-h-[400px]">{{ $settings['privacy_policy_content'] ?? '' }}</textarea>
+                            <textarea name="privacy_policy_content" id="editor_privacy" data-cms-rich-text class="w-full min-h-[400px]">{{ old('privacy_policy_content', $settings['privacy_policy_content'] ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -651,7 +637,7 @@
                     <div class="brand-card">
                         <h3 class="text-xl font-black uppercase text-zinc-800 mb-4">Terms & Conditions</h3>
                         <div class="border rounded-2xl overflow-hidden">
-                            <textarea name="terms_and_conditions_content" id="editor_terms" data-cms-rich-text class="w-full min-h-[400px]">{{ $settings['terms_and_conditions_content'] ?? '' }}</textarea>
+                            <textarea name="terms_and_conditions_content" id="editor_terms" data-cms-rich-text class="w-full min-h-[400px]">{{ old('terms_and_conditions_content', $settings['terms_and_conditions_content'] ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -670,45 +656,45 @@
                         <div class="space-y-5">
                             <div>
                                 <label class="premium-label">WhatsApp Hotline</label>
-                                <input type="text" name="whatsapp_number" value="{{ $settings['whatsapp_number'] ?? '' }}" class="premium-input" placeholder="e.g. 9779856...">
+                                <input type="text" name="whatsapp_number" value="{{ old('whatsapp_number', $settings['whatsapp_number'] ?? '') }}" class="premium-input" placeholder="e.g. 9779856...">
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="premium-label">Academy Email <span class="text-[10px] font-bold text-brand-gold uppercase tracking-wider">(Canonical)</span></label>
-                                    <input type="email" name="site_email" value="{{ $settings['site_email'] ?? config('goldeneye.official_email', 'contact@goldeneye.edu.np') }}" class="premium-input bg-zinc-100 text-zinc-500 cursor-not-allowed select-none" readonly title="Canonical official email managed in application configuration">
+                                    <input type="email" name="site_email" value="{{ old('site_email', $settings['site_email'] ?? config('goldeneye.official_email', 'contact@goldeneye.edu.np')) }}" class="premium-input bg-zinc-100 text-zinc-500 cursor-not-allowed select-none" readonly title="Canonical official email managed in application configuration">
                                     <p class="text-[10px] text-zinc-400 mt-1">Managed canonically in application configuration (contact@goldeneye.edu.np).</p>
                                 </div>
                                 <div>
                                     <label class="premium-label">Phone Number</label>
-                                    <input type="text" name="site_phone" value="{{ $settings['site_phone'] ?? '' }}" class="premium-input" placeholder="e.g. +977 1 4XXXXXX">
+                                    <input type="text" name="site_phone" value="{{ old('site_phone', $settings['site_phone'] ?? '') }}" class="premium-input" placeholder="e.g. +977 1 4XXXXXX">
                                 </div>
                             </div>
                             <div>
                                 <label class="premium-label">Physical Address</label>
-                                <input type="text" name="site_address" value="{{ $settings['site_address'] ?? '' }}" class="premium-input" placeholder="e.g. Putalisadak, Kathmandu">
+                                <input type="text" name="site_address" value="{{ old('site_address', $settings['site_address'] ?? '') }}" class="premium-input" placeholder="e.g. Putalisadak, Kathmandu">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 @if($isAdmin)
                                 <div>
                                     <label class="premium-label">Opening Hours</label>
-                                    <input type="text" name="opening_hours" value="{{ $settings['opening_hours'] ?? '' }}" class="premium-input" placeholder="e.g. Sun-Fri, 7AM-6PM">
+                                    <input type="text" name="opening_hours" value="{{ old('opening_hours', $settings['opening_hours'] ?? '') }}" class="premium-input" placeholder="e.g. Sun-Fri, 7AM-6PM">
                                 </div>
                                 <div>
                                     <label class="premium-label">Geo Latitude</label>
-                                    <input type="text" name="geo_latitude" value="{{ $settings['geo_latitude'] ?? '' }}" class="premium-input text-xs" placeholder="e.g. 28.2163">
+                                    <input type="text" name="geo_latitude" value="{{ old('geo_latitude', $settings['geo_latitude'] ?? '') }}" class="premium-input text-xs" placeholder="e.g. 28.2163">
                                 </div>
                                 <div>
                                     <label class="premium-label">Geo Longitude</label>
-                                    <input type="text" name="geo_longitude" value="{{ $settings['geo_longitude'] ?? '' }}" class="premium-input text-xs" placeholder="e.g. 83.9823">
+                                    <input type="text" name="geo_longitude" value="{{ old('geo_longitude', $settings['geo_longitude'] ?? '') }}" class="premium-input text-xs" placeholder="e.g. 83.9823">
                                 </div>
                                 <div>
                                     <label class="premium-label">Maps Embed URL (src only)</label>
-                                    <input type="text" name="google_maps_embed" value="{{ $settings['google_maps_embed'] ?? '' }}" class="premium-input" placeholder="https://google.com/maps/embed?...">
+                                    <input type="text" name="google_maps_embed" value="{{ old('google_maps_embed', $settings['google_maps_embed'] ?? '') }}" class="premium-input" placeholder="https://google.com/maps/embed?...">
                                 </div>
                                 @else
                                 <div class="col-span-2">
                                     <label class="premium-label">Opening Hours</label>
-                                    <input type="text" name="opening_hours" value="{{ $settings['opening_hours'] ?? '' }}" class="premium-input" placeholder="e.g. Sun-Fri, 7AM-6PM">
+                                    <input type="text" name="opening_hours" value="{{ old('opening_hours', $settings['opening_hours'] ?? '') }}" class="premium-input" placeholder="e.g. Sun-Fri, 7AM-6PM">
                                 </div>
                                 @endif
                             </div>
@@ -722,24 +708,24 @@
                             @if($isAdmin)
                             <div>
                                 <label class="premium-label text-blue-600">Google Analytics ID</label>
-                                <input type="text" name="google_analytics_id" value="{{ $settings['google_analytics_id'] ?? '' }}" class="premium-input bg-zinc-50 border-dashed" placeholder="G-XXXXXXXXXX">
+                                <input type="text" name="google_analytics_id" value="{{ old('google_analytics_id', $settings['google_analytics_id'] ?? '') }}" class="premium-input bg-zinc-50 border-dashed" placeholder="G-XXXXXXXXXX">
                             </div>
                             @endif
                             <div>
                                 <label class="premium-label">Meta Keywords</label>
-                                <textarea name="meta_keywords" id="meta_keywords" rows="2" class="premium-input h-auto py-3">{{ $settings['meta_keywords'] ?? '' }}</textarea>
+                                <textarea name="meta_keywords" id="meta_keywords" rows="2" class="premium-input h-auto py-3">{{ old('meta_keywords', $settings['meta_keywords'] ?? '') }}</textarea>
                             </div>
                             <div>
                                 <label class="premium-label">Meta Description</label>
-                                <textarea name="meta_description" id="meta_description" rows="3" class="premium-input h-auto py-3">{{ $settings['meta_description'] ?? '' }}</textarea>
+                                <textarea name="meta_description" id="meta_description" rows="3" class="premium-input h-auto py-3">{{ old('meta_description', $settings['meta_description'] ?? '') }}</textarea>
                             </div>
                             <div>
                                 <label class="premium-label">Footer Newsletter Description</label>
-                                <input type="text" name="footer_newsletter_desc" value="{{ $settings['footer_newsletter_desc'] ?? '' }}" class="premium-input" placeholder="e.g. Sign up for career insights...">
+                                <input type="text" name="footer_newsletter_desc" value="{{ old('footer_newsletter_desc', $settings['footer_newsletter_desc'] ?? '') }}" class="premium-input" placeholder="e.g. Sign up for career insights...">
                             </div>
                             <div>
                                 <label class="premium-label">Footer Bio / Summary (Rich Text)</label>
-                                <textarea name="footer_about_text" id="editor_footer_bio" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ $settings['footer_about_text'] ?? '' }}</textarea>
+                                <textarea name="footer_about_text" id="editor_footer_bio" rows="3" data-cms-rich-text class="premium-input h-auto py-3">{{ old('footer_about_text', $settings['footer_about_text'] ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -750,7 +736,7 @@
                             @foreach(['facebook', 'instagram', 'linkedin', 'youtube', 'tiktok'] as $plat)
                                 <div class="flex items-center gap-4">
                                     <div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0"><i class="fab fa-{{ $plat }}"></i></div>
-                                    <input type="url" name="{{ $plat }}_url" value="{{ $settings[$plat.'_url'] ?? '' }}" class="premium-input" placeholder="{{ ucfirst($plat) }} URL">
+                                    <input type="url" name="{{ $plat }}_url" value="{{ old($plat.'_url', $settings[$plat.'_url'] ?? '') }}" class="premium-input" placeholder="{{ ucfirst($plat) }} URL">
                                 </div>
                             @endforeach
                         </div>
@@ -763,12 +749,12 @@
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <div>
                                 <label class="premium-label">Google Business Profile URL</label>
-                                <input type="url" name="google_business_profile_url" value="{{ $settings['google_business_profile_url'] ?? '' }}" class="premium-input" placeholder="https://g.page/r/...">
+                                <input type="url" name="google_business_profile_url" value="{{ old('google_business_profile_url', $settings['google_business_profile_url'] ?? '') }}" class="premium-input" placeholder="https://g.page/r/...">
                             </div>
                             <div>
                                 <label class="premium-label">Review Screenshot Path</label>
                                 <div class="flex gap-2">
-                                    <input type="text" name="external_review_screenshot_path" id="input_external_review_screenshot" value="{{ $settings['external_review_screenshot'] ?? '' }}" class="premium-input flex-1" placeholder="site/img/reviews/google-review.png">
+                                    <input type="text" name="external_review_screenshot_path" id="input_external_review_screenshot" value="{{ old('external_review_screenshot_path', $settings['external_review_screenshot'] ?? '') }}" class="premium-input flex-1" placeholder="site/img/reviews/google-review.png">
                                     <button type="button" onclick="openPicker('input_external_review_screenshot')" class="bg-zinc-800 text-[#C5A059] px-4 rounded-xl text-[9px] font-black uppercase hover:bg-[#C5A059] hover:text-white transition-all whitespace-nowrap">
                                         <i class="fa fa-images"></i>
                                     </button>
@@ -784,7 +770,7 @@
                             </div>
                             <div class="lg:col-span-2">
                                 <label class="premium-label">Public Review Proof Note</label>
-                                <textarea name="external_review_proof_note" rows="3" class="premium-input h-auto py-3" placeholder="Explain how students or parents can verify reviews.">{{ $settings['external_review_proof_note'] ?? '' }}</textarea>
+                                <textarea name="external_review_proof_note" rows="3" class="premium-input h-auto py-3" placeholder="Explain how students or parents can verify reviews.">{{ old('external_review_proof_note', $settings['external_review_proof_note'] ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -819,8 +805,8 @@
                             <div>
                                 <label class="premium-label">Visibility Status</label>
                                 <select name="popup_status" class="premium-input font-black uppercase">
-                                    <option value="active" {{ ($settings['popup_status'] ?? '') === 'active' ? 'selected' : '' }}>ACTIVE</option>
-                                    <option value="inactive" {{ ($settings['popup_status'] ?? '') === 'inactive' ? 'selected' : '' }}>HIDDEN</option>
+                                    <option value="active" @selected(old('popup_status', $settings['popup_status'] ?? '') === 'active')>ACTIVE</option>
+                                    <option value="inactive" @selected(old('popup_status', $settings['popup_status'] ?? '') === 'inactive')>HIDDEN</option>
                                 </select>
                             </div>
                             <div>
@@ -829,7 +815,7 @@
                                     <img src="{{ \App\Support\PublicAsset::url($settings['popup_image'] ?? null, 'site/img/carousel-1.png') }}" class="w-full h-full object-cover">
                                 </div>
                                 <div class="flex gap-2">
-                                    <input type="text" name="popup_image_path" id="input_popup_image" value="{{ $settings['popup_image'] ?? '' }}" class="premium-input h-10 text-xs flex-1">
+                                    <input type="text" name="popup_image_path" id="input_popup_image" value="{{ old('popup_image_path', $settings['popup_image'] ?? '') }}" class="premium-input h-10 text-xs flex-1">
                                     <button type="button" onclick="openPicker('input_popup_image')" class="bg-zinc-800 text-[#C5A059] px-3 rounded-xl text-[9px] font-black uppercase">Pick</button>
                                 </div>
                                 <input type="file" name="popup_image" accept="image/*" class="text-xs mt-3">
@@ -847,29 +833,29 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="premium-label">Notice Title</label>
-                                    <input type="text" name="popup_title" value="{{ $settings['popup_title'] ?? '' }}" class="premium-input">
+                                    <input type="text" name="popup_title" value="{{ old('popup_title', $settings['popup_title'] ?? '') }}" class="premium-input">
                                 </div>
                                 <div>
                                     <label class="premium-label">Button Text</label>
-                                    <input type="text" name="popup_button_text" value="{{ $settings['popup_button_text'] ?? '' }}" class="premium-input">
+                                    <input type="text" name="popup_button_text" value="{{ old('popup_button_text', $settings['popup_button_text'] ?? '') }}" class="premium-input">
                                 </div>
                             </div>
                             <div>
                                 <label class="premium-label">Link</label>
-                                <input type="text" name="popup_register_link" value="{{ $settings['popup_register_link'] ?? '' }}" class="premium-input">
+                                <input type="text" name="popup_register_link" value="{{ old('popup_register_link', $settings['popup_register_link'] ?? '') }}" class="premium-input">
                             </div>
                             <div>
                                 <label class="premium-label">Subtitle (Marketing Copy)</label>
-                                <textarea name="popup_subtitle" rows="3" class="premium-input h-auto py-3">{{ $settings['popup_subtitle'] ?? '' }}</textarea>
+                                <textarea name="popup_subtitle" rows="3" class="premium-input h-auto py-3">{{ old('popup_subtitle', $settings['popup_subtitle'] ?? '') }}</textarea>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="premium-label">Notice Badge</label>
-                                    <input type="text" name="notice_badge_text" value="{{ $settings['notice_badge_text'] ?? 'Important Intake' }}" class="premium-input h-10">
+                                    <input type="text" name="notice_badge_text" value="{{ old('notice_badge_text', $settings['notice_badge_text'] ?? 'Important Intake') }}" class="premium-input h-10">
                                 </div>
                                 <div>
                                     <label class="premium-label">Dismiss Label</label>
-                                    <input type="text" name="notice_dismiss_text" value="{{ $settings['notice_dismiss_text'] ?? 'Dismiss' }}" class="premium-input h-10">
+                                    <input type="text" name="notice_dismiss_text" value="{{ old('notice_dismiss_text', $settings['notice_dismiss_text'] ?? 'Dismiss') }}" class="premium-input h-10">
                                 </div>
                             </div>
                         </div>
@@ -879,9 +865,9 @@
                         <div>
                             <h4 class="text-xs font-black uppercase text-orange-900 mb-6">Sticky Conversion Bar</h4>
                             <div class="space-y-4">
-                                <input type="text" name="sticky_cta_badge" value="{{ $settings['sticky_cta_badge'] ?? '' }}" class="premium-input" placeholder="Badge (e.g. New Intake)">
-                                <input type="text" name="sticky_cta_text" value="{{ $settings['sticky_cta_text'] ?? '' }}" class="premium-input" placeholder="Button Text">
-                                <input type="text" name="sticky_cta_desc" value="{{ $settings['sticky_cta_desc'] ?? '' }}" class="premium-input" placeholder="Brief Description">
+                                <input type="text" name="sticky_cta_badge" value="{{ old('sticky_cta_badge', $settings['sticky_cta_badge'] ?? '') }}" class="premium-input" placeholder="Badge (e.g. New Intake)">
+                                <input type="text" name="sticky_cta_text" value="{{ old('sticky_cta_text', $settings['sticky_cta_text'] ?? '') }}" class="premium-input" placeholder="Button Text">
+                                <input type="text" name="sticky_cta_desc" value="{{ old('sticky_cta_desc', $settings['sticky_cta_desc'] ?? '') }}" class="premium-input" placeholder="Brief Description">
                             </div>
                         </div>
                         @if($isAdmin)
@@ -907,7 +893,7 @@
                             <h4 class="text-xs font-black uppercase text-orange-900 mb-6">System Constraints</h4>
                             <div class="space-y-4">
                                 <label class="premium-label">Global Image Upload Limit (KB)</label>
-                                <input type="number" name="image_size_limit" value="{{ $settings['image_size_limit'] ?? '2048' }}" class="premium-input text-xs" placeholder="Default: 2048">
+                                <input type="number" name="image_size_limit" value="{{ old('image_size_limit', $settings['image_size_limit'] ?? '2048') }}" class="premium-input text-xs" placeholder="Default: 2048">
                                 <p class="helper-text">Applies to all modules (Courses, Blog, etc.). Recommended: 1024-2048 KB.</p>
                             </div>
                         </div>

@@ -1,5 +1,5 @@
 <x-layouts::app :title="__('Newsletter Subscribers')">
-    <div class="flex h-full w-full flex-1 flex-col gap-6 p-6">
+    <div id="newsletterDisplayPage" class="flex h-full w-full flex-1 flex-col gap-6 p-6">
         <div class="flex items-center justify-between pb-4 border-b border-neutral-100">
             <div class="space-y-1">
                 <h1 class="text-3xl font-black text-neutral-900 tracking-tight uppercase">Newsletter <span class="text-orange-600">Subscribers</span></h1>
@@ -94,63 +94,71 @@
                 </button>
             </form>
             @endrole
-            <button onclick="unselectAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
+            <button onclick="unselectNewsletterAll()" class="text-neutral-400 hover:text-white transition-colors text-xs font-bold uppercase">Cancel</button>
         </div>
         @endrole
     </div>
 
     <script>
-        if (typeof window.newsletterDisplayInited === 'undefined') {
-            window.newsletterDisplayInited = true;
+        function initNewsletterBulkActions() {
+            const page = document.getElementById('newsletterDisplayPage');
+            if (!page) return;
 
-            function initNewsletterBulkActions() {
-                const selectAllSubscribers = document.getElementById('selectAll');
-                const checkboxes = document.querySelectorAll('.row-checkbox');
-                const bulkBar = document.getElementById('bulkActionsBar');
-                const selectedCount = document.getElementById('selectedCount');
-                const bulkIdsContainer = document.getElementById('bulkIdsContainer');
+            const selectAllSubscribers = page.querySelector('#selectAll');
+            const checkboxes = page.querySelectorAll('.row-checkbox');
+            const bulkBar = page.querySelector('#bulkActionsBar');
+            const selectedCount = page.querySelector('#selectedCount');
+            const bulkIdsContainer = page.querySelector('#bulkIdsContainer');
 
-                if (!selectAllSubscribers) return;
+            if (!selectAllSubscribers || !bulkBar || !selectedCount || !bulkIdsContainer) return;
 
-                function updateBulkBar() {
-                    const checked = document.querySelectorAll('.row-checkbox:checked');
-                    selectedCount.innerText = checked.length;
-                    
-                    bulkIdsContainer.innerHTML = '';
-                    checked.forEach(cb => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'ids[]';
-                        input.value = cb.value;
-                        bulkIdsContainer.appendChild(input);
-                    });
-
-                    if (checked.length > 0) {
-                        bulkBar.classList.remove('translate-y-24', 'opacity-0');
-                    } else {
-                        bulkBar.classList.add('translate-y-24', 'opacity-0');
-                        selectAllSubscribers.checked = false;
-                    }
-                }
-
-                selectAllSubscribers.addEventListener('change', () => {
-                    checkboxes.forEach(cb => cb.checked = selectAllSubscribers.checked);
-                    updateBulkBar();
+            function updateBulkBar() {
+                const checked = page.querySelectorAll('.row-checkbox:checked');
+                selectedCount.innerText = checked.length;
+                
+                bulkIdsContainer.innerHTML = '';
+                checked.forEach(cb => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids[]';
+                    input.value = cb.value;
+                    bulkIdsContainer.appendChild(input);
                 });
 
-                checkboxes.forEach(cb => {
-                    cb.addEventListener('change', updateBulkBar);
-                });
-
-                window.unselectAll = function() {
-                    checkboxes.forEach(cb => cb.checked = false);
+                if (checked.length > 0) {
+                    bulkBar.classList.remove('translate-y-24', 'opacity-0');
+                } else {
+                    bulkBar.classList.add('translate-y-24', 'opacity-0');
                     selectAllSubscribers.checked = false;
-                    updateBulkBar();
-                };
+                }
             }
 
-            document.addEventListener('livewire:navigated', initNewsletterBulkActions);
-            document.addEventListener('DOMContentLoaded', initNewsletterBulkActions);
+            selectAllSubscribers.onchange = () => {
+                checkboxes.forEach(cb => cb.checked = selectAllSubscribers.checked);
+                updateBulkBar();
+            };
+
+            checkboxes.forEach(cb => {
+                cb.onchange = updateBulkBar;
+            });
+
+            window.unselectNewsletterAll = function() {
+                const currentPage = document.getElementById('newsletterDisplayPage');
+                if (!currentPage) return;
+                currentPage.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = false);
+                const selAll = currentPage.querySelector('#selectAll');
+                if (selAll) selAll.checked = false;
+                updateBulkBar();
+            };
+            window.unselectAll = function() {
+                window.unselectContactAll?.();
+                window.unselectEnrollmentAll?.();
+                window.unselectNewsletterAll?.();
+            };
         }
+
+        document.addEventListener('livewire:navigated', initNewsletterBulkActions);
+        document.addEventListener('DOMContentLoaded', initNewsletterBulkActions);
+        initNewsletterBulkActions();
     </script>
 </x-layouts::app>

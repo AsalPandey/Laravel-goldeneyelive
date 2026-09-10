@@ -190,6 +190,31 @@ class InquiryManagementTest extends TestCase
         $this->assertSame(2, JoinNowQuery::withTrashed()->count());
     }
 
+    public function test_submissions_screens_render_collision_free_scoped_modal_and_bulk_scripts(): void
+    {
+        $admin = $this->userWithRole('Admin');
+
+        // Contact inquiries
+        $contactRes = $this->actingAs($admin)->get(route('admin.submissions.contact-display'));
+        $contactRes->assertOk();
+        $contactRes->assertSee('id="contactDisplayPage"', false);
+        $contactRes->assertSee('closeContactModal', false);
+        $contactRes->assertSee('unselectContactAll', false);
+
+        // Join now inquiries
+        $joinNowRes = $this->actingAs($admin)->get(route('admin.submissions.join_now-display'));
+        $joinNowRes->assertOk();
+        $joinNowRes->assertSee('id="joinNowDisplayPage"', false);
+        $joinNowRes->assertSee('closeEnrollmentModal', false);
+        $joinNowRes->assertSee('unselectEnrollmentAll', false);
+
+        // Newsletter subscribers
+        $newsletterRes = $this->actingAs($admin)->get(route('admin.submissions.newsletter-display'));
+        $newsletterRes->assertOk();
+        $newsletterRes->assertSee('id="newsletterDisplayPage"', false);
+        $newsletterRes->assertSee('unselectNewsletterAll', false);
+    }
+
     private function userWithRole(string $role): User
     {
         $user = User::factory()->create();

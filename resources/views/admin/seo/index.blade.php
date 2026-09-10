@@ -1,13 +1,4 @@
 <x-layouts::app :title="__('SEO & AI Authority Center')">
-    @if($errors->any())
-        @php
-            foreach (old() as $oldKey => $oldValue) {
-                if (is_scalar($oldValue) || $oldValue === null) {
-                    $settings[$oldKey] = $oldValue;
-                }
-            }
-        @endphp
-    @endif
     <style>
         .seo-card {
             background: #fff;
@@ -67,17 +58,17 @@
                     <div class="space-y-6">
                         <div>
                             <label class="premium-label">Global Meta Title</label>
-                            <input type="text" name="meta_title" value="{{ $settings['meta_title'] ?? '' }}" class="premium-input @error('meta_title') border-rose-500 @enderror" placeholder="Golden Eye Academy | Courses and Classes in Pokhara">
+                            <input type="text" name="meta_title" value="{{ old('meta_title', $settings['meta_title'] ?? '') }}" class="premium-input @error('meta_title') border-rose-500 @enderror" placeholder="Golden Eye Academy | Courses and Classes in Pokhara">
                             @error('meta_title') <p class="text-rose-500 text-[10px] mt-1 font-bold uppercase">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="premium-label">Global Meta Description</label>
-                            <textarea name="meta_description" rows="3" class="premium-input @error('meta_description') border-rose-500 @enderror">{{ $settings['meta_description'] ?? '' }}</textarea>
+                            <textarea name="meta_description" rows="3" class="premium-input @error('meta_description') border-rose-500 @enderror">{{ old('meta_description', $settings['meta_description'] ?? '') }}</textarea>
                             @error('meta_description') <p class="text-rose-500 text-[10px] mt-1 font-bold uppercase">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="premium-label">Global Keywords (Comma Separated)</label>
-                            <input type="text" name="meta_keywords" value="{{ $settings['meta_keywords'] ?? '' }}" class="premium-input" placeholder="academy pokhara, web development classes, ielts pokhara">
+                            <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $settings['meta_keywords'] ?? '') }}" class="premium-input" placeholder="academy pokhara, web development classes, ielts pokhara">
                         </div>
                     </div>
                 </div>
@@ -95,7 +86,7 @@
                     <div class="space-y-6">
                         <div>
                             <label class="premium-label">Global AI/AEO Brief</label>
-                            <textarea name="aeo_summary" rows="4" class="premium-input" placeholder="Golden Eye Academy in Pokhara provides IELTS/PTE, language, computer, office, web development, and IT classes.">{{ $settings['aeo_summary'] ?? '' }}</textarea>
+                            <textarea name="aeo_summary" rows="4" class="premium-input" placeholder="Golden Eye Academy in Pokhara provides IELTS/PTE, language, computer, office, web development, and IT classes.">{{ old('aeo_summary', $settings['aeo_summary'] ?? '') }}</textarea>
                         </div>
                         <div class="rounded-xl border border-indigo-100 bg-indigo-50 p-4 text-xs text-indigo-900">
                             Structured data is generated from verified CMS fields. Speakable markup and raw JSON-LD are intentionally not exposed.
@@ -116,11 +107,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="premium-label">Google Search Console ID</label>
-                            <input type="text" name="google_search_console_id" value="{{ $settings['google_search_console_id'] ?? '' }}" class="premium-input" placeholder="ID from meta tag">
+                            <input type="text" name="google_search_console_id" value="{{ old('google_search_console_id', $settings['google_search_console_id'] ?? '') }}" class="premium-input" placeholder="ID from meta tag">
                         </div>
                         <div>
                             <label class="premium-label">Bing Webmaster ID</label>
-                            <input type="text" name="bing_webmaster_id" value="{{ $settings['bing_webmaster_id'] ?? '' }}" class="premium-input" placeholder="ID from meta tag">
+                            <input type="text" name="bing_webmaster_id" value="{{ old('bing_webmaster_id', $settings['bing_webmaster_id'] ?? '') }}" class="premium-input" placeholder="ID from meta tag">
                         </div>
                     </div>
                 </div>
@@ -154,11 +145,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         <div>
                             <label class="premium-label">Institution Name</label>
-                            <input type="text" name="site_name" value="{{ $settings['site_name'] ?? 'Golden Eye' }}" class="premium-input">
+                            <input type="text" name="site_name" value="{{ old('site_name', $settings['site_name'] ?? 'Golden Eye') }}" class="premium-input">
                         </div>
                         <div>
                             <label class="premium-label">Brand Suffix</label>
-                            <input type="text" name="site_name_suffix" value="{{ $settings['site_name_suffix'] ?? 'Academy' }}" class="premium-input">
+                            <input type="text" name="site_name_suffix" value="{{ old('site_name_suffix', $settings['site_name_suffix'] ?? 'Academy') }}" class="premium-input">
                         </div>
                         <div>
                             <label class="premium-label">Established Year</label>
@@ -167,11 +158,11 @@
                         </div>
                         <div>
                             <label class="premium-label">Geo Latitude</label>
-                            <input type="text" name="geo_latitude" value="{{ $settings['geo_latitude'] ?? '' }}" class="premium-input">
+                            <input type="text" name="geo_latitude" value="{{ old('geo_latitude', $settings['geo_latitude'] ?? '') }}" class="premium-input">
                         </div>
                         <div>
                             <label class="premium-label">Geo Longitude</label>
-                            <input type="text" name="geo_longitude" value="{{ $settings['geo_longitude'] ?? '' }}" class="premium-input">
+                            <input type="text" name="geo_longitude" value="{{ old('geo_longitude', $settings['geo_longitude'] ?? '') }}" class="premium-input">
                         </div>
                     </div>
                 </div>
