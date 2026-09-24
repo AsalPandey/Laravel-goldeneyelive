@@ -170,9 +170,8 @@
                                             <span class="text-zinc-500" style="font-size: 11px;">Category: {{ $course->category }}</span>
                                         @endif
                                     </div>
-                                    <div class="d-grid gap-2">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="homepage-course-details" class="btn btn-primary py-2.5 rounded-lg font-black uppercase tracking-widest" style="font-size: 11px;">View Course Details</a>
-                                        <a href="{{ $guidanceUrl('homepage-course-card', $course->slug) }}" data-cta="homepage-course-guidance" class="btn btn-outline-brand-dark py-2.5 rounded-lg font-black uppercase tracking-widest" style="font-size: 11px;">Ask for Course Help</a>
+                                    <div class="d-grid">
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="homepage-course-details" class="btn btn-primary course-card-cta py-2.5 rounded-lg font-black uppercase">View Course Details</a>
                                     </div>
                                 </div>
                             </article>

@@ -90,9 +90,8 @@
                                     <small class="text-muted text-uppercase font-black tracking-widest" style="font-size: 11px;"><i class="fa fa-user text-brand-gold me-1"></i>{{ $course->capacity }} Seats</small>
                                 </div>
 
-                                <div class="d-flex flex-column gap-2">
-                                    <a href="{{ $course->slug ? route('courses-detail', $course->slug) : route('courses-all') }}" class="btn btn-primary rounded-lg font-black text-uppercase tracking-widest py-2 shadow-lg" style="font-size: 11px;">View Course Details</a>
-                                    <a href="{{ $guidanceUrl('category-course-card', $course->slug) }}" data-cta="category-course-guidance" class="btn btn-outline-dark rounded-lg py-2 font-black text-uppercase tracking-widest" style="font-size: 11px;">Ask for Course Help</a>
+                                <div class="d-grid">
+                                    <a href="{{ $course->slug ? route('courses-detail', $course->slug) : route('courses-all') }}" class="btn btn-primary course-card-cta rounded-lg font-black text-uppercase py-2 shadow-lg">View Course Details</a>
                                 </div>
                             </div>
                         </div>

@@ -56,22 +56,16 @@
                 </div>
                 <div class="col-lg-5">
                     <form action="{{ route('courses-all') }}" method="GET" class="bg-white/10 border border-white/10 rounded-2xl p-3 shadow-2xl" data-track-event="course_filter_used" data-source-page="courses-all" data-source-section="courses-filter" data-cta-label="Apply Filters">
+                        @if($categorySlug)
+                            <input type="hidden" name="category" value="{{ $categorySlug }}">
+                        @endif
                         <div class="row g-2">
                             <div class="col-12">
                                 <label for="course-search" class="visually-hidden">Search courses</label>
                                 <input id="course-search" type="search" name="search" value="{{ $search }}" class="form-control border-0 rounded-xl py-3 px-4" placeholder="Search IELTS, Korean, web, office skills...">
                             </div>
-                            <div class="col-md-7">
-                                <label for="course-category" class="visually-hidden">Filter by category</label>
-                                <select id="course-category" name="category" class="form-select border-0 rounded-xl py-3 px-4">
-                                    <option value="">All categories</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->slug }}" @selected($categorySlug === $category->slug)>{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-5 d-grid">
-                                <button type="submit" data-cta="courses-filter-submit" class="btn btn-primary rounded-xl font-black uppercase tracking-widest" style="font-size: 10px;">Apply Filters</button>
+                            <div class="col-12 d-grid">
+                                <button type="submit" data-cta="courses-filter-submit" class="btn btn-primary course-card-cta rounded-xl font-black uppercase">Apply Filters</button>
                             </div>
                         </div>
                     </form>
@@ -111,7 +105,7 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 10px;">{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="popular-course-details" class="btn btn-primary py-2.5 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">View Course Details</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="popular-course-details" class="btn btn-primary course-card-cta py-2.5 rounded-xl font-black uppercase">View Course Details</a>
                                     </div>
                                 </div>
                             </article>
@@ -190,7 +184,7 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 10px;"><i class="fa fa-tag text-brand-gold me-1"></i>{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="course-card-details" class="btn btn-primary py-2.5 rounded-lg font-black uppercase tracking-widest shadow-lg" style="font-size: 11px;">View Course Details</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="course-card-details" class="btn btn-primary course-card-cta py-2.5 rounded-lg font-black uppercase shadow-lg">View Course Details</a>
                                     </div>
                                 </div>
                             </article>

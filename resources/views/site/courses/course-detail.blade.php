@@ -314,6 +314,10 @@
                                 <div class="course-dark-row"><span>Batch timing</span><strong>{{ $courseConfirmationNote }}</strong></div>
                                 <div class="course-dark-row"><span>Seat availability</span><strong>Confirm with the academy</strong></div>
                             </div>
+                            <div class="d-grid d-sm-flex gap-2 mt-4">
+                                <a href="{{ $sectionGuidanceUrl('course-detail-fee') }}" data-cta="course-detail-fee-guidance" class="btn btn-primary px-4 py-3 rounded-xl fw-black">Ask About This Batch</a>
+                                <a href="https://wa.me/{{ $whatsappCleanNumber }}?text={{ $whatsappMessage }}" target="_blank" rel="noopener" data-cta="course-detail-fee-whatsapp" class="btn btn-outline-light px-4 py-3 rounded-xl fw-black">WhatsApp</a>
+                            </div>
                         </div>
                     </div>
                     @if($instructor)

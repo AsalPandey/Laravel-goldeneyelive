@@ -138,6 +138,7 @@ h1, h2, h3, h4, h5, h6, .section-title {
 .btn {
     font-family: 'Inter', sans-serif;
     font-weight: 600;
+    font-size: 0.875rem;
     border-radius: 8px;
     min-height: 44px;
     transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
@@ -210,10 +211,13 @@ h1, h2, h3, h4, h5, h6, .section-title {
 .premium-card,
 .minimal-card,
 .site-notice-popup .modal-content,
-.pathway-card,
-.rounded-xl,
-.rounded-2xl {
-    border-radius: 8px !important;
+.pathway-card {
+    border-radius: 16px;
+}
+
+.course-card-cta {
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
 }
 
 

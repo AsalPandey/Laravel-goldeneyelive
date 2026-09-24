@@ -126,9 +126,8 @@
                                         <span class="fw-black text-brand-dark uppercase tracking-widest" style="font-size: 11px;">Guidance Available</span>
                                     </div>
                                 </div>
-                                <div class="d-flex flex-column gap-2">
-                                    <a href="{{ $course->slug ? route('courses-detail', $course->slug) : route('courses-all') }}" class="btn btn-primary py-2 rounded-lg shadow-lg animate-glow font-black uppercase tracking-widest" style="font-size: 11px;">View Course Details</a>
-                                    <a href="{{ $guidanceUrl('featured-course-card', $course->slug) }}" data-cta="featured-course-guidance" class="btn btn-outline-brand-dark py-2 rounded-lg font-black uppercase tracking-widest" style="font-size: 11px;">Ask for Course Help</a>
+                                <div class="d-grid">
+                                    <a href="{{ $course->slug ? route('courses-detail', $course->slug) : route('courses-all') }}" class="btn btn-primary course-card-cta py-2 rounded-lg shadow-lg animate-glow font-black uppercase">View Course Details</a>
                                 </div>
                             </div>
                         </div>
