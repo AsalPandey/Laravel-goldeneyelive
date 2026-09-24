@@ -20,4 +20,21 @@ class Notice extends Model
         'starts_at' => 'datetime',
         'expires_at' => 'datetime',
     ];
+
+    public function publicationState(): string
+    {
+        if ($this->status !== 'active') {
+            return 'inactive';
+        }
+
+        if ($this->starts_at?->isFuture()) {
+            return 'scheduled';
+        }
+
+        if ($this->expires_at?->isPast()) {
+            return 'expired';
+        }
+
+        return 'live';
+    }
 }

@@ -8,6 +8,7 @@ use App\Models\Notice;
 use App\Support\CmsDateTime;
 use App\Traits\InteractsWithAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -48,11 +49,13 @@ class NoticeController extends Controller
         $uploadedImage = $request->hasFile('image') ? $validated['image'] : null;
 
         try {
-            DB::transaction(function () use ($validated): void {
-                $this->deactivateCurrentNoticeFor($validated);
-                Notice::create($validated);
+            $this->withPublicationLock(function () use ($validated): void {
+                DB::transaction(function () use ($validated): void {
+                    $this->deactivateCurrentNoticeFor($validated);
+                    Notice::create($validated);
 
-                DB::afterCommit(fn () => $this->clearSiteCache());
+                    DB::afterCommit(fn () => $this->clearSiteCache());
+                });
             });
         } catch (\Throwable $exception) {
             if ($uploadedImage) {
@@ -104,13 +107,15 @@ class NoticeController extends Controller
         $uploadedImage = $request->hasFile('image') ? $validated['image'] : null;
 
         try {
-            DB::transaction(function () use ($notice, $validated, $oldImage): void {
-                $this->deactivateCurrentNoticeFor($validated, $notice->getKey());
-                $notice->update($validated);
+            $this->withPublicationLock(function () use ($notice, $validated, $oldImage): void {
+                DB::transaction(function () use ($notice, $validated, $oldImage): void {
+                    $this->deactivateCurrentNoticeFor($validated, $notice->getKey());
+                    $notice->update($validated);
 
-                DB::afterCommit(function () use ($oldImage, $notice): void {
-                    $this->deleteReplacedAsset($oldImage, $notice->image);
-                    $this->clearSiteCache();
+                    DB::afterCommit(function () use ($oldImage, $notice): void {
+                        $this->deleteReplacedAsset($oldImage, $notice->image);
+                        $this->clearSiteCache();
+                    });
                 });
             });
         } catch (\Throwable $exception) {
@@ -134,18 +139,20 @@ class NoticeController extends Controller
         $notice = Notice::findOrFail($id);
         $newStatus = $notice->status === 'active' ? 'inactive' : 'active';
 
-        DB::transaction(function () use ($notice, $newStatus): void {
-            $activation = [
-                'status' => $newStatus,
-                'display_type' => $notice->display_type,
-                'starts_at' => $notice->starts_at,
-                'expires_at' => $notice->expires_at,
-            ];
+        $this->withPublicationLock(function () use ($notice, $newStatus): void {
+            DB::transaction(function () use ($notice, $newStatus): void {
+                $activation = [
+                    'status' => $newStatus,
+                    'display_type' => $notice->display_type,
+                    'starts_at' => $notice->starts_at,
+                    'expires_at' => $notice->expires_at,
+                ];
 
-            $this->deactivateCurrentNoticeFor($activation, $notice->getKey());
-            $notice->update(['status' => $newStatus]);
+                $this->deactivateCurrentNoticeFor($activation, $notice->getKey());
+                $notice->update(['status' => $newStatus]);
 
-            DB::afterCommit(fn () => $this->clearSiteCache());
+                DB::afterCommit(fn () => $this->clearSiteCache());
+            });
         });
 
         Alert::success('Success', "Notice marked as {$newStatus}.");
@@ -204,5 +211,10 @@ class NoticeController extends Controller
                 $query->whereNull('expires_at')->orWhere('expires_at', '>', now());
             })
             ->update(['status' => 'inactive']);
+    }
+
+    private function withPublicationLock(callable $callback): mixed
+    {
+        return Cache::lock('notices:publication', 10)->block(5, $callback);
     }
 }

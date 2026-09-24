@@ -20,9 +20,9 @@ class NoticeRequest extends CMSRequest
         $imageLimit = SiteSetting::getValue('image_size_limit', 2048);
 
         return array_merge(parent::rules(), [
-            'title' => ['required', 'string', 'max:255'],
-            'subtitle' => ['nullable', 'string', 'max:255'],
-            'badge' => ['nullable', 'string', 'max:50'],
+            'title' => ['required', 'string', 'max:60'],
+            'subtitle' => ['nullable', 'string', 'max:160'],
+            'badge' => ['nullable', 'string', 'max:20'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
             'image_path' => ['exclude_if:remove_image,1', 'nullable', 'string', 'max:255', new PublicMediaPath],
             'remove_image' => ['nullable', 'boolean'],

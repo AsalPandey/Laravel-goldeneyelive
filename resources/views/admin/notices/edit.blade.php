@@ -1,8 +1,8 @@
 <x-layouts::app :title="__('Modify Notice')">
     <div class="flex h-full w-full flex-1 flex-col gap-8 p-8 max-w-4xl mx-auto">
         <div class="flex items-center gap-4 pb-4 border-b border-neutral-100">
-            <a href="{{ route('admin.notices.index') }}" class="p-3 rounded-xl bg-white border border-neutral-100 text-neutral-400 hover:text-orange-600 transition-all">
-                <i class="fa fa-arrow-left"></i>
+            <a href="{{ route('admin.notices.index') }}" aria-label="Back to global notices" title="Back to global notices" class="p-3 rounded-xl bg-white border border-neutral-100 text-neutral-400 hover:text-orange-600 transition-all">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
             </a>
             <div class="space-y-1">
                 <h1 class="text-3xl font-black text-neutral-900 tracking-tight uppercase">Edit <span class="text-orange-600">Notice</span></h1>

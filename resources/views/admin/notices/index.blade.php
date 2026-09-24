@@ -7,8 +7,9 @@
             </div>
             <div class="flex flex-col sm:flex-row items-center gap-4">
                 <form action="{{ route('admin.notices.index') }}" method="GET" class="relative w-full sm:w-auto">
+                    <label for="notice-search" class="sr-only">Search notices</label>
                     <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xs"></i>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search notices..." class="pl-10 pr-4 py-2.5 rounded-xl border-zinc-200 bg-white text-xs w-full sm:w-64 focus:border-brand-gold focus:ring-0">
+                    <input id="notice-search" type="search" name="search" value="{{ request('search') }}" placeholder="Search notices..." class="pl-10 pr-4 py-2.5 rounded-xl border-zinc-200 bg-white text-xs w-full sm:w-64 focus:border-brand-gold focus:ring-0">
                 </form>
                 <a href="{{ route('admin.notices.create') }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-gold text-brand-dark px-6 py-3 text-sm font-black uppercase shadow-lg hover:bg-brand-dark hover:text-brand-gold transition-all w-full sm:w-auto justify-center">
                     <i class="fa fa-plus-circle"></i> Create New
@@ -20,7 +21,7 @@
             Notices can appear as either a popup-style notice or a top announcement bar. While active and in schedule, a popup-style Notice temporarily takes precedence over the separate Main Campaign Popup under Website Content → Marketing Tools. Scheduled times below use Nepal time.
         </div>
 
-        <div class="overflow-x-auto rounded-3xl border border-zinc-100 bg-white shadow-xl">
+        <div class="hidden overflow-x-auto rounded-3xl border border-zinc-100 bg-white shadow-xl md:block">
             <table class="min-w-full divide-y divide-zinc-200">
                 <thead class="bg-zinc-50/50">
                     <tr>
@@ -36,7 +37,7 @@
                         <td class="px-8 py-6">
                             <div class="flex items-center gap-5">
                                 <div class="h-16 w-24 flex-shrink-0 bg-zinc-100 rounded-2xl overflow-hidden border-2 border-white shadow-md">
-                                    <img class="h-full w-full object-cover transition-transform group-hover:scale-110" src="{{ asset($notice->image) }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $notice->title }}">
+                                    <img class="h-full w-full object-cover transition-transform group-hover:scale-110" src="{{ \App\Support\PublicAsset::url($notice->image, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $notice->title }}">
                                 </div>
                                 <div class="space-y-1.5">
                                     <div class="text-sm font-black text-brand-dark leading-tight flex items-center gap-2">
@@ -64,30 +65,45 @@
                             </div>
                         </td>
                         <td class="px-8 py-6">
+                            @php
+                                $publicationState = $notice->publicationState();
+                                $stateClasses = match ($publicationState) {
+                                    'live' => 'bg-emerald-50 text-emerald-700 border-emerald-100',
+                                    'scheduled' => 'bg-blue-50 text-blue-700 border-blue-100',
+                                    'expired' => 'bg-amber-50 text-amber-700 border-amber-100',
+                                    default => 'bg-rose-50 text-rose-700 border-rose-100',
+                                };
+                                $dotClasses = match ($publicationState) {
+                                    'live' => 'bg-emerald-500',
+                                    'scheduled' => 'bg-blue-500',
+                                    'expired' => 'bg-amber-500',
+                                    default => 'bg-rose-500',
+                                };
+                            @endphp
                             @role('Admin')
                             <form action="{{ route('admin.notices.toggle', $notice->id) }}" method="POST">
                                 @csrf @method('PATCH')
-                                <button type="submit" class="inline-flex items-center rounded-full border-2 {{ $notice->status === 'active' ? 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100' : 'bg-rose-50 text-rose-700 border-rose-100 hover:bg-rose-100' }} px-4 py-1 text-[9px] font-black uppercase tracking-widest transition-all shadow-sm">
-                                    <span class="w-2 h-2 rounded-full {{ $notice->status === 'active' ? 'bg-emerald-500' : 'bg-rose-500' }} me-2"></span>
-                                    {{ $notice->status }}
+                                <button type="submit" aria-label="{{ $notice->status === 'active' ? 'Deactivate' : 'Activate' }} {{ $notice->title }}" class="inline-flex items-center rounded-full border-2 {{ $stateClasses }} px-4 py-1 text-[9px] font-black uppercase tracking-widest transition-all shadow-sm hover:brightness-95">
+                                    <span class="w-2 h-2 rounded-full {{ $dotClasses }} me-2"></span>
+                                    {{ $publicationState }}
                                 </button>
                             </form>
                             @else
-                            <span class="text-xs text-neutral-500">{{ ucfirst($notice->status) }}</span>
+                            <span class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold {{ $stateClasses }}">{{ ucfirst($publicationState) }}</span>
                             @endrole
                         </td>
                         <td class="px-8 py-6">
                             <div class="flex justify-center gap-3">
                                 @role('Admin')
-                                <a href="{{ route('admin.notices.edit', $notice->id) }}" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-zinc-100 text-neutral-600 hover:bg-brand-gold hover:text-brand-dark hover:shadow-lg transition-all border border-zinc-200 hover:border-brand-gold">
-                                    <i class="fa fa-pencil-alt text-xs"></i>
+                                <a href="{{ route('admin.notices.edit', $notice->id) }}" aria-label="Edit {{ $notice->title }}" title="Edit notice" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-zinc-100 text-neutral-600 hover:bg-brand-gold hover:text-brand-dark hover:shadow-lg transition-all border border-zinc-200 hover:border-brand-gold">
+                                    <i class="fa fa-pencil-alt text-xs" aria-hidden="true"></i>
                                 </a>
                                 @endrole
                                 @role('Admin')
                                 <form action="{{ route('admin.notices.destroy', $notice->id) }}" method="POST" onsubmit="return confirm('Permanently delete this notice? This cannot be undone.')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-zinc-100 text-neutral-600 hover:bg-rose-500 hover:text-white hover:shadow-lg transition-all border border-zinc-200 hover:border-rose-500">
-                                        <i class="fa fa-trash-alt text-xs"></i>
+                                    <button type="submit" aria-label="Permanently delete {{ $notice->title }}" title="Delete notice" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-zinc-100 text-neutral-600 hover:bg-rose-500 hover:text-white hover:shadow-lg transition-all border border-zinc-200 hover:border-rose-500">
+                                        <i class="fa fa-trash-alt text-xs" aria-hidden="true"></i>
                                     </button>
                                 </form>
                                 @endrole
@@ -112,6 +128,55 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="grid gap-4 md:hidden">
+            @forelse($notices as $notice)
+                @php
+                    $publicationState = $notice->publicationState();
+                    $stateClasses = match ($publicationState) {
+                        'live' => 'bg-emerald-50 text-emerald-700 border-emerald-100',
+                        'scheduled' => 'bg-blue-50 text-blue-700 border-blue-100',
+                        'expired' => 'bg-amber-50 text-amber-700 border-amber-100',
+                        default => 'bg-rose-50 text-rose-700 border-rose-100',
+                    };
+                @endphp
+                <article class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+                    <div class="flex gap-4">
+                        <img class="h-20 w-24 shrink-0 rounded-xl object-cover" src="{{ \App\Support\PublicAsset::url($notice->image, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-start justify-between gap-2">
+                                <h2 class="font-black text-brand-dark">{{ $notice->title }}</h2>
+                                <span class="rounded-full border px-2.5 py-1 text-[9px] font-black uppercase tracking-wider {{ $stateClasses }}">{{ $publicationState }}</span>
+                            </div>
+                            <p class="mt-2 truncate text-xs text-neutral-500">{{ $notice->link ?: 'Join Now flow' }}</p>
+                            @if($notice->starts_at || $notice->expires_at)
+                                <p class="mt-2 text-[10px] text-neutral-500">
+                                    {{ $notice->starts_at ? 'Starts '.\App\Support\CmsDateTime::forStaffDisplay($notice->starts_at) : 'Starts immediately' }} ·
+                                    {{ $notice->expires_at ? 'Ends '.\App\Support\CmsDateTime::forStaffDisplay($notice->expires_at) : 'No end date' }}
+                                </p>
+                            @endif
+                        </div>
+                    </div>
+                    @role('Admin')
+                        <div class="mt-4 grid grid-cols-3 gap-2 border-t border-zinc-100 pt-4">
+                            <form action="{{ route('admin.notices.toggle', $notice) }}" method="POST">
+                                @csrf @method('PATCH')
+                                <button type="submit" class="w-full rounded-xl border border-zinc-200 px-3 py-2 text-xs font-bold" aria-label="{{ $notice->status === 'active' ? 'Deactivate' : 'Activate' }} {{ $notice->title }}">
+                                    {{ $notice->status === 'active' ? 'Deactivate' : 'Activate' }}
+                                </button>
+                            </form>
+                            <a href="{{ route('admin.notices.edit', $notice) }}" class="rounded-xl border border-zinc-200 px-3 py-2 text-center text-xs font-bold" aria-label="Edit {{ $notice->title }}">Edit</a>
+                            <form action="{{ route('admin.notices.destroy', $notice) }}" method="POST" onsubmit="return confirm('Permanently delete this notice? This cannot be undone.')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="w-full rounded-xl border border-rose-200 px-3 py-2 text-xs font-bold text-rose-700" aria-label="Permanently delete {{ $notice->title }}">Delete</button>
+                            </form>
+                        </div>
+                    @endrole
+                </article>
+            @empty
+                <div class="rounded-2xl border border-zinc-200 bg-white p-8 text-center text-sm text-neutral-500">No global notices are currently scheduled.</div>
+            @endforelse
         </div>
         <div class="mt-6">
             {{ $notices->links() }}

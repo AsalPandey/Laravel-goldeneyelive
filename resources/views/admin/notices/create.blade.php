@@ -1,8 +1,8 @@
 <x-layouts::app :title="__('Post New Notice')">
     <div class="flex h-full w-full flex-1 flex-col gap-8 p-8 max-w-4xl mx-auto">
         <div class="flex items-center gap-5 pb-6 border-b border-zinc-100">
-            <a href="{{ route('admin.notices.index') }}" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-zinc-200 text-neutral-400 hover:text-brand-gold hover:border-brand-gold transition-all shadow-sm">
-                <i class="fa fa-arrow-left"></i>
+            <a href="{{ route('admin.notices.index') }}" aria-label="Back to global notices" title="Back to global notices" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-zinc-200 text-neutral-400 hover:text-brand-gold hover:border-brand-gold transition-all shadow-sm">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
             </a>
             <div class="space-y-1">
                 <h1 class="text-3xl font-black text-brand-dark tracking-tight uppercase">New <span class="text-brand-gold">Notice</span></h1>
@@ -27,41 +27,41 @@
             <div class="bg-white rounded-[2rem] border border-zinc-100 p-10 shadow-xl space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Notice Title</label>
-                        <input type="text" name="title" required value="{{ old('title') }}" maxlength="60"
+                        <label for="notice-title" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Notice Title</label>
+                        <input id="notice-title" type="text" name="title" required value="{{ old('title') }}" maxlength="60"
                                class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all" 
                                placeholder="e.g., Admission Open 2024">
                     </div>
 
                     <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Notice Subtitle</label>
-                        <textarea name="subtitle" rows="2" maxlength="160"
+                        <label for="notice-subtitle" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Notice Subtitle</label>
+                        <textarea id="notice-subtitle" name="subtitle" rows="2" maxlength="160"
                                   class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all" 
                                   placeholder="Brief description of the notice...">{{ old('subtitle') }}</textarea>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Notice Badge</label>
-                        <input type="text" name="badge" value="{{ old('badge') }}" maxlength="20"
+                        <label for="notice-badge" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Notice Badge</label>
+                        <input id="notice-badge" type="text" name="badge" value="{{ old('badge') }}" maxlength="20"
                                class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all" 
                                placeholder="e.g., ANNOUNCEMENT">
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Status</label>
-                        <select name="status" @disabled(! auth()->user()->hasRole('Admin')) class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
+                        <label for="notice-status" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Status</label>
+                        <select id="notice-status" name="status" @disabled(! auth()->user()->hasRole('Admin')) class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
                             <option value="active" @selected(old('status') === 'active')>Active (Visible)</option>
                             <option value="inactive" @selected(old('status', 'inactive') === 'inactive')>Inactive (Hidden)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Button Action Text</label>
-                        <input type="text" name="button_text" value="{{ old('button_text', 'Ask for Course Help') }}" maxlength="50"
+                        <label for="notice-button-text" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Button Action Text</label>
+                        <input id="notice-button-text" type="text" name="button_text" value="{{ old('button_text', 'Ask for Course Help') }}" maxlength="50"
                                class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Destination Link</label>
-                        <input type="text" name="link" value="{{ old('link') }}"
+                        <label for="notice-link" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Destination Link</label>
+                        <input id="notice-link" type="text" name="link" value="{{ old('link') }}"
                                class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all"
                                placeholder="/join-now or https://...">
                     </div>
@@ -74,20 +74,20 @@
                         </h4>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Display Style</label>
-                        <select name="display_type" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
+                        <label for="notice-display-type" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Display Style</label>
+                        <select id="notice-display-type" name="display_type" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
                             <option value="popup" @selected(old('display_type', 'popup') === 'popup')>Popup-style notice</option>
                             <option value="bar" @selected(old('display_type') === 'bar')>Top announcement bar</option>
                         </select>
                         <p class="mt-2 text-[10px] text-amber-700">An active popup-style Notice temporarily overrides the Main Campaign Popup. A top announcement bar does not.</p>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Starts At (Nepal time, optional)</label>
-                        <input type="datetime-local" name="starts_at" value="{{ old('starts_at') }}" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
+                        <label for="notice-starts-at" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Starts At (Nepal time, optional)</label>
+                        <input id="notice-starts-at" type="datetime-local" name="starts_at" value="{{ old('starts_at') }}" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Expires At (Nepal time, optional)</label>
-                        <input type="datetime-local" name="expires_at" value="{{ old('expires_at') }}" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
+                        <label for="notice-expires-at" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Expires At (Nepal time, optional)</label>
+                        <input id="notice-expires-at" type="datetime-local" name="expires_at" value="{{ old('expires_at') }}" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
                     </div>
                     <div class="flex items-center gap-3 pt-4">
                         <label class="relative inline-flex items-center cursor-pointer">
