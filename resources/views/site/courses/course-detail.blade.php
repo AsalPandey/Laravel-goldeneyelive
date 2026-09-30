@@ -91,10 +91,10 @@
             ['icon' => 'fa fa-calendar-check', 'label' => 'Plan your visit', 'value' => 'Call or message before visiting to discuss the course and current timings.'],
         ];
         $whoFor = collect([
-            $bestFor,
-            'Read what the course covers and check that it matches your goal.',
+            $bestFor ?: 'Read what the course covers and check that it matches your goal.',
             'Ask whether your current level is suitable for the class.',
             'Contact the academy for current timings and availability.',
+            $course->fit_note ?: 'Ask what preparation or materials are recommended before class.',
         ])->filter()->values();
         $studentViewItems = [
             ['label' => 'About this course', 'value' => $descriptionText ?: 'Ask the academy what the course covers.'],

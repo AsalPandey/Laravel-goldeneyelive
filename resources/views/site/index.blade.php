@@ -155,7 +155,7 @@
                 <div class="row g-4">
                     @foreach($courses->take(4) as $course)
                         <div class="col-lg-3 col-md-6">
-                            <article class="premium-card p-0 border border-zinc-100 shadow-sm rounded-xl overflow-hidden h-100 d-flex flex-column bg-white">
+                            <article class="premium-card course-card-clickable position-relative p-0 border border-zinc-100 shadow-sm rounded-xl overflow-hidden h-100 d-flex flex-column bg-white">
                                 <div class="aspect-[16/9] overflow-hidden bg-zinc-100">
                                     <img class="img-fluid w-100 h-100 object-cover" loading="lazy" decoding="async" width="640" height="360" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $course->name }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'">
                                 </div>
@@ -171,7 +171,7 @@
                                         @endif
                                     </div>
                                     <div class="d-grid">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="homepage-course-details" class="btn btn-primary course-card-cta py-2.5 rounded-lg font-black uppercase">View Course Details</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="homepage-course-details" aria-label="View details for {{ $course->name }}" class="btn btn-primary course-card-cta stretched-link py-2.5 rounded-lg font-black uppercase">View Course Details</a>
                                     </div>
                                 </div>
                             </article>

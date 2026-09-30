@@ -120,9 +120,9 @@
                 <div class="row g-4">
                     @foreach($catalogueCourses as $course)
                         <div class="col-lg-4 col-md-6">
-                            <article class="premium-card p-0 overflow-hidden h-100 d-flex flex-column">
+                            <article class="premium-card course-card-clickable position-relative p-0 overflow-hidden h-100 d-flex flex-column">
                                 <div class="aspect-[16/9] overflow-hidden position-relative">
-                                    <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full text-[11px] font-black uppercase tracking-[0.2em] shadow-lg z-10">
+                                    <span class="course-card-badge position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full text-[11px] font-black uppercase tracking-[0.2em] shadow-lg z-10">
                                         {{ $course->badge_text ?? 'Available' }}
                                     </span>
                                     <img class="img-fluid w-100 h-100 object-cover" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $course->name }}" loading="lazy" decoding="async" width="640" height="360">
@@ -136,7 +136,7 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 11px;">{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="catalogue-course-details" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest" style="font-size: 11px;">View Course Details</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="catalogue-course-details" aria-label="View details for {{ $course->name }}" class="btn btn-primary course-card-cta stretched-link py-2 rounded-xl font-black uppercase">View Course Details</a>
                                     </div>
                                 </div>
                             </article>

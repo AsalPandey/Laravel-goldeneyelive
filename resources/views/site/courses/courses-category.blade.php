@@ -70,7 +70,7 @@
             <div class="row g-4 justify-content-center">
                 @forelse ($courses as $course)
                     <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="premium-card p-0 overflow-hidden h-full flex flex-col rounded-xl shadow-lg border border-zinc-100">
+                        <div class="premium-card course-card-clickable position-relative p-0 overflow-hidden h-full flex flex-col rounded-xl shadow-lg border border-zinc-100">
                             <div class="relative overflow-hidden h-52">
                                 <img class="w-full h-full object-cover" loading="lazy" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
                                 <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-lg">{{ $course->badge_text ?? 'Course' }}</span>
@@ -91,7 +91,7 @@
                                 </div>
 
                                 <div class="d-grid">
-                                    <a href="{{ $course->slug ? route('courses-detail', $course->slug) : route('courses-all') }}" class="btn btn-primary course-card-cta rounded-lg font-black text-uppercase py-2 shadow-lg">View Course Details</a>
+                                    <a href="{{ $course->slug ? route('courses-detail', $course->slug) : route('courses-all') }}" aria-label="View details for {{ $course->name }}" class="btn btn-primary course-card-cta stretched-link rounded-lg font-black text-uppercase py-2 shadow-lg">View Course Details</a>
                                 </div>
                             </div>
                         </div>

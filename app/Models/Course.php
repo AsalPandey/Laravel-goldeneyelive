@@ -16,7 +16,7 @@ class Course extends Model
 
     protected $fillable = [
         'name', 'badge_text', 'slug', 'category', 'category_slug', 'category_id', 'price', 'duration',
-        'instructor', 'teacher_id', 'capacity', 'description', 'course_outline', 'photo',
+        'instructor', 'teacher_id', 'capacity', 'description', 'course_outline', 'fit_note', 'photo',
         'rating_star', 'rating_count', 'meta_title', 'meta_description', 'meta_keywords', 'aeo_summary', 'schema_markup', 'status', 'is_featured', 'display_order',
     ];
 

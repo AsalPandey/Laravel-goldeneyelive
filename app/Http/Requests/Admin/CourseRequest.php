@@ -60,6 +60,7 @@ class CourseRequest extends CMSRequest
             'capacity' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'course_outline' => ['required', 'string'],
+            'fit_note' => ['nullable', 'string', 'max:255'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', "max:{$imageLimit}"],
             'photo_path' => ['nullable', 'string', 'max:255', new PublicMediaPath],
             'status' => ['required', 'in:active,inactive'],

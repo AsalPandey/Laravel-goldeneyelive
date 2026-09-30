@@ -92,7 +92,7 @@
                 <div class="row g-4">
                     @foreach($featuredCourses as $course)
                         <div class="col-lg-4">
-                            <article class="premium-card h-100 overflow-hidden d-flex flex-column">
+                            <article class="premium-card course-card-clickable position-relative h-100 overflow-hidden d-flex flex-column">
                                 <div class="position-relative aspect-[16/9] overflow-hidden bg-zinc-100">
                                     <img class="w-100 h-100 object-cover" loading="lazy" decoding="async" width="640" height="360" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
                                     <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full font-black uppercase tracking-[0.25em]" style="font-size: 10px;">{{ $course->badge_text ?? 'Hot Course' }}</span>
@@ -105,7 +105,7 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 10px;">{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="popular-course-details" class="btn btn-primary course-card-cta py-2.5 rounded-xl font-black uppercase">View Course Details</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="popular-course-details" aria-label="View details for {{ $course->name }}" class="btn btn-primary course-card-cta stretched-link py-2.5 rounded-xl font-black uppercase">View Course Details</a>
                                     </div>
                                 </div>
                             </article>
@@ -170,7 +170,7 @@
                 <div class="row g-4 justify-content-center">
                     @foreach($courses as $course)
                         <div class="col-lg-4 col-md-6">
-                            <article class="premium-card p-0 overflow-hidden h-100 d-flex flex-column border border-zinc-100 shadow-lg rounded-xl">
+                            <article class="premium-card course-card-clickable position-relative p-0 overflow-hidden h-100 d-flex flex-column border border-zinc-100 shadow-lg rounded-xl">
                                 <div class="position-relative overflow-hidden aspect-[16/9] bg-zinc-100">
                                     <img class="w-100 h-100 object-cover" loading="lazy" decoding="async" width="640" height="360" src="{{ \App\Support\PublicAsset::url($course->photo ?? null, 'site/img/cat-1.jpg') }}" onerror="this.src='{{ asset('site/img/cat-1.jpg') }}'" alt="{{ $course->name }}">
                                     <span class="position-absolute top-0 start-0 bg-brand-gold text-brand-dark px-2.5 py-1 m-3 rounded-full font-black uppercase tracking-widest shadow-lg" style="font-size: 10px;">{{ $course->badge_text ?? 'Available' }}</span>
@@ -184,7 +184,7 @@
                                         <span class="bg-zinc-50 rounded-full px-3 py-1.5 border border-zinc-100 fw-black text-brand-dark uppercase tracking-widest" style="font-size: 10px;"><i class="fa fa-tag text-brand-gold me-1"></i>{{ $course->price }}</span>
                                     </div>
                                     <div class="d-grid">
-                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="course-card-details" class="btn btn-primary course-card-cta py-2.5 rounded-lg font-black uppercase shadow-lg">View Course Details</a>
+                                        <a href="{{ route('courses-detail', $course->slug) }}" data-cta="course-card-details" aria-label="View details for {{ $course->name }}" class="btn btn-primary course-card-cta stretched-link py-2.5 rounded-lg font-black uppercase shadow-lg">View Course Details</a>
                                     </div>
                                 </div>
                             </article>

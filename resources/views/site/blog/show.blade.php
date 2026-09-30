@@ -87,7 +87,7 @@
                             <div class="row g-4">
                                 @foreach($relatedCourses as $relatedCourse)
                                     <div class="col-md-6">
-                                        <article class="premium-card h-100 overflow-hidden d-flex flex-column">
+                                        <article class="premium-card course-card-clickable position-relative h-100 overflow-hidden d-flex flex-column">
                                             <img src="{{ \App\Support\PublicAsset::url($relatedCourse->photo ?? null, 'site/img/cat-1.jpg') }}" alt="{{ $relatedCourse->name }}" class="w-100 object-cover" loading="lazy" decoding="async" width="640" height="360" style="aspect-ratio: 16 / 9;">
                                             <div class="p-4 d-flex flex-column flex-grow-1">
                                                 <small class="text-brand-gold font-black uppercase tracking-widest mb-2" style="font-size: 8px;">{{ $relatedCourse->courseCategory?->name ?? $relatedCourse->category }}</small>
@@ -103,7 +103,7 @@
                                                         <dt class="col-4">Instructor</dt><dd class="col-8 mb-0">{{ $relatedCourse->instructor }}</dd>
                                                     @endif
                                                 </dl>
-                                                <a href="{{ route('courses-detail', $relatedCourse->slug) }}" data-cta="blog-related-course" data-track-event="blog_related_course_click" data-source-page="blog-detail" data-source-section="related-courses" data-selected-course="{{ $relatedCourse->slug }}" class="btn btn-primary py-2 rounded-xl font-black uppercase tracking-widest mt-auto" style="font-size: 9px;">View Course Details</a>
+                                                <a href="{{ route('courses-detail', $relatedCourse->slug) }}" data-cta="blog-related-course" data-track-event="blog_related_course_click" data-source-page="blog-detail" data-source-section="related-courses" data-selected-course="{{ $relatedCourse->slug }}" aria-label="View details for {{ $relatedCourse->name }}" class="btn btn-primary course-card-cta stretched-link py-2 rounded-xl font-black uppercase mt-auto">View Course Details</a>
                                             </div>
                                         </article>
                                     </div>

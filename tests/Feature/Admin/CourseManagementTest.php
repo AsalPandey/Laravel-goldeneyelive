@@ -75,6 +75,7 @@ class CourseManagementTest extends TestCase
                 'capacity' => '20 Seats',
                 'description' => '<p>Updated description.</p>',
                 'course_outline' => '<ul><li>Speaking practice</li></ul>',
+                'fit_note' => 'Bring your goals for a placement discussion.',
                 'photo_path' => 'site/img/cat-1.jpg',
                 'status' => 'active',
                 'display_order' => 7,
@@ -89,6 +90,7 @@ class CourseManagementTest extends TestCase
             'category' => 'Language and Test Prep',
             'category_slug' => 'language-and-test-prep',
             'display_order' => 7,
+            'fit_note' => 'Bring your goals for a placement discussion.',
         ]);
     }
 

@@ -220,6 +220,19 @@ h1, h2, h3, h4, h5, h6, .section-title {
     letter-spacing: 0.06em;
 }
 
+.course-card-clickable {
+    cursor: pointer;
+}
+
+.course-card-clickable:focus-within {
+    outline: 3px solid rgba(197, 160, 89, 0.45);
+    outline-offset: 3px;
+}
+
+.course-card-clickable .course-card-badge {
+    pointer-events: none;
+}
+
 
 /*** Navbar ***/
 .site-navbar {

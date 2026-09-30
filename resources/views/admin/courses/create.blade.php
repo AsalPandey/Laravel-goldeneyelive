@@ -110,6 +110,13 @@
                     <textarea name="course_outline" id="course_outline" rows="5" required data-cms-rich-text class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white p-3">{{ old('course_outline') }}</textarea>
                 </div>
 
+                <div>
+                    <label for="fit_note" class="premium-label">Fourth Course-Fit Card</label>
+                    <input type="text" name="fit_note" id="fit_note" value="{{ old('fit_note') }}" maxlength="255" class="mt-1 block w-full rounded-md border-neutral-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white h-10 px-3" placeholder="Ask what preparation or materials are recommended before class.">
+                    <p class="mt-1 text-xs text-neutral-500">Shown as the fourth card under “Check fit before you enroll.” Leave blank to use the default guidance.</p>
+                    @error('fit_note') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                </div>
+
                 <x-seo-aeo-fields :meta-title-max="70" :meta-description-max="500" :meta-keywords-max="500" :aeo-summary-max="500" />
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-100">
