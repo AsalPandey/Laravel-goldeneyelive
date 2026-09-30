@@ -99,10 +99,12 @@ final class PublicCtaContract
 
         if (array_key_exists('button_text', $input) || array_key_exists('link', $input)) {
             $link = $normalized['link'] ?? ($input['link'] ?? null);
-            $normalized['button_text'] = self::normalizeLabel(
-                $input['button_text'] ?? null,
-                self::intentForUrl($link)
-            );
+            $buttonText = self::cleanText($input['button_text'] ?? null);
+            $defaultLabel = self::normalizeLabel(null, self::intentForUrl($link));
+            $normalized['button_text'] = match (strtolower($buttonText)) {
+                'ask for course guidance', 'explore programs', 'message us on whatsapp' => $defaultLabel,
+                default => $buttonText !== '' ? $buttonText : $defaultLabel,
+            };
         }
 
         return $normalized;

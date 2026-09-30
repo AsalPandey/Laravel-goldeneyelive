@@ -51,17 +51,9 @@ class SettingsServiceProvider extends ServiceProvider
                         }
 
                         if (Schema::hasTable('notices')) {
-                            $activeNotices = Notice::where('status', 'active')
-                                ->where(function ($q) {
-                                    $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
-                                })
-                                ->where(function ($q) {
-                                    $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
-                                })
-                                ->orderByDesc('is_urgent')
-                                ->orderByRaw('CASE WHEN starts_at IS NOT NULL THEN 1 ELSE 0 END DESC')
-                                ->latest('starts_at')
-                                ->latest('updated_at')
+                            $activeNotices = Notice::query()
+                                ->currentlyEligible()
+                                ->inPublicPriority()
                                 ->get();
 
                             $activeNotice = $activeNotices->first()?->toArray();

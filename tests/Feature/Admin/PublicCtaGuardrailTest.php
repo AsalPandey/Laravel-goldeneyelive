@@ -169,6 +169,36 @@ class PublicCtaGuardrailTest extends TestCase
         ]);
     }
 
+    public function test_notice_can_keep_custom_button_text_for_an_event_link(): void
+    {
+        $this->actingAs($this->admin)
+            ->post(route('admin.notices.store'), [
+                'title' => 'Event Notice',
+                'link' => '/events/open-day',
+                'button_text' => 'See Event Details',
+                'status' => 'active',
+                'display_type' => 'popup',
+            ])
+            ->assertRedirect(route('admin.notices.index'));
+
+        $this->assertDatabaseHas(Notice::class, [
+            'title' => 'Event Notice',
+            'button_text' => 'See Event Details',
+        ]);
+
+        $notice = Notice::query()->where('title', 'Event Notice')->firstOrFail();
+        $this->actingAs($this->admin)->put(route('admin.notices.update', $notice), [
+            'title' => 'Event Notice',
+            'link' => '/events/open-day',
+            'button_text' => 'Book Your Seat',
+            'status' => 'active',
+            'display_type' => 'popup',
+        ])->assertRedirect(route('admin.notices.index'));
+
+        $this->assertSame('Book Your Seat', $notice->fresh()->button_text);
+        $this->get(route('home'))->assertOk()->assertSee('Book Your Seat');
+    }
+
     public function test_notice_and_service_pillar_reject_invalid_public_links(): void
     {
         $this->actingAs($this->admin)

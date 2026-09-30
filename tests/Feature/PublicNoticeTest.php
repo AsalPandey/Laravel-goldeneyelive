@@ -28,6 +28,8 @@ class PublicNoticeTest extends TestCase
         $response->assertSee('https://example.com/test-link');
         $response->assertSee('siteNoticePopup');
         $response->assertSee('notice-popup');
+        $response->assertSee('scrollable <= 0', false);
+        $response->assertSee("window.addEventListener('load', function () {", false);
     }
 
     public function test_inactive_notice_is_not_visible(): void

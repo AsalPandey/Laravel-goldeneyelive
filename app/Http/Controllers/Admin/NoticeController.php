@@ -20,6 +20,14 @@ class NoticeController extends Controller
     {
         $search = $request->input('search');
 
+        $visibleNoticeIds = Notice::query()
+            ->currentlyEligible()
+            ->inPublicPriority()
+            ->get(['id', 'display_type'])
+            ->unique(fn (Notice $notice): string => $notice->display_type === 'bar' ? 'bar' : 'popup')
+            ->pluck('id')
+            ->all();
+
         $notices = Notice::query()
             ->when($search, function ($query, $search) {
                 $query->where('title', 'like', "%{$search}%")
@@ -29,7 +37,7 @@ class NoticeController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.notices.index', compact('notices'));
+        return view('admin.notices.index', compact('notices', 'visibleNoticeIds'));
     }
 
     public function create()

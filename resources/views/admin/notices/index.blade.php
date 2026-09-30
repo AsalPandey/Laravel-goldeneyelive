@@ -18,7 +18,7 @@
         </div>
 
         <div class="rounded-2xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-900">
-            Notices can appear as either a popup-style notice or a top announcement bar. While active and in schedule, a popup-style Notice temporarily takes precedence over the separate Main Campaign Popup under Website Content → Marketing Tools. Scheduled times below use Nepal time.
+            Notices can appear as either a popup-style notice or a top announcement bar. While active and in schedule, a popup-style Notice temporarily takes precedence over the separate Main Campaign Popup under Website Content → Marketing Tools. "Queued" means an active notice is waiting behind a higher-priority notice on the same display surface. Scheduled times below use Nepal time.
         </div>
 
         <div class="hidden overflow-x-auto rounded-3xl border border-zinc-100 bg-white shadow-xl md:block">
@@ -67,14 +67,19 @@
                         <td class="px-8 py-6">
                             @php
                                 $publicationState = $notice->publicationState();
+                                if ($publicationState === 'live' && ! in_array($notice->getKey(), $visibleNoticeIds, true)) {
+                                    $publicationState = 'queued';
+                                }
                                 $stateClasses = match ($publicationState) {
                                     'live' => 'bg-emerald-50 text-emerald-700 border-emerald-100',
+                                    'queued' => 'bg-violet-50 text-violet-700 border-violet-100',
                                     'scheduled' => 'bg-blue-50 text-blue-700 border-blue-100',
                                     'expired' => 'bg-amber-50 text-amber-700 border-amber-100',
                                     default => 'bg-rose-50 text-rose-700 border-rose-100',
                                 };
                                 $dotClasses = match ($publicationState) {
                                     'live' => 'bg-emerald-500',
+                                    'queued' => 'bg-violet-500',
                                     'scheduled' => 'bg-blue-500',
                                     'expired' => 'bg-amber-500',
                                     default => 'bg-rose-500',
@@ -134,8 +139,12 @@
             @forelse($notices as $notice)
                 @php
                     $publicationState = $notice->publicationState();
+                    if ($publicationState === 'live' && ! in_array($notice->getKey(), $visibleNoticeIds, true)) {
+                        $publicationState = 'queued';
+                    }
                     $stateClasses = match ($publicationState) {
                         'live' => 'bg-emerald-50 text-emerald-700 border-emerald-100',
+                        'queued' => 'bg-violet-50 text-violet-700 border-violet-100',
                         'scheduled' => 'bg-blue-50 text-blue-700 border-blue-100',
                         'expired' => 'bg-amber-50 text-amber-700 border-amber-100',
                         default => 'bg-rose-50 text-rose-700 border-rose-100',

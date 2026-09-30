@@ -86,6 +86,7 @@
                         <select name="display_type" class="w-full bg-white border-none rounded-xl p-4 text-sm font-bold text-neutral-900 focus:ring-2 focus:ring-orange-500 transition-all">
                             <option value="popup" {{ old('display_type', $notice->display_type) === 'popup' ? 'selected' : '' }}>Popup-style notice</option>
                             <option value="bar" {{ old('display_type', $notice->display_type) === 'bar' ? 'selected' : '' }}>Top announcement bar</option>
+                            <option value="standard" {{ old('display_type', $notice->display_type) === 'standard' ? 'selected' : '' }}>Standard (legacy popup-style notice)</option>
                         </select>
                         <p class="mt-2 text-[10px] text-amber-700">An active popup-style Notice temporarily overrides the Main Campaign Popup. A top announcement bar does not.</p>
                     </div>

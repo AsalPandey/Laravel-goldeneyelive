@@ -68,6 +68,7 @@
 
 	            return (object) [
 	                'id' => 'notice_'.$notice->id,
+	                'version' => sha1(json_encode($notice)),
 	                'badge' => $notice->badge ?? 'Academy Support',
 	                'title' => $notice->title,
 	                'subtitle' => $notice->subtitle,
@@ -113,7 +114,7 @@
 	    @endphp
 
     @if($noticeStripData)
-        <section id="siteNoticeStrip" class="site-notice-strip" data-notice-id="{{ $noticeStripData->id }}">
+        <section id="siteNoticeStrip" class="site-notice-strip" data-notice-id="{{ $noticeStripData->id }}" data-notice-version="{{ $noticeStripData->version }}">
             <div class="container d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
                 <div class="d-flex align-items-start gap-3">
                     <span class="site-notice-badge">{{ $noticeStripData->badge }}</span>
@@ -138,13 +139,14 @@
                 if (!notice) return;
 
                 const id = notice.dataset.noticeId;
-                const dismissed = localStorage.getItem('notice_dismissed_' + id);
-                if (dismissed) {
+                const dismissalKey = 'notice_dismissed_' + id;
+                const [dismissedVersion, dismissedAt] = (localStorage.getItem(dismissalKey) || '').split('|');
+                if (dismissedVersion === notice.dataset.noticeVersion && Date.now() - Number(dismissedAt) < 12 * 60 * 60 * 1000) {
                     notice.remove();
                 }
 
                 window.dismissSiteNotice = function (noticeId) {
-                    localStorage.setItem('notice_dismissed_' + noticeId, new Date().toISOString());
+                    localStorage.setItem(dismissalKey, notice.dataset.noticeVersion + '|' + Date.now());
                     notice.remove();
                 };
             })();
@@ -331,25 +333,28 @@
 	                    });
 	                }
 
-	                window.addEventListener('load', function () {
-	                    window.setTimeout(function () {
-	                        delayElapsed = true;
-	                        maybeAutoOpen();
-	                    }, autoDelayMs);
-	                });
-
-	                window.addEventListener('scroll', function () {
+	                function updateScrollTrigger() {
 	                    if (scrollTriggered || autoOpened || window.location.pathname.includes('/join-now')) {
 	                        return;
 	                    }
 
 	                    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
 
-	                    if (scrollable > 0 && (window.scrollY / scrollable) >= 0.25) {
+	                    if (scrollable <= 0 || (window.scrollY / scrollable) >= 0.25) {
 	                        scrollTriggered = true;
 	                        maybeAutoOpen();
 	                    }
-	                }, { passive: true });
+	                }
+
+	                window.addEventListener('load', function () {
+	                    updateScrollTrigger();
+	                    window.setTimeout(function () {
+	                        delayElapsed = true;
+	                        maybeAutoOpen();
+	                    }, autoDelayMs);
+	                });
+
+	                window.addEventListener('scroll', updateScrollTrigger, { passive: true });
 	            })();
 	        </script>
 	    @endif
