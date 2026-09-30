@@ -233,6 +233,12 @@ h1, h2, h3, h4, h5, h6, .section-title {
     pointer-events: none;
 }
 
+.course-card-clickable .stretched-link:hover,
+.course-card-clickable .stretched-link:focus {
+    transform: none;
+    translate: none;
+}
+
 
 /*** Navbar ***/
 .site-navbar {

@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\NoticeRequest;
 use App\Models\Notice;
 use App\Support\CmsDateTime;
 use App\Traits\InteractsWithAssets;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -142,13 +143,12 @@ class NoticeController extends Controller
     /**
      * Quick Toggle for Notice Status
      */
-    public function toggleStatus($id)
+    public function toggleStatus(int|string $id): RedirectResponse
     {
-        $notice = Notice::findOrFail($id);
-        $newStatus = $notice->status === 'active' ? 'inactive' : 'active';
-
-        $this->withPublicationLock(function () use ($notice, $newStatus): void {
-            DB::transaction(function () use ($notice, $newStatus): void {
+        $newStatus = $this->withPublicationLock(function () use ($id): string {
+            return DB::transaction(function () use ($id): string {
+                $notice = Notice::query()->lockForUpdate()->findOrFail($id);
+                $newStatus = $notice->status === 'active' ? 'inactive' : 'active';
                 $activation = [
                     'status' => $newStatus,
                     'display_type' => $notice->display_type,
@@ -160,6 +160,8 @@ class NoticeController extends Controller
                 $notice->update(['status' => $newStatus]);
 
                 DB::afterCommit(fn () => $this->clearSiteCache());
+
+                return $newStatus;
             });
         });
 

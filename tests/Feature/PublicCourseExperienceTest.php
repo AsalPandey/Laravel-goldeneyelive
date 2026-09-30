@@ -90,6 +90,15 @@ class PublicCourseExperienceTest extends TestCase
             ->assertSee(route('courses-detail', $course->slug), false);
     }
 
+    public function test_card_link_keeps_its_stretched_click_target_on_hover_and_focus(): void
+    {
+        $css = file_get_contents(public_path('site/css/style.css'));
+
+        $this->assertStringContainsString('.course-card-clickable .stretched-link:hover,', $css);
+        $this->assertStringContainsString('.course-card-clickable .stretched-link:focus {', $css);
+        $this->assertMatchesRegularExpression('/\.course-card-clickable \.stretched-link:focus\s*\{\s*transform:\s*none;\s*translate:\s*none;/', $css);
+    }
+
     public function test_course_fit_section_always_has_four_cards_and_uses_builder_content(): void
     {
         $category = CourseCategory::factory()->create(['status' => 'active']);

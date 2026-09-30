@@ -45,7 +45,7 @@
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Status</label>
                         <select name="status" class="w-full bg-neutral-50 border-none rounded-xl p-4 text-sm font-bold text-neutral-900 focus:ring-2 focus:ring-orange-500 transition-all">
-                            <option value="active" {{ old('status', $notice->status) === 'active' ? 'selected' : '' }}>Active (Visible)</option>
+                            <option value="active" {{ old('status', $notice->status) === 'active' ? 'selected' : '' }}>Active (follows schedule)</option>
                             <option value="inactive" {{ old('status', $notice->status) === 'inactive' ? 'selected' : '' }}>Inactive (Hidden)</option>
                         </select>
                     </div>
@@ -86,7 +86,9 @@
                         <select name="display_type" class="w-full bg-white border-none rounded-xl p-4 text-sm font-bold text-neutral-900 focus:ring-2 focus:ring-orange-500 transition-all">
                             <option value="popup" {{ old('display_type', $notice->display_type) === 'popup' ? 'selected' : '' }}>Popup-style notice</option>
                             <option value="bar" {{ old('display_type', $notice->display_type) === 'bar' ? 'selected' : '' }}>Top announcement bar</option>
-                            <option value="standard" {{ old('display_type', $notice->display_type) === 'standard' ? 'selected' : '' }}>Standard (legacy popup-style notice)</option>
+                            @if($notice->display_type === 'standard')
+                                <option value="standard" {{ old('display_type', $notice->display_type) === 'standard' ? 'selected' : '' }}>Popup (legacy record)</option>
+                            @endif
                         </select>
                         <p class="mt-2 text-[10px] text-amber-700">An active popup-style Notice temporarily overrides the Main Campaign Popup. A top announcement bar does not.</p>
                     </div>

@@ -50,7 +50,7 @@
                     <div>
                         <label for="notice-status" class="block text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Status</label>
                         <select id="notice-status" name="status" @disabled(! auth()->user()->hasRole('Admin')) class="w-full bg-zinc-50 border-zinc-100 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
-                            <option value="active" @selected(old('status') === 'active')>Active (Visible)</option>
+                            <option value="active" @selected(old('status') === 'active')>Active (follows schedule)</option>
                             <option value="inactive" @selected(old('status', 'inactive') === 'inactive')>Inactive (Hidden)</option>
                         </select>
                     </div>
@@ -78,7 +78,6 @@
                         <select id="notice-display-type" name="display_type" class="w-full bg-white border-zinc-200 rounded-2xl p-4 text-sm font-bold text-brand-dark focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10 transition-all">
                             <option value="popup" @selected(old('display_type', 'popup') === 'popup')>Popup-style notice</option>
                             <option value="bar" @selected(old('display_type') === 'bar')>Top announcement bar</option>
-                            <option value="standard" @selected(old('display_type') === 'standard')>Standard (legacy popup-style notice)</option>
                         </select>
                         <p class="mt-2 text-[10px] text-amber-700">An active popup-style Notice temporarily overrides the Main Campaign Popup. A top announcement bar does not.</p>
                     </div>

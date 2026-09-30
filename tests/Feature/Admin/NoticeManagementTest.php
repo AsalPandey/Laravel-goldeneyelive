@@ -47,6 +47,9 @@ class NoticeManagementTest extends TestCase
             ->assertSee('expired')
             ->assertSee('inactive')
             ->assertSee('for="notice-search"', false)
+            ->assertSee('Status / Public display')
+            ->assertSee('aria-label="Activate Inactive Notice"', false)
+            ->assertSee('aria-label="Deactivate Live Notice"', false)
             ->assertSee('aria-label="Edit Live Notice"', false)
             ->assertSee('aria-label="Permanently delete Live Notice"', false)
             ->assertSee('site/img/carousel-1.png', false)
@@ -63,6 +66,16 @@ class NoticeManagementTest extends TestCase
             ->assertOk()
             ->assertSee('Enrollment Week')
             ->assertDontSee('Holiday');
+    }
+
+    public function test_create_form_offers_only_the_two_public_placements(): void
+    {
+        $this->actingAs($this->admin)
+            ->get(route('admin.notices.create'))
+            ->assertOk()
+            ->assertSee('Popup-style notice')
+            ->assertSee('Top announcement bar')
+            ->assertDontSee('value="standard"', false);
     }
 
     public function test_server_validation_matches_the_editor_character_limits(): void
@@ -112,6 +125,57 @@ class NoticeManagementTest extends TestCase
         $this->assertSame('active', $newPopup->fresh()->status);
     }
 
+    public function test_admin_can_activate_and_deactivate_a_popup_from_the_index(): void
+    {
+        $notice = Notice::factory()->create([
+            'title' => 'Toggleable Popup',
+            'status' => 'inactive',
+            'display_type' => 'popup',
+        ]);
+
+        $this->actingAs($this->admin)
+            ->get(route('admin.notices.index'))
+            ->assertSee('aria-label="Activate Toggleable Popup"', false);
+
+        $this->patch(route('admin.notices.toggle', $notice))
+            ->assertRedirect()
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame('active', $notice->fresh()->status);
+        $this->get(route('home'))->assertSee('Toggleable Popup');
+        $this->get(route('admin.notices.index'))
+            ->assertSee('aria-label="Deactivate Toggleable Popup"', false)
+            ->assertSee('Public: live');
+
+        $this->patch(route('admin.notices.toggle', $notice))->assertRedirect();
+
+        $this->assertSame('inactive', $notice->fresh()->status);
+        $this->get(route('home'))->assertDontSee('Toggleable Popup');
+        $this->get(route('admin.notices.index'))
+            ->assertSee('aria-label="Activate Toggleable Popup"', false)
+            ->assertSee('Public: hidden');
+    }
+
+    public function test_activating_expired_notice_changes_status_but_does_not_ignore_its_schedule(): void
+    {
+        $notice = Notice::factory()->create([
+            'title' => 'Expired Announcement',
+            'status' => 'inactive',
+            'display_type' => 'bar',
+            'expires_at' => now()->subDay(),
+        ]);
+
+        $this->actingAs($this->admin)
+            ->patch(route('admin.notices.toggle', $notice))
+            ->assertRedirect();
+
+        $this->assertSame('active', $notice->fresh()->status);
+        $this->get(route('admin.notices.index'))
+            ->assertSee('aria-label="Deactivate Expired Announcement"', false)
+            ->assertSee('Public: expired');
+        $this->get(route('home'))->assertDontSee('Expired Announcement');
+    }
+
     public function test_overridden_active_notice_is_queued_in_the_cms(): void
     {
         Notice::factory()->create([
@@ -140,8 +204,8 @@ class NoticeManagementTest extends TestCase
 
         $this->assertNotNull($fallbackRow);
         $this->assertNotNull($priorityRow);
-        $this->assertSame('queued', trim($xpath->query('.//td[3]//button', $fallbackRow)->item(0)?->textContent ?? ''));
-        $this->assertSame('live', trim($xpath->query('.//td[3]//button', $priorityRow)->item(0)?->textContent ?? ''));
+        $this->assertSame('Public: queued', trim($xpath->query('.//td[3]//span[2]', $fallbackRow)->item(0)?->textContent ?? ''));
+        $this->assertSame('Public: live', trim($xpath->query('.//td[3]//span[2]', $priorityRow)->item(0)?->textContent ?? ''));
 
         $publicPage = $this->get(route('home'));
         $publicPage->assertSee('Scheduled Priority Popup')->assertDontSee('Fallback Popup');
@@ -156,9 +220,16 @@ class NoticeManagementTest extends TestCase
         ]);
 
         $this->actingAs($this->admin)
+            ->get(route('admin.notices.index'))
+            ->assertOk()
+            ->assertSee('Popup')
+            ->assertDontSee('>standard<', false);
+
+        $this->actingAs($this->admin)
             ->get(route('admin.notices.edit', $notice))
             ->assertOk()
-            ->assertSee('value="standard" selected', false);
+            ->assertSee('value="standard" selected', false)
+            ->assertSee('Popup (legacy record)');
 
         $this->put(route('admin.notices.update', $notice), [
             'title' => 'Legacy Standard Updated',
@@ -167,6 +238,23 @@ class NoticeManagementTest extends TestCase
         ])->assertRedirect(route('admin.notices.index'));
 
         $this->assertSame('standard', $notice->fresh()->display_type);
+    }
+
+    public function test_bar_index_uses_an_icon_instead_of_a_photo_preview(): void
+    {
+        Notice::factory()->create([
+            'title' => 'Bar Without Public Image',
+            'status' => 'active',
+            'display_type' => 'bar',
+            'image' => 'site/img/notices/private-preview.jpg',
+        ]);
+
+        $this->actingAs($this->admin)
+            ->get(route('admin.notices.index'))
+            ->assertOk()
+            ->assertSee('Announcement bar')
+            ->assertSee('fa-bullhorn', false)
+            ->assertDontSee('private-preview.jpg');
     }
 
     public function test_updating_a_bar_gives_its_dismissal_a_new_version(): void

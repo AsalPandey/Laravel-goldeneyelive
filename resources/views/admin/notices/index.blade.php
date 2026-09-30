@@ -18,7 +18,12 @@
         </div>
 
         <div class="rounded-2xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-900">
-            Notices can appear as either a popup-style notice or a top announcement bar. While active and in schedule, a popup-style Notice temporarily takes precedence over the separate Main Campaign Popup under Website Content → Marketing Tools. "Queued" means an active notice is waiting behind a higher-priority notice on the same display surface. Scheduled times below use Nepal time.
+            <p class="font-black">Global Notices has two public placements:</p>
+            <ul class="mt-2 list-disc space-y-1 pl-5">
+                <li><strong>Popup</strong> — uses the image and temporarily replaces the Main Campaign Popup under Website Content → Marketing Tools.</li>
+                <li><strong>Announcement bar</strong> — shows text and a button, but not the image. It can appear alongside a popup.</li>
+            </ul>
+            <p class="mt-3">Older "standard" records also display as popups. <strong>Status</strong> is the Admin on/off switch; <strong>Public display</strong> shows what visitors see now. Activating does not change scheduled dates. "Queued" means another notice has priority on the same placement. Times use Nepal time.</p>
         </div>
 
         <div class="hidden overflow-x-auto rounded-3xl border border-zinc-100 bg-white shadow-xl md:block">
@@ -27,7 +32,7 @@
                     <tr>
                         <th scope="col" class="px-8 py-5 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Notice Detail</th>
                         <th scope="col" class="px-8 py-5 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Destination</th>
-                        <th scope="col" class="px-8 py-5 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Status</th>
+                        <th scope="col" class="px-8 py-5 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400">Status / Public display</th>
                         <th scope="col" class="px-8 py-5 text-left text-[10px] font-black uppercase tracking-widest text-neutral-400 text-center">Manage</th>
                     </tr>
                 </thead>
@@ -37,7 +42,11 @@
                         <td class="px-8 py-6">
                             <div class="flex items-center gap-5">
                                 <div class="h-16 w-24 flex-shrink-0 bg-zinc-100 rounded-2xl overflow-hidden border-2 border-white shadow-md">
-                                    <img class="h-full w-full object-cover transition-transform group-hover:scale-110" src="{{ \App\Support\PublicAsset::url($notice->image, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $notice->title }}">
+                                    @if($notice->display_type === 'bar')
+                                        <div class="flex h-full w-full items-center justify-center text-brand-gold" aria-hidden="true"><i class="fas fa-bullhorn text-2xl"></i></div>
+                                    @else
+                                        <img class="h-full w-full object-cover transition-transform group-hover:scale-110" src="{{ \App\Support\PublicAsset::url($notice->image, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="{{ $notice->title }}">
+                                    @endif
                                 </div>
                                 <div class="space-y-1.5">
                                     <div class="text-sm font-black text-brand-dark leading-tight flex items-center gap-2">
@@ -46,7 +55,7 @@
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <div class="text-[8px] font-black text-white uppercase tracking-widest bg-brand-dark px-2 py-0.5 rounded-full">{{ $notice->badge ?? 'ANNOUNCEMENT' }}</div>
-                                        <div class="text-[8px] font-black text-brand-gold uppercase tracking-widest bg-brand-gold/10 px-2 py-0.5 rounded-full border border-brand-gold/20">{{ $notice->display_type ?? 'popup' }}</div>
+                                        <div class="text-[8px] font-black text-brand-gold uppercase tracking-widest bg-brand-gold/10 px-2 py-0.5 rounded-full border border-brand-gold/20">{{ $notice->display_type === 'bar' ? 'Announcement bar' : 'Popup' }}</div>
                                     </div>
                                     @if($notice->starts_at || $notice->expires_at)
                                         <div class="text-[9px] text-neutral-500">
@@ -77,28 +86,20 @@
                                     'expired' => 'bg-amber-50 text-amber-700 border-amber-100',
                                     default => 'bg-rose-50 text-rose-700 border-rose-100',
                                 };
-                                $dotClasses = match ($publicationState) {
-                                    'live' => 'bg-emerald-500',
-                                    'queued' => 'bg-violet-500',
-                                    'scheduled' => 'bg-blue-500',
-                                    'expired' => 'bg-amber-500',
-                                    default => 'bg-rose-500',
-                                };
                             @endphp
-                            @role('Admin')
-                            <form action="{{ route('admin.notices.toggle', $notice->id) }}" method="POST">
-                                @csrf @method('PATCH')
-                                <button type="submit" aria-label="{{ $notice->status === 'active' ? 'Deactivate' : 'Activate' }} {{ $notice->title }}" class="inline-flex items-center rounded-full border-2 {{ $stateClasses }} px-4 py-1 text-[9px] font-black uppercase tracking-widest transition-all shadow-sm hover:brightness-95">
-                                    <span class="w-2 h-2 rounded-full {{ $dotClasses }} me-2"></span>
-                                    {{ $publicationState }}
-                                </button>
-                            </form>
-                            @else
-                            <span class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold {{ $stateClasses }}">{{ ucfirst($publicationState) }}</span>
-                            @endrole
+                            <div class="flex flex-col items-start gap-1.5">
+                                <span class="inline-flex items-center rounded-full border px-3 py-1 text-[9px] font-black uppercase tracking-widest {{ $notice->status === 'active' ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : 'border-rose-100 bg-rose-50 text-rose-700' }}">{{ $notice->status }}</span>
+                                <span class="inline-flex items-center rounded-full border px-3 py-1 text-[9px] font-black uppercase tracking-widest {{ $stateClasses }}">Public: {{ $publicationState === 'inactive' ? 'hidden' : $publicationState }}</span>
+                            </div>
                         </td>
                         <td class="px-8 py-6">
-                            <div class="flex justify-center gap-3">
+                            <div class="flex flex-wrap items-center justify-center gap-2">
+                                @role('Admin')
+                                <form action="{{ route('admin.notices.toggle', $notice->id) }}" method="POST">
+                                    @csrf @method('PATCH')
+                                    <button type="submit" aria-label="{{ $notice->status === 'active' ? 'Deactivate' : 'Activate' }} {{ $notice->title }}" class="min-h-10 rounded-xl border px-3 py-2 text-[10px] font-black uppercase tracking-wide transition-colors {{ $notice->status === 'active' ? 'border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100' : 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' }}">{{ $notice->status === 'active' ? 'Deactivate' : 'Activate' }}</button>
+                                </form>
+                                @endrole
                                 @role('Admin')
                                 <a href="{{ route('admin.notices.edit', $notice->id) }}" aria-label="Edit {{ $notice->title }}" title="Edit notice" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-zinc-100 text-neutral-600 hover:bg-brand-gold hover:text-brand-dark hover:shadow-lg transition-all border border-zinc-200 hover:border-brand-gold">
                                     <i class="fa fa-pencil-alt text-xs" aria-hidden="true"></i>
@@ -152,12 +153,18 @@
                 @endphp
                 <article class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
                     <div class="flex gap-4">
-                        <img class="h-20 w-24 shrink-0 rounded-xl object-cover" src="{{ \App\Support\PublicAsset::url($notice->image, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="">
+                        @if($notice->display_type === 'bar')
+                            <div class="flex h-20 w-24 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-brand-gold" aria-hidden="true"><i class="fas fa-bullhorn text-2xl"></i></div>
+                        @else
+                            <img class="h-20 w-24 shrink-0 rounded-xl object-cover" src="{{ \App\Support\PublicAsset::url($notice->image, 'site/img/carousel-1.png') }}" onerror="this.src='{{ asset('site/img/carousel-1.png') }}'" alt="">
+                        @endif
                         <div class="min-w-0 flex-1">
                             <div class="flex flex-wrap items-start justify-between gap-2">
                                 <h2 class="font-black text-brand-dark">{{ $notice->title }}</h2>
-                                <span class="rounded-full border px-2.5 py-1 text-[9px] font-black uppercase tracking-wider {{ $stateClasses }}">{{ $publicationState }}</span>
+                                <span class="rounded-full border px-2.5 py-1 text-[9px] font-black uppercase tracking-wider {{ $notice->status === 'active' ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : 'border-rose-100 bg-rose-50 text-rose-700' }}">{{ $notice->status }}</span>
                             </div>
+                            <p class="mt-1 text-[10px] font-black uppercase tracking-wide text-brand-gold">{{ $notice->display_type === 'bar' ? 'Announcement bar' : 'Popup' }}</p>
+                            <span class="mt-1 inline-flex rounded-full border px-2.5 py-1 text-[9px] font-black uppercase tracking-wider {{ $stateClasses }}">Public: {{ $publicationState === 'inactive' ? 'hidden' : $publicationState }}</span>
                             <p class="mt-2 truncate text-xs text-neutral-500">{{ $notice->link ?: 'Join Now flow' }}</p>
                             @if($notice->starts_at || $notice->expires_at)
                                 <p class="mt-2 text-[10px] text-neutral-500">
